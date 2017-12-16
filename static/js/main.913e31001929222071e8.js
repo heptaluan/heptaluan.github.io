@@ -1,4 +1,4 @@
-webpackJsonp([3],{
+webpackJsonp([2],{
 
 /***/ "O9gN":
 /***/ (function(module, exports) {
@@ -26,12 +26,10 @@ var vue_router_esm = __webpack_require__("u28b");
 vue_esm["a" /* default */].use(vue_router_esm["a" /* default */]);
 
 const Button = () => __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, "uePe"))
-const BBB = () => __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, "I1LJ"))
 
 /* harmony default export */ var router = (new vue_router_esm["a" /* default */]({
     routes: [
         { path: '/button', component: Button },
-        { path: '/bbb', component: BBB},
         { path: '*', redirect: '/button'}
     ]
 }));
@@ -3978,4 +3976,4 @@ new vue_esm["a" /* default */]({
 /***/ })
 
 },["Pa1R"]);
-//# sourceMappingURL=main.27fc46174be08c871f6b.js.map
+//# sourceMappingURL=main.913e31001929222071e8.js.map
