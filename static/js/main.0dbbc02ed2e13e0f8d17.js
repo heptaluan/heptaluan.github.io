@@ -33,20 +33,20 @@ var vue_router_esm = __webpack_require__("u28b");
 vue_esm["a" /* default */].use(vue_router_esm["a" /* default */]);
 
 const Table = () => __webpack_require__.e/* import() */(13).then(__webpack_require__.bind(null, "Dq1J"));
-const Icon = () => __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, "uhWp"));
-const Close = () => __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, "uxfk"));
-const BackToTop = () => __webpack_require__.e/* import() */(7).then(__webpack_require__.bind(null, "dRrG"));
-const Button = () => __webpack_require__.e/* import() */(8).then(__webpack_require__.bind(null, "uePe"));
+const Icon = () => __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, "uhWp"));
+const Close = () => __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, "uxfk"));
+const BackToTop = () => __webpack_require__.e/* import() */(8).then(__webpack_require__.bind(null, "dRrG"));
+const Button = () => __webpack_require__.e/* import() */(9).then(__webpack_require__.bind(null, "uePe"));
 const Input = () => __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, "YC2e"));
-const Radio = () => __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, "GA9x"));
-const Checkbox = () => __webpack_require__.e/* import() */(6).then(__webpack_require__.bind(null, "5aWj"));
-const Switch = () => __webpack_require__.e/* import() */(9).then(__webpack_require__.bind(null, "7FmX"));
+const Radio = () => __webpack_require__.e/* import() */(5).then(__webpack_require__.bind(null, "GA9x"));
+const Checkbox = () => __webpack_require__.e/* import() */(7).then(__webpack_require__.bind(null, "5aWj"));
+const Switch = () => __webpack_require__.e/* import() */(10).then(__webpack_require__.bind(null, "7FmX"));
 const ToolTip = () => __webpack_require__.e/* import() */(12).then(__webpack_require__.bind(null, "o6Q0"));
-const Notify = () => __webpack_require__.e/* import() */(5).then(__webpack_require__.bind(null, "8NaV"));
+const Notify = () => __webpack_require__.e/* import() */(6).then(__webpack_require__.bind(null, "8NaV"));
 const Message = () => __webpack_require__.e/* import() */(14).then(__webpack_require__.bind(null, "ATvN"));
 const Dialog = () => __webpack_require__.e/* import() */(11).then(__webpack_require__.bind(null, "jFnR"));
-const Slider = () => __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, "2LdQ"));
-const Select = () => __webpack_require__.e/* import() */(10).then(__webpack_require__.bind(null, "f42M"));
+const Slider = () => __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, "2LdQ"));
+const Select = () => __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, "f42M"));
 
 
 /* harmony default export */ var router = (new vue_router_esm["a" /* default */]({
@@ -3906,19 +3906,297 @@ var Slider_Component = Slider_normalizeComponent(
 
 
 
+// CONCATENATED MODULE: ./node_modules/_babel-loader@7.1.2@babel-loader/lib!./node_modules/_vue-loader@13.6.0@vue-loader/lib/selector.js?type=script&index=0!./src/components/Select/SelectDropDown.vue
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ var SelectDropDown = ({
+    name: "dy-select-drop-down",
+    mixins: [popup],
+    data: function data() {
+        var _this = this;
+
+        var selectValue = [];
+        this.options.forEach(function (item) {
+            if (!_this.multiple && selectValue.length) {
+                return;
+            }
+            if (item.selected) {
+                selectValue.push(item);
+            }
+        });
+        return {
+            selectValue: selectValue,
+            saveOptions: this.options,
+            renderOptions: this.options,
+            selectHeight: this.maxHeight + "px"
+        };
+    },
+
+    props: ["value", "options", "maxHeight", "isFocus", "multiple", "transition"],
+    methods: {
+        isSelected: function isSelected(item) {
+            var is = false;
+            this.selectValue.every(function (_item) {
+                if (_item.value === item.value && _item.label === item.label) {
+                    is = true;
+                    return false;
+                }
+                return true;
+            });
+            return is;
+        },
+        selectHandle: function selectHandle(item, index) {
+            if (this.isSelected(item)) {
+                if (!this.multiple) {
+                    return this.hide();
+                } else {
+                    return this.filterSelectItem(item);
+                }
+            }
+
+            if (!this.multiple) {
+                this.selectValue = [item];
+                this.hide();
+            } else {
+                this.selectValue.push(item);
+            }
+        },
+        filterSelectItem: function filterSelectItem(item) {
+            this.selectValue.splice(this.selectValue.findIndex(function (_item) {
+                return _item.label === item.label && _item.value === item.value;
+            }), 1);
+        },
+        popupPosition: function popupPosition() {
+            var _$parent$$el$getBound = this.$parent.$el.getBoundingClientRect(),
+                top = _$parent$$el$getBound.top,
+                left = _$parent$$el$getBound.left,
+                height = _$parent$$el$getBound.height,
+                width = _$parent$$el$getBound.width;
+
+            var _getPageOffset = this.getPageOffset(),
+                offsetTop = _getPageOffset.top,
+                offsetLeft = _getPageOffset.left;
+
+            var ret = {
+                top: top + offsetTop + height + "px",
+                left: left + offsetLeft + "px",
+                width: width + "px",
+                height: "" + this.selectHeight || "auto",
+                zIndex: this.getZIndex()
+            };
+
+            if (this.$refs["lists"].offsetHeight < this.maxHeight) {
+                this.scrollHeight = this.$refs["lists"].offsetHeight;
+            }
+
+            return ret;
+        }
+    },
+    watch: {
+        isFocus: function isFocus(val, oldVal) {
+            if (val) {
+                this.show();
+            } else {
+                this.hide();
+            }
+        },
+        options: function options(val, oldVal) {
+            var _this2 = this;
+
+            val.forEach(function (item) {
+                if (_this2.renderOptions.findIndex(function (_item) {
+                    return _item.label === item.label && _item.value === item.value;
+                }) > -1) {
+                    _this2.renderOptions.push(item);
+                    _this2.saveOptions.push(item);
+                    if (item.selected) {
+                        if (_this2.selected) {
+                            _this2.selectValue.push(item);
+                        } else {
+                            _this2.selectValue = [item];
+                        }
+                    }
+                }
+            });
+        },
+        selectValue: function selectValue(val, oldVal) {
+            this.$emit("input", val);
+        },
+        visible: function visible(val, oldVal) {
+            if (val) {
+                this.$parent.isFocus = true;
+            } else {
+                this.$parent.isFocus = false;
+            }
+        }
+    },
+    mounted: function mounted() {
+        document.body.appendChild(this.$el);
+    }
+});
+// CONCATENATED MODULE: ./node_modules/_vue-loader@13.6.0@vue-loader/lib/template-compiler?{"id":"data-v-2d3d2fc6","hasScoped":false,"transformToRequire":{"video":"src","source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/_vue-loader@13.6.0@vue-loader/lib/selector.js?type=template&index=0!./src/components/Select/SelectDropDown.vue
+var SelectDropDown_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('transition',{attrs:{"name":_vm.transition}},[(_vm.visible)?_c('div',{staticClass:"dy-select-box"},[_c('ul',{ref:"lists",staticClass:"dy-select-list"},_vm._l((_vm.renderOptions),function(item,index){return _c('li',{key:index,class:{ 'dy-checked': _vm.isSelected(item) },on:{"click":function($event){$event.stopPropagation();_vm.selectHandle(item, index)}}},[_c('span',{staticClass:"dy-select-text"},[_vm._v(_vm._s(item.label))]),_vm._v(" "),_c('i',{staticClass:"dy-select-icon"})])}))]):_vm._e()])}
+var SelectDropDown_staticRenderFns = []
+var SelectDropDown_esExports = { render: SelectDropDown_render, staticRenderFns: SelectDropDown_staticRenderFns }
+/* harmony default export */ var Select_SelectDropDown = (SelectDropDown_esExports);
+// CONCATENATED MODULE: ./src/components/Select/SelectDropDown.vue
+var SelectDropDown_normalizeComponent = __webpack_require__("OF7X")
+/* script */
+
+
+/* template */
+
+/* template functional */
+var SelectDropDown___vue_template_functional__ = false
+/* styles */
+var SelectDropDown___vue_styles__ = null
+/* scopeId */
+var SelectDropDown___vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var SelectDropDown___vue_module_identifier__ = null
+var SelectDropDown_Component = SelectDropDown_normalizeComponent(
+  SelectDropDown,
+  Select_SelectDropDown,
+  SelectDropDown___vue_template_functional__,
+  SelectDropDown___vue_styles__,
+  SelectDropDown___vue_scopeId__,
+  SelectDropDown___vue_module_identifier__
+)
+
+/* harmony default export */ var components_Select_SelectDropDown = (SelectDropDown_Component.exports);
+
 // CONCATENATED MODULE: ./node_modules/_babel-loader@7.1.2@babel-loader/lib!./node_modules/_vue-loader@13.6.0@vue-loader/lib/selector.js?type=script&index=0!./src/components/Select/Select.vue
 //
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
 
 
 /* harmony default export */ var Select_Select = ({
     name: "dy-select",
-    props: {}
+    data: function data() {
+        return {
+            isFocus: false,
+            disabled: false,
+            selectValue: []
+        };
+    },
+
+    props: {
+        placeholder: {
+            type: String,
+            default: "请选择"
+        },
+        width: String,
+        maxHeight: {
+            type: Number,
+            default: 200
+        },
+        multiple: {
+            type: Boolean,
+            default: false
+        },
+        options: {
+            type: Array,
+            required: true
+        },
+        transition: {
+            type: String,
+            default: "slide-down"
+        }
+    },
+    methods: {
+        toggleSelect: function toggleSelect() {
+            this.isFocus = !this.isFocus;
+        },
+        bodyClickHandle: function bodyClickHandle() {
+            if (this.isFocus) {
+                this.toggleSelect();
+            }
+        }
+    },
+    watch: {
+        selectValue: function selectValue(val, oldVal) {
+            this.$emit("input", val);
+            this.$emit("select", this.multiple ? val : val[0]);
+            if (val.length >= oldVal.length) {
+                this.$emit("change", val[val.length - 1], true);
+            } else {
+                this.$emit("change", val[val.length - 1], false);
+            }
+        }
+    },
+    computed: {
+        text: function text() {
+            if (!this.selectValue.length) {
+                return this.placeholder;
+            }
+
+            var text = [];
+            this.selectValue.forEach(function (item) {
+                text.push(item.label);
+            });
+            return text.join(",");
+        }
+    },
+    components: {
+        SelectDropdown: components_Select_SelectDropDown
+    },
+    mounted: function mounted() {
+        on(document.body, "click", this.bodyClickHandle);
+        if (this.width !== undefined) {
+            css(this.$el, "width", this.width);
+        }
+    },
+    beforeDestroy: function beforeDestroy() {
+        off(document.body, "click", this.bodyClickHandle);
+    }
 });
-// CONCATENATED MODULE: ./node_modules/_vue-loader@13.6.0@vue-loader/lib/template-compiler?{"id":"data-v-6bed5127","hasScoped":false,"transformToRequire":{"video":"src","source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/_vue-loader@13.6.0@vue-loader/lib/selector.js?type=template&index=0!./src/components/Select/Select.vue
-var Select_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_vm._v("123")])}
+// CONCATENATED MODULE: ./node_modules/_vue-loader@13.6.0@vue-loader/lib/template-compiler?{"id":"data-v-3c75e82e","hasScoped":false,"transformToRequire":{"video":"src","source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/_vue-loader@13.6.0@vue-loader/lib/selector.js?type=template&index=0!./src/components/Select/Select.vue
+var Select_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"selectButton",staticClass:"dy-selected",class:{ 'dy-select-active': _vm.isFocus },on:{"click":function($event){$event.stopPropagation();_vm.toggleSelect($event)}}},[_c('button',{staticClass:"dy-select-button dy-btn"},[_c('span',{staticClass:"dy-button-text"},[_vm._v(_vm._s(_vm.text))]),_vm._v(" "),_c('i',{staticClass:"dy-button-icon"})]),_vm._v(" "),_c('select-dropdown',{attrs:{"options":_vm.options,"isFocus":_vm.isFocus,"maxHeight":_vm.maxHeight,"multiple":_vm.multiple,"width":_vm.width,"transition":_vm.transition},model:{value:(_vm.selectValue),callback:function ($$v) {_vm.selectValue=$$v},expression:"selectValue"}})],1)}
 var Select_staticRenderFns = []
 var Select_esExports = { render: Select_render, staticRenderFns: Select_staticRenderFns }
 /* harmony default export */ var components_Select_Select = (Select_esExports);
@@ -4082,4 +4360,4 @@ new vue_esm["a" /* default */]({
 /***/ })
 
 },["Pa1R"]);
-//# sourceMappingURL=main.324612c91ab513b65e60.js.map
+//# sourceMappingURL=main.0dbbc02ed2e13e0f8d17.js.map
