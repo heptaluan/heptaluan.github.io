@@ -1,2 +1,411 @@
-webpackJsonp([13],{Dq1J:function(t,e,l){"use strict";Object.defineProperty(e,"__esModule",{value:!0});var a={data:function(){return{tableData:[{num:1,title:"苹果",date:"2017-12-12"},{num:2,title:"香蕉",date:"2017-12-12"},{num:3,title:"葡萄",date:"2017-12-12"},{num:4,title:"西瓜",date:"2017-12-12"}],tableSelect1:[],tableSelect2:[]}}},r=function(){var t=this,e=t.$createElement,l=t._self._c||e;return l("div",{staticClass:"components-box"},[l("div",{staticClass:"components-title"},[t._v("Table 表格")]),t._v(" "),l("div",{staticClass:"components-wrapper"},[l("ul",[l("li",[l("div",{staticClass:"components-content"},[l("h2",{staticClass:"h2"},[t._v("表格 - Table（默认）")]),t._v(" "),l("dy-table",{attrs:{data:t.tableData}},[l("dy-table-col",{attrs:{prop:"num",label:"序号"}}),t._v(" "),l("dy-table-col",{attrs:{prop:"title",label:"名称"}}),t._v(" "),l("dy-table-col",{attrs:{prop:"date",label:"日期"}})],1)],1),t._v(" "),t._m(0),t._v(" "),l("pre",{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[t._v("\r\n    "),l("code",{staticClass:"html"},[t._v('\r\n    <template>\r\n\r\n        <dy-table :data="tableData">\r\n            <dy-table-col prop="num" label="序号"></dy-table-col>\r\n            <dy-table-col prop="title" label="名称"></dy-table-col>\r\n            <dy-table-col prop="date" label="日期"></dy-table-col>\r\n        </dy-table>\r\n\r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            data() {\r\n                return {\r\n                    tableData: [{\r\n                            num: 1,\r\n                            title: "苹果",\r\n                            date: "2017-12-12"\r\n                        },{\r\n                            num: 2,\r\n                            title: "香蕉",\r\n                            date: "2017-12-12"\r\n                        },\r\n                        {\r\n                            num: 3,\r\n                            title: "葡萄",\r\n                            date: "2017-12-12"\r\n                        },\r\n                        {\r\n                            num: 4,\r\n                            title: "西瓜",\r\n                            date: "2017-12-12"\r\n                    }],\r\n                }\r\n            }\r\n        }\r\n    <\/script>\r\n    ')]),t._v("\r\n")])]),t._v(" "),l("li",[l("div",{staticClass:"components-content"},[l("h2",{staticClass:"h2"},[t._v("表格 - Table（指定边框）")]),t._v(" "),l("dy-table",{attrs:{data:t.tableData,border:!0}},[l("dy-table-col",{attrs:{prop:"num",label:"序号"}}),t._v(" "),l("dy-table-col",{attrs:{prop:"title",label:"名称"}}),t._v(" "),l("dy-table-col",{attrs:{prop:"date",label:"日期"}})],1)],1),t._v(" "),t._m(1),t._v(" "),l("pre",{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[t._v("\r\n    "),l("code",{staticClass:"html"},[t._v('\r\n    <template>\r\n\r\n        <dy-table :data="tableData" :border="true">\r\n            <dy-table-col prop="num" label="序号"></dy-table-col>\r\n            <dy-table-col prop="title" label="名称"></dy-table-col>\r\n            <dy-table-col prop="date" label="日期"></dy-table-col>\r\n        </dy-table>\r\n\r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            data() {\r\n                // 数据和上面的一样\r\n            }\r\n        }\r\n    <\/script>\r\n    ')]),t._v("\r\n")])]),t._v(" "),l("li",[l("div",{staticClass:"components-content"},[l("h2",{staticClass:"h2"},[t._v("表格 - Table（指定背景色）")]),t._v(" "),l("dy-table",{attrs:{data:t.tableData,border:!0,striped:!0}},[l("dy-table-col",{attrs:{prop:"num",label:"序号"}}),t._v(" "),l("dy-table-col",{attrs:{prop:"title",label:"名称"}}),t._v(" "),l("dy-table-col",{attrs:{prop:"date",label:"日期"}})],1)],1),t._v(" "),t._m(2),t._v(" "),l("pre",{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[t._v("\r\n    "),l("code",{staticClass:"html"},[t._v('\r\n    <template>\r\n\r\n        <dy-table :data="tableData" :striped="true" :border="true">\r\n            <dy-table-col prop="num" label="序号"></dy-table-col>\r\n            <dy-table-col prop="title" label="名称"></dy-table-col>\r\n            <dy-table-col prop="date" label="日期"></dy-table-col>\r\n        </dy-table>\r\n\r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            data() {\r\n                // 数据和上面的一样\r\n            }\r\n        }\r\n    <\/script>\r\n    ')]),t._v("\r\n")])]),t._v(" "),l("li",[l("div",{staticClass:"components-content"},[l("h2",{staticClass:"h2"},[t._v("表格 - Table（添加鼠标移入效果）")]),t._v(" "),l("dy-table",{attrs:{data:t.tableData,border:!0,striped:!0,hover:!0}},[l("dy-table-col",{attrs:{prop:"num",label:"序号"}}),t._v(" "),l("dy-table-col",{attrs:{prop:"title",label:"名称"}}),t._v(" "),l("dy-table-col",{attrs:{prop:"date",label:"日期"}})],1)],1),t._v(" "),t._m(3),t._v(" "),l("pre",{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[t._v("\r\n    "),l("code",{staticClass:"html"},[t._v('\r\n    <template>\r\n\r\n        <dy-table :data="tableData" :striped="true" :hover="true" :border="true">\r\n            <dy-table-col prop="num" label="序号"></dy-table-col>\r\n            <dy-table-col prop="title" label="名称"></dy-table-col>\r\n            <dy-table-col prop="date" label="日期"></dy-table-col>\r\n        </dy-table>\r\n\r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            data() {\r\n                // 数据和上面的一样\r\n            }\r\n        }\r\n    <\/script>\r\n    ')]),t._v("\r\n")])]),t._v(" "),l("li",[l("div",{staticClass:"components-content"},[l("h2",{staticClass:"h2"},[t._v("表格 - Table（添加单选框）")]),t._v(" "),l("dy-table",{attrs:{select:!0,data:t.tableData,border:!0,striped:!0,hover:!0},model:{value:t.tableSelect1,callback:function(e){t.tableSelect1=e},expression:"tableSelect1"}},[l("dy-table-col",{attrs:{prop:"num",label:"序号"}}),t._v(" "),l("dy-table-col",{attrs:{prop:"title",label:"名称"}}),t._v(" "),l("dy-table-col",{attrs:{prop:"date",label:"日期"}})],1),t._v(" "),l("div",{staticClass:"subBox"},[t._v("\r\n        当前选择的是："+t._s(t.tableSelect1)+"\r\n    ")])],1),t._v(" "),t._m(4),t._v(" "),l("pre",{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[t._v("\r\n    "),l("code",{staticClass:"html"},[t._v('\r\n    <template>\r\n\r\n        <dy-table \r\n            v-model="tableSelect1" \r\n            :select="true" \r\n            :data="tableData" \r\n            :striped="true" \r\n            :hover="true" \r\n            :border="true"\r\n        >\r\n            <dy-table-col prop="num" label="序号"></dy-table-col>\r\n            <dy-table-col prop="title" label="名称"></dy-table-col>\r\n            <dy-table-col prop="date" label="日期"></dy-table-col>\r\n        </dy-table>\r\n\r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            data() {\r\n                // 数据和上面的一样,\r\n                tableSelect1: []\r\n            }\r\n        }\r\n    <\/script>\r\n    ')]),t._v("\r\n")])]),t._v(" "),l("li",[l("div",{staticClass:"components-content"},[l("h2",{staticClass:"h2"},[t._v("表格 - Table（添加多选框）")]),t._v(" "),l("dy-table",{attrs:{selectAll:!0,select:!0,data:t.tableData,border:!0,striped:!0,hover:!0},model:{value:t.tableSelect2,callback:function(e){t.tableSelect2=e},expression:"tableSelect2"}},[l("dy-table-col",{attrs:{prop:"num",label:"序号"}}),t._v(" "),l("dy-table-col",{attrs:{prop:"title",label:"名称"}}),t._v(" "),l("dy-table-col",{attrs:{prop:"date",label:"日期"}}),t._v(" "),l("div",{attrs:{slot:"tfoot"},slot:"tfoot"},[t._v("全选行自定义内容")])],1),t._v(" "),l("div",{staticClass:"subBox"},[t._v("\r\n        当前选择的是："+t._s(t.tableSelect2)+"\r\n    ")])],1),t._v(" "),t._m(5),t._v(" "),l("pre",{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[t._v("\r\n    "),l("code",{staticClass:"html"},[t._v('\r\n    <template>\r\n\r\n        <dy-table \r\n            v-model="tableSelect2" \r\n            :selectAll="true" \r\n            :select="true" \r\n            :data="tableData" \r\n            :border="true" \r\n            :striped="true" \r\n            :hover="true"\r\n        >\r\n            <dy-table-col prop="num" label="序号"></dy-table-col>\r\n            <dy-table-col prop="title" label="名称"></dy-table-col>\r\n            <dy-table-col prop="date" label="日期"></dy-table-col>\r\n            <div slot="tfoot">全选行自定义内容</div>\r\n        </dy-table>\r\n        \r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            data() {\r\n                // 数据和上面的一样,\r\n                tableSelect2: []\r\n            }\r\n        }\r\n    <\/script>\r\n    ')]),t._v("\r\n")])])])])])},n=[function(){var t=this,e=t.$createElement,l=t._self._c||e;return l("div",{staticClass:"components-code"},[l("div",{staticClass:"code-title"},[t._v("示例代码")]),t._v(" "),l("div",{staticClass:"code-tip"},[l("p",[t._v("使用 "),l("code",[t._v("dy-table")]),t._v(" 组件来包裹 "),l("code",[t._v("dy-table-col")]),t._v(" 组件使用")]),t._v(" "),l("br"),t._v(" "),l("p",[l("code",[t._v(":data")]),t._v(" -- 绑定用来渲染的数据列表数组")]),t._v(" "),l("p",[l("code",[t._v("prop")]),t._v(" -- 绑定用来渲染的数据列表数组当中的 "),l("code",[t._v("key")])]),t._v(" "),l("p",[l("code",[t._v("label")]),t._v(" -- 表格表头的内容")]),t._v(" "),l("br"),t._v(" "),l("p",[l("code",[t._v(":border")]),t._v(" -- 布尔值，是否显示边框，默认为 "),l("code",[t._v("false")])]),t._v(" "),l("p",[l("code",[t._v(":striped")]),t._v(" -- 布尔值，是否显示隔行背景色，默认为 "),l("code",[t._v("false")])]),t._v(" "),l("p",[l("code",[t._v(":hover")]),t._v(" -- 布尔值，是否显示鼠标移入样式，默认为 "),l("code",[t._v("false")])]),t._v(" "),l("p",[l("code",[t._v(":select")]),t._v(" -- 布尔值，是否显示单选框，默认为 "),l("code",[t._v("false")])]),t._v(" "),l("p",[l("code",[t._v(":selectAll")]),t._v(" -- 布尔值，是否显示全选框，默认为 "),l("code",[t._v("false")])]),t._v(" "),l("p",[l("code",[t._v(":selectText")]),t._v(" -- 用于标记全选按钮的文本，默认为 "),l("code",[t._v("全选")]),t._v(" 两字")]),t._v(" "),l("p",[l("code",[t._v('slot="tfoot"')]),t._v(" -- 用于自定义全选行的显示内容")])])])},function(){var t=this,e=t.$createElement,l=t._self._c||e;return l("div",{staticClass:"components-code"},[l("div",{staticClass:"code-title"},[t._v("示例代码")]),t._v(" "),l("div",{staticClass:"code-tip"},[l("p",[t._v("添加 "),l("code",[t._v(":border")]),t._v(" 参数为 "),l("code",[t._v("true")]),t._v(" 即可")])])])},function(){var t=this,e=t.$createElement,l=t._self._c||e;return l("div",{staticClass:"components-code"},[l("div",{staticClass:"code-title"},[t._v("示例代码")]),t._v(" "),l("div",{staticClass:"code-tip"},[l("p",[t._v("添加 "),l("code",[t._v(":striped")]),t._v(" 参数为 "),l("code",[t._v("true")]),t._v(" 即可")])])])},function(){var t=this,e=t.$createElement,l=t._self._c||e;return l("div",{staticClass:"components-code"},[l("div",{staticClass:"code-title"},[t._v("示例代码")]),t._v(" "),l("div",{staticClass:"code-tip"},[l("p",[t._v("添加 "),l("code",[t._v(":hover")]),t._v(" 参数为 "),l("code",[t._v("true")]),t._v(" 即可")])])])},function(){var t=this,e=t.$createElement,l=t._self._c||e;return l("div",{staticClass:"components-code"},[l("div",{staticClass:"code-title"},[t._v("示例代码")]),t._v(" "),l("div",{staticClass:"code-tip"},[l("p",[t._v("使用 "),l("code",[t._v("v-model")]),t._v(" 来与表格进行绑定后进行数据展示")]),t._v(" "),l("p",[t._v("添加 "),l("code",[t._v(":select")]),t._v(" 参数为 "),l("code",[t._v("true")]),t._v(" 即可")])])])},function(){var t=this,e=t.$createElement,l=t._self._c||e;return l("div",{staticClass:"components-code"},[l("div",{staticClass:"code-title"},[t._v("示例代码")]),t._v(" "),l("div",{staticClass:"code-tip"},[l("p",[t._v("使用 "),l("code",[t._v("v-model")]),t._v(" 来与表格进行绑定后进行数据展示")]),t._v(" "),l("p",[t._v("添加 "),l("code",[t._v(":selectAll")]),t._v(" 和 "),l("code",[t._v(":select")]),t._v(" 参数均为 "),l("code",[t._v("true")]),t._v(" 即可")]),t._v(" "),l("p",[t._v("页脚部分的全选行后半部分内容，可以在自定义元素身上添加 "),l("code",[t._v('slot="tfoot"')]),t._v(" 参数来进行自定义")])])])}],s={render:r,staticRenderFns:n},o=s,c=l("OF7X"),d=c(a,o,!1,null,null,null);e.default=d.exports}});
+webpackJsonp([13],{
+
+/***/ "Dq1J":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+
+// CONCATENATED MODULE: ./node_modules/_babel-loader@7.1.2@babel-loader/lib!./node_modules/_vue-loader@13.6.0@vue-loader/lib/selector.js?type=script&index=0!./example/views/components/Table.vue
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ var Table = ({
+    data: function data() {
+        return {
+            tableData: [{
+                num: 1,
+                title: "苹果",
+                date: "2017-12-12"
+            }, {
+                num: 2,
+                title: "香蕉",
+                date: "2017-12-12"
+            }, {
+                num: 3,
+                title: "葡萄",
+                date: "2017-12-12"
+            }, {
+                num: 4,
+                title: "西瓜",
+                date: "2017-12-12"
+            }],
+            tableSelect1: [],
+            tableSelect2: []
+        };
+    }
+});
+// CONCATENATED MODULE: ./node_modules/_vue-loader@13.6.0@vue-loader/lib/template-compiler?{"id":"data-v-30c09954","hasScoped":false,"transformToRequire":{"video":"src","source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/_vue-loader@13.6.0@vue-loader/lib/selector.js?type=template&index=0!./example/views/components/Table.vue
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-box"},[_c('div',{staticClass:"components-title"},[_vm._v("Table 表格")]),_vm._v(" "),_c('div',{staticClass:"components-wrapper"},[_c('ul',[_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("表格 - Table（默认）")]),_vm._v(" "),_c('dy-table',{attrs:{"data":_vm.tableData}},[_c('dy-table-col',{attrs:{"prop":"num","label":"序号"}}),_vm._v(" "),_c('dy-table-col',{attrs:{"prop":"title","label":"名称"}}),_vm._v(" "),_c('dy-table-col',{attrs:{"prop":"date","label":"日期"}})],1)],1),_vm._v(" "),_vm._m(0),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n\r\n        <dy-table :data=\"tableData\">\r\n            <dy-table-col prop=\"num\" label=\"序号\"></dy-table-col>\r\n            <dy-table-col prop=\"title\" label=\"名称\"></dy-table-col>\r\n            <dy-table-col prop=\"date\" label=\"日期\"></dy-table-col>\r\n        </dy-table>\r\n\r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            data() {\r\n                return {\r\n                    tableData: [{\r\n                            num: 1,\r\n                            title: \"苹果\",\r\n                            date: \"2017-12-12\"\r\n                        },{\r\n                            num: 2,\r\n                            title: \"香蕉\",\r\n                            date: \"2017-12-12\"\r\n                        },\r\n                        {\r\n                            num: 3,\r\n                            title: \"葡萄\",\r\n                            date: \"2017-12-12\"\r\n                        },\r\n                        {\r\n                            num: 4,\r\n                            title: \"西瓜\",\r\n                            date: \"2017-12-12\"\r\n                    }],\r\n                }\r\n            }\r\n        }\r\n    </script>\r\n    ")]),_vm._v("\r\n")])]),_vm._v(" "),_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("表格 - Table（指定边框）")]),_vm._v(" "),_c('dy-table',{attrs:{"data":_vm.tableData,"border":true}},[_c('dy-table-col',{attrs:{"prop":"num","label":"序号"}}),_vm._v(" "),_c('dy-table-col',{attrs:{"prop":"title","label":"名称"}}),_vm._v(" "),_c('dy-table-col',{attrs:{"prop":"date","label":"日期"}})],1)],1),_vm._v(" "),_vm._m(1),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n\r\n        <dy-table :data=\"tableData\" :border=\"true\">\r\n            <dy-table-col prop=\"num\" label=\"序号\"></dy-table-col>\r\n            <dy-table-col prop=\"title\" label=\"名称\"></dy-table-col>\r\n            <dy-table-col prop=\"date\" label=\"日期\"></dy-table-col>\r\n        </dy-table>\r\n\r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            data() {\r\n                // 数据和上面的一样\r\n            }\r\n        }\r\n    </script>\r\n    ")]),_vm._v("\r\n")])]),_vm._v(" "),_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("表格 - Table（指定背景色）")]),_vm._v(" "),_c('dy-table',{attrs:{"data":_vm.tableData,"border":true,"striped":true}},[_c('dy-table-col',{attrs:{"prop":"num","label":"序号"}}),_vm._v(" "),_c('dy-table-col',{attrs:{"prop":"title","label":"名称"}}),_vm._v(" "),_c('dy-table-col',{attrs:{"prop":"date","label":"日期"}})],1)],1),_vm._v(" "),_vm._m(2),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n\r\n        <dy-table :data=\"tableData\" :striped=\"true\" :border=\"true\">\r\n            <dy-table-col prop=\"num\" label=\"序号\"></dy-table-col>\r\n            <dy-table-col prop=\"title\" label=\"名称\"></dy-table-col>\r\n            <dy-table-col prop=\"date\" label=\"日期\"></dy-table-col>\r\n        </dy-table>\r\n\r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            data() {\r\n                // 数据和上面的一样\r\n            }\r\n        }\r\n    </script>\r\n    ")]),_vm._v("\r\n")])]),_vm._v(" "),_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("表格 - Table（添加鼠标移入效果）")]),_vm._v(" "),_c('dy-table',{attrs:{"data":_vm.tableData,"border":true,"striped":true,"hover":true}},[_c('dy-table-col',{attrs:{"prop":"num","label":"序号"}}),_vm._v(" "),_c('dy-table-col',{attrs:{"prop":"title","label":"名称"}}),_vm._v(" "),_c('dy-table-col',{attrs:{"prop":"date","label":"日期"}})],1)],1),_vm._v(" "),_vm._m(3),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n\r\n        <dy-table :data=\"tableData\" :striped=\"true\" :hover=\"true\" :border=\"true\">\r\n            <dy-table-col prop=\"num\" label=\"序号\"></dy-table-col>\r\n            <dy-table-col prop=\"title\" label=\"名称\"></dy-table-col>\r\n            <dy-table-col prop=\"date\" label=\"日期\"></dy-table-col>\r\n        </dy-table>\r\n\r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            data() {\r\n                // 数据和上面的一样\r\n            }\r\n        }\r\n    </script>\r\n    ")]),_vm._v("\r\n")])]),_vm._v(" "),_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("表格 - Table（添加单选框）")]),_vm._v(" "),_c('dy-table',{attrs:{"select":true,"data":_vm.tableData,"border":true,"striped":true,"hover":true},model:{value:(_vm.tableSelect1),callback:function ($$v) {_vm.tableSelect1=$$v},expression:"tableSelect1"}},[_c('dy-table-col',{attrs:{"prop":"num","label":"序号"}}),_vm._v(" "),_c('dy-table-col',{attrs:{"prop":"title","label":"名称"}}),_vm._v(" "),_c('dy-table-col',{attrs:{"prop":"date","label":"日期"}})],1),_vm._v(" "),_c('div',{staticClass:"subBox"},[_vm._v("\r\n        当前选择的是："+_vm._s(_vm.tableSelect1)+"\r\n    ")])],1),_vm._v(" "),_vm._m(4),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n\r\n        <dy-table \r\n            v-model=\"tableSelect1\" \r\n            :select=\"true\" \r\n            :data=\"tableData\" \r\n            :striped=\"true\" \r\n            :hover=\"true\" \r\n            :border=\"true\"\r\n        >\r\n            <dy-table-col prop=\"num\" label=\"序号\"></dy-table-col>\r\n            <dy-table-col prop=\"title\" label=\"名称\"></dy-table-col>\r\n            <dy-table-col prop=\"date\" label=\"日期\"></dy-table-col>\r\n        </dy-table>\r\n\r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            data() {\r\n                // 数据和上面的一样,\r\n                tableSelect1: []\r\n            }\r\n        }\r\n    </script>\r\n    ")]),_vm._v("\r\n")])]),_vm._v(" "),_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("表格 - Table（添加多选框）")]),_vm._v(" "),_c('dy-table',{attrs:{"selectAll":true,"select":true,"data":_vm.tableData,"border":true,"striped":true,"hover":true},model:{value:(_vm.tableSelect2),callback:function ($$v) {_vm.tableSelect2=$$v},expression:"tableSelect2"}},[_c('dy-table-col',{attrs:{"prop":"num","label":"序号"}}),_vm._v(" "),_c('dy-table-col',{attrs:{"prop":"title","label":"名称"}}),_vm._v(" "),_c('dy-table-col',{attrs:{"prop":"date","label":"日期"}}),_vm._v(" "),_c('div',{attrs:{"slot":"tfoot"},slot:"tfoot"},[_vm._v("全选行自定义内容")])],1),_vm._v(" "),_c('div',{staticClass:"subBox"},[_vm._v("\r\n        当前选择的是："+_vm._s(_vm.tableSelect2)+"\r\n    ")])],1),_vm._v(" "),_vm._m(5),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n\r\n        <dy-table \r\n            v-model=\"tableSelect2\" \r\n            :selectAll=\"true\" \r\n            :select=\"true\" \r\n            :data=\"tableData\" \r\n            :border=\"true\" \r\n            :striped=\"true\" \r\n            :hover=\"true\"\r\n        >\r\n            <dy-table-col prop=\"num\" label=\"序号\"></dy-table-col>\r\n            <dy-table-col prop=\"title\" label=\"名称\"></dy-table-col>\r\n            <dy-table-col prop=\"date\" label=\"日期\"></dy-table-col>\r\n            <div slot=\"tfoot\">全选行自定义内容</div>\r\n        </dy-table>\r\n        \r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            data() {\r\n                // 数据和上面的一样,\r\n                tableSelect2: []\r\n            }\r\n        }\r\n    </script>\r\n    ")]),_vm._v("\r\n")])])])])])}
+var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("使用 "),_c('code',[_vm._v("dy-table")]),_vm._v(" 组件来包裹 "),_c('code',[_vm._v("dy-table-col")]),_vm._v(" 组件使用")]),_vm._v(" "),_c('br'),_vm._v(" "),_c('p',[_c('code',[_vm._v(":data")]),_vm._v(" -- 绑定用来渲染的数据列表数组")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("prop")]),_vm._v(" -- 绑定用来渲染的数据列表数组当中的 "),_c('code',[_vm._v("key")])]),_vm._v(" "),_c('p',[_c('code',[_vm._v("label")]),_vm._v(" -- 表格表头的内容")]),_vm._v(" "),_c('br'),_vm._v(" "),_c('p',[_c('code',[_vm._v(":border")]),_vm._v(" -- 布尔值，是否显示边框，默认为 "),_c('code',[_vm._v("false")])]),_vm._v(" "),_c('p',[_c('code',[_vm._v(":striped")]),_vm._v(" -- 布尔值，是否显示隔行背景色，默认为 "),_c('code',[_vm._v("false")])]),_vm._v(" "),_c('p',[_c('code',[_vm._v(":hover")]),_vm._v(" -- 布尔值，是否显示鼠标移入样式，默认为 "),_c('code',[_vm._v("false")])]),_vm._v(" "),_c('p',[_c('code',[_vm._v(":select")]),_vm._v(" -- 布尔值，是否显示单选框，默认为 "),_c('code',[_vm._v("false")])]),_vm._v(" "),_c('p',[_c('code',[_vm._v(":selectAll")]),_vm._v(" -- 布尔值，是否显示全选框，默认为 "),_c('code',[_vm._v("false")])]),_vm._v(" "),_c('p',[_c('code',[_vm._v(":selectText")]),_vm._v(" -- 用于标记全选按钮的文本，默认为 "),_c('code',[_vm._v("全选")]),_vm._v(" 两字")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("slot=\"tfoot\"")]),_vm._v(" -- 用于自定义全选行的显示内容")])])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("添加 "),_c('code',[_vm._v(":border")]),_vm._v(" 参数为 "),_c('code',[_vm._v("true")]),_vm._v(" 即可")])])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("添加 "),_c('code',[_vm._v(":striped")]),_vm._v(" 参数为 "),_c('code',[_vm._v("true")]),_vm._v(" 即可")])])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("添加 "),_c('code',[_vm._v(":hover")]),_vm._v(" 参数为 "),_c('code',[_vm._v("true")]),_vm._v(" 即可")])])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("使用 "),_c('code',[_vm._v("v-model")]),_vm._v(" 来与表格进行绑定后进行数据展示")]),_vm._v(" "),_c('p',[_vm._v("添加 "),_c('code',[_vm._v(":select")]),_vm._v(" 参数为 "),_c('code',[_vm._v("true")]),_vm._v(" 即可")])])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("使用 "),_c('code',[_vm._v("v-model")]),_vm._v(" 来与表格进行绑定后进行数据展示")]),_vm._v(" "),_c('p',[_vm._v("添加 "),_c('code',[_vm._v(":selectAll")]),_vm._v(" 和 "),_c('code',[_vm._v(":select")]),_vm._v(" 参数均为 "),_c('code',[_vm._v("true")]),_vm._v(" 即可")]),_vm._v(" "),_c('p',[_vm._v("页脚部分的全选行后半部分内容，可以在自定义元素身上添加 "),_c('code',[_vm._v("slot=\"tfoot\"")]),_vm._v(" 参数来进行自定义")])])])}]
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ var components_Table = (esExports);
+// CONCATENATED MODULE: ./example/views/components/Table.vue
+var normalizeComponent = __webpack_require__("OF7X")
+/* script */
+
+
+/* template */
+
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  Table,
+  components_Table,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+
+/* harmony default export */ var views_components_Table = __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ })
+
+});
 //# sourceMappingURL=13.6764f467505fae923400.js.map

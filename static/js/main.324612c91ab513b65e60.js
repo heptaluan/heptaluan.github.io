@@ -66,7 +66,7 @@ const Select = () => __webpack_require__.e/* import() */(10).then(__webpack_requ
         { path: '/dialog', component: Dialog },
         { path: '/slider', component: Slider },
         { path: '/select', component: Select },
-        { path: '*', redirect: '/box'}
+        { path: '*', redirect: '/table'}
     ]
 }));
 
@@ -4082,4 +4082,4 @@ new vue_esm["a" /* default */]({
 /***/ })
 
 },["Pa1R"]);
-//# sourceMappingURL=main.a03d7efe08ce10ef27be.js.map
+//# sourceMappingURL=main.324612c91ab513b65e60.js.map
