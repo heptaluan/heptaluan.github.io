@@ -1,13 +1,6 @@
-webpackJsonp([16],{
+webpackJsonp([17],{
 
 /***/ "JRJB":
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
-/***/ "Kv4e":
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
@@ -32,21 +25,22 @@ var vue_router_esm = __webpack_require__("u28b");
 
 vue_esm["a" /* default */].use(vue_router_esm["a" /* default */]);
 
-const Table = () => __webpack_require__.e/* import() */(13).then(__webpack_require__.bind(null, "Dq1J"));
-const Icon = () => __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, "uhWp"));
+const Table = () => __webpack_require__.e/* import() */(14).then(__webpack_require__.bind(null, "Dq1J"));
+const Icon = () => __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, "uhWp"));
 const Close = () => __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, "uxfk"));
-const BackToTop = () => __webpack_require__.e/* import() */(7).then(__webpack_require__.bind(null, "dRrG"));
-const Button = () => __webpack_require__.e/* import() */(9).then(__webpack_require__.bind(null, "uePe"));
-const Input = () => __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, "YC2e"));
-const Radio = () => __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, "GA9x"));
-const Checkbox = () => __webpack_require__.e/* import() */(6).then(__webpack_require__.bind(null, "5aWj"));
+const BackToTop = () => __webpack_require__.e/* import() */(9).then(__webpack_require__.bind(null, "dRrG"));
+const Button = () => __webpack_require__.e/* import() */(11).then(__webpack_require__.bind(null, "uePe"));
+const Input = () => __webpack_require__.e/* import() */(6).then(__webpack_require__.bind(null, "YC2e"));
+const Radio = () => __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, "GA9x"));
+const Checkbox = () => __webpack_require__.e/* import() */(8).then(__webpack_require__.bind(null, "5aWj"));
 const Switch = () => __webpack_require__.e/* import() */(10).then(__webpack_require__.bind(null, "7FmX"));
-const ToolTip = () => __webpack_require__.e/* import() */(12).then(__webpack_require__.bind(null, "o6Q0"));
+const ToolTip = () => __webpack_require__.e/* import() */(13).then(__webpack_require__.bind(null, "o6Q0"));
 const Notify = () => __webpack_require__.e/* import() */(5).then(__webpack_require__.bind(null, "8NaV"));
-const Message = () => __webpack_require__.e/* import() */(14).then(__webpack_require__.bind(null, "ATvN"));
-const Dialog = () => __webpack_require__.e/* import() */(11).then(__webpack_require__.bind(null, "jFnR"));
+const Message = () => __webpack_require__.e/* import() */(15).then(__webpack_require__.bind(null, "ATvN"));
+const Dialog = () => __webpack_require__.e/* import() */(12).then(__webpack_require__.bind(null, "jFnR"));
 const Slider = () => __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, "2LdQ"));
-const Select = () => __webpack_require__.e/* import() */(8).then(__webpack_require__.bind(null, "f42M"));
+const Select = () => __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, "f42M"));
+const Progress = () => __webpack_require__.e/* import() */(7).then(__webpack_require__.bind(null, "g+qo"));
 
 
 /* harmony default export */ var router = (new vue_router_esm["a" /* default */]({
@@ -66,18 +60,19 @@ const Select = () => __webpack_require__.e/* import() */(8).then(__webpack_requi
         { path: '/dialog', component: Dialog },
         { path: '/slider', component: Slider },
         { path: '/select', component: Select },
+        { path: '/progress', component: Progress },
         { path: '*', redirect: '/table'}
     ]
 }));
 
-// CONCATENATED MODULE: ./node_modules/_vue-loader@13.6.0@vue-loader/lib/template-compiler?{"id":"data-v-4f5b799b","hasScoped":false,"transformToRequire":{"video":"src","source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/_vue-loader@13.6.0@vue-loader/lib/selector.js?type=template&index=0!./example/App.vue
-var App_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('back-to-top',[_c('dy-icon',{attrs:{"size":"14","type":"&#xe62d;"}})],1),_vm._v(" "),_vm._m(0),_vm._v(" "),_c('div',{staticClass:"wrapper"},[_c('div',{staticClass:"wrapper-container"},[_c('div',{staticClass:"wrapper-list"},[_c('ul',[_c('div',{staticClass:"list-title"},[_vm._v("组件")]),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/table"}},[_vm._v("Table 表格")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/icon"}},[_vm._v("Icon 图标")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/close"}},[_vm._v("Close 关闭按钮")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/backtotop"}},[_vm._v("BackToTop 回到顶部")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/button"}},[_vm._v("Button 按钮")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/input"}},[_vm._v("Input 输入框")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/radio"}},[_vm._v("Radio 单选框")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/checkbox"}},[_vm._v("Checkbox 多选框")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/switch"}},[_vm._v("Switch 开关")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/tooltip"}},[_vm._v("ToolTip 文字提示")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/notify"}},[_vm._v("Notify 顶部消息通知")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/message"}},[_vm._v("Message 侧边信息提示")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/dialog"}},[_vm._v("Dialog 对话框")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/slider"}},[_vm._v("Slider 滑块")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/select"}},[_vm._v("Select 下拉菜单")])],1)])]),_vm._v(" "),_c('div',{staticClass:"wrapper-content"},[_c('article',[_c('transition',{attrs:{"name":"fade"}},[_c('router-view')],1)],1)])])])],1)}
+// CONCATENATED MODULE: ./node_modules/_vue-loader@13.6.0@vue-loader/lib/template-compiler?{"id":"data-v-052931be","hasScoped":false,"transformToRequire":{"video":"src","source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/_vue-loader@13.6.0@vue-loader/lib/selector.js?type=template&index=0!./example/App.vue
+var App_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('back-to-top',[_c('dy-icon',{attrs:{"size":"14","type":"&#xe62d;"}})],1),_vm._v(" "),_vm._m(0),_vm._v(" "),_c('div',{staticClass:"wrapper"},[_c('div',{staticClass:"wrapper-container"},[_c('div',{staticClass:"wrapper-list"},[_c('ul',[_c('div',{staticClass:"list-title"},[_vm._v("Basic")]),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/icon"}},[_vm._v("Icon 图标")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/close"}},[_vm._v("Close 关闭按钮")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/backtotop"}},[_vm._v("BackToTop 回到顶部")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/button"}},[_vm._v("Button 按钮")])],1),_vm._v(" "),_c('div',{staticClass:"list-title"},[_vm._v("Form")]),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/radio"}},[_vm._v("Radio 单选框")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/checkbox"}},[_vm._v("Checkbox 多选框")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/input"}},[_vm._v("Input 输入框")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/select"}},[_vm._v("Select 下拉菜单")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/switch"}},[_vm._v("Switch 开关")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/slider"}},[_vm._v("Slider 滑块")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/table"}},[_vm._v("Table 表格")])],1),_vm._v(" "),_c('div',{staticClass:"list-title"},[_vm._v("View")]),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/notify"}},[_vm._v("Notify 顶部消息通知")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/message"}},[_vm._v("Message 侧边信息提示")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/dialog"}},[_vm._v("Dialog 对话框")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/progress"}},[_vm._v("Progress 进度条")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/tooltip"}},[_vm._v("ToolTip 文字提示")])],1)])]),_vm._v(" "),_c('div',{staticClass:"wrapper-content"},[_c('article',[_c('transition',{attrs:{"name":"fade"}},[_c('router-view')],1)],1)])])])],1)}
 var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('header',[_c('div',{staticClass:"header"},[_vm._v("\n\t\t\tdy-ui\n\t\t")])])}]
 var esExports = { render: App_render, staticRenderFns: staticRenderFns }
 /* harmony default export */ var App = (esExports);
 // CONCATENATED MODULE: ./example/App.vue
 function injectStyle (ssrContext) {
-  __webpack_require__("Kv4e")
+  __webpack_require__("b1nr")
 }
 var normalizeComponent = __webpack_require__("OF7X")
 /* script */
@@ -4257,9 +4252,115 @@ var Select_Component = Select_normalizeComponent(
 
 
 
+// CONCATENATED MODULE: ./node_modules/_babel-loader@7.1.2@babel-loader/lib!./node_modules/_vue-loader@13.6.0@vue-loader/lib/selector.js?type=script&index=0!./src/components/Progress/Progress.vue
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ var Progress_Progress = ({
+    name: "dy-progress",
+    props: {
+        progress: {
+            type: Number,
+            required: true
+        },
+        showProgressText: {
+            type: Boolean,
+            default: true
+        },
+        textInside: {
+            type: Boolean,
+            default: false
+        },
+        color: {
+            type: String,
+            validator: function validator(color) {
+                return ["default", "success", "waring", "danger"].includes(color);
+            }
+        },
+        striped: {
+            type: Boolean,
+            default: false
+        },
+        active: {
+            type: Boolean,
+            default: false
+        }
+    },
+    methods: {
+        chooseProgressColor: function chooseProgressColor(color) {
+            if (color) {
+                return " dy-progress-bar-" + color;
+            }
+        }
+    },
+    computed: {
+        computedClass: function computedClass() {
+            var classes = [];
+
+            if (this.textInside) {
+                classes.push("dy-progress-inside");
+            }
+
+            if (this.striped) {
+                classes.push("dy-progress-striped");
+            }
+
+            if (this.active) {
+                classes.push("dy-progress-active");
+            }
+
+            return classes.join(" ");
+        }
+    }
+});
+// CONCATENATED MODULE: ./node_modules/_vue-loader@13.6.0@vue-loader/lib/template-compiler?{"id":"data-v-23e9f6be","hasScoped":false,"transformToRequire":{"video":"src","source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/_vue-loader@13.6.0@vue-loader/lib/selector.js?type=template&index=0!./src/components/Progress/Progress.vue
+var Progress_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"dy-progress"},[_c('div',{staticClass:"dy-progress-box",class:_vm.computedClass},[_c('div',{staticClass:"dy-progress-wrapper"},[_c('div',{staticClass:"dy-progress-bar",class:_vm.chooseProgressColor(_vm.color),style:({ width: _vm.progress + '%' })},[(_vm.showProgressText && _vm.textInside)?_c('span',{staticClass:"dy-progress-text-inside"},[_vm._v(_vm._s(_vm.progress)+"%")]):_vm._e()])])]),_vm._v(" "),(_vm.showProgressText && !_vm.textInside)?_c('div',{staticClass:"dy-progress-text-outside"},[_vm._v(_vm._s(_vm.progress)+"%")]):_vm._e()])}
+var Progress_staticRenderFns = []
+var Progress_esExports = { render: Progress_render, staticRenderFns: Progress_staticRenderFns }
+/* harmony default export */ var components_Progress_Progress = (Progress_esExports);
+// CONCATENATED MODULE: ./src/components/Progress/Progress.vue
+var Progress_normalizeComponent = __webpack_require__("OF7X")
+/* script */
+
+
+/* template */
+
+/* template functional */
+var Progress___vue_template_functional__ = false
+/* styles */
+var Progress___vue_styles__ = null
+/* scopeId */
+var Progress___vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var Progress___vue_module_identifier__ = null
+var Progress_Component = Progress_normalizeComponent(
+  Progress_Progress,
+  components_Progress_Progress,
+  Progress___vue_template_functional__,
+  Progress___vue_styles__,
+  Progress___vue_scopeId__,
+  Progress___vue_module_identifier__
+)
+
+/* harmony default export */ var src_components_Progress_Progress = (Progress_Component.exports);
+
+// CONCATENATED MODULE: ./src/components/Progress/index.js
+
+
+
 // CONCATENATED MODULE: ./src/index.js
-
-
 
 
 
@@ -4318,6 +4419,7 @@ var src_install = function install(Vue) {
     Vue.component(TableCol.name, TableCol);
 
     Vue.component(src_components_Select_Select.name, src_components_Select_Select);
+    Vue.component(src_components_Progress_Progress.name, src_components_Progress_Progress);
 
     Vue.use(src_components_Notify_Notify);
     Vue.use(src_components_Message_Message);
@@ -4372,6 +4474,13 @@ new vue_esm["a" /* default */]({
 
 /***/ }),
 
+/***/ "b1nr":
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+
 /***/ "wkmk":
 /***/ (function(module, exports) {
 
@@ -4387,4 +4496,4 @@ new vue_esm["a" /* default */]({
 /***/ })
 
 },["Pa1R"]);
-//# sourceMappingURL=main.762cd1b4190d1b27ab24.js.map
+//# sourceMappingURL=main.ce818cffa615a8c35c6e.js.map
