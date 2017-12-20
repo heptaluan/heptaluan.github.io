@@ -1,13 +1,13 @@
 webpackJsonp([16],{
 
-/***/ "I69L":
+/***/ "JRJB":
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ "JRJB":
+/***/ "Kv4e":
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
@@ -33,20 +33,20 @@ var vue_router_esm = __webpack_require__("u28b");
 vue_esm["a" /* default */].use(vue_router_esm["a" /* default */]);
 
 const Table = () => __webpack_require__.e/* import() */(13).then(__webpack_require__.bind(null, "Dq1J"));
-const Icon = () => __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, "uhWp"));
-const Close = () => __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, "uxfk"));
-const BackToTop = () => __webpack_require__.e/* import() */(8).then(__webpack_require__.bind(null, "dRrG"));
+const Icon = () => __webpack_require__.e/* import() */(3).then(__webpack_require__.bind(null, "uhWp"));
+const Close = () => __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, "uxfk"));
+const BackToTop = () => __webpack_require__.e/* import() */(7).then(__webpack_require__.bind(null, "dRrG"));
 const Button = () => __webpack_require__.e/* import() */(9).then(__webpack_require__.bind(null, "uePe"));
 const Input = () => __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, "YC2e"));
-const Radio = () => __webpack_require__.e/* import() */(5).then(__webpack_require__.bind(null, "GA9x"));
-const Checkbox = () => __webpack_require__.e/* import() */(7).then(__webpack_require__.bind(null, "5aWj"));
+const Radio = () => __webpack_require__.e/* import() */(4).then(__webpack_require__.bind(null, "GA9x"));
+const Checkbox = () => __webpack_require__.e/* import() */(6).then(__webpack_require__.bind(null, "5aWj"));
 const Switch = () => __webpack_require__.e/* import() */(10).then(__webpack_require__.bind(null, "7FmX"));
 const ToolTip = () => __webpack_require__.e/* import() */(12).then(__webpack_require__.bind(null, "o6Q0"));
-const Notify = () => __webpack_require__.e/* import() */(6).then(__webpack_require__.bind(null, "8NaV"));
+const Notify = () => __webpack_require__.e/* import() */(5).then(__webpack_require__.bind(null, "8NaV"));
 const Message = () => __webpack_require__.e/* import() */(14).then(__webpack_require__.bind(null, "ATvN"));
 const Dialog = () => __webpack_require__.e/* import() */(11).then(__webpack_require__.bind(null, "jFnR"));
-const Slider = () => __webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, "2LdQ"));
-const Select = () => __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, "f42M"));
+const Slider = () => __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, "2LdQ"));
+const Select = () => __webpack_require__.e/* import() */(8).then(__webpack_require__.bind(null, "f42M"));
 
 
 /* harmony default export */ var router = (new vue_router_esm["a" /* default */]({
@@ -70,14 +70,14 @@ const Select = () => __webpack_require__.e/* import() */(1).then(__webpack_requi
     ]
 }));
 
-// CONCATENATED MODULE: ./node_modules/_vue-loader@13.6.0@vue-loader/lib/template-compiler?{"id":"data-v-59e8b60e","hasScoped":false,"transformToRequire":{"video":"src","source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/_vue-loader@13.6.0@vue-loader/lib/selector.js?type=template&index=0!./example/App.vue
+// CONCATENATED MODULE: ./node_modules/_vue-loader@13.6.0@vue-loader/lib/template-compiler?{"id":"data-v-4f5b799b","hasScoped":false,"transformToRequire":{"video":"src","source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/_vue-loader@13.6.0@vue-loader/lib/selector.js?type=template&index=0!./example/App.vue
 var App_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_c('back-to-top',[_c('dy-icon',{attrs:{"size":"14","type":"&#xe62d;"}})],1),_vm._v(" "),_vm._m(0),_vm._v(" "),_c('div',{staticClass:"wrapper"},[_c('div',{staticClass:"wrapper-container"},[_c('div',{staticClass:"wrapper-list"},[_c('ul',[_c('div',{staticClass:"list-title"},[_vm._v("组件")]),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/table"}},[_vm._v("Table 表格")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/icon"}},[_vm._v("Icon 图标")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/close"}},[_vm._v("Close 关闭按钮")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/backtotop"}},[_vm._v("BackToTop 回到顶部")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/button"}},[_vm._v("Button 按钮")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/input"}},[_vm._v("Input 输入框")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/radio"}},[_vm._v("Radio 单选框")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/checkbox"}},[_vm._v("Checkbox 多选框")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/switch"}},[_vm._v("Switch 开关")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/tooltip"}},[_vm._v("ToolTip 文字提示")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/notify"}},[_vm._v("Notify 顶部消息通知")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/message"}},[_vm._v("Message 侧边信息提示")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/dialog"}},[_vm._v("Dialog 对话框")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/slider"}},[_vm._v("Slider 滑块")])],1),_vm._v(" "),_c('li',[_c('router-link',{attrs:{"to":"/select"}},[_vm._v("Select 下拉菜单")])],1)])]),_vm._v(" "),_c('div',{staticClass:"wrapper-content"},[_c('article',[_c('transition',{attrs:{"name":"fade"}},[_c('router-view')],1)],1)])])])],1)}
 var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('header',[_c('div',{staticClass:"header"},[_vm._v("\n\t\t\tdy-ui\n\t\t")])])}]
 var esExports = { render: App_render, staticRenderFns: staticRenderFns }
 /* harmony default export */ var App = (esExports);
 // CONCATENATED MODULE: ./example/App.vue
 function injectStyle (ssrContext) {
-  __webpack_require__("I69L")
+  __webpack_require__("Kv4e")
 }
 var normalizeComponent = __webpack_require__("OF7X")
 /* script */
@@ -3925,6 +3925,8 @@ var Slider_Component = Slider_normalizeComponent(
 //
 //
 //
+//
+//
 
 
 
@@ -3947,12 +3949,11 @@ var Slider_Component = Slider_normalizeComponent(
         return {
             selectValue: selectValue,
             saveOptions: this.options,
-            renderOptions: this.options,
-            selectHeight: this.maxHeight + "px"
+            renderOptions: this.options
         };
     },
 
-    props: ["value", "options", "maxHeight", "isFocus", "multiple", "transition"],
+    props: ["value", "options", "maxHeight", "isFocus", "multiple", "transition", "width"],
     methods: {
         isSelected: function isSelected(item) {
             var is = false;
@@ -4000,8 +4001,6 @@ var Slider_Component = Slider_normalizeComponent(
             var ret = {
                 top: top + offsetTop + height + "px",
                 left: left + offsetLeft + "px",
-                width: width + "px",
-                height: "" + this.selectHeight || "auto",
                 zIndex: this.getZIndex()
             };
 
@@ -4050,12 +4049,29 @@ var Slider_Component = Slider_normalizeComponent(
             }
         }
     },
+    computed: {
+        wrapperStyle: function wrapperStyle() {
+            var style = {};
+
+            if (this.maxHeight) {
+                style["maxHeight"] = this.maxHeight - 30 + "px";
+            }
+
+            if (this.width) {
+                style["width"] = this.width + "px";
+            } else {
+                style["width"] = "200px";
+            }
+
+            return style;
+        }
+    },
     mounted: function mounted() {
         document.body.appendChild(this.$el);
     }
 });
-// CONCATENATED MODULE: ./node_modules/_vue-loader@13.6.0@vue-loader/lib/template-compiler?{"id":"data-v-2d3d2fc6","hasScoped":false,"transformToRequire":{"video":"src","source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/_vue-loader@13.6.0@vue-loader/lib/selector.js?type=template&index=0!./src/components/Select/SelectDropDown.vue
-var SelectDropDown_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('transition',{attrs:{"name":_vm.transition}},[(_vm.visible)?_c('div',{staticClass:"dy-select-box"},[_c('ul',{ref:"lists",staticClass:"dy-select-list"},_vm._l((_vm.renderOptions),function(item,index){return _c('li',{key:index,class:{ 'dy-checked': _vm.isSelected(item) },on:{"click":function($event){$event.stopPropagation();_vm.selectHandle(item, index)}}},[_c('span',{staticClass:"dy-select-text"},[_vm._v(_vm._s(item.label))]),_vm._v(" "),_c('i',{staticClass:"dy-select-icon"})])}))]):_vm._e()])}
+// CONCATENATED MODULE: ./node_modules/_vue-loader@13.6.0@vue-loader/lib/template-compiler?{"id":"data-v-2e33b5f5","hasScoped":false,"transformToRequire":{"video":"src","source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/_vue-loader@13.6.0@vue-loader/lib/selector.js?type=template&index=0!./src/components/Select/SelectDropDown.vue
+var SelectDropDown_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('transition',{attrs:{"name":_vm.transition}},[(_vm.visible)?_c('div',{staticClass:"dy-select-box"},[_c('div',{staticClass:"dy-select-wrapper",style:(_vm.wrapperStyle)},[_c('ul',{ref:"lists",staticClass:"dy-select-list"},_vm._l((_vm.renderOptions),function(item,index){return _c('li',{key:index,class:{ 'dy-checked': _vm.isSelected(item) },on:{"click":function($event){$event.stopPropagation();_vm.selectHandle(item, index)}}},[_c('span',{staticClass:"dy-select-text"},[_vm._v(_vm._s(item.label))]),_vm._v(" "),_c('i',{staticClass:"dy-select-icon"})])}))])]):_vm._e()])}
 var SelectDropDown_staticRenderFns = []
 var SelectDropDown_esExports = { render: SelectDropDown_render, staticRenderFns: SelectDropDown_staticRenderFns }
 /* harmony default export */ var Select_SelectDropDown = (SelectDropDown_esExports);
@@ -4110,6 +4126,7 @@ var SelectDropDown_Component = SelectDropDown_normalizeComponent(
 //
 //
 //
+//
 
 
 
@@ -4130,10 +4147,12 @@ var SelectDropDown_Component = SelectDropDown_normalizeComponent(
             type: String,
             default: "请选择"
         },
-        width: String,
+        width: {
+            type: [String, Number]
+        },
         maxHeight: {
             type: Number,
-            default: 200
+            default: 300
         },
         multiple: {
             type: Boolean,
@@ -4180,6 +4199,17 @@ var SelectDropDown_Component = SelectDropDown_normalizeComponent(
                 text.push(item.label);
             });
             return text.join(",");
+        },
+        selectBoxStyle: function selectBoxStyle() {
+            var style = {};
+
+            if (this.width) {
+                style["width"] = this.width + "px";
+            } else {
+                style["width"] = "200px";
+            }
+
+            return style;
         }
     },
     components: {
@@ -4187,16 +4217,13 @@ var SelectDropDown_Component = SelectDropDown_normalizeComponent(
     },
     mounted: function mounted() {
         on(document.body, "click", this.bodyClickHandle);
-        if (this.width !== undefined) {
-            css(this.$el, "width", this.width);
-        }
     },
     beforeDestroy: function beforeDestroy() {
         off(document.body, "click", this.bodyClickHandle);
     }
 });
-// CONCATENATED MODULE: ./node_modules/_vue-loader@13.6.0@vue-loader/lib/template-compiler?{"id":"data-v-3c75e82e","hasScoped":false,"transformToRequire":{"video":"src","source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/_vue-loader@13.6.0@vue-loader/lib/selector.js?type=template&index=0!./src/components/Select/Select.vue
-var Select_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"selectButton",staticClass:"dy-selected",class:{ 'dy-select-active': _vm.isFocus },on:{"click":function($event){$event.stopPropagation();_vm.toggleSelect($event)}}},[_c('button',{staticClass:"dy-select-button dy-btn"},[_c('span',{staticClass:"dy-button-text"},[_vm._v(_vm._s(_vm.text))]),_vm._v(" "),_c('i',{staticClass:"dy-button-icon"})]),_vm._v(" "),_c('select-dropdown',{attrs:{"options":_vm.options,"isFocus":_vm.isFocus,"maxHeight":_vm.maxHeight,"multiple":_vm.multiple,"width":_vm.width,"transition":_vm.transition},model:{value:(_vm.selectValue),callback:function ($$v) {_vm.selectValue=$$v},expression:"selectValue"}})],1)}
+// CONCATENATED MODULE: ./node_modules/_vue-loader@13.6.0@vue-loader/lib/template-compiler?{"id":"data-v-1bfe2264","hasScoped":false,"transformToRequire":{"video":"src","source":"src","img":"src","image":"xlink:href"},"buble":{"transforms":{}}}!./node_modules/_vue-loader@13.6.0@vue-loader/lib/selector.js?type=template&index=0!./src/components/Select/Select.vue
+var Select_render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{ref:"selectButton",staticClass:"dy-selected",class:{ 'dy-select-active': _vm.isFocus },style:(_vm.selectBoxStyle),on:{"click":function($event){$event.stopPropagation();_vm.toggleSelect($event)}}},[_c('button',{staticClass:"dy-select-button dy-btn"},[_c('span',{staticClass:"dy-button-text"},[_vm._v(_vm._s(_vm.text))]),_vm._v(" "),_c('i',{staticClass:"dy-button-icon"})]),_vm._v(" "),_c('select-dropdown',{attrs:{"options":_vm.options,"isFocus":_vm.isFocus,"maxHeight":_vm.maxHeight,"multiple":_vm.multiple,"width":_vm.width,"transition":_vm.transition},model:{value:(_vm.selectValue),callback:function ($$v) {_vm.selectValue=$$v},expression:"selectValue"}})],1)}
 var Select_staticRenderFns = []
 var Select_esExports = { render: Select_render, staticRenderFns: Select_staticRenderFns }
 /* harmony default export */ var components_Select_Select = (Select_esExports);
@@ -4360,4 +4387,4 @@ new vue_esm["a" /* default */]({
 /***/ })
 
 },["Pa1R"]);
-//# sourceMappingURL=main.0dbbc02ed2e13e0f8d17.js.map
+//# sourceMappingURL=main.762cd1b4190d1b27ab24.js.map
