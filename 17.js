@@ -1,15 +1,15 @@
 webpackJsonp([17],{
 
-/***/ 477:
+/***/ 472:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_script_index_0_Carousel_vue__ = __webpack_require__(500);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_script_index_0_Close_vue__ = __webpack_require__(498);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_6_0_vue_loader_lib_template_compiler_index_id_data_v_63daa7b2_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_template_index_0_Carousel_vue__ = __webpack_require__(541);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_6_0_vue_loader_lib_template_compiler_index_id_data_v_882bb326_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_template_index_0_Close_vue__ = __webpack_require__(523);
 function injectStyle (ssrContext) {
-  __webpack_require__(540)
+  __webpack_require__(522)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -26,8 +26,8 @@ var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_script_index_0_Carousel_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_6_0_vue_loader_lib_template_compiler_index_id_data_v_63daa7b2_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_template_index_0_Carousel_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_script_index_0_Close_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_6_0_vue_loader_lib_template_compiler_index_id_data_v_882bb326_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_template_index_0_Close_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -39,23 +39,10 @@ var Component = normalizeComponent(
 
 /***/ }),
 
-/***/ 500:
+/***/ 498:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -146,26 +133,32 @@ var Component = normalizeComponent(
 //
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-	data: function data() {
-		return {};
-	}
+    methods: {
+        closeHandle: function closeHandle() {
+            this.$notify({
+                message: "点击了关闭按钮",
+                delay: 2000,
+                type: "default"
+            });
+        }
+    }
 });
 
 /***/ }),
 
-/***/ 540:
+/***/ 522:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 541:
+/***/ 523:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-box"},[_c('div',{staticClass:"components-title"},[_vm._v("Carousel 走马灯")]),_vm._v(" "),_c('div',{staticClass:"tab-wrapper"},[_c('ul',[_c('li',[_c('div',{staticClass:"tab-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Carousel 走马灯（默认）")]),_vm._v(" "),_c('dy-carousel',[_c('dy-carousel-item',[_vm._v("1")]),_vm._v(" "),_c('dy-carousel-item',[_vm._v("2")]),_vm._v(" "),_c('dy-carousel-item',[_vm._v("3")]),_vm._v(" "),_c('dy-carousel-item',[_vm._v("4")])],1)],1),_vm._v(" "),_vm._m(0),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n        \r\n        <dy-carousel>\r\n            <dy-carousel-item>1</dy-carousel-item>\r\n            <dy-carousel-item>2</dy-carousel-item>\r\n            <dy-carousel-item>3</dy-carousel-item>\r\n            <dy-carousel-item>4</dy-carousel-item>\r\n        </dy-carousel>\r\n\r\n    </template>\r\n    ")]),_vm._v("\r\n")])]),_vm._v(" "),_c('li',[_c('div',{staticClass:"tab-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Carousel 走马灯（参数设置）")]),_vm._v(" "),_c('dy-carousel',{attrs:{"showCarouselButton":true,"showCarouselControl":false,"height":350,"playTime":2000}},[_c('dy-carousel-item',[_vm._v("1")]),_vm._v(" "),_c('dy-carousel-item',[_vm._v("2")]),_vm._v(" "),_c('dy-carousel-item',[_vm._v("3")]),_vm._v(" "),_c('dy-carousel-item',[_vm._v("4")])],1)],1),_vm._v(" "),_vm._m(1),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n        \r\n        <dy-carousel :showCarouselButton=\"true\" :showCarouselControl=\"false\" :height=\"350\" :playTime=\"2000\">\r\n            <dy-carousel-item>1</dy-carousel-item>\r\n            <dy-carousel-item>2</dy-carousel-item>\r\n            <dy-carousel-item>3</dy-carousel-item>\r\n            <dy-carousel-item>4</dy-carousel-item>\r\n        </dy-carousel>\r\n\r\n    </template>\r\n    ")]),_vm._v("\r\n")])])])])])}
-var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("直接使用 "),_c('code',[_vm._v("dy-carousel")]),_vm._v(" 组件包裹 "),_c('code',[_vm._v("dy-carousel-item")]),_vm._v(" 组件即可")]),_vm._v(" "),_c('p',[_vm._v("如果内容部分为图片，则图片默认是自适应框体大小居中展示")]),_vm._v(" "),_c('br'),_vm._v(" "),_c('p',[_vm._v("参数设置如下：")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("activeIndex")]),_vm._v(" -- 展示第几页，默认为 "),_c('code',[_vm._v("0")])]),_vm._v(" "),_c('p',[_c('code',[_vm._v("showCarouselButton")]),_vm._v(" -- 是否显示上一页和下一页，默认是显示")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("showCarouselControl")]),_vm._v(" -- 是否显示底部切换栏，默认是显示")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("height")]),_vm._v(" -- 设置窗体高度，默认为 "),_c('code',[_vm._v("300")])]),_vm._v(" "),_c('p',[_c('code',[_vm._v("autoPlay")]),_vm._v(" -- 指定是否自动播放，默认为 "),_c('code',[_vm._v("true")])]),_vm._v(" "),_c('p',[_c('code',[_vm._v("playTime")]),_vm._v(" -- 指定切换时间，默认为 "),_c('code',[_vm._v("3000")]),_vm._v(" 毫秒")])])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("如下设置表示：显示左右切换按钮，不显示底部控制按钮组，高度设置为 "),_c('code',[_vm._v("500")]),_vm._v("，切换间隔时间为 "),_c('code',[_vm._v("2000")]),_vm._v(" 毫秒")])])])}]
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-box"},[_c('div',{staticClass:"components-title"},[_vm._v("Close 关闭按钮")]),_vm._v(" "),_c('div',{staticClass:"components-wrapper"},[_c('ul',[_c('li',[_c('div',{staticClass:"components-content"},[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Close 关闭按钮")]),_vm._v(" "),_c('div',[_c('dy-close',{attrs:{"size":"28"}}),_vm._v(" "),_c('dy-close',{attrs:{"size":"20"}}),_vm._v(" "),_c('dy-close')],1)])]),_vm._v(" "),_c('div',{staticClass:"components-content"},[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("绑定 Close 点击事件")]),_vm._v(" "),_c('div',[_c('dy-close',{attrs:{"size":"20"},on:{"click":_vm.closeHandle}})],1)])]),_vm._v(" "),_vm._m(0),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n        \r\n        <dy-close size=\"28\"></dy-close>\r\n\r\n        <dy-close size=\"20\"></dy-close>\r\n\r\n        <dy-close></dy-close>\r\n\r\n        <dy-close size=\"20\" @click=\"closeHandle\"></dy-close>\r\n\r\n    </template>\r\n\r\n    <script>\r\n\r\n        export default {\r\n            methods: {\r\n                closeHandle() {\r\n                    this.$notify({\r\n                        message: \"点击了关闭按钮\",\r\n                        delay: 2000,\r\n                        type: \"default\"\r\n                    });\r\n                }\r\n            }\r\n        }\r\n\r\n    </script>\r\n    ")]),_vm._v("\r\n")])])])])])}
+var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("使用的是基于阿里巴巴的矢量图标库")]),_vm._v(" "),_c('p',[_vm._v("默认的图标是没有点击事件的，封装后 "),_c('code',[_vm._v("close")]),_vm._v(" 组件会 "),_c('code',[_vm._v("$emit")]),_vm._v(" 一个 "),_c('code',[_vm._v("click")]),_vm._v(" 事件予以调用")]),_vm._v(" "),_c('br'),_vm._v(" "),_c('p',[_vm._v("参数设置如下：")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("size")]),_vm._v("  --  指定图标大小，默认大小为 "),_c('code',[_vm._v("10")])]),_vm._v(" "),_c('p',[_c('code',[_vm._v("@click")]),_vm._v("  --  按钮点击的回调事件")])])])}]
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
 

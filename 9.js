@@ -1,15 +1,15 @@
 webpackJsonp([9],{
 
-/***/ 482:
+/***/ 480:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_script_index_0_Nav_vue__ = __webpack_require__(504);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_script_index_0_Notify_vue__ = __webpack_require__(504);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_6_0_vue_loader_lib_template_compiler_index_id_data_v_617617c7_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_template_index_0_Nav_vue__ = __webpack_require__(550);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_6_0_vue_loader_lib_template_compiler_index_id_data_v_d6a8c262_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_template_index_0_Notify_vue__ = __webpack_require__(540);
 function injectStyle (ssrContext) {
-  __webpack_require__(549)
+  __webpack_require__(539)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -26,8 +26,8 @@ var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_script_index_0_Nav_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_6_0_vue_loader_lib_template_compiler_index_id_data_v_617617c7_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_template_index_0_Nav_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_script_index_0_Notify_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_6_0_vue_loader_lib_template_compiler_index_id_data_v_d6a8c262_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_template_index_0_Notify_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -158,28 +158,199 @@ var Component = normalizeComponent(
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-	data: function data() {
-		return {};
+	methods: {
+		notify01: function notify01() {
+			this.$notify({
+				message: "这是一条默认消息通知",
+				delay: 2000,
+				type: "default"
+			});
+		},
+		notify02: function notify02() {
+			this.$notify({
+				message: "这是一条成功消息通知",
+				delay: 2000,
+				type: "success"
+			});
+		},
+		notify03: function notify03() {
+			this.$notify({
+				message: "这是一条警告消息通知",
+				delay: 2000,
+				type: "warning"
+			});
+		},
+		notify04: function notify04() {
+			this.$notify({
+				message: "这是一条危险消息通知",
+				delay: 2000,
+				type: "danger"
+			});
+		},
+		notify05: function notify05() {
+			this.$notify({
+				message: "这是一条默认消息通知",
+				delay: 2000,
+				type: "default",
+				close: true,
+				onClick: function onClick() {
+					console.log("...");
+				}
+			});
+		},
+		notify06: function notify06() {
+			this.$notify({
+				message: "这是一条成功消息通知",
+				delay: 2000,
+				type: "success",
+				close: true,
+				onClick: function onClick() {
+					console.log("...");
+				}
+			});
+		},
+		notify07: function notify07() {
+			this.$notify({
+				message: "这是一条默认消息通知",
+				delay: 2000,
+				type: "default",
+				onClick: function onClick() {
+					console.log("...");
+				},
+
+				align: "center"
+			});
+		},
+		notify08: function notify08() {
+			this.$notify({
+				message: "这是一条成功消息通知",
+				delay: 2000,
+				type: "success",
+				close: true,
+				onClick: function onClick() {
+					console.log("...");
+				},
+
+				align: "center"
+			});
+		}
 	}
 });
 
 /***/ }),
 
-/***/ 549:
+/***/ 539:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 550:
+/***/ 540:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"nav-box"},[_c('div',{staticClass:"components-title"},[_vm._v("Nav 导航")]),_vm._v(" "),_c('div',{staticClass:"components-wrapper"},[_c('ul',[_c('li',[_c('div',{staticClass:"nav-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Nav 导航（默认）")]),_vm._v(" "),_c('dy-nav',[_c('dy-nav-item',{attrs:{"active":true,"to":'/icon'}},[_vm._v("图标")]),_vm._v(" "),_c('dy-nav-item',{attrs:{"to":'/close'}},[_vm._v("关闭按钮")]),_vm._v(" "),_c('dy-nav-item',{attrs:{"to":'/backtotop'}},[_vm._v("回到顶部")]),_vm._v(" "),_c('dy-nav-item',{attrs:{"to":'/tag'}},[_vm._v("标签")])],1)],1),_vm._v(" "),_vm._m(0),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n        \r\n        <dy-nav>\r\n            <dy-nav-item :active=\"true\" :to=\"'/icon'\">图标</dy-nav-item>\r\n            <dy-nav-item :to=\"'/close'\">关闭按钮</dy-nav-item>\r\n            <dy-nav-item :to=\"'/backtotop'\">回到顶部</dy-nav-item>\r\n            <dy-nav-item :to=\"'/tag'\">标签</dy-nav-item>\r\n        </dy-nav>\r\n\r\n    </template>\r\n    ")]),_vm._v("\r\n")])]),_vm._v(" "),_c('li',[_c('div',{staticClass:"nav-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Nav 导航（不使用 router-link）")]),_vm._v(" "),_c('dy-nav',[_c('dy-nav-item',{attrs:{"active":true}},[_c('a',{attrs:{"href":"/icon"}},[_vm._v("图标")])]),_vm._v(" "),_c('dy-nav-item',[_c('a',{attrs:{"href":"/close"}},[_vm._v("关闭按钮")])]),_vm._v(" "),_c('dy-nav-item',[_c('a',{attrs:{"href":"/backtotop"}},[_vm._v("回到顶部")])]),_vm._v(" "),_c('dy-nav-item',[_c('a',{attrs:{"href":"/tag"}},[_vm._v("标签")])])],1)],1),_vm._v(" "),_vm._m(1),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n        \r\n        <dy-nav>\r\n            <dy-nav-item :active=\"true\">\r\n                <a href=\"/icon\">图标</a>\r\n            </dy-nav-item>\r\n            <dy-nav-item>\r\n                <a href=\"/close\">关闭按钮</a>\r\n            </dy-nav-item>\r\n            <dy-nav-item>\r\n                <a href=\"/backtotop\">回到顶部</a>\r\n            </dy-nav-item>\r\n            <dy-nav-item>\r\n                <a href=\"/tag\">标签</a>\r\n            </dy-nav-item>\r\n        </dy-nav>\r\n\r\n    </template>\r\n    ")]),_vm._v("\r\n")])])])]),_vm._v(" "),_c('div',{staticStyle:{"height":"500px"}})])}
-var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("使用 "),_c('code',[_vm._v("dy-nav")]),_vm._v(" 组件包裹 "),_c('code',[_vm._v("dy-nav-item")]),_vm._v(" 组件使用即可")]),_vm._v(" "),_c('p',[_vm._v("需要注意，默认是使用 "),_c('code',[_vm._v("router-link")]),_vm._v(" 进行配置的")]),_vm._v(" "),_c('p',[_vm._v("如若不想使用 "),_c('code',[_vm._v("router-link")]),_vm._v("，则不需要传递 "),_c('code',[_vm._v(":to")]),_vm._v(" 参数即可，"),_c('code',[_vm._v("dy-nav-item")]),_vm._v(" 组件内部有 "),_c('code',[_vm._v("slot")]),_vm._v(" 插槽，需要手动进行配置")]),_vm._v(" "),_c('br'),_vm._v(" "),_c('p',[_vm._v("参数设置如下：")]),_vm._v(" "),_c('p',[_c('code',[_vm._v(":active")]),_vm._v("  --  布尔值，表示当前激活项")]),_vm._v(" "),_c('p',[_c('code',[_vm._v(":to")]),_vm._v("  --  指定跳转路径，需要注意，传值需要带上 "),_c('code',[_vm._v("''")])])])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("如若不想使用 "),_c('code',[_vm._v("router-link")]),_vm._v("，则不需要传递 "),_c('code',[_vm._v(":to")]),_vm._v(" 参数即可，"),_c('code',[_vm._v("dy-nav-item")]),_vm._v(" 组件内部有 "),_c('code',[_vm._v("slot")]),_vm._v(" 插槽，需要手动进行配置")]),_vm._v(" "),_c('p',[_vm._v("需要注意，这样配置以后就不会在走路由了")])])])}]
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-box"},[_c('div',{staticClass:"components-title"},[_vm._v("Notify - 顶部消息通知")]),_vm._v(" "),_c('div',{staticClass:"components-wrapper"},[_c('ul',[_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Notify - 消息通知（默认）")]),_vm._v(" "),_c('dy-button',{on:{"click":_vm.notify01}},[_vm._v("默认通知")]),_vm._v(" "),_c('dy-button',{on:{"click":_vm.notify02}},[_vm._v("成功通知")]),_vm._v(" "),_c('dy-button',{on:{"click":_vm.notify03}},[_vm._v("警告通知")]),_vm._v(" "),_c('dy-button',{on:{"click":_vm.notify04}},[_vm._v("危险通知")])],1),_vm._v(" "),_vm._m(0),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n\r\n        <dy-button @click=\"notify01\">默认通知</dy-button>\r\n        <dy-button @click=\"notify02\">成功通知</dy-button>\r\n        <dy-button @click=\"notify03\">警告通知</dy-button>\r\n        <dy-button @click=\"notify04\">危险通知</dy-button>\r\n\r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            methods: {\r\n                notify01() {\r\n                    this.$notify({\r\n                        message: \"这是一条默认消息通知\",\r\n                        delay: 2000,\r\n                        type: \"default\"\r\n                    });\r\n                },\r\n                notify02() {\r\n                    this.$notify({\r\n                        message: \"这是一条成功消息通知\",\r\n                        delay: 2000,\r\n                        type: \"success\"\r\n                    });\r\n                },\r\n                notify03() {\r\n                    this.$notify({\r\n                        message: \"这是一条警告消息通知\",\r\n                        delay: 2000,\r\n                        type: \"warning\"\r\n                    });\r\n                },\r\n                notify04() {\r\n                    this.$notify({\r\n                        message: \"这是一条危险消息通知\",\r\n                        delay: 2000,\r\n                        type: \"danger\"\r\n                    });\r\n                },\r\n            }\r\n        }\r\n    </script>\r\n    ")]),_vm._v("\r\n")])]),_vm._v(" "),_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Notify - 消息通知（带关闭按钮）")]),_vm._v(" "),_c('dy-button',{on:{"click":_vm.notify05}},[_vm._v("默认通知")]),_vm._v(" "),_c('dy-button',{on:{"click":_vm.notify06}},[_vm._v("成功通知")])],1),_vm._v(" "),_vm._m(1),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n\r\n        <dy-button @click=\"notify05\">默认通知</dy-button>\r\n        <dy-button @click=\"notify06\">成功通知</dy-button>\r\n        \r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            methods: {\r\n                notify05() {\r\n                    this.$notify({\r\n                        message: \"这是一条默认消息通知\",\r\n                        delay: 2000,\r\n                        type: \"default\",\r\n                        close: true,\r\n                        onClick() {\r\n                            console.log(`...`)\r\n                        }\r\n                    });\r\n                },\r\n                notify06() {\r\n                    this.$notify({\r\n                        message: \"这是一条成功消息通知\",\r\n                        delay: 2000,\r\n                        type: \"success\",\r\n                        close: true,\r\n                        onClick() {\r\n                            console.log(`...`)\r\n                        }\r\n                    });\r\n                }\r\n            }\r\n        }\r\n    </script>\r\n    ")]),_vm._v("\r\n")])]),_vm._v(" "),_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Notify - 消息通知（文字居中显示）")]),_vm._v(" "),_c('dy-button',{on:{"click":_vm.notify07}},[_vm._v("默认通知")]),_vm._v(" "),_c('dy-button',{on:{"click":_vm.notify08}},[_vm._v("成功通知")])],1),_vm._v(" "),_vm._m(2),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n\r\n        <dy-button @click=\"notify07\">默认通知</dy-button>\r\n        <dy-button @click=\"notify08\">成功通知</dy-button>\r\n        \r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            methods: {\r\n                notify07() {\r\n                    this.$notify({\r\n                        message: \"这是一条默认消息通知\",\r\n                        delay: 2000,\r\n                        type: \"default\",\r\n                        onClick() {\r\n                            console.log(`...`)\r\n                        },\r\n                        align: \"center\"\r\n                    });\r\n                },\r\n                notify08() {\r\n                    this.$notify({\r\n                        message: \"这是一条成功消息通知\",\r\n                        delay: 2000,\r\n                        type: \"success\",\r\n                        close: true,\r\n                        onClick() {\r\n                            console.log(`...`)\r\n                        },\r\n                        align: \"center\"\r\n                    });\r\n                }\r\n            }\r\n        }\r\n    </script>\r\n    ")]),_vm._v("\r\n")])])])])])}
+var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("绑定 "),_c('code',[_vm._v("click")]),_vm._v(" 方法后调用 "),_c('code',[_vm._v("$notify({})")]),_vm._v(" 方法即可")]),_vm._v(" "),_c('br'),_vm._v(" "),_c('p',[_vm._v("相关参数设置如下：")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("message")]),_vm._v(" -- 通知内容")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("delay")]),_vm._v(" -- 自动关闭时间，默认为 "),_c('code',[_vm._v("2000")]),_vm._v(" 毫秒")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("close")]),_vm._v(" -- 布尔值，是否出现关闭按钮，默认为 "),_c('code',[_vm._v("false")])]),_vm._v(" "),_c('p',[_c('code',[_vm._v("onClose")]),_vm._v(" -- 消息通知关闭后的回调事件")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("type")]),_vm._v(" -- 通知框的主题，分为 "),_c('code',[_vm._v("default")]),_vm._v("，"),_c('code',[_vm._v("success")]),_vm._v("，"),_c('code',[_vm._v("warning")]),_vm._v("，"),_c('code',[_vm._v("danger")]),_vm._v("，默认为 "),_c('code',[_vm._v("default")])]),_vm._v(" "),_c('p',[_c('code',[_vm._v("align")]),_vm._v(" -- 字体显示方向，默认为 "),_c('code',[_vm._v("left")]),_vm._v("，可选值为 "),_c('code',[_vm._v("center")])])])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_c('code',[_vm._v("$notify({})")]),_vm._v(" 指令中添加参数 "),_c('code',[_vm._v("close: true")]),_vm._v(" 即可")])])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_c('code',[_vm._v("$notify({})")]),_vm._v(" 指令中添加参数 "),_c('code',[_vm._v("align: \"center\"")]),_vm._v(" 即可")])])])}]
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
 

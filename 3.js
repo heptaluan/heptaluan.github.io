@@ -1,15 +1,15 @@
 webpackJsonp([3],{
 
-/***/ 472:
+/***/ 478:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_script_index_0_Slider_vue__ = __webpack_require__(495);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_script_index_0_Switch_vue__ = __webpack_require__(503);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_6_0_vue_loader_lib_template_compiler_index_id_data_v_83f8a6c2_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_template_index_0_Slider_vue__ = __webpack_require__(531);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_6_0_vue_loader_lib_template_compiler_index_id_data_v_6fae7794_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_template_index_0_Switch_vue__ = __webpack_require__(536);
 function injectStyle (ssrContext) {
-  __webpack_require__(530)
+  __webpack_require__(535)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -26,8 +26,8 @@ var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_script_index_0_Slider_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_6_0_vue_loader_lib_template_compiler_index_id_data_v_83f8a6c2_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_template_index_0_Slider_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_script_index_0_Switch_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_6_0_vue_loader_lib_template_compiler_index_id_data_v_6fae7794_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_template_index_0_Switch_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -39,10 +39,76 @@ var Component = normalizeComponent(
 
 /***/ }),
 
-/***/ 495:
+/***/ 503:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -161,32 +227,30 @@ var Component = normalizeComponent(
 /* harmony default export */ __webpack_exports__["a"] = ({
 	data: function data() {
 		return {
-			sliderVal01: 0,
-			sliderVal02: 0,
-			sliderVal03: 25,
-			sliderVal04: 30,
-			sliderVal05: 420,
-			sliderVal06: 10,
-			sliderVal07: 20
+			switch1: false,
+			switch2: true,
+			switch3: false,
+			switch4: false,
+			switch5: true
 		};
 	}
 });
 
 /***/ }),
 
-/***/ 530:
+/***/ 535:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 531:
+/***/ 536:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-box"},[_c('div',{staticClass:"components-title"},[_vm._v("Slider 滑块")]),_vm._v(" "),_c('div',{staticClass:"components-wrapper"},[_c('ul',[_c('li',[_c('div',{staticClass:"components-content"},[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Slider - 滑块（默认）")]),_vm._v(" "),_c('dy-slider',{model:{value:(_vm.sliderVal01),callback:function ($$v) {_vm.sliderVal01=$$v},expression:"sliderVal01"}})],1),_vm._v(" "),_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Slider - 滑块（显示tooltip）")]),_vm._v(" "),_c('dy-slider',{attrs:{"showTooltip":""},model:{value:(_vm.sliderVal02),callback:function ($$v) {_vm.sliderVal02=$$v},expression:"sliderVal02"}})],1),_vm._v(" "),_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Slider - 滑块（自定义初始值）")]),_vm._v(" "),_c('dy-slider',{attrs:{"showTooltip":""},model:{value:(_vm.sliderVal03),callback:function ($$v) {_vm.sliderVal03=$$v},expression:"sliderVal03"}})],1),_vm._v(" "),_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Slider - 滑块（显示输入框）")]),_vm._v(" "),_c('dy-slider',{attrs:{"showTooltip":"","showInput":""},model:{value:(_vm.sliderVal04),callback:function ($$v) {_vm.sliderVal04=$$v},expression:"sliderVal04"}})],1),_vm._v(" "),_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Slider - 滑块（输入框限定范围值【100-1000】）")]),_vm._v(" "),_c('dy-slider',{attrs:{"showTooltip":"","showInput":"","min":100,"max":1000},model:{value:(_vm.sliderVal05),callback:function ($$v) {_vm.sliderVal05=$$v},expression:"sliderVal05"}})],1),_vm._v(" "),_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Slider - 滑块（离散值）")]),_vm._v(" "),_c('dy-slider',{attrs:{"showTooltip":"","show-input":"","step":10},model:{value:(_vm.sliderVal06),callback:function ($$v) {_vm.sliderVal06=$$v},expression:"sliderVal06"}})],1),_vm._v(" "),_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Slider - 滑块（离散值【显示间断点】）")]),_vm._v(" "),_c('dy-slider',{attrs:{"showTooltip":"","show-input":"","step":20,"show-steps":""},model:{value:(_vm.sliderVal07),callback:function ($$v) {_vm.sliderVal07=$$v},expression:"sliderVal07"}})],1)]),_vm._v(" "),_vm._m(0),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n        \r\n        <dy-slider v-model=\"sliderVal01\"></dy-slider>\r\n\r\n        <dy-slider v-model=\"sliderVal02\" showTooltip></dy-slider>\r\n\r\n        <dy-slider v-model=\"sliderVal03\" showTooltip></dy-slider>\r\n\r\n        <dy-slider v-model=\"sliderVal04\" showTooltip showInput></dy-slider>\r\n\r\n        <dy-slider v-model=\"sliderVal05\" showTooltip showInput :min=\"100\" :max=\"1000\"></dy-slider>\r\n\r\n        <dy-slider v-model=\"sliderVal06\" showTooltip show-input :step=\"10\"></dy-slider>\r\n\r\n        <dy-slider v-model=\"sliderVal07\" showTooltip show-input :step=\"20\" show-steps></dy-slider>\r\n\r\n    </template>\r\n\r\n    <script>\r\n\r\n        export default {\r\n            data() {\r\n                return {\r\n                    sliderVal01: 0,\r\n                    sliderVal02: 0,\r\n                    sliderVal03: 25,\r\n                    sliderVal04: 30,\r\n                    sliderVal05: 420,\r\n                    sliderVal06: 10,\r\n                    sliderVal07: 20,\r\n                }\r\n            }\r\n        }\r\n\r\n    </script>\r\n    ")]),_vm._v("\r\n")])])])])])}
-var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("直接使用 "),_c('code',[_vm._v("dy-slider")]),_vm._v(" 组件然后绑定所需参数即可")]),_vm._v(" "),_c('br'),_vm._v(" "),_c('p',[_vm._v("参数设置如下：")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("showTooltip")]),_vm._v(" -- 布尔值，是否显示 "),_c('code',[_vm._v("tooltip")]),_vm._v("，默认为 "),_c('code',[_vm._v("false")])]),_vm._v(" "),_c('p',[_c('code',[_vm._v("showInput")]),_vm._v(" -- 布尔值，是否显示配套显示的 "),_c('code',[_vm._v("input")]),_vm._v("，默认为 "),_c('code',[_vm._v("false")])]),_vm._v(" "),_c('p',[_c('code',[_vm._v(":min")]),_vm._v(" -- 设定最小值")]),_vm._v(" "),_c('p',[_c('code',[_vm._v(":max")]),_vm._v(" -- 设定最大值")]),_vm._v(" "),_c('p',[_c('code',[_vm._v(":step")]),_vm._v(" -- 设定离散数值")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("show-steps")]),_vm._v(" -- 布尔值，是否显示离散数值间断点，默认为 "),_c('code',[_vm._v("false")])])])])}]
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-box"},[_c('div',{staticClass:"components-title"},[_vm._v("Switch 开关")]),_vm._v(" "),_c('div',{staticClass:"components-wrapper"},[_c('ul',[_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("开关 - Switch（默认）")]),_vm._v(" "),_c('dy-switch',{model:{value:(_vm.switch1),callback:function ($$v) {_vm.switch1=$$v},expression:"switch1"}})],1),_vm._v(" "),_c('div',{staticClass:"components-content"},[_c('dy-switch',{model:{value:(_vm.switch2),callback:function ($$v) {_vm.switch2=$$v},expression:"switch2"}})],1),_vm._v(" "),_vm._m(0),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n\r\n        <dy-switch v-model=\"switch1\"></dy-switch>\r\n\r\n        <dy-switch v-model=\"switch2\"></dy-switch>\r\n\r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            data() {\r\n                return {\r\n                    switch1: false,\r\n                    switch2: true\r\n                }\r\n            }\r\n        }\r\n    </script>\r\n    ")]),_vm._v("\r\n")])]),_vm._v(" "),_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("开关 - Switch（添加文字提示）")]),_vm._v(" "),_c('dy-switch',{attrs:{"inActiveText":"左侧","activeText":"右侧"},model:{value:(_vm.switch3),callback:function ($$v) {_vm.switch3=$$v},expression:"switch3"}})],1),_vm._v(" "),_vm._m(1),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n\r\n        <dy-switch\r\n            v-model=\"switch3\"\r\n            inActiveText=\"左侧\"\r\n            activeText=\"右侧\"\r\n        ></dy-switch>\r\n\r\n        <dy-switch v-model=\"switch3\"></dy-switch>\r\n\r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            data() {\r\n                return {\r\n                    switch3: false\r\n                }\r\n            }\r\n        }\r\n    </script>\r\n    ")]),_vm._v("\r\n")])]),_vm._v(" "),_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("开关 - Switch（禁用状态）")]),_vm._v(" "),_c('dy-switch',{attrs:{"disabled":"","inActiveText":"左侧","activeText":"右侧"},model:{value:(_vm.switch4),callback:function ($$v) {_vm.switch4=$$v},expression:"switch4"}})],1),_vm._v(" "),_c('div',{staticClass:"components-content"},[_c('dy-switch',{attrs:{"disabled":"","inActiveText":"左侧","activeText":"右侧"},model:{value:(_vm.switch5),callback:function ($$v) {_vm.switch5=$$v},expression:"switch5"}})],1),_vm._v(" "),_vm._m(2),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n\r\n        <dy-switch \r\n            disabled\r\n            v-model=\"switch4\"\r\n            inActiveText=\"左侧\"\r\n            activeText=\"右侧\"\r\n        ></dy-switch>\r\n\r\n        <dy-switch \r\n            disabled\r\n            v-model=\"switch5\"\r\n            inActiveText=\"左侧\"\r\n            activeText=\"右侧\"\r\n        ></dy-switch>\r\n\r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            data() {\r\n                return {\r\n                    switch4: false,\r\n                    switch5: true\r\n                }\r\n            }\r\n        }\r\n    </script>\r\n    ")]),_vm._v("\r\n")])])])])])}
+var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("使用 "),_c('code',[_vm._v("v-model")]),_vm._v(" 所绑定的值来决定初始值")]),_vm._v(" "),_c('br'),_vm._v(" "),_c('p',[_vm._v("参数设置如下：")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("inActiveText")]),_vm._v("  --  左侧文本内容")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("activeText")]),_vm._v("  --  右侧文本内容")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("disabled")]),_vm._v("  --  禁用选项")])])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("使用 "),_c('code',[_vm._v("inActiveText")]),_vm._v(" 和 "),_c('code',[_vm._v("activeText")]),_vm._v(" 参数来设置左右显示的文字")]),_vm._v(" "),_c('p',[_vm._v("具体样式可以配合生成的 "),_c('code',[_vm._v("class")]),_vm._v(" 的值 "),_c('code',[_vm._v("dy-switch-inActiveText")]),_vm._v(" 和 "),_c('code',[_vm._v("dy-switch-activeText")]),_vm._v(" 来进行设置")])])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("添加 "),_c('code',[_vm._v("disabled")]),_vm._v(" 参数即可")])])])}]
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
 
