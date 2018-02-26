@@ -1,15 +1,15 @@
 webpackJsonp([14],{
 
-/***/ 489:
+/***/ 480:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_script_index_0_DropDown_vue__ = __webpack_require__(513);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_1_vue_loader_lib_selector_type_script_index_0_Icon_vue__ = __webpack_require__(508);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_6_0_vue_loader_lib_template_compiler_index_id_data_v_0988d424_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_template_index_0_DropDown_vue__ = __webpack_require__(557);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_1_vue_loader_lib_template_compiler_index_id_data_v_3716259b_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_1_vue_loader_lib_selector_type_template_index_0_Icon_vue__ = __webpack_require__(534);
 function injectStyle (ssrContext) {
-  __webpack_require__(556)
+  __webpack_require__(533)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -26,8 +26,8 @@ var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_script_index_0_DropDown_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_6_0_vue_loader_lib_template_compiler_index_id_data_v_0988d424_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_template_index_0_DropDown_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_1_vue_loader_lib_selector_type_script_index_0_Icon_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_1_vue_loader_lib_template_compiler_index_id_data_v_3716259b_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_1_vue_loader_lib_selector_type_template_index_0_Icon_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -39,55 +39,10 @@ var Component = normalizeComponent(
 
 /***/ }),
 
-/***/ 513:
+/***/ 508:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -214,19 +169,19 @@ var Component = normalizeComponent(
 
 /***/ }),
 
-/***/ 556:
+/***/ 533:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 557:
+/***/ 534:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-box"},[_c('div',{staticClass:"components-title"},[_vm._v("DropDown 下拉菜单")]),_vm._v(" "),_c('div',{staticClass:"components-wrapper"},[_c('ul',[_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("DropDown 下拉菜单（默认，鼠标移入激活菜单）")]),_vm._v(" "),_c('dy-button',{directives:[{name:"dropdown",rawName:"v-dropdown:dropdown01",arg:"dropdown01"}]},[_vm._v("下拉菜单")]),_vm._v(" "),_c('dy-dropdown',{ref:"dropdown01"},[_c('dy-dropdown-item',[_c('a',{attrs:{"href":"javascript:;"}},[_vm._v("地瓜")])]),_vm._v(" "),_c('dy-dropdown-item',[_c('a',{attrs:{"href":"javascript:;"}},[_vm._v("西瓜")])]),_vm._v(" "),_c('dy-dropdown-item',[_c('a',{attrs:{"href":"javascript:;"}},[_vm._v("冬瓜")])]),_vm._v(" "),_c('dy-dropdown-item',[_c('a',{attrs:{"href":"javascript:;"}},[_vm._v("南瓜")])]),_vm._v(" "),_c('dy-dropdown-item',[_c('a',{attrs:{"href":"javascript:;"}},[_vm._v("草莓")])])],1)],1),_vm._v(" "),_vm._m(0),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n        \r\n        <dy-button v-dropdown:dropdown01>下拉菜单</dy-button>\r\n\r\n        <dy-dropdown ref=\"dropdown01\">\r\n            <dy-dropdown-item><a href=\"javascript:;\">地瓜</a></dy-dropdown-item>\r\n            <dy-dropdown-item><a href=\"javascript:;\">西瓜</a></dy-dropdown-item>\r\n            <dy-dropdown-item><a href=\"javascript:;\">冬瓜</a></dy-dropdown-item>\r\n            <dy-dropdown-item><a href=\"javascript:;\">南瓜</a></dy-dropdown-item>\r\n            <dy-dropdown-item><a href=\"javascript:;\">草莓</a></dy-dropdown-item>\r\n        </dy-dropdown>\r\n\r\n    </template>\r\n    ")]),_vm._v("\r\n")])]),_vm._v(" "),_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("DropDown 下拉菜单（点击激活菜单）")]),_vm._v(" "),_c('dy-button',{directives:[{name:"dropdown",rawName:"v-dropdown:dropdown02",arg:"dropdown02"}]},[_vm._v("下拉菜单")]),_vm._v(" "),_c('dy-dropdown',{ref:"dropdown02",attrs:{"trigger":"click"}},[_c('dy-dropdown-item',[_c('a',{attrs:{"href":"javascript:;"}},[_vm._v("地瓜")])]),_vm._v(" "),_c('dy-dropdown-item',[_c('a',{attrs:{"href":"javascript:;"}},[_vm._v("西瓜")])]),_vm._v(" "),_c('dy-dropdown-item',[_c('a',{attrs:{"href":"javascript:;"}},[_vm._v("冬瓜")])]),_vm._v(" "),_c('dy-dropdown-item',[_c('a',{attrs:{"href":"javascript:;"}},[_vm._v("南瓜")])]),_vm._v(" "),_c('dy-dropdown-item',[_c('a',{attrs:{"href":"javascript:;"}},[_vm._v("草莓")])])],1)],1),_vm._v(" "),_vm._m(1),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n        \r\n        <dy-button v-dropdown:dropdown02>下拉菜单</dy-button>\r\n\r\n        <dy-dropdown ref=\"dropdown02\" trigger=\"click\">\r\n            <dy-dropdown-item><a href=\"javascript:;\">地瓜</a></dy-dropdown-item>\r\n            <dy-dropdown-item><a href=\"javascript:;\">西瓜</a></dy-dropdown-item>\r\n            <dy-dropdown-item><a href=\"javascript:;\">冬瓜</a></dy-dropdown-item>\r\n            <dy-dropdown-item><a href=\"javascript:;\">南瓜</a></dy-dropdown-item>\r\n            <dy-dropdown-item><a href=\"javascript:;\">草莓</a></dy-dropdown-item>\r\n        </dy-dropdown>\r\n\r\n    </template>\r\n    ")]),_vm._v("\r\n")])]),_vm._v(" "),_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("DropDown 下拉菜单（指定菜单标题）")]),_vm._v(" "),_c('dy-button',{directives:[{name:"dropdown",rawName:"v-dropdown:dropdown03",arg:"dropdown03"}]},[_vm._v("下拉菜单")]),_vm._v(" "),_c('dy-dropdown',{ref:"dropdown03",attrs:{"trigger":"click"}},[_c('dy-dropdown-item',{attrs:{"header":true}},[_vm._v("水果")]),_vm._v(" "),_c('dy-dropdown-item',[_c('a',{attrs:{"href":"javascript:;"}},[_vm._v("香蕉")])]),_vm._v(" "),_c('dy-dropdown-item',[_c('a',{attrs:{"href":"javascript:;"}},[_vm._v("西瓜")])]),_vm._v(" "),_c('dy-dropdown-item',[_c('a',{attrs:{"href":"javascript:;"}},[_vm._v("草莓")])]),_vm._v(" "),_c('dy-dropdown-item',{attrs:{"header":true}},[_vm._v("蔬菜")]),_vm._v(" "),_c('dy-dropdown-item',[_c('a',{attrs:{"href":"javascript:;"}},[_vm._v("胡萝卜")])]),_vm._v(" "),_c('dy-dropdown-item',[_c('a',{attrs:{"href":"javascript:;"}},[_vm._v("南瓜")])]),_vm._v(" "),_c('dy-dropdown-item',[_c('a',{attrs:{"href":"javascript:;"}},[_vm._v("冬瓜")])])],1)],1),_vm._v(" "),_vm._m(2),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n        \r\n        <dy-button v-dropdown:dropdown03>下拉菜单</dy-button>\r\n\r\n        <dy-dropdown ref=\"dropdown03\" trigger=\"click\">\r\n            <dy-dropdown-item :header=\"true\">水果</dy-dropdown-item>\r\n            <dy-dropdown-item><a href=\"javascript:;\">香蕉</a></dy-dropdown-item>\r\n            <dy-dropdown-item><a href=\"javascript:;\">西瓜</a></dy-dropdown-item>\r\n            <dy-dropdown-item><a href=\"javascript:;\">草莓</a></dy-dropdown-item>\r\n            <dy-dropdown-item :header=\"true\">蔬菜</dy-dropdown-item>\r\n            <dy-dropdown-item><a href=\"javascript:;\">胡萝卜</a></dy-dropdown-item>\r\n            <dy-dropdown-item><a href=\"javascript:;\">南瓜</a></dy-dropdown-item>\r\n            <dy-dropdown-item><a href=\"javascript:;\">冬瓜</a></dy-dropdown-item>\r\n        </dy-dropdown>\r\n\r\n    </template>\r\n    ")]),_vm._v("\r\n")])])])])])}
-var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("使用 "),_c('code',[_vm._v("v-dropdown")]),_vm._v(" 指令绑定需要显示的下拉菜单，下拉组件则需要指定与之对应的 "),_c('code',[_vm._v("ref")]),_vm._v(" 的值")]),_vm._v(" "),_c('p',[_vm._v("然后只需使用 "),_c('code',[_vm._v("dy-dropdown")]),_vm._v(" 组件包裹 "),_c('code',[_vm._v("dy-dropdown-item")]),_vm._v(" 组件即可")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("dy-dropdown-item")]),_vm._v(" 组件当中的内容可以自行定义")]),_vm._v(" "),_c('br'),_vm._v(" "),_c('p',[_vm._v("可选参数：")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("trigger")]),_vm._v("  --  下拉菜单触发方式，默认为 "),_c('code',[_vm._v("focus")]),_vm._v("，可选值为 "),_c('code',[_vm._v("click")])]),_vm._v(" "),_c('p',[_c('code',[_vm._v(":header")]),_vm._v("  --  布尔值，指定下拉菜单标题（分组用），默认为 "),_c('code',[_vm._v("false")])])])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("设置参数，改为点击触发下拉菜单")])])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("设置 "),_c('code',[_vm._v(":header")]),_vm._v(" 参数为 "),_c('code',[_vm._v("true")]),_vm._v("，指定菜单标题")])])])}]
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-box"},[_c('div',{staticClass:"components-title"},[_vm._v("Icon 图标")]),_vm._v(" "),_c('div',{staticClass:"components-wrapper"},[_c('ul',[_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Icon 图标（指定 type）")]),_vm._v(" "),_c('dy-icon',{attrs:{"size":"36","type":"&#xe6b2;"}}),_vm._v(" "),_c('dy-icon',{attrs:{"size":"36","type":"&#xe6af;"}}),_vm._v(" "),_c('dy-icon',{attrs:{"size":"36","type":"&#xe6ae;"}}),_vm._v(" "),_c('dy-icon',{attrs:{"size":"36","type":"&#xe6ac;"}}),_vm._v(" "),_c('dy-icon',{attrs:{"size":"36","type":"&#xe6ab;"}}),_vm._v(" "),_c('dy-icon',{attrs:{"size":"36","type":"&#xe6a4;"}}),_vm._v(" "),_c('dy-icon',{attrs:{"size":"36","type":"&#xe69d;"}}),_vm._v(" "),_c('dy-icon',{attrs:{"size":"36","type":"&#xe69c;"}}),_vm._v(" "),_c('dy-icon',{attrs:{"size":"36","type":"&#xe631;"}}),_vm._v(" "),_c('dy-icon',{attrs:{"size":"36","type":"&#xe6a0;"}})],1),_vm._v(" "),_c('div',{staticClass:"components-content"},[_c('dy-icon',{attrs:{"size":"36","type":"&#xe62f;"}}),_vm._v(" "),_c('dy-icon',{attrs:{"size":"36","type":"&#xe62e;"}}),_vm._v(" "),_c('dy-icon',{attrs:{"size":"36","type":"&#xe62d;"}}),_vm._v(" "),_c('dy-icon',{attrs:{"size":"36","type":"&#xe62d;"}}),_vm._v(" "),_c('dy-icon',{attrs:{"size":"36","type":"&#xe62c;"}}),_vm._v(" "),_c('dy-icon',{attrs:{"size":"36","type":"&#xe629;"}}),_vm._v(" "),_c('dy-icon',{attrs:{"size":"36","type":"&#xe628;"}}),_vm._v(" "),_c('dy-icon',{attrs:{"size":"36","type":"&#xe627;"}}),_vm._v(" "),_c('dy-icon',{attrs:{"size":"36","type":"&#xe631;"}}),_vm._v(" "),_c('dy-icon',{attrs:{"size":"36","type":"&#xe625;"}})],1),_vm._v(" "),_vm._m(0),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n        \r\n        <dy-icon size=\"36\" type=\"&#xe6b2;\"></dy-icon>\r\n        <dy-icon size=\"36\" type=\"&#xe6b2;\"></dy-icon>\r\n        <dy-icon size=\"36\" type=\"&#xe6af;\"></dy-icon>\r\n        <dy-icon size=\"36\" type=\"&#xe6ae;\"></dy-icon>\r\n        <dy-icon size=\"36\" type=\"&#xe6ac;\"></dy-icon>\r\n        <dy-icon size=\"36\" type=\"&#xe6ab;\"></dy-icon>\r\n\r\n    </template>\r\n    ")]),_vm._v("\r\n")])]),_vm._v(" "),_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Icon 图标（指定 class）")]),_vm._v(" "),_c('dy-icon',{staticClass:"icon-suo",attrs:{"size":"36"}}),_vm._v(" "),_c('dy-icon',{staticClass:"icon-survey",attrs:{"size":"36"}}),_vm._v(" "),_c('dy-icon',{staticClass:"icon-smile",attrs:{"size":"36"}}),_vm._v(" "),_c('dy-icon',{staticClass:"icon-refresh",attrs:{"size":"36"}}),_vm._v(" "),_c('dy-icon',{staticClass:"icon-favorite",attrs:{"size":"36"}}),_vm._v(" "),_c('dy-icon',{staticClass:"icon-edit",attrs:{"size":"36"}}),_vm._v(" "),_c('dy-icon',{staticClass:"icon-tishishuoming",attrs:{"size":"36"}})],1),_vm._v(" "),_vm._m(1),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n        \r\n        <dy-icon size=\"36\" class=\"icon-suo\"></dy-icon>\r\n        <dy-icon size=\"36\" class=\"icon-survey\"></dy-icon>\r\n        <dy-icon size=\"36\" class=\"icon-smile\"></dy-icon>\r\n        <dy-icon size=\"36\" class=\"icon-refresh\"></dy-icon>\r\n        <dy-icon size=\"36\" class=\"icon-favorite\"></dy-icon>\r\n        <dy-icon size=\"36\" class=\"icon-edit\"></dy-icon>\r\n        <dy-icon size=\"36\" class=\"icon-tishishuoming\"></dy-icon>\r\n\r\n    </template>\r\n    ")]),_vm._v("\r\n")])])])]),_vm._v(" "),_c('div',{staticStyle:{"height":"500px"}})])}
+var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("使用的是基于阿里巴巴的矢量图标库")]),_vm._v(" "),_c('p',[_vm._v("有两种使用方式，一种为指定对应的 "),_c('code',[_vm._v("type")]),_vm._v(" 类型，另一种为指定对应图标的 "),_c('code',[_vm._v("class")])]),_vm._v(" "),_c('p',[_vm._v("需要注意的是：如果使用的 "),_c('code',[_vm._v("class")]),_vm._v("，则需要在入口处手动的引入对应的 "),_c('code',[_vm._v("css")]),_vm._v(" 文件，例如 "),_c('code',[_vm._v("import \"../src/styles/iconfont/iconfont.css\";")])]),_vm._v(" "),_c('br'),_vm._v(" "),_c('p',[_vm._v("参数设置如下：")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("size")]),_vm._v(" -- 指定图标大小，默认大小为 "),_c('code',[_vm._v("14")])]),_vm._v(" "),_c('p',[_c('code',[_vm._v("type")]),_vm._v(" -- 指定图标类型")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("class")]),_vm._v(" -- 指定对应图标的 "),_c('code',[_vm._v("class")]),_vm._v("，如果使用这个，需要额外载入一个 "),_c('code',[_vm._v("iconfont.css")]),_vm._v(" 文件")])])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("指定对应的 "),_c('code',[_vm._v("class")])])])])}]
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
 

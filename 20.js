@@ -1,15 +1,15 @@
 webpackJsonp([20],{
 
-/***/ 494:
+/***/ 497:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_script_index_0_Article_vue__ = __webpack_require__(517);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_1_vue_loader_lib_selector_type_script_index_0_Carousel_vue__ = __webpack_require__(523);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_6_0_vue_loader_lib_template_compiler_index_id_data_v_43ac4a70_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_template_index_0_Article_vue__ = __webpack_require__(566);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_1_vue_loader_lib_template_compiler_index_id_data_v_63daa7b2_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_1_vue_loader_lib_selector_type_template_index_0_Carousel_vue__ = __webpack_require__(568);
 function injectStyle (ssrContext) {
-  __webpack_require__(565)
+  __webpack_require__(567)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -26,8 +26,8 @@ var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_script_index_0_Article_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_6_0_vue_loader_lib_template_compiler_index_id_data_v_43ac4a70_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_template_index_0_Article_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_1_vue_loader_lib_selector_type_script_index_0_Carousel_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_1_vue_loader_lib_template_compiler_index_id_data_v_63daa7b2_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_1_vue_loader_lib_selector_type_template_index_0_Carousel_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -39,10 +39,22 @@ var Component = normalizeComponent(
 
 /***/ }),
 
-/***/ 517:
+/***/ 523:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -141,19 +153,19 @@ var Component = normalizeComponent(
 
 /***/ }),
 
-/***/ 565:
+/***/ 567:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 566:
+/***/ 568:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"nav-box"},[_c('div',{staticClass:"components-title"},[_vm._v("Article 文章")]),_vm._v(" "),_c('div',{staticClass:"components-wrapper"},[_c('ul',[_c('li',[_c('div',{staticClass:"nav-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Article 文章")]),_vm._v(" "),_c('dy-article',[_c('dy-article-header',{attrs:{"title":"中国港机","meta":"作者：镝次元","time":"发表时间：2017年12月15日"}}),_vm._v(" "),_c('dy-article-body',[_c('dy-article-lead',[_vm._v("\r\n                1月3日，亚洲最大绞吸挖泥船“天鲲号”下水,长140米,宽27.8米,最大挖掘深度35米，总装机功率25843千瓦，标准疏浚能力每小时6000立方米。中国港口机械设备（下简称中国港机）的各项主要指标已属世界领先水平。\r\n            ")]),_vm._v(" "),_c('p',[_vm._v("据联合国数据显示，在港机设备中，来自中国的龙门起重机和基座臂起重机贸易额均连续11年排名第一，桥式起重机更是蝉联首位长达16年。最近几年，这三类产品的销售势头愈加迅猛，是排名第二国家的两倍还多。数据显示，中国港机装备全球份额，已经从五年前的70%增长到82%，据英国权威杂志《World Cargo News》统计，从2015年6月至2016年6月间，全球共有271台岸桥订单，其中222台订单来自中国，占比82%（在欧美市场的占有率更是高达90%以上）。这意味着，中国港机正在世界各个港口忙碌着，搬运着这个世界。")]),_vm._v(" "),_c('img',{attrs:{"src":"http://image.dydata.io/GcGgDV6j8j1X2iVpQkBzvv.jpg","alt":""}}),_vm._v(" "),_c('p',[_vm._v("据联合国数据显示，在港机设备中，来自中国的龙门起重机和基座臂起重机贸易额均连续11年排名第一，桥式起重机更是蝉联首位长达16年。最近几年，这三类产品的销售势头愈加迅猛，是排名第二国家的两倍还多。数据显示，中国港机装备全球份额，已经从五年前的70%增长到82%，据英国权威杂志《World Cargo News》统计，从2015年6月至2016年6月间，全球共有271台岸桥订单，其中222台订单来自中国，占比82%（在欧美市场的占有率更是高达90%以上）。这意味着，中国港机正在世界各个港口忙碌着，搬运着这个世界。")]),_vm._v(" "),_c('img',{attrs:{"src":"http://image.dydata.io/GcGgDV6j8j1X2iVpQkBzvv.jpg","alt":""}}),_vm._v(" "),_c('p',[_vm._v("\r\n                “一带一路”倡议的提出给中国港机又提供了巨大的发展空间，据统计，中国企业已参与了“一带一路”沿线13个国家、20个港口的经营，这意味着中国港机又将在一带一路的港口落地生根，振华重工，三一重工、中联重工等国内工程机械龙头都在积极探索改良制造工艺，输送贴合市场需求的港机产品。特别是被国际港口界看好的自动化码头系统装备，继青岛港之后，将陆续在洋山港、厦门港、阿联酋阿布扎比哈利法港等地建成运行，成为现代码头配置的标杆。 2017年11月，工业和信息化部印发的《高端智能再制造行动计划（2018-2020年）》，将探索大型港口机械的高端智能再制造技术列为主要任务之一。预计到2020年，拆解、检测、成形加工等制约性技术将被突破，90%以上的港机将采用电力、太阳能或风能代替传统的能源，中国港机正朝着自动化、集成化和绿色友好的高端智能设备稳步迈进。\r\n            ")]),_vm._v(" "),_c('img',{attrs:{"src":"http://image.dydata.io/6shoiiCyWvHrMzMeti5MhF.jpg","alt":""}})],1)],1)],1),_vm._v(" "),_vm._m(0),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n        \r\n        <dy-article>\r\n            <dy-article-header title=\"中国港机\" meta=\"作者：镝次元\" time=\"发表时间：2017年12月15日\"></dy-article-header>\r\n            <dy-article-body>\r\n                <dy-article-lead>\r\n                    1月3日，亚洲最大绞吸挖泥船“天鲲号”下水,长140米 ... ...\r\n                </dy-article-lead>\r\n                \r\n                <p>据联合国数据显示，在港机设备中，来自中国的龙门 ... ...</p>\r\n                <img src=\"http://image.dydata.io/GcGgDV6j8j1X2iVpQkBzvv.jpg\" alt=\"\">\r\n                <p>据联合国数据显示，在港机设备中，来自中国的龙门起重机和基座臂 ... ...</p>\r\n                <img src=\"http://image.dydata.io/GcGgDV6j8j1X2iVpQkBzvv.jpg\" alt=\"\">\r\n                <p>\r\n                    “一带一路”倡议的提出给中国港机又提供了巨大的发展空间，据统计，中国企业 ... ...\r\n                </p>\r\n                <img src=\"http://image.dydata.io/6shoiiCyWvHrMzMeti5MhF.jpg\" alt=\"\">\r\n            </dy-article-body>\r\n        </dy-article>\r\n\r\n    </template>\r\n    ")]),_vm._v("\r\n")])])])])])}
-var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("共有四个组件可供选择：")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("dy-article")]),_vm._v(" 组件 -- 最外层的容器")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("dy-article-header")]),_vm._v(" 组件 -- 标题部分")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("dy-article-body")]),_vm._v(" 组件 -- 内容部分")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("dy-article-lead")]),_vm._v(" 组件 -- 摘要部分（可选）")]),_vm._v(" "),_c('br'),_vm._v(" "),_c('p',[_vm._v("使用 "),_c('code',[_vm._v("dy-article")]),_vm._v(" 组件包裹 "),_c('code',[_vm._v("dy-article-header")]),_vm._v("，"),_c('code',[_vm._v("dy-article-body")]),_vm._v(" 组件使用即可")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("dy-article-header")]),_vm._v(" 组件当中的 "),_c('code',[_vm._v("title")]),_vm._v(" 参数为必填项，"),_c('code',[_vm._v("meta")]),_vm._v(" 参数和 "),_c('code',[_vm._v("time")]),_vm._v(" 参数为选填项")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("dy-article-header")]),_vm._v(" 组件当中包含一个可选组件 "),_c('code',[_vm._v("dy-article-lead")]),_vm._v("，表示摘要")]),_vm._v(" "),_c('br'),_vm._v(" "),_c('p',[_vm._v("参数设置如下：")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("title")]),_vm._v("  --  必填项，指定文章标题")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("meta")]),_vm._v("  --  选填项，指定文章作者信息")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("time")]),_vm._v("  --  选填项，指定文章发表时间")])])])}]
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-box"},[_c('div',{staticClass:"components-title"},[_vm._v("Carousel 走马灯")]),_vm._v(" "),_c('div',{staticClass:"tab-wrapper"},[_c('ul',[_c('li',[_c('div',{staticClass:"tab-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Carousel 走马灯（默认）")]),_vm._v(" "),_c('dy-carousel',[_c('dy-carousel-item',[_vm._v("1")]),_vm._v(" "),_c('dy-carousel-item',[_vm._v("2")]),_vm._v(" "),_c('dy-carousel-item',[_vm._v("3")]),_vm._v(" "),_c('dy-carousel-item',[_vm._v("4")])],1)],1),_vm._v(" "),_vm._m(0),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n        \r\n        <dy-carousel>\r\n            <dy-carousel-item>1</dy-carousel-item>\r\n            <dy-carousel-item>2</dy-carousel-item>\r\n            <dy-carousel-item>3</dy-carousel-item>\r\n            <dy-carousel-item>4</dy-carousel-item>\r\n        </dy-carousel>\r\n\r\n    </template>\r\n    ")]),_vm._v("\r\n")])]),_vm._v(" "),_c('li',[_c('div',{staticClass:"tab-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Carousel 走马灯（参数设置）")]),_vm._v(" "),_c('dy-carousel',{attrs:{"showCarouselButton":true,"showCarouselControl":false,"height":350,"playTime":2000}},[_c('dy-carousel-item',[_vm._v("1")]),_vm._v(" "),_c('dy-carousel-item',[_vm._v("2")]),_vm._v(" "),_c('dy-carousel-item',[_vm._v("3")]),_vm._v(" "),_c('dy-carousel-item',[_vm._v("4")])],1)],1),_vm._v(" "),_vm._m(1),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n        \r\n        <dy-carousel :showCarouselButton=\"true\" :showCarouselControl=\"false\" :height=\"350\" :playTime=\"2000\">\r\n            <dy-carousel-item>1</dy-carousel-item>\r\n            <dy-carousel-item>2</dy-carousel-item>\r\n            <dy-carousel-item>3</dy-carousel-item>\r\n            <dy-carousel-item>4</dy-carousel-item>\r\n        </dy-carousel>\r\n\r\n    </template>\r\n    ")]),_vm._v("\r\n")])])])])])}
+var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("直接使用 "),_c('code',[_vm._v("dy-carousel")]),_vm._v(" 组件包裹 "),_c('code',[_vm._v("dy-carousel-item")]),_vm._v(" 组件即可")]),_vm._v(" "),_c('p',[_vm._v("如果内容部分为图片，则图片默认是自适应框体大小居中展示")]),_vm._v(" "),_c('br'),_vm._v(" "),_c('p',[_vm._v("参数设置如下：")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("activeIndex")]),_vm._v(" -- 展示第几页，默认为 "),_c('code',[_vm._v("0")])]),_vm._v(" "),_c('p',[_c('code',[_vm._v("showCarouselButton")]),_vm._v(" -- 是否显示上一页和下一页，默认是显示")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("showCarouselControl")]),_vm._v(" -- 是否显示底部切换栏，默认是显示")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("height")]),_vm._v(" -- 设置窗体高度，默认为 "),_c('code',[_vm._v("300")])]),_vm._v(" "),_c('p',[_c('code',[_vm._v("autoPlay")]),_vm._v(" -- 指定是否自动播放，默认为 "),_c('code',[_vm._v("true")])]),_vm._v(" "),_c('p',[_c('code',[_vm._v("playTime")]),_vm._v(" -- 指定切换时间，默认为 "),_c('code',[_vm._v("3000")]),_vm._v(" 毫秒")])])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("如下设置表示：显示左右切换按钮，不显示底部控制按钮组，高度设置为 "),_c('code',[_vm._v("500")]),_vm._v("，切换间隔时间为 "),_c('code',[_vm._v("2000")]),_vm._v(" 毫秒")])])])}]
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
 

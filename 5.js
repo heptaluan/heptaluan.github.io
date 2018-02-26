@@ -1,15 +1,15 @@
 webpackJsonp([5],{
 
-/***/ 484:
+/***/ 505:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_script_index_0_Select_vue__ = __webpack_require__(508);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_1_vue_loader_lib_selector_type_script_index_0_SideBar_vue__ = __webpack_require__(530);
 /* empty harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_6_0_vue_loader_lib_template_compiler_index_id_data_v_74eaa729_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_template_index_0_Select_vue__ = __webpack_require__(547);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_1_vue_loader_lib_template_compiler_index_id_data_v_21cf3e22_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_1_vue_loader_lib_selector_type_template_index_0_SideBar_vue__ = __webpack_require__(584);
 function injectStyle (ssrContext) {
-  __webpack_require__(546)
+  __webpack_require__(583)
 }
 var normalizeComponent = __webpack_require__(0)
 /* script */
@@ -26,8 +26,8 @@ var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_script_index_0_Select_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_6_0_vue_loader_lib_template_compiler_index_id_data_v_74eaa729_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_6_0_vue_loader_lib_selector_type_template_index_0_Select_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_13_7_1_vue_loader_lib_selector_type_script_index_0_SideBar_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_13_7_1_vue_loader_lib_template_compiler_index_id_data_v_21cf3e22_hasScoped_false_transformToRequire_video_src_source_src_img_src_image_xlink_href_buble_transforms_node_modules_vue_loader_13_7_1_vue_loader_lib_selector_type_template_index_0_SideBar_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
@@ -39,150 +39,10 @@ var Component = normalizeComponent(
 
 /***/ }),
 
-/***/ 508:
+/***/ 530:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -279,65 +139,38 @@ var Component = normalizeComponent(
 //
 
 /* harmony default export */ __webpack_exports__["a"] = ({
-    data: function data() {
-        return {
-            options01: [{
-                label: "东瓜"
-            }, {
-                label: "南瓜"
-            }, {
-                label: "西瓜"
-            }],
-            options02: [{
-                label: "东瓜"
-            }, {
-                label: "南瓜"
-            }, {
-                label: "西瓜"
-            }, {
-                label: "北瓜"
-            }, {
-                label: "中瓜"
-            }, {
-                label: "葡萄"
-            }, {
-                label: "梨子"
-            }, {
-                label: "香蕉"
-            }, {
-                label: "苹果"
-            }, {
-                label: "地瓜"
-            }, {
-                label: "皮瓜"
-            }],
-            selectVal01: [],
-            selectVal02: []
-        };
-    }
-    // methods: {
-    //     selectHandle() {
-    //         this.selectVal = val;
-    //     }
-    // }
+  data: function data() {
+    return {
+      showSidebar01: false,
+      showSidebar02: false
+    };
+  },
 
+  methods: {
+    showHandle01: function showHandle01() {
+      this.showSidebar01 = true;
+    },
+    showHandle02: function showHandle02() {
+      this.showSidebar02 = true;
+    }
+  }
 });
 
 /***/ }),
 
-/***/ 546:
+/***/ 583:
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
 
-/***/ 547:
+/***/ 584:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-box"},[_c('div',{staticClass:"components-title"},[_vm._v("Select 选择框")]),_vm._v(" "),_c('div',{staticClass:"components-wrapper"},[_c('ul',[_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Select 选择框（默认）")]),_vm._v(" "),_c('dy-select',{attrs:{"options":_vm.options01}})],1),_vm._v(" "),_vm._m(0),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n\r\n        <dy-select :options=\"options01\"></dy-select>\r\n\r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            data() {\r\n                return {\r\n                    options01: [{\r\n                        label: \"东瓜\"\r\n                    }, {\r\n                        label: \"南瓜\"\r\n                    }, {\r\n                        label: \"西瓜\",\r\n                    }]\r\n                }\r\n            }\r\n        }\r\n    </script>\r\n    ")]),_vm._v("\r\n")])]),_vm._v(" "),_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Select 选择框（获取选中值）")]),_vm._v(" "),_c('dy-select',{attrs:{"options":_vm.options01},model:{value:(_vm.selectVal01),callback:function ($$v) {_vm.selectVal01=$$v},expression:"selectVal01"}}),_vm._v(" "),_c('div',{staticClass:"subBox dy-select-subBox"},[_vm._v("\r\n        当前选择的是："+_vm._s(_vm.selectVal01)+"\r\n    ")])],1),_vm._v(" "),_vm._m(1),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n\r\n        <dy-select :options=\"options01\" v-model=\"selectVal01\"></dy-select>\r\n\r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            data() {\r\n                return {\r\n                    options01: [{\r\n                        label: \"东瓜\"\r\n                    }, {\r\n                        label: \"南瓜\"\r\n                    }, {\r\n                        label: \"西瓜\",\r\n                    }],\r\n                    selectVal01: []\r\n                }\r\n            }\r\n        }\r\n    </script>\r\n    ")]),_vm._v("\r\n")])]),_vm._v(" "),_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Select 选择框（多选）")]),_vm._v(" "),_c('dy-select',{attrs:{"options":_vm.options01,"multiple":true}})],1),_vm._v(" "),_vm._m(2),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n\r\n        <dy-select :options=\"options01\" :multiple=\"true\"></dy-select>\r\n\r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            data() {\r\n                return {\r\n                    options01: [{\r\n                        label: \"东瓜\"\r\n                    }, {\r\n                        label: \"南瓜\"\r\n                    }, {\r\n                        label: \"西瓜\",\r\n                    }]\r\n                }\r\n            }\r\n        }\r\n    </script>\r\n    ")]),_vm._v("\r\n")])]),_vm._v(" "),_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("Select 选择框（设定宽高）")]),_vm._v(" "),_c('dy-select',{attrs:{"options":_vm.options02,"maxHeight":300,"width":400,"multiple":true},model:{value:(_vm.selectVal02),callback:function ($$v) {_vm.selectVal02=$$v},expression:"selectVal02"}}),_vm._v(" "),_c('div',{staticClass:"subBox dy-select-subBox"},[_vm._v("\r\n        当前选择的是："+_vm._s(_vm.selectVal02)+"\r\n    ")])],1),_vm._v(" "),_vm._m(3),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n\r\n        <dy-select \r\n            :options=\"options02\" \r\n            :maxHeight=\"300\" \r\n            :width=\"400\" \r\n            :multiple=\"true\" \r\n            v-model=\"selectVal02\"\r\n        ></dy-select>\r\n\r\n    </template>\r\n\r\n    <script>\r\n        export default {\r\n            data() {\r\n                return {\r\n                    options02: [{\r\n                        label: \"东瓜\"\r\n                    }, {\r\n                        label: \"南瓜\"\r\n                    }, {\r\n                        label: \"西瓜\",\r\n                    }, {\r\n                        label: \"北瓜\",\r\n                    }, {\r\n                        label: \"中瓜\",\r\n                    }, {\r\n                        label: \"葡萄\",\r\n                    }, {\r\n                        label: \"梨子\",\r\n                    }, {\r\n                        label: \"香蕉\",\r\n                    }, {\r\n                        label: \"苹果\",\r\n                    }, {\r\n                        label: \"地瓜\",\r\n                    }, {\r\n                        label: \"皮瓜\",\r\n                    }],\r\n                    selectVal02: []\r\n                }\r\n            }\r\n        }\r\n    </script>\r\n    ")]),_vm._v("\r\n")])])])])])}
-var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("直接调用 "),_c('code',[_vm._v("dy-select")]),_vm._v(" 组件，然后使用 "),_c('code',[_vm._v(":options")]),_vm._v(" 绑定需要渲染的数据即可")]),_vm._v(" "),_c('br'),_vm._v(" "),_c('p',[_vm._v("参数设置如下：")]),_vm._v(" "),_c('p',[_c('code',[_vm._v(":options")]),_vm._v(" -- 绑定需要渲染的数组列表")]),_vm._v(" "),_c('p',[_c('code',[_vm._v("v-model")]),_vm._v(" -- 双向绑定的值")]),_vm._v(" "),_c('p',[_c('code',[_vm._v(":multiple")]),_vm._v(" -- 布尔值，指定是否开启多选模式，默认为单选模式")]),_vm._v(" "),_c('p',[_c('code',[_vm._v(":width")]),_vm._v(" -- 设定下拉按钮和下拉框的长度，默认为 "),_c('code',[_vm._v("200")])]),_vm._v(" "),_c('p',[_c('code',[_vm._v(":maxHeight")]),_vm._v(" -- 设定下拉框的最大高度，默认为 "),_c('code',[_vm._v("300")]),_vm._v("，超出最大高度后出现滚动条 ")])])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("使用 "),_c('code',[_vm._v("v-model")]),_vm._v(" 双向绑定即可")])])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("指定参数 "),_c('code',[_vm._v(":multiple")]),_vm._v(" 为 "),_c('code',[_vm._v("true")]),_vm._v(" 即可")])])])},function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("可以手动指定下拉组件的宽度和高度，只需要使用 "),_c('code',[_vm._v(":maxHeight")]),_vm._v(" 和 "),_c('code',[_vm._v(":width")]),_vm._v(" 参数即可")]),_vm._v(" "),_c('p',[_vm._v("需要注意，最大高度中包含 "),_c('code',[_vm._v("30")]),_vm._v(" 像素的 "),_c('code',[_vm._v("padding")]),_vm._v(" 距离（长度没有）")]),_vm._v(" "),_c('p',[_vm._v("即设置 "),_c('code',[_vm._v("300")]),_vm._v(" 最大高度，实则为 "),_c('code',[_vm._v("270")]),_vm._v("，目的是为了抵消与外层容器之间的间距，否则会溢出容器")]),_vm._v(" "),_c('br'),_vm._v(" "),_c('p',[_c('code',[_vm._v(":maxHeight")]),_vm._v(" -- 设定下拉框的最大高度，默认为 "),_c('code',[_vm._v("300")]),_vm._v("，超出最大高度后出现滚动条 ")]),_vm._v(" "),_c('p',[_c('code',[_vm._v(":width")]),_vm._v(" -- 设定下拉按钮和下拉框的长度，默认为 "),_c('code',[_vm._v("200")])])])])}]
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-box"},[_c('div',{staticClass:"components-title"},[_vm._v("SideBar 侧边栏")]),_vm._v(" "),_c('div',{staticClass:"components-wrapper"},[_c('ul',[_c('li',[_c('div',{staticClass:"components-content"},[_c('h2',{staticClass:"h2"},[_vm._v("SideBar 侧边栏")]),_vm._v(" "),_c('dy-button',{on:{"click":_vm.showHandle01}},[_vm._v("左侧侧边栏")]),_vm._v(" "),_c('dy-sidebar',{attrs:{"is-show":_vm.showSidebar01,"width":280},on:{"update:isShow":function($event){_vm.showSidebar01=$event}}},[_c('div',{staticClass:"side-box"},[_c('p',[_vm._v("这里是侧边栏弹出层的自定义内容部分")])])]),_vm._v(" "),_c('dy-button',{staticStyle:{"margin-left":"40px"},on:{"click":_vm.showHandle02}},[_vm._v("右侧侧边栏")]),_vm._v(" "),_c('dy-sidebar',{attrs:{"placement":"right","is-show":_vm.showSidebar02,"width":280},on:{"update:isShow":function($event){_vm.showSidebar02=$event}}},[_c('div',{staticClass:"side-box"},[_c('p',[_vm._v("这里是侧边栏弹出层的自定义内容部分")])])])],1),_vm._v(" "),_vm._m(0),_vm._v(" "),_c('pre',{directives:[{name:"highlightjs",rawName:"v-highlightjs"}]},[_vm._v("\r\n    "),_c('code',{staticClass:"html"},[_vm._v("\r\n    <template>\r\n        \r\n      <dy-button @click=\"showHandle01\">左侧侧边栏</dy-button>\r\n      <dy-sidebar :is-show.sync=\"showSidebar01\" :width=\"280\">\r\n        <div class=\"side-box\">\r\n          <p>这里是侧边栏弹出层的自定义内容部分</p>\r\n        </div>\r\n      </dy-sidebar>\r\n\r\n      <dy-button @click=\"showHandle02\" style=\"margin-left:40px;\">右侧侧边栏</dy-button>\r\n      <dy-sidebar placement=\"right\" :is-show.sync=\"showSidebar02\" :width=\"280\">\r\n        <div class=\"side-box\">\r\n          <p>这里是侧边栏弹出层的自定义内容部分</p>\r\n        </div>\r\n      </dy-sidebar>\r\n\r\n    </template>\r\n    <script>\r\n      export default {\r\n        data () {\r\n          return {\r\n            showSidebar01: false,\r\n            showSidebar02: false\r\n          }\r\n        },\r\n        methods: {\r\n          showHandle01 () {\r\n            this.showSidebar01 = true\r\n          },\r\n          showHandle02 () {\r\n            this.showSidebar02 = true\r\n          },\r\n        }\r\n      }\r\n    </script>\r\n    ")]),_vm._v("\r\n")])])])]),_vm._v(" "),_c('div',{staticStyle:{"height":"500px"}})])}
+var staticRenderFns = [function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"components-code"},[_c('div',{staticClass:"code-title"},[_vm._v("示例代码")]),_vm._v(" "),_c('div',{staticClass:"code-tip"},[_c('p',[_vm._v("使用 "),_c('code',[_vm._v("dy-sidebar")]),_vm._v(" 组件绑定 "),_c('code',[_vm._v(":is-show.sync")]),_vm._v(" 参数即可")]),_vm._v(" "),_c('p',[_vm._v("侧边栏的状态是根据 "),_c('code',[_vm._v(":is-show.sync")]),_vm._v(" 所绑定的值来改变状态的")]),_vm._v(" "),_c('br'),_vm._v(" "),_c('p',[_vm._v("参数设置如下：")]),_vm._v(" "),_c('p',[_c('code',[_vm._v(":is-show.sync")]),_vm._v(" -- 布尔值，用于显示侧边栏的状态")]),_vm._v(" "),_c('p',[_c('code',[_vm._v(":width")]),_vm._v(" -- 数值或者字符串，用于设置侧边栏的宽度，默认为 "),_c('code',[_vm._v("250")])]),_vm._v(" "),_c('p',[_c('code',[_vm._v("placement")]),_vm._v(" -- 用于指定侧边栏弹出方向")])])])}]
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
 
