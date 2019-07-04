@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+<title>JavaScript 中的 call 和 apply - heptaluan&#39;s blog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="call() 和 apply() 方法主要是用来扩充函数的作用域和改变 this 的指向（改变被调用函数的上下文），都接收两个参数  apply() 方法 第一个参数是作用域，第二个是参数数组，其中第二个参数可以是数组实例，也可以是 arguments 对象  call() 方法 也接收两个参数，仅仅在于和 apply() 的传参方式不同，传递函数的参数必须逐个写入">
+<meta name="keywords" content="JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript 中的 call 和 apply">
+<meta property="og:url" content="http://yoursite.com/2017/01/10/JavaScript/02/index.html">
+<meta property="og:site_name" content="heptaluan&#39;s blog">
+<meta property="og:description" content="call() 和 apply() 方法主要是用来扩充函数的作用域和改变 this 的指向（改变被调用函数的上下文），都接收两个参数  apply() 方法 第一个参数是作用域，第二个是参数数组，其中第二个参数可以是数组实例，也可以是 arguments 对象  call() 方法 也接收两个参数，仅仅在于和 apply() 的传参方式不同，传递函数的参数必须逐个写入">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/cover/02.jpg">
+<meta property="og:updated_time" content="2019-07-04T09:58:26.210Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScript 中的 call 和 apply">
+<meta name="twitter:description" content="call() 和 apply() 方法主要是用来扩充函数的作用域和改变 this 的指向（改变被调用函数的上下文），都接收两个参数  apply() 方法 第一个参数是作用域，第二个是参数数组，其中第二个参数可以是数组实例，也可以是 arguments 对象  call() 方法 也接收两个参数，仅仅在于和 apply() 的传参方式不同，传递函数的参数必须逐个写入">
+<meta name="twitter:image" content="http://yoursite.com/images/cover/02.jpg">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.ico">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-2-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <!-- <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="JavaScript 中的 call 和 apply" height="28">
+            
+            </a>
+        </div> -->
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/heptaluan">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-10-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-image">
+        <span class="image is-7by1">
+            <img class="thumbnail" src="/images/cover/02.jpg" alt="JavaScript 中的 call 和 apply">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-01-09T16:00:00.000Z">2017-01-10</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    23 分钟 读完 (大约 3431 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                JavaScript 中的 call 和 apply
+            
+        </h1>
+        <div class="content">
+            <p><code>call()</code> 和 <code>apply()</code> 方法主要是用来扩充函数的作用域和改变 <code>this</code> 的指向（改变被调用函数的上下文），都接收两个参数</p>
+<ul>
+<li><p><code>apply()</code> 方法 第一个参数是作用域，第二个是参数数组，其中第二个参数可以是数组实例，也可以是 <code>arguments</code> 对象</p>
+</li>
+<li><p><code>call()</code> 方法 也接收两个参数，仅仅在于和 <code>apply()</code> 的传参方式不同，传递函数的参数必须逐个写入</p>
+</li>
+</ul>
+<a id="more"></a>
+
+
+<h2 id="两者的区别"><a href="#两者的区别" class="headerlink" title="两者的区别"></a>两者的区别</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>).<span class="hljs-title">call</span>(<span class="hljs-params">object, a, b, c ...</span>)</span></span><br><span class="line"><span class="hljs-function"></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-title">function</span>(<span class="hljs-params"></span>).<span class="hljs-title">apply</span>(<span class="hljs-params">object, [a, b, c ...]</span>)</span></span><br></pre></td></tr></table></figure>
+
+<p>功能基本一样，都是对象 <code>object</code> 调用这里的 <code>funciton()</code></p>
+<p>不同之处是 <code>call</code> 参数从第二个开始都是传递给 <code>funciton</code> 的，可以依次罗列用 <code>&#39;，&#39;</code> 隔开，而 <code>apply</code> 只有两个参数，第二个是一个数组，其中存储了所有传递给 <code>function</code> 的参数</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> bar = &#123;<span class="hljs-attr">baz</span>: <span class="hljs-string">'baz'</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">   <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo.call(<span class="hljs-string">'bar'</span>);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 输出 Object &#123;baz: 'baz'&#125;</span></span><br><span class="line"><span class="hljs-comment">// 其实就是让一个对象调用一个函数，在使用了 call 以后，即调用了显式绑定，this 就指向了所传进去的对象</span></span><br></pre></td></tr></table></figure>
+
+<p>不过需要注意的是，<code>apply</code> 和 <code>call</code> 在严格模式下的不同</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span> (<span class="hljs-params">x, y</span>) </span>&#123;</span><br><span class="line"><span class="hljs-meta">  'use strict'</span>;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(x, y, <span class="hljs-keyword">this</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo.apply(<span class="hljs-literal">null</span>);       <span class="hljs-comment">// undefined undefined null</span></span><br><span class="line">foo.apply(<span class="hljs-literal">undefined</span>);  <span class="hljs-comment">// undefined undefined undefined</span></span><br></pre></td></tr></table></figure>
+
+<p>我们可以尝试来手动实现一下这两个函数</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p><code>call</code> 和 <code>apply</code> 本质是一样的，区别就在于参数的不同</p>
+<p><code>call</code> 方法的定义 <a href="http://yanhaijing.com/es5/#323" target="_blank" rel="noopener">ES5 - Call</a></p>
+<p>简单来说就是</p>
+<ul>
+<li><p><code>call()</code> 方法在使用一个指定的 <code>this</code> 值和若干个指定的参数值的前提下调用某个函数或方法</p>
+</li>
+<li><p><code>apply()</code> 方法在使用一个指定的 <code>this</code> 值和参数值必须是数组类型的前提下调用某个函数或方法</p>
+</li>
+</ul>
+<p><code>call()</code> 和 <code>apply()</code> 的第一个参数是要调用函数的母对象，它是调用上下文，在函数体内通过 <code>this</code> 来获得它的引用，比如以对象 <code>o</code> 的方法来调用函数 <code>f()</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">f.call(o)</span><br><span class="line"></span><br><span class="line">f.apply(o)</span><br></pre></td></tr></table></figure>
+
+<p>大致原理如下所示</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">o.m = f;    <span class="hljs-comment">// 将 f 存储为 o 的临时方法</span></span><br><span class="line">o.m();      <span class="hljs-comment">// 调用它，不传入参数</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">delete</span> o.m; <span class="hljs-comment">// 将临时方法删除</span></span><br></pre></td></tr></table></figure>
+
+<p>在严格模式中，<code>call()</code> 和 <code>apply()</code> 的第一个参数都会变成 <code>this</code> 的值，哪怕传入的实参是原始值甚至是 <code>null</code> 或 <code>undefined</code></p>
+<p>在 <code>ES3</code> 或者非严格模式中，传入的 <code>null</code> 和 <code>undefined</code> 都会被全局对象代替，而其他原始值则会被相应的包装对象（<code>wrapper object</code>）所替代</p>
+<p>简单来说就是，<code>f.call(o)</code> 其原理就是先通过 <code>o.m = f</code> 将 <code>f</code> 作为 <code>o</code> 的某个临时属性 <code>m</code> 存储，然后执行 <code>m</code>，执行完毕后将 <code>m</code> 属性删除</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>这里以 <code>apply</code> 为例</p>
+<p>初级实现</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Function</span>.prototype.apply = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">context</span>) </span>&#123;</span><br><span class="line">  context.fn = <span class="hljs-keyword">this</span>;</span><br><span class="line">  context.fn();</span><br><span class="line">  <span class="hljs-keyword">delete</span> context.fn;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是 <code>apply</code> 有一点不同，它的参数是一个数组，在执行的时候会把数组的值依次传递给函数当参数</p>
+<p>需要实现类似 <code>context.fn(arg1, arg2, arg3 ...)</code> 的调用方式，这里采用 <code>evel</code> 来实现</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Function</span>.prototype.apply = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">context</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> args = <span class="hljs-built_in">arguments</span>[<span class="hljs-number">1</span>];</span><br><span class="line">  context.fn = <span class="hljs-keyword">this</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 使用 evel 来实现（并不是唯一的方式）</span></span><br><span class="line">  <span class="hljs-comment">// 来得到 context.fn(arg1,arg2,arg3...)</span></span><br><span class="line">  <span class="hljs-keyword">var</span> fnStr = <span class="hljs-string">'context.fn('</span>;</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; args.length; i++) &#123;</span><br><span class="line">    fnStr += i == args.length - <span class="hljs-number">1</span> ? args[i] : args[i] + <span class="hljs-string">','</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  fnStr += <span class="hljs-string">')'</span>;</span><br><span class="line">  <span class="hljs-built_in">eval</span>(fnStr);</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">delete</span> context.fn;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>有几个需要注意的地方</p>
+<p><code>this</code> 参数可以传递 <code>null</code> 或者不传，当为 <code>null</code> 的时候，则指向 <code>window</code></p>
+<p>函数是可以指定返回值的</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Function</span>.prototype.apply = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">context</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> context = context || <span class="hljs-built_in">window</span>;</span><br><span class="line">  <span class="hljs-keyword">var</span> args = <span class="hljs-built_in">arguments</span>[<span class="hljs-number">1</span>];</span><br><span class="line">  context.fn = <span class="hljs-keyword">this</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (args === <span class="hljs-keyword">void</span> <span class="hljs-number">0</span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> context.fn();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 使用 evel 来实现（并不是唯一的方式）</span></span><br><span class="line">  <span class="hljs-comment">// 来得到 context.fn(arg1, arg2, arg3 ...)</span></span><br><span class="line">  <span class="hljs-keyword">var</span> fnStr = <span class="hljs-string">'context.fn('</span>;</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; args.length; i++) &#123;</span><br><span class="line">    fnStr += i == args.length - <span class="hljs-number">1</span> ? args[i] : args[i] + <span class="hljs-string">','</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  fnStr += <span class="hljs-string">')'</span>;</span><br><span class="line">  <span class="hljs-keyword">var</span> returnVal = <span class="hljs-built_in">eval</span>(fnStr);</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">delete</span> context.fn;</span><br><span class="line">  <span class="hljs-keyword">return</span> returnVal;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还有一个问题，即 <code>context.fn = this</code>，这里我们只是假设不存在名为 <code>fn</code> 的属性，所以这里我们需要保证 <code>fn</code> 的唯一性</p>
+<p>这里可以采用 <code>ES6</code> 提供的 <code>symbol</code> 数据类型，直接添加即可</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> fn = <span class="hljs-built_in">Symbol</span>()</span><br><span class="line">context[fn] = <span class="hljs-keyword">this</span></span><br></pre></td></tr></table></figure>
+
+<p>如果不使用 <code>symbol</code>，也可以来手动模拟一个，简单来说就是随机定义一个属性名称，然后在进行赋值的时候判断一下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">symbol</span>(<span class="hljs-params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> unique_proper = <span class="hljs-string">"00"</span> + <span class="hljs-built_in">Math</span>.random();</span><br><span class="line">  <span class="hljs-keyword">if</span> (obj.hasOwnProperty(unique_proper)) &#123;</span><br><span class="line">    <span class="hljs-comment">// 如果已经存在这个属性，则递归调用，直到没有这个属性</span></span><br><span class="line">    <span class="hljs-built_in">arguments</span>.callee(obj)</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> unique_proper;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 使用</span></span><br><span class="line"><span class="hljs-keyword">var</span> fn = symbol(context);</span><br></pre></td></tr></table></figure>
+
+<p>而 <code>call</code> 方法，可以利用上面的 <code>apply</code> 来简单实现</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Function</span>.prototype.call = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">context</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.apply(([].shift.apply(<span class="hljs-built_in">arguments</span>), <span class="hljs-built_in">arguments</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="延伸"><a href="#延伸" class="headerlink" title="延伸"></a>延伸</h2><p>下面是两个实际使用场景</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sum</span> (<span class="hljs-params">num1, num2</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> num1 + num2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">callSum1</span> (<span class="hljs-params">num1, num2</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 使用 sum 这个函数来完成一次调用，调用的参数就是 callSum1 这个函数的参数</span></span><br><span class="line">  <span class="hljs-comment">// apply 的第二个参数表示一组参数数组</span></span><br><span class="line">  <span class="hljs-keyword">return</span> sum.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">callSum2</span> (<span class="hljs-params">num1, num2</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 第二个参数是数组</span></span><br><span class="line">  <span class="hljs-keyword">return</span> sum.apply(<span class="hljs-keyword">this</span>, [num1, num2]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">callSum1(<span class="hljs-number">12</span>, <span class="hljs-number">22</span>);</span><br><span class="line">callSum2(<span class="hljs-number">22</span>, <span class="hljs-number">32</span>);</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">callSum3</span> (<span class="hljs-params">num1, num2</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// call 是通过参数列表来完成传递，其余和 apply 没什么区别</span></span><br><span class="line">  <span class="hljs-keyword">return</span> sum.call(<span class="hljs-keyword">this</span>, num1, num2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">callSum3(<span class="hljs-number">32</span>, <span class="hljs-number">42</span>);</span><br></pre></td></tr></table></figure>
+
+<p>另外一个实例</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> color = <span class="hljs-string">'red'</span>;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showColor</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  alert(<span class="hljs-keyword">this</span>.color);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Circle</span> (<span class="hljs-params">color</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.color = color;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> c = <span class="hljs-keyword">new</span> Circle(<span class="hljs-string">'yellow'</span>);</span><br><span class="line"></span><br><span class="line">showColor.call(<span class="hljs-keyword">this</span>); <span class="hljs-comment">// 使用上下文来调用 showColor，结果是red</span></span><br><span class="line">showColor.call(c);    <span class="hljs-comment">// 上下文对象是 c，结果就是 yellow</span></span><br></pre></td></tr></table></figure>
+
+<p>通过以上发现，使用 <code>call</code> 和 <code>apply</code> 以后，对象中可以不需要定义方法了</p>
+<p>这就是 <code>call</code> 和 <code>apply</code> 的一种运用</p>
+<h2 id="扩展：this-init-apply-this-arguments"><a href="#扩展：this-init-apply-this-arguments" class="headerlink" title="扩展：this.init.apply(this, arguments)"></a>扩展：this.init.apply(this, arguments)</h2><p>在 <code>prototype</code> 框架中有如下一段代码</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> Class = &#123;</span><br><span class="line">  create: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.initialize.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// Class 使用方法如下</span></span><br><span class="line"><span class="hljs-keyword">var</span> A = Class.create();</span><br><span class="line"></span><br><span class="line">A.prototype = &#123;</span><br><span class="line">  initialize: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">v</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.value = v;</span><br><span class="line">  &#125;,</span><br><span class="line">  showValue: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    alert(<span class="hljs-keyword">this</span>.value);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-keyword">new</span> A(<span class="hljs-string">"helloWord!"</span>);</span><br><span class="line">a.showValue();</span><br></pre></td></tr></table></figure>
+
+<p><code>var a = new A(&quot;helloWord!&quot;)</code> 其实这句话的含义就是构造个一个 <code>function</code> 复制给 <code>a</code>，这个 <code>function</code> 是</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.initialize.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个 <code>function</code> 方法是用来做构造函数的。使用 <code>function</code> 构造对象时，会让构造出来的对象的 <code>initialize</code> 方法执行 <code>apply()</code> 方法</p>
+<p><code>function</code> 中的第一个 <code>this</code> 是指用 <code>new</code> 调用构造函数之后生成的对象，也就是前面的 <code>a</code>，那么第二个 <code>this</code> 也当然应该是指同一个对象</p>
+<p><code>this</code> 调用 <code>initialize</code> 方法，参数是 <code>arguments</code> 对象（参数的数组对象），在构造函数执行时，对象 <code>a</code> 就会去执行 <code>initialize</code> 方法来初始化 <code>arguments</code> 作为 <code>create</code> 返回的构造函数的实参数组</p>
+<p>传递给方法 <code>apply</code>，在调用 <code>initialize</code> 时作为参数传递给初始化函数 <code>initialize</code></p>
+<p>那么在 <code>var a = new A(&quot;helloWord!&quot;);</code> 的时候 <code>&quot;helloWord!&quot;</code> 就是实参数组（虽然只有一个字符串），传递给方法 <code>apply</code></p>
+<p>然后在调用 <code>initialize</code> 的时候作为参数传递给初始化函数 <code>initialize</code></p>
+<p>一个实际使用场景</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Circle</span> (<span class="hljs-params">nRadius, sMessage</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.init.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  Circle.prototype = &#123;</span><br><span class="line">    init : <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">nRadius, sMessage</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.nR = nRadius;</span><br><span class="line">      <span class="hljs-keyword">this</span>.sMessage = sMessage;</span><br><span class="line">    &#125;,</span><br><span class="line">    PI : <span class="hljs-number">3.14</span>,</span><br><span class="line">    fnGetArea : <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.sMessage + <span class="hljs-string">': '</span> + <span class="hljs-keyword">this</span>.PI * <span class="hljs-keyword">this</span>.nR * <span class="hljs-keyword">this</span>.nR;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">var</span> c = <span class="hljs-keyword">new</span> Circle(<span class="hljs-number">5</span>, <span class="hljs-string">'构造初始化 面积'</span>);</span><br><span class="line">  alert(c.fnGetArea()); <span class="hljs-comment">//构造初始化 面积: 78.5</span></span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<h2 id="扩展：Math-max-apply-null-arr"><a href="#扩展：Math-max-apply-null-arr" class="headerlink" title="扩展：Math.max.apply(null, arr)"></a>扩展：Math.max.apply(null, arr)</h2><p><code>max()</code> 方法可以返回两个指定的数中带有较大的值的那个数</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">7</span>, <span class="hljs-number">9</span>, <span class="hljs-number">11</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">6</span>, <span class="hljs-number">8</span>, <span class="hljs-number">10</span>];</span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">Math</span>.max.apply(<span class="hljs-literal">null</span>, arr));</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 使用 call 方法可以达到同样目的</span></span><br><span class="line"><span class="hljs-comment">// Math.max.call(null, 1, 2, 3, 4, 5);</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Math.max()</code> 方法，支持传递多个参数，比如：<code>Math.max(1, 3, 5, 7, 9, 11)</code>  </p>
+<p>但是它不支持直接传递一个数组作为参数，比如：<code>Math.max(new Array(1, 3, 5, 7, 9, 11))</code></p>
+<p>这里，只要我们有方法把数组，一个一个拆分开来，传递到 <code>Math.max()</code> 方法中，就实现了传递数组的方法，这里就可以利用到 <code>apply()</code> 函数</p>
+<p>所有函数都有 <code>apply(作用域链, 参数)</code> 这个方法，这个函数的 “参数”，接收一个数组，并且是将数组中的每个值分开来，传递给调用函数，所以就实现了传递一个数组，取得最大值的方法</p>
+<p><code>Function.apply()</code> 是 <code>JavaScript</code> 的一个 <code>OOP</code> 特性，一般用来模拟继承和扩展 <code>this</code> 的用途</p>
+<p><code>xx.apply</code> 是一个调用函数的方法，其参数为：<code>apply(Function, Args)</code></p>
+<p><code>Function</code> 为要调用的方法，<code>Args</code> 是参数列表，当 <code>Function</code> 为 <code>null</code> 时，默认为上文</p>
+<p>即</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Math</span>.max.apply(<span class="hljs-literal">null</span>, arr)</span><br></pre></td></tr></table></figure>
+
+<h2 id="扩展：Array-prototype-slice-call-arguments-0"><a href="#扩展：Array-prototype-slice-call-arguments-0" class="headerlink" title="扩展：Array.prototype.slice.call(arguments, 0)"></a>扩展：Array.prototype.slice.call(arguments, 0)</h2><p>在 <code>JavaScript</code> 中我们经常会看到 <code>Array.prototype.slice.call(arguments, 0)</code> 的写法，这个方法的作用是<strong>把类数组对象转换成一个真正的数组</strong></p>
+<p>这里涉及到 <code>slice()</code> 方法和 <code>call()</code> 方法</p>
+<h3 id="slice-方法"><a href="#slice-方法" class="headerlink" title="slice()方法"></a>slice()方法</h3><p>数组和字符串都有这个 <code>slice</code> 方法，这个方法的作用是截取一段数据，在数组中，该方法的返回值是<strong>包含</strong>截取元素的组成的数组，在字符串中，该方法的返回值是<strong>包含</strong>截取字符串组成的字符串</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 参数 start 表示数组片段开始处的下标，如果是负数，它声明从数组末尾开始算起的位置</span></span><br><span class="line"><span class="hljs-comment">// 参数 end 表示数组片段结束处的后一个元素的下标，如果没有指定这个参数，切分的数组包含从 start 开始到数组结束的所有元素</span></span><br><span class="line"><span class="hljs-comment">// 如果这个参数是负数，它声明的是从数组尾部开始算起的元素（不包括结束位置）</span></span><br><span class="line">array.slice(start, end)</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是，如果 <code>slice()</code> 方法没有传递参数，则默认是从 <code>index</code> 序列为 <code>0</code> 开始截取（见 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice" target="_blank" rel="noopener">MDN - Array.prototype.slice()</a>）</p>
+<p>比如：</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>].slice(<span class="hljs-number">2</span>, <span class="hljs-number">4</span>);</span><br><span class="line">[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>].slice(<span class="hljs-number">-4</span>, <span class="hljs-number">-2</span>);</span><br><span class="line">[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>].slice();</span><br><span class="line"></span><br><span class="line"><span class="hljs-string">'everything'</span>.slice(<span class="hljs-number">2</span>, <span class="hljs-number">4</span>);</span><br><span class="line"><span class="hljs-string">'everything'</span>.slice(<span class="hljs-number">-4</span>, <span class="hljs-number">-2</span>);</span><br><span class="line"><span class="hljs-string">'everything'</span>.slice();</span><br></pre></td></tr></table></figure>
+
+<p>前两个的返回值均为 <code>[3, 4]</code>，为数组，而后两个的返回值分别为 <code>&#39;er&#39;</code> 和 <code>&#39;hi&#39;</code>，为字符串</p>
+<ul>
+<li><p>如果之传入一个参数的话，那就是输出从开始位置到结束位置的所有元素</p>
+</li>
+<li><p>而如果不传递参数，则是从 <code>0</code> 开始计算（可以认为返回一个原对象的副本，因为 <code>slice</code> 方法返回的是一个新的数组）</p>
+</li>
+</ul>
+<p>在字符串中，和 <code>slice()</code> 方法类型的还有两个方法：<code>substring()</code> 和 <code>substr()</code> 方法</p>
+<p>其中，<code>substring()</code> 方法表示<strong>返回从开始位置到结束位置的字符串</strong>，<code>substr()</code> 接收两个参数，<strong>第一个参数表示开始位置，第二个参数表示要截取的字符个数</strong>，和前两个方法略有不同</p>
+<p>当传入方法的参数为负数时，这三种方法又略有不同：</p>
+<ul>
+<li><p><code>slice()</code> 像上面说的，是负数加上字符串的长度得出相应的正值</p>
+</li>
+<li><p><code>substring()</code> 方法的参数均置为零</p>
+</li>
+<li><p><code>substr()</code> 方法的第一个参数为负值加上字符串长度得到的正值，第二个参数置为零</p>
+</li>
+</ul>
+<h3 id="Array-prototype-slice-call-arguments-0"><a href="#Array-prototype-slice-call-arguments-0" class="headerlink" title="Array.prototype.slice.call(arguments, 0)"></a>Array.prototype.slice.call(arguments, 0)</h3><p>在 <code>Array.prototype.slice.call(arguments, 0)</code> 中，<code>Array.prototype.slice</code> 调用的是 <code>Array</code> 的原型方法，对于正真的数组是有 <code>slice()</code> 方法，但是对于像 <code>arguments</code> 或者自己定义的一些<strong>类数组对象</strong>虽然存在 <code>length</code> 等若干属性，但是并没有 <code>slice()</code> 方法</p>
+<p>所以对于这种类数组对象就得使用原型方法来使用 <code>slice()</code> 方法，即 <code>Array.prototype.slice</code>（如果在自定义中的类数组对象中自定义了 <code>slice()</code> 方法，那么自然可以直接调用）</p>
+<p>简单点说就是：对于 <code>arguments</code> 类数组，我们调用 <code>Array.prototype.slice</code> 原型方法，并用 <code>call()</code> 方法，将作用域限定在 <code>arguments</code> 中，这里 <code>Array.prototype</code> 就可以理解为 <code>arguments</code>，同参数 <code>0</code> 为 <code>slice()</code> 方法的第一个参数，即开始位置索引，通过这种方法就将 <code>arguments</code> 类数组转换成了真数组</p>
+<blockquote>
+<p><code>Array.prototype.slice.call(arguments)</code> 能将具有 <code>length</code> 属性的对象转成数组，除了 <code>IE</code> 下的节点集合（因为 <code>ie</code> 下的 <code>dom</code> 对象是以 <code>com</code> 对象的形式实现的，<code>js</code> 对象与 <code>com</code> 对象不能进行转换）</p>
+</blockquote>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = &#123; </span><br><span class="line">  length: <span class="hljs-number">2</span>, </span><br><span class="line">  <span class="hljs-number">0</span>: <span class="hljs-string">'first'</span>, </span><br><span class="line">  <span class="hljs-number">1</span>: <span class="hljs-string">'second'</span> </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Array</span>.prototype.slice.call(a);  <span class="hljs-comment">// ['first', 'second']</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> a = &#123; </span><br><span class="line">  length: <span class="hljs-number">2</span> </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Array</span>.prototype.slice.call(a);  <span class="hljs-comment">// [undefined, undefined]</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="猜测-slice-的内部实现"><a href="#猜测-slice-的内部实现" class="headerlink" title="猜测 slice 的内部实现"></a>猜测 slice 的内部实现</h3><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Array</span>.prototype.slice = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, end</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> result = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>();</span><br><span class="line">  start = start || <span class="hljs-number">0</span>;</span><br><span class="line">  <span class="hljs-comment">// this 指向调用的对象，当用了 call 后，能够改变 this 的指向，也就是指向传进来的对象</span></span><br><span class="line">  end = end || <span class="hljs-keyword">this</span>.length;</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = start; i &lt; end; i++) &#123;</span><br><span class="line">    result.push(<span class="hljs-keyword">this</span>[i]);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="一个转成数组的通用函数"><a href="#一个转成数组的通用函数" class="headerlink" title="一个转成数组的通用函数"></a>一个转成数组的通用函数</h3><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> toArray = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">s</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">try</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Array</span>.prototype.slice.call(s);</span><br><span class="line">  &#125; <span class="hljs-keyword">catch</span> (e) &#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> arr = [];</span><br><span class="line">      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>, len = s.length; i &lt; len; i++) &#123;</span><br><span class="line">      <span class="hljs-comment">// arr.push(s[i]);</span></span><br><span class="line">      <span class="hljs-comment">// 据说这样比 push 快</span></span><br><span class="line">      arr[i] = s[i]; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> arr;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="jQuery-中的-toArray"><a href="#jQuery-中的-toArray" class="headerlink" title="jQuery 中的 toArray()"></a>jQuery 中的 toArray()</h3><p><code>jQuery</code> 中的方法 <code>.toArray()</code> 是将当前 <code>jQuery</code> 对象转换为真正的数组，转换后的数组包含了所有元素，方法 <code>.toArray()</code> 的实现巧妙地借用了数组的方法 <code>slice()</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//...</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// Save a reference to some core methods</span></span><br><span class="line"></span><br><span class="line">toString = <span class="hljs-built_in">Object</span>.prototype.toString,</span><br><span class="line">hasOwn = <span class="hljs-built_in">Object</span>.prototype.hasOwnProperty,</span><br><span class="line">push = <span class="hljs-built_in">Array</span>.prototype.push,</span><br><span class="line">slice = <span class="hljs-built_in">Array</span>.prototype.slice,</span><br><span class="line">trim = <span class="hljs-built_in">String</span>.prototype.trim,</span><br><span class="line">indexOf = <span class="hljs-built_in">Array</span>.prototype.indexOf,</span><br><span class="line"></span><br><span class="line">toArray: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> slice.call(<span class="hljs-keyword">this</span>, <span class="hljs-number">0</span>);</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//...</span></span><br></pre></td></tr></table></figure>
+
+<p>连同 <code>slice()</code> 一起声明的还有 <code>toString()</code> 、<code>hasOwn()</code> 、<code>trim()</code> 、<code>indexOf()</code>，这里通过声明对这些核心方法的引用</p>
+<p>使得在 <code>jQuery</code> 代码中可以借用这些核心方法的功能，执行时可通过方法 <code>call()</code> 和 <code>apply()</code> 指定方法执行的环境，即关键字 <code>this</code> 所引用的对象</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/JavaScript/">JavaScript</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/01/18/JavaScript/03/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">JavaScript 中的作用域</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2016/12/25/CSS/03/">
+                <span class="level-item">伪类与伪元素</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="comment-container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+	var gitment = new Gitment({
+		id: '2017/01/10/JavaScript/02/',
+		owner: 'heptaluan',
+		repo: 'blog-gitment',
+		oauth: {
+			client_id: 'ee317a1f9527f57fc555',
+			client_secret: '94bba574dd577716d4860ca484651d0b7c5b1b65',
+		},
+	})
+	gitment.render('comment-container')
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-2-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <figure class="image is-128x128 has-mb-6">
+                            <img class="is-rounded" src="https://avatars2.githubusercontent.com/u/18285736?s=460&amp;v=4" alt="heptaluan">
+                        </figure>
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        heptaluan
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        white lie.
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>WuHan China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <!-- <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        55
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        5
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        5
+                    </p>
+                </div>
+            </div>
+        </nav> -->
+        <!-- <div class="level">
+            <a class="level-item button is-link is-rounded" href="/" target="_blank">
+                关注我</a>
+        </div> -->
+        
+        
+    </div>
+</div>
+    
+        
+    
+        
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Angular/">
+            <span class="level-start">
+                <span class="level-item">Angular</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">9</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/CSS/">
+            <span class="level-start">
+                <span class="level-item">CSS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/HTTP/">
+            <span class="level-start">
+                <span class="level-item">HTTP</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/JavaScript/">
+            <span class="level-start">
+                <span class="level-item">JavaScript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">37</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Node-js/">
+            <span class="level-start">
+                <span class="level-item">Node.js</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Angular/" style="font-size: 17.5px;">Angular</a> <a href="/tags/CSS/" style="font-size: 12.5px;">CSS</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow  ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/03/13/Angular/09/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/09.jpg" alt="动态加载（补充）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-03-12T16:00:00.000Z">2019-03-13</time></div>
+                    <a href="/2019/03/13/Angular/09/" class="has-link-black-ter is-size-6">动态加载（补充）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/03/12/Angular/08/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/08.jpg" alt="动态加载已经声明的组件">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-03-11T16:00:00.000Z">2019-03-12</time></div>
+                    <a href="/2019/03/12/Angular/08/" class="has-link-black-ter is-size-6">动态加载已经声明的组件</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/01/11/Angular/07/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/07.jpg" alt="ExpressionChangedAfterItHasBeenCheckedError">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-10T16:00:00.000Z">2019-01-11</time></div>
+                    <a href="/2019/01/11/Angular/07/" class="has-link-black-ter is-size-6">ExpressionChangedAfterItHasBeenCheckedError</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/12/08/Angular/06/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/06.jpg" alt=":host 和 ::ng-deep">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-07T16:00:00.000Z">2018-12-08</time></div>
+                    <a href="/2018/12/08/Angular/06/" class="has-link-black-ter is-size-6">:host 和 ::ng-deep</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/12/05/Angular/05/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/05.jpg" alt="Angular 中的装饰器">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-04T16:00:00.000Z">2018-12-05</time></div>
+                    <a href="/2018/12/05/Angular/05/" class="has-link-black-ter is-size-6">Angular 中的装饰器</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Angular/">
+                        <span class="tag">Angular</span>
+                        <span class="tag is-grey">9</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/CSS/">
+                        <span class="tag">CSS</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/HTTP/">
+                        <span class="tag">HTTP</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/JavaScript/">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag is-grey">37</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Node-js/">
+                        <span class="tag">Node.js</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <!-- <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="JavaScript 中的 call 和 apply" height="28">
+                
+                </a> -->
+                <p class="is-size-7">
+                &copy; 2019 heptaluan&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <!-- <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/heptaluan">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div> -->
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+<title>Angular 中的装饰器 - heptaluan&#39;s blog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="Angular 中的装饰器可以简单的总结为以下几句">
+<meta name="keywords" content="Angular">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Angular 中的装饰器">
+<meta property="og:url" content="http://yoursite.com/2018/12/05/Angular/05/index.html">
+<meta property="og:site_name" content="heptaluan&#39;s blog">
+<meta property="og:description" content="Angular 中的装饰器可以简单的总结为以下几句">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/cover/05.jpg">
+<meta property="og:updated_time" content="2019-07-04T10:05:53.808Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Angular 中的装饰器">
+<meta name="twitter:description" content="Angular 中的装饰器可以简单的总结为以下几句">
+<meta name="twitter:image" content="http://yoursite.com/images/cover/05.jpg">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.ico">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-2-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <!-- <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="Angular 中的装饰器" height="28">
+            
+            </a>
+        </div> -->
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/heptaluan">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-10-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-image">
+        <span class="image is-7by1">
+            <img class="thumbnail" src="/images/cover/05.jpg" alt="Angular 中的装饰器">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-12-04T16:00:00.000Z">2018-12-05</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    15 分钟 读完 (大约 2265 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Angular 中的装饰器
+            
+        </h1>
+        <div class="content">
+            <p><code>Angular</code> 中的装饰器可以简单的总结为以下几句</p>
+<a id="more"></a>
+
+<ul>
+<li><p>它是一个表达式</p>
+</li>
+<li><p>该表达式被执行后，返回一个函数</p>
+</li>
+<li><p>函数的入参分别为 <code>target</code>、<code>name</code> 和 <code>descriptor</code></p>
+</li>
+<li><p>执行该函数后，可能返回 <code>descriptor</code> 对象，用于配置 <code>target</code> 对象</p>
+</li>
+</ul>
+<p>它分为</p>
+<ul>
+<li><p>类装饰器 (<code>Class decorators</code>)</p>
+</li>
+<li><p>属性装饰器 (<code>Property decorators</code>)</p>
+</li>
+<li><p>方法装饰器 (<code>Method decorators</code>)</p>
+</li>
+<li><p>参数装饰器 (<code>Parameter decorators</code>)</p>
+</li>
+</ul>
+<h2 id="TypeScript-中的装饰器"><a href="#TypeScript-中的装饰器" class="headerlink" title="TypeScript 中的装饰器"></a>TypeScript 中的装饰器</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 类装饰器</span></span><br><span class="line"><span class="hljs-comment">// 用来装饰类的，它接收一个参数：</span></span><br><span class="line"><span class="hljs-comment">// target: TFunction - 被装饰的类</span></span><br><span class="line">declare type ClassDecorator = <span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">TFunction</span> <span class="hljs-attr">extends</span> <span class="hljs-attr">Function</span>&gt;</span>(target: TFunction) =&gt; TFunction | void</span></span><br><span class="line"><span class="hljs-xml"></span></span><br><span class="line"><span class="hljs-xml"></span></span><br><span class="line"><span class="hljs-xml">// 属性装饰器</span></span><br><span class="line"><span class="hljs-xml">// 用来装饰类的属性，它接收两个参数：</span></span><br><span class="line"><span class="hljs-xml">// target: Object - 被装饰的类</span></span><br><span class="line"><span class="hljs-xml">// propertyKey: string | symbol - 被装饰类的属性名</span></span><br><span class="line"><span class="hljs-xml">declare type PropertyDecorator = (target:Object, propertyKey: string | symbol ) =&gt; void;</span></span><br><span class="line"><span class="hljs-xml"></span></span><br><span class="line"><span class="hljs-xml"></span></span><br><span class="line"><span class="hljs-xml">// 方法装饰器</span></span><br><span class="line"><span class="hljs-xml">// 用来装饰类的属性，它接收三个参数</span></span><br><span class="line"><span class="hljs-xml">// target: Object - 被装饰的类</span></span><br><span class="line"><span class="hljs-xml">// propertyKey: string | symbol - 方法名</span></span><br><span class="line"><span class="hljs-xml">// descriptor: TypePropertyDescript - 属性描述符</span></span><br><span class="line">declare type MethodDecorator = &lt;T&gt;(target:Object, propertyKey: string | symbol, descriptor: TypePropertyDescript&lt;T&gt;) =&gt; TypedPropertyDescriptor&lt;T&gt; | void;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">// 参数装饰器</span><br><span class="line">// 用来装饰函数参数，它接收三个参数</span><br><span class="line">// target: Object - 被装饰的类</span><br><span class="line">// propertyKey: string | symbol - 方法名</span><br><span class="line">// parameterIndex: number - 方法中参数的索引值</span><br><span class="line">declare type ParameterDecorator = (target: Object, propertyKey: string | symbol, parameterIndex: number ) =&gt; void</span><br></pre></td></tr></table></figure>
+
+<h2 id="Angular-内置装饰器"><a href="#Angular-内置装饰器" class="headerlink" title="Angular 内置装饰器"></a>Angular 内置装饰器</h2><ul>
+<li><p>类装饰器 - <code>@Component</code>、<code>@NgModule</code>、<code>@Pipe</code>、<code>@Injectable</code></p>
+</li>
+<li><p>属性装饰器 - <code>@Input</code>、<code>@Output</code>、<code>@ContentChild</code>、<code>@ContentChildren</code>、<code>@ViewChild</code>、<code>@ViewChildren</code></p>
+</li>
+<li><p>方法装饰器 - <code>@HostListener</code>、<code>@HostBinding</code></p>
+</li>
+<li><p>参数装饰器 - <code>@Inject</code>、<code>@Optional</code>、<code>@Self</code>、<code>@SkipSelf</code>、<code>@Host</code></p>
+</li>
+</ul>
+<p>这里主要介绍 <code>@Input</code>，<code>@Output</code>，<code>@ViewChild</code>，<code>@ViewChildren</code>，<code>@HostListener</code> 和 <code>@HostBinding</code> 六种</p>
+<h2 id="Input"><a href="#Input" class="headerlink" title="Input"></a>Input</h2><p><code>Input</code> 是属性装饰器，用来定义组件内的输入属性，一般用来实现父组件向子组件传递数据</p>
+<h4 id="Input-1"><a href="#Input-1" class="headerlink" title="@Input()"></a>@Input()</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// counter.component.ts</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; Component, Input &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;</span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'exe-counter'</span>,</span><br><span class="line">  template: <span class="hljs-string">`</span></span><br><span class="line"><span class="hljs-string">    &lt;p&gt;当前值: &#123;&#123; count &#125;&#125;&lt;/p&gt;</span></span><br><span class="line"><span class="hljs-string">    &lt;button (click)="increment()"&gt; + &lt;/button&gt;</span></span><br><span class="line"><span class="hljs-string">    &lt;button (click)="decrement()"&gt; - &lt;/button&gt;</span></span><br><span class="line"><span class="hljs-string">  `</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CounterComponent</span> </span>&#123;</span><br><span class="line">  @Input() count: number = <span class="hljs-number">0</span>;</span><br><span class="line"></span><br><span class="line">  increment() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.count++;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  decrement() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.count--;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// app.component.ts</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;</span><br><span class="line"></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'exe-app'</span>,</span><br><span class="line">  template: <span class="hljs-string">`</span></span><br><span class="line"><span class="hljs-string">    &lt;exe-counter [count]="initialCount"&gt;&lt;/exe-counter&gt;</span></span><br><span class="line"><span class="hljs-string">  `</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AppComponent</span> </span>&#123;</span><br><span class="line">  initialCount: number = <span class="hljs-number">5</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Input-‘bindingPropertyName’"><a href="#Input-‘bindingPropertyName’" class="headerlink" title="@Input(‘bindingPropertyName’)"></a>@Input(‘bindingPropertyName’)</h4><p><code>Input</code> 装饰器支持一个可选的参数，用来指定组件绑定属性的名称</p>
+<p>如果没有指定，则默认使用 <code>@Input</code> 装饰器，装饰的属性名，如下所示</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// counter.component.ts</span></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CounterComponent</span> </span>&#123;</span><br><span class="line">  @Input(<span class="hljs-string">'value'</span>) count: number = <span class="hljs-number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// app.component.ts</span></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'exe-app'</span>,</span><br><span class="line">  <span class="hljs-comment">// 绑定的时候如果写成 [value]，那么在 @Input() 接收的时候指定为 value 即可</span></span><br><span class="line">  template: <span class="hljs-string">`</span></span><br><span class="line"><span class="hljs-string">    &lt;exe-counter [value]="initialCount"&gt;&lt;/exe-counter&gt;</span></span><br><span class="line"><span class="hljs-string">  `</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="inputs"><a href="#inputs" class="headerlink" title="inputs"></a>inputs</h4><p>还可以使用 <code>inputs</code> 属性将绑定的输入属性名称直接写到 <code>@Component({})</code> 的元数据当中</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// counter.component.ts</span></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CounterComponent</span> </span>&#123;</span><br><span class="line">  @Input(<span class="hljs-string">'value'</span>) count: number = <span class="hljs-number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// app.component.ts</span></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'exe-app'</span>,</span><br><span class="line">  template: <span class="hljs-string">`</span></span><br><span class="line"><span class="hljs-string">    &lt;exe-counter [value]="initialCount"&gt;&lt;/exe-counter&gt;</span></span><br><span class="line"><span class="hljs-string">  `</span>,</span><br><span class="line">  <span class="hljs-comment">// 如果模版当中指定的为 [count]="initialCount"</span></span><br><span class="line">  <span class="hljs-comment">// 可以直接写为 inputs: ['count']</span></span><br><span class="line">  inputs: [<span class="hljs-string">'count: value'</span>]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CounterComponent</span> </span>&#123;</span><br><span class="line">  count: number = <span class="hljs-number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>不过需要注意的是，不能同时使用 <code>@Input</code> 装饰器，或在 <code>@Directive</code>、<code>@Component inputs</code> 字段中定义同一个输入属性</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 错误的使用方式</span></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'exe-counter'</span>,</span><br><span class="line">  inputs:[<span class="hljs-string">'count:value'</span>] </span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CounterComponent</span> </span>&#123;</span><br><span class="line">  @Input(<span class="hljs-string">'value'</span>) count: number = <span class="hljs-number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Input-和-inputs-两者的区别"><a href="#Input-和-inputs-两者的区别" class="headerlink" title="@Input 和 inputs 两者的区别"></a>@Input 和 inputs 两者的区别</h4><p>它们都是用来定义输入属性，而不同的地方在于</p>
+<ul>
+<li><p><code>inputs</code> 定义在指令的 <code>metadata</code> 信息中，开发者对指令的输入属性一目了然</p>
+</li>
+<li><p>此外对于未选用 <code>TypeScript</code> 作为开发语言的开发者，也只能在 <code>metadata</code> 中定义指令的输入属性</p>
+</li>
+</ul>
+<p><code>@Input</code> 属于属性装饰器，通过它可以一起定义属性的访问描述符（<code>public</code>、<code>private</code>、<code>protected</code>）</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@Input() public attr: string;</span><br></pre></td></tr></table></figure>
+
+<p><code>@Output</code> 与其类似</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@Output(<span class="hljs-string">'countChange'</span>) change: EventEmitter&lt;number&gt; = <span class="hljs-keyword">new</span> EventEmitter&lt;number&gt;();</span><br></pre></td></tr></table></figure>
+
+<h4 id="setter-amp-getter"><a href="#setter-amp-getter" class="headerlink" title="setter &amp; getter"></a>setter &amp; getter</h4><p><code>setter</code> 和 <code>getter</code> 是用来约束属性的设置和获取，它们提供了一些属性读写的封装，可以让代码更便捷，更具可扩展性</p>
+<p>通过 <code>setter</code> 和 <code>getter</code> 方式，我们对类中的私有属性进行了封装，能避免外界操作影响到该私有属性</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; Component, Input &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;</span><br><span class="line"></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'exe-counter'</span>,</span><br><span class="line">  template: <span class="hljs-string">`</span></span><br><span class="line"><span class="hljs-string">    &lt;p&gt;当前值: &#123;&#123; count &#125;&#125; &lt;/p&gt;</span></span><br><span class="line"><span class="hljs-string">    &lt;button (click)="increment()"&gt; + &lt;/button&gt;</span></span><br><span class="line"><span class="hljs-string">    &lt;button (click)="decrement()"&gt; - &lt;/button&gt;</span></span><br><span class="line"><span class="hljs-string">  `</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CounterComponent</span> </span>&#123;</span><br><span class="line">  _count: number = <span class="hljs-number">0</span>;</span><br><span class="line">  biggerThanTen: boolean = <span class="hljs-literal">false</span>;</span><br><span class="line"></span><br><span class="line">  @Input()</span><br><span class="line">  <span class="hljs-keyword">set</span> count (num: number) &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.biggerThanTen = num &gt; <span class="hljs-number">10</span>;</span><br><span class="line">    <span class="hljs-keyword">this</span>._count = num;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">get</span> count(): number &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._count;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  increment() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.count++;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  decrement() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.count--;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Output"><a href="#Output" class="headerlink" title="Output"></a>Output</h2><p><code>Output</code> 是属性装饰器，用来定义组件内的输出属性，主要用来实现子组件将信息通过事件的形式通知到父级组件</p>
+<h4 id="EventEmitter"><a href="#EventEmitter" class="headerlink" title="EventEmitter"></a>EventEmitter</h4><p><code>Output</code> 属性装饰器一般是和 <code>EventEmitter</code> 一起相互配合来使用的，先看 <code>EventEmitter</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> numberEmitter: EventEmitter&lt;number&gt; = <span class="hljs-keyword">new</span> EventEmitter&lt;number&gt;(); </span><br><span class="line"></span><br><span class="line">numberEmitter.subscribe(<span class="hljs-function">(<span class="hljs-params">v: number</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(v));</span><br><span class="line"></span><br><span class="line">numberEmitter.emit(<span class="hljs-number">10</span>);</span><br></pre></td></tr></table></figure>
+
+<p>具体的应用流程为</p>
+<ul>
+<li><p>子指令创建一个 <code>EventEmitter</code> 实例，并将其作为输出属性导出</p>
+</li>
+<li><p>子指令调用已创建的 <code>EventEmitter</code> 实例中的 <code>emit(payload)</code> 方法来触发一个事件</p>
+</li>
+<li><p>而父指令通过事件绑定 (<code>eventName</code>) 的方式监听该事件，并通过 <code>$event</code> 对象来获取 <code>payload</code> 对象</p>
+</li>
+</ul>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// counter.component.ts</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; Component, Input, Output, EventEmitter &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;</span><br><span class="line"></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'exe-counter'</span>,</span><br><span class="line">  template: <span class="hljs-string">`</span></span><br><span class="line"><span class="hljs-string">    &lt;p&gt;当前值: &#123;&#123; count &#125;&#125;&lt;/p&gt;</span></span><br><span class="line"><span class="hljs-string">    &lt;button (click)="increment()"&gt; + &lt;/button&gt;</span></span><br><span class="line"><span class="hljs-string">    &lt;button (click)="decrement()"&gt; - &lt;/button&gt;</span></span><br><span class="line"><span class="hljs-string">  `</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CounterComponent</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  @Input() count: number = <span class="hljs-number">0</span>;</span><br><span class="line">  @Output() change: EventEmitter&lt;number&gt; = <span class="hljs-keyword">new</span> EventEmitter&lt;number&gt;();</span><br><span class="line"></span><br><span class="line">  increment() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.count++;</span><br><span class="line">    <span class="hljs-keyword">this</span>.change.emit(<span class="hljs-keyword">this</span>.count);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  decrement() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.count--;</span><br><span class="line">    <span class="hljs-keyword">this</span>.change.emit(<span class="hljs-keyword">this</span>.count);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// app.component.ts</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;</span><br><span class="line"></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'exe-app'</span>,</span><br><span class="line">  template: <span class="hljs-string">`</span></span><br><span class="line"><span class="hljs-string">    &lt;exe-counter [count]="initialCount" </span></span><br><span class="line"><span class="hljs-string">    (change)="countChange($event)"&gt;&lt;/exe-counter&gt;</span></span><br><span class="line"><span class="hljs-string">  `</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AppComponent</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  initialCount: number = <span class="hljs-number">5</span>;</span><br><span class="line"></span><br><span class="line">  countChange(ev: number) &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'$&#123;ev&#125;'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Output-‘bindingPropertyName’"><a href="#Output-‘bindingPropertyName’" class="headerlink" title="@Output(‘bindingPropertyName’)"></a>@Output(‘bindingPropertyName’)</h4><p>同 <code>@Input</code> 一样，<code>@Output</code> 装饰器支持一个可选的参数，用来指定组件绑定属性的名称</p>
+<p>如果没有指定，则默认使用 <code>@Output</code> 装饰器，装饰的属性名</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// counter.component.ts</span></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CounterComponent</span> </span>&#123;</span><br><span class="line">  @Output(<span class="hljs-string">'counterChange'</span>) change: EventEmitter&lt;number&gt; = <span class="hljs-keyword">new</span> EventEmitter&lt;number&gt;();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// app.component.ts</span></span><br><span class="line">@Component(&#123;</span><br><span class="line">  template: <span class="hljs-string">`</span></span><br><span class="line"><span class="hljs-string">    &lt;exe-counter [count]="initialCount" </span></span><br><span class="line"><span class="hljs-string">    (counterChange)="countChange($event)"&gt;&lt;/exe-counter&gt;</span></span><br><span class="line"><span class="hljs-string">  `</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="outputs"><a href="#outputs" class="headerlink" title="outputs"></a>outputs</h4><p>同 <code>inputs</code> 一样，也支持在组建内部添加 <code>outputs</code> 属性，但是和上面一样不太推荐这种写法</p>
+<h4 id="ngOnChanges"><a href="#ngOnChanges" class="headerlink" title="ngOnChanges"></a>ngOnChanges</h4><p>当数据绑定输入属性的值发生变化的时候，<code>Angular</code> 将会主动调用 <code>ngOnChanges</code> 方法</p>
+<p>它会获得一个 <code>SimpleChanges</code> 对象，包含绑定属性的新值和旧值，它主要用于监测组件输入属性的变化</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; Component, Input, SimpleChanges, OnChanges &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;</span><br><span class="line"></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'exe-counter'</span>,</span><br><span class="line">  template: <span class="hljs-string">`</span></span><br><span class="line"><span class="hljs-string">    &lt;p&gt;当前值: &#123;&#123; count &#125;&#125;&lt;/p&gt;</span></span><br><span class="line"><span class="hljs-string">    &lt;button (click)="increment()"&gt; + &lt;/button&gt;</span></span><br><span class="line"><span class="hljs-string">    &lt;button (click)="decrement()"&gt; - &lt;/button&gt;</span></span><br><span class="line"><span class="hljs-string">  `</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CounterComponent</span> <span class="hljs-title">implements</span> <span class="hljs-title">OnChanges</span></span>&#123;</span><br><span class="line">  @Input() count: number = <span class="hljs-number">0</span>;</span><br><span class="line"></span><br><span class="line">  ngOnChanges(changes: SimpleChanges) &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.dir(changes[<span class="hljs-string">'count'</span>]);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  increment() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.count++;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  decrement() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.count--;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以在控制台当中看到 <code>SimpleChanges</code> 对象的一些值（包括新值和旧值）</p>
+<p>需要注意的是，当手动改变输入属性的值，是不会触发 <code>ngOnChanges</code> 钩子的</p>
+<h2 id="ViewChild"><a href="#ViewChild" class="headerlink" title="@ViewChild()"></a>@ViewChild()</h2><p>通过 <code>@ViewChild()</code> 装饰器可以获得子组件的引用，从而可以在父组件当中来直接调用子组件的方法</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 父组件</span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">app-header</span> #<span class="hljs-attr">child1</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">app-header</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AppComponent</span> <span class="hljs-title">implements</span> <span class="hljs-title">OnInit</span></span>&#123;</span><br><span class="line"></span><br><span class="line">  @ViewChild(<span class="hljs-string">'child1'</span>)</span><br><span class="line">  child1: HeaderComponent;</span><br><span class="line"></span><br><span class="line">  ngOnInit() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.child1.run(<span class="hljs-string">'...'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 子组件</span></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HeaderComponent</span> <span class="hljs-title">implements</span> <span class="hljs-title">OnInit</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>() &#123; &#125;</span><br><span class="line">  ngOnInit() &#123; &#125;</span><br><span class="line"></span><br><span class="line">  run(name) &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(name);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="ViewChild-使用类型查询"><a href="#ViewChild-使用类型查询" class="headerlink" title="@ViewChild 使用类型查询"></a>@ViewChild 使用类型查询</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// child.component.ts</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; Component, OnInit &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;</span><br><span class="line"></span><br><span class="line">@Component(&#123;</span><br><span class="line">    selector: <span class="hljs-string">'exe-child'</span>,</span><br><span class="line">    template: <span class="hljs-string">`</span></span><br><span class="line"><span class="hljs-string">      &lt;p&gt;Child Component&lt;/p&gt;  </span></span><br><span class="line"><span class="hljs-string">    `</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ChildComponent</span> </span>&#123;</span><br><span class="line">  name: string = <span class="hljs-string">'child-component'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// app.component.ts</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; Component, ViewChild, AfterViewInit &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;</span><br><span class="line"><span class="hljs-keyword">import</span> &#123; ChildComponent &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./child.component'</span>;</span><br><span class="line"></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'my-app'</span>,</span><br><span class="line">  template: <span class="hljs-string">`</span></span><br><span class="line"><span class="hljs-string">    &lt;h4&gt;Welcome to Angular World&lt;/h4&gt;</span></span><br><span class="line"><span class="hljs-string">    &lt;exe-child&gt;&lt;/exe-child&gt;</span></span><br><span class="line"><span class="hljs-string">  `</span>,</span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AppComponent</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 通过 @ViewChild() 来获取子组件</span></span><br><span class="line">  @ViewChild(ChildComponent)</span><br><span class="line">  childCmp: ChildComponent;</span><br><span class="line"></span><br><span class="line">  ngAfterViewInit() &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.dir(<span class="hljs-keyword">this</span>.childCmp);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="ViewChildren"><a href="#ViewChildren" class="headerlink" title="ViewChildren"></a>ViewChildren</h4><p><code>ViewChildren</code> 用来从模版视图中获取匹配的多个元素，返回的结果是一个 <code>QueryList</code> 集合</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; Component, ViewChildren, QueryList, AfterViewInit &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;</span><br><span class="line"><span class="hljs-keyword">import</span> &#123; ChildComponent &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./child.component'</span>;</span><br><span class="line"></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'my-app'</span>,</span><br><span class="line">  template: <span class="hljs-string">`</span></span><br><span class="line"><span class="hljs-string">    &lt;h4&gt;Welcome to Angular World&lt;/h4&gt;</span></span><br><span class="line"><span class="hljs-string">    &lt;exe-child&gt;&lt;/exe-child&gt;</span></span><br><span class="line"><span class="hljs-string">    &lt;exe-child&gt;&lt;/exe-child&gt;</span></span><br><span class="line"><span class="hljs-string">    &lt;exe-child&gt;&lt;/exe-child&gt;</span></span><br><span class="line"><span class="hljs-string">  `</span>,</span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AppComponent</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  @ViewChildren(ChildComponent)</span><br><span class="line">  childCmps: QueryList&lt;ChildComponent&gt;;</span><br><span class="line"></span><br><span class="line">  ngAfterViewInit() &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.dir(<span class="hljs-keyword">this</span>.childCmps);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行之后可以在控制台当中看到输出多个 <code>ChildComponent</code></p>
+<h4 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h4><p><code>ViewChild</code> 装饰器用于获取模板视图中的元素，它支持 <code>Type</code> 类型或 <code>string</code> 类型的选择器</p>
+<p>同时支持设置 <code>read</code> 查询条件，以获取不同类型的实例</p>
+<p><code>ViewChildren</code> 装饰器是用来从模板视图中获取匹配的多个元素，返回的结果是一个 <code>QueryList</code> 集合</p>
+<h2 id="HostListener-amp-HostBinding"><a href="#HostListener-amp-HostBinding" class="headerlink" title="HostListener &amp; HostBinding"></a>HostListener &amp; HostBinding</h2><h4 id="Host-Element（宿主元素）"><a href="#Host-Element（宿主元素）" class="headerlink" title="Host Element（宿主元素）"></a>Host Element（宿主元素）</h4><p>宿主元素的概念同时适用于指令和组件，对于指令来说，应用指令的元素，就是宿主元素</p>
+<p>如果在自定义组件中使用的话，那么自定义组件就是宿主元素</p>
+<h4 id="HostListener"><a href="#HostListener" class="headerlink" title="HostListener"></a>HostListener</h4><p><code>HostListener</code> 是属性装饰器，用来为宿主元素添加事件监听</p>
+<p><code>HostListenerDecorator</code> 装饰器定义如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> interface HostListenerDecorator &#123;</span><br><span class="line">  (eventName: string, args?: string[]): any;</span><br><span class="line">  <span class="hljs-keyword">new</span> (eventName: string, args?: string[]): any;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; Directive, HostListener &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;</span><br><span class="line"></span><br><span class="line">@Directive(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'onClicks'</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">onClicks</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  @HostListener(<span class="hljs-string">'click'</span>)</span><br><span class="line">  onClick() &#123;</span><br><span class="line">    <span class="hljs-comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此外还可以监听宿主元素外，其他对象产生的事件，比如 <code>window</code> 或 <code>document</code> 对象</p>
+<p>一个点击目标区域会添加背景颜色，点击其他区域取消掉高亮</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">SetBackgroundDirective</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(</span><br><span class="line">    private el: ElementRef,</span><br><span class="line">    private re: Renderer2</span><br><span class="line">  ) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  @HostListener(<span class="hljs-string">'document:click'</span>, [<span class="hljs-string">'$event'</span>])</span><br><span class="line">  onClick(btn: Event) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.el.nativeElement.contains(event.target)) &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.highlight(<span class="hljs-string">'yellow'</span>);</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.highlight(<span class="hljs-literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  highlight(color: string) &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.re.setStyle(<span class="hljs-keyword">this</span>.el.nativeElement, <span class="hljs-string">'backgroundColor'</span>, color);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Host-Event-Listener"><a href="#Host-Event-Listener" class="headerlink" title="Host Event Listener"></a>Host Event Listener</h4><p>还可以使用 <code>host</code> 参数来进行绑定（不太建议使用这种方式，推荐使用装饰器风格）</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; Directive &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;</span><br><span class="line"></span><br><span class="line">@Directive(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'button[counting]'</span>,</span><br><span class="line">  host: &#123;</span><br><span class="line">    <span class="hljs-string">'(click)'</span>: <span class="hljs-string">'onClick($event.target)'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CountClicks</span> </span>&#123;</span><br><span class="line">  numberOfClicks = <span class="hljs-number">0</span>;</span><br><span class="line"></span><br><span class="line">  onClick(btn: HTMLElement) &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'button'</span>, btn, <span class="hljs-string">'number of clicks:'</span>, <span class="hljs-keyword">this</span>.numberOfClicks++);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="HostBinding"><a href="#HostBinding" class="headerlink" title="HostBinding"></a>HostBinding</h4><p><code>HostBinding</code> 是属性装饰器，用来动态设置宿主元素的属性值，定义如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> interface HostBindingDecorator &#123;</span><br><span class="line">  (hostPropertyName?: string): any;</span><br><span class="line">  <span class="hljs-keyword">new</span> (hostPropertyName?: string): any;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>应用</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@Directive(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'[exeButtonPress]'</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ExeButtonPress</span> </span>&#123;</span><br><span class="line">  @HostBinding(<span class="hljs-string">'attr.data'</span>) data = <span class="hljs-string">'button'</span>;</span><br><span class="line">  @HostBinding(<span class="hljs-string">'class.active'</span>) isActive: boolean;</span><br><span class="line"></span><br><span class="line">  @HostListener(<span class="hljs-string">'mouseenter'</span>)</span><br><span class="line">  enter() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.isActive = <span class="hljs-literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @HostListener(<span class="hljs-string">'mouseleave'</span>)</span><br><span class="line">  leave() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.isActive = <span class="hljs-literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>和上面一样，我们也可以在指令的元数据当中来进行绑定（同样的不建议这样使用）</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">@Directive(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'[exeButtonPress]'</span>,</span><br><span class="line">  host: &#123;</span><br><span class="line">    <span class="hljs-string">'data'</span>: <span class="hljs-string">'button'</span>,</span><br><span class="line">    <span class="hljs-string">'[class.active]'</span>: <span class="hljs-string">'isActive'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ExeButtonPress</span> </span>&#123;</span><br><span class="line">  isActive: boolean;</span><br><span class="line"></span><br><span class="line">  @HostListener(<span class="hljs-string">'mouseenter'</span>)</span><br><span class="line">  enter() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.isActive = <span class="hljs-literal">true</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @HostListener(<span class="hljs-string">'mouseleave'</span>)</span><br><span class="line">  leave() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.isActive = <span class="hljs-literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Angular/">Angular</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/12/08/Angular/06/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">:host 和 ::ng-deep</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/11/11/Angular/04/">
+                <span class="level-item">Angular 中的管道</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="comment-container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+	var gitment = new Gitment({
+		id: '2018/12/05/Angular/05/',
+		owner: 'heptaluan',
+		repo: 'blog-gitment',
+		oauth: {
+			client_id: 'ee317a1f9527f57fc555',
+			client_secret: '94bba574dd577716d4860ca484651d0b7c5b1b65',
+		},
+	})
+	gitment.render('comment-container')
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-2-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <figure class="image is-128x128 has-mb-6">
+                            <img class="is-rounded" src="https://avatars2.githubusercontent.com/u/18285736?s=460&amp;v=4" alt="heptaluan">
+                        </figure>
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        heptaluan
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        white lie.
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>WuHan China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <!-- <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        55
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        5
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        5
+                    </p>
+                </div>
+            </div>
+        </nav> -->
+        <!-- <div class="level">
+            <a class="level-item button is-link is-rounded" href="/" target="_blank">
+                关注我</a>
+        </div> -->
+        
+        
+    </div>
+</div>
+    
+        
+    
+        
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Angular/">
+            <span class="level-start">
+                <span class="level-item">Angular</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">9</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/CSS/">
+            <span class="level-start">
+                <span class="level-item">CSS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/HTTP/">
+            <span class="level-start">
+                <span class="level-item">HTTP</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/JavaScript/">
+            <span class="level-start">
+                <span class="level-item">JavaScript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">37</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Node-js/">
+            <span class="level-start">
+                <span class="level-item">Node.js</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Angular/" style="font-size: 17.5px;">Angular</a> <a href="/tags/CSS/" style="font-size: 12.5px;">CSS</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow  ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/03/13/Angular/09/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/09.jpg" alt="动态加载（补充）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-03-12T16:00:00.000Z">2019-03-13</time></div>
+                    <a href="/2019/03/13/Angular/09/" class="has-link-black-ter is-size-6">动态加载（补充）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/03/12/Angular/08/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/08.jpg" alt="动态加载已经声明的组件">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-03-11T16:00:00.000Z">2019-03-12</time></div>
+                    <a href="/2019/03/12/Angular/08/" class="has-link-black-ter is-size-6">动态加载已经声明的组件</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/01/11/Angular/07/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/07.jpg" alt="ExpressionChangedAfterItHasBeenCheckedError">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-10T16:00:00.000Z">2019-01-11</time></div>
+                    <a href="/2019/01/11/Angular/07/" class="has-link-black-ter is-size-6">ExpressionChangedAfterItHasBeenCheckedError</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/12/08/Angular/06/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/06.jpg" alt=":host 和 ::ng-deep">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-07T16:00:00.000Z">2018-12-08</time></div>
+                    <a href="/2018/12/08/Angular/06/" class="has-link-black-ter is-size-6">:host 和 ::ng-deep</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/12/05/Angular/05/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/05.jpg" alt="Angular 中的装饰器">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-04T16:00:00.000Z">2018-12-05</time></div>
+                    <a href="/2018/12/05/Angular/05/" class="has-link-black-ter is-size-6">Angular 中的装饰器</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Angular/">
+                        <span class="tag">Angular</span>
+                        <span class="tag is-grey">9</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/CSS/">
+                        <span class="tag">CSS</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/HTTP/">
+                        <span class="tag">HTTP</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/JavaScript/">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag is-grey">37</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Node-js/">
+                        <span class="tag">Node.js</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <!-- <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="Angular 中的装饰器" height="28">
+                
+                </a> -->
+                <p class="is-size-7">
+                &copy; 2019 heptaluan&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <!-- <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/heptaluan">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div> -->
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

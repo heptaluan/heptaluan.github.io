@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+<title>依赖注入（补充） - heptaluan&#39;s blog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="接上次 依赖注入，之前只是简单的介绍了为什么要使用依赖注入和 Angular 当中的一个简单的依赖注入实例 下面就来详细的理解一下 Angular 当中的依赖注入">
+<meta name="keywords" content="Angular">
+<meta property="og:type" content="article">
+<meta property="og:title" content="依赖注入（补充）">
+<meta property="og:url" content="http://yoursite.com/2018/10/16/Angular/03/index.html">
+<meta property="og:site_name" content="heptaluan&#39;s blog">
+<meta property="og:description" content="接上次 依赖注入，之前只是简单的介绍了为什么要使用依赖注入和 Angular 当中的一个简单的依赖注入实例 下面就来详细的理解一下 Angular 当中的依赖注入">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/cover/03.jpg">
+<meta property="og:updated_time" content="2019-07-04T10:05:41.816Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="依赖注入（补充）">
+<meta name="twitter:description" content="接上次 依赖注入，之前只是简单的介绍了为什么要使用依赖注入和 Angular 当中的一个简单的依赖注入实例 下面就来详细的理解一下 Angular 当中的依赖注入">
+<meta name="twitter:image" content="http://yoursite.com/images/cover/03.jpg">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.ico">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-2-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <!-- <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="依赖注入（补充）" height="28">
+            
+            </a>
+        </div> -->
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/heptaluan">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-10-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-image">
+        <span class="image is-7by1">
+            <img class="thumbnail" src="/images/cover/03.jpg" alt="依赖注入（补充）">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-10-15T16:00:00.000Z">2018-10-16</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    29 分钟 读完 (大约 4390 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                依赖注入（补充）
+            
+        </h1>
+        <div class="content">
+            <p>接上次 <a href="https://github.com/heptaluan/blog/blob/master/blog/angular/02.md" target="_blank" rel="noopener">依赖注入</a>，之前只是简单的介绍了为什么要使用依赖注入和 <code>Angular</code> 当中的一个简单的依赖注入实例</p>
+<p>下面就来详细的理解一下 <code>Angular</code> 当中的依赖注入</p>
+<a id="more"></a>
+
+<p>依赖注入（<code>DI</code>）是 <code>Angular</code> 的核心，在 <code>Angular</code> 中我们使用 <code>Provider</code> 来描述与 <code>Token</code> 关联的依赖对象的创建方式</p>
+<p>创建方式有四种，它们分别是 <code>useClass</code>，<code>useValue</code>，<code>useExisting</code> 和 <code>useFactory</code></p>
+<h2 id="useClass"><a href="#useClass" class="headerlink" title="useClass"></a>useClass</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@NgModule(&#123;</span><br><span class="line">  providers: [</span><br><span class="line">    <span class="hljs-comment">// 两者名称一样的时候可以使用简洁语法，直接使用 ApiService</span></span><br><span class="line">    &#123; <span class="hljs-attr">provide</span>: ApiService, <span class="hljs-attr">useClass</span>: ApiService &#125;</span><br><span class="line">  ],</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="ClassProvider-接口定义"><a href="#ClassProvider-接口定义" class="headerlink" title="ClassProvider 接口定义"></a>ClassProvider 接口定义</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> interface ClassProvider &#123;</span><br><span class="line">  <span class="hljs-comment">// 用于设置与依赖对象关联的 Token 值</span></span><br><span class="line">  <span class="hljs-comment">// Token 值可能是 Type、InjectionToken、OpaqueToken 的实例或字符串</span></span><br><span class="line">  provide: any; </span><br><span class="line">  useClass: Type&lt;any&gt;;</span><br><span class="line">  <span class="hljs-comment">// 用于标识是否 multiple providers，若是 multiple 类型，则返回与 Token 关联的依赖对象列表</span></span><br><span class="line">  multi?: boolean; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="关于上面的-Type-lt-any-gt-类型"><a href="#关于上面的-Type-lt-any-gt-类型" class="headerlink" title="关于上面的 Type&lt;any&gt; 类型"></a>关于上面的 Type&lt;any&gt; 类型</h4><p>在 <code>Angular</code> 中分为 <code>Type</code> 类型和非 <code>Type</code> 类似，两者的区别在于注入方式的不同</p>
+<p>即：非 <code>Type</code> 类型的参数只能用 <code>@Inject(Something)</code> 的方式注入</p>
+<p>接口定义如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> interface Type&lt;T&gt; extends <span class="hljs-built_in">Function</span> &#123; <span class="hljs-keyword">new</span> (...args: any[]): T; &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isType</span>(<span class="hljs-params">v: any</span>): <span class="hljs-title">v</span> <span class="hljs-title">is</span> <span class="hljs-title">Type</span>&lt;<span class="hljs-title">any</span>&gt; </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">typeof</span> v === <span class="hljs-string">'function'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="useValue"><a href="#useValue" class="headerlink" title="useValue"></a>useValue</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">providers: [</span><br><span class="line">  &#123; <span class="hljs-attr">provide</span>: <span class="hljs-string">'SEARCH_URL'</span>, <span class="hljs-attr">useValue</span>: <span class="hljs-string">'http://api.xxx.com'</span>&#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p><code>ValueProvider</code> 接口如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> interface ValueProvider &#123;</span><br><span class="line">  <span class="hljs-comment">// 用于设置与依赖对象关联的 Token 值</span></span><br><span class="line">  <span class="hljs-comment">// Token 值可能是 Type、InjectionToken、OpaqueToken 的实例或字符串</span></span><br><span class="line">  provide: any;</span><br><span class="line">  <span class="hljs-comment">// 设置注入的对象</span></span><br><span class="line">  useValue: any;</span><br><span class="line">  <span class="hljs-comment">// 用于标识是否 multiple providers，若是 multiple 类型，则返回与 Token 关联的依赖对象列表</span></span><br><span class="line">  multi?: boolean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果需要使用的话，直接在当前组件的构造函数当中进行注入即可，需要注意使用 <code>@Inject()</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">constructor</span>(</span><br><span class="line">  @Inject('SEARCH_URL') private searchUrl</span><br><span class="line">) &#123; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>还会遇到一种问题，如果在开发中引入第三方库以后，可能会引起比如上面的字符串 <code>Token</code>（<code>SEARCH_URL</code>）的冲突问题</p>
+<p>这里可以使用 <a href="https://segmentfault.com/a/1190000009648572#articleHeader3" target="_blank" rel="noopener">InjectionToken</a> 来解决</p>
+<h2 id="useExisting"><a href="#useExisting" class="headerlink" title="useExisting"></a>useExisting</h2><p><code>useExisting</code> 的意思是使用已经注册的类型注入到这里（别名），比如下面示例意思是将 <code>ApiService</code> 起个叫 <code>ApiServiceAlias</code> 的别名</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">providers: [</span><br><span class="line">  &#123; <span class="hljs-attr">provide</span>: <span class="hljs-string">'ApiServiceAlias'</span>, <span class="hljs-attr">useExisting</span>: ApiService &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<h2 id="useFactory"><a href="#useFactory" class="headerlink" title="useFactory"></a>useFactory</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">@NgModule(&#123;</span><br><span class="line">  ...</span><br><span class="line">  providers: [</span><br><span class="line">    &#123; </span><br><span class="line">      provide: APP_INITIALIZER,</span><br><span class="line">      useFactory: <span class="hljs-function">(<span class="hljs-params">config: AppConfig</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> config.load();</span><br><span class="line">      &#125;,</span><br><span class="line">      deps: [AppConfig],</span><br><span class="line">      <span class="hljs-comment">// 关于这个属性，见下方</span></span><br><span class="line">      multi: <span class="hljs-literal">true</span> </span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>一般用于告诉 <code>Injector</code> (注入器)，通过调用 <code>useFactory</code> 对应的函数，返回 <code>Token</code> 对应的依赖对象</p>
+<p>接口定义如下，详细示例可见上方</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> interface FactoryProvider &#123;</span><br><span class="line">  <span class="hljs-comment">// 用于设置与依赖对象关联的 Token 值</span></span><br><span class="line">  <span class="hljs-comment">// Token 值可能是 Type、InjectionToken、OpaqueToken 的实例或字符串</span></span><br><span class="line">  provide: any;</span><br><span class="line">  <span class="hljs-comment">// 设置用于创建对象的工厂函数</span></span><br><span class="line">  useFactory: <span class="hljs-built_in">Function</span>;</span><br><span class="line">  <span class="hljs-comment">// 依赖对象列表</span></span><br><span class="line">  deps?: any[];</span><br><span class="line">  <span class="hljs-comment">// 用于标识是否 multiple providers，若是 multiple 类型，则返回与 Token 关联的依赖对象列表</span></span><br><span class="line">  multi?: boolean;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="关于上面示例当中的-Multi"><a href="#关于上面示例当中的-Multi" class="headerlink" title="关于上面示例当中的 Multi"></a>关于上面示例当中的 Multi</h4><p><code>Multi providers</code> 让我们可以使用相同的 <code>Token</code> 去注册多个 <code>Provider</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> SOME_TOKEN: OpaqueToken = <span class="hljs-keyword">new</span> OpaqueToken(<span class="hljs-string">'SomeToken'</span>);</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> injector = ReflectiveInjector.resolveAndCreate([</span><br><span class="line">  provide(SOME_TOKEN, &#123; <span class="hljs-attr">useValue</span>: <span class="hljs-string">'dependency one'</span>, <span class="hljs-attr">multi</span>: <span class="hljs-literal">true</span> &#125;),</span><br><span class="line">  provide(SOME_TOKEN, &#123; <span class="hljs-attr">useValue</span>: <span class="hljs-string">'dependency two'</span>, <span class="hljs-attr">multi</span>: <span class="hljs-literal">true</span> &#125;)</span><br><span class="line">]);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// dependencies == ['dependency one', 'dependency two']</span></span><br><span class="line"><span class="hljs-keyword">var</span> dependencies = injector.get(SOME_TOKEN);</span><br></pre></td></tr></table></figure>
+
+<p>我们使用 <code>multi: true</code> 来告诉 <code>Angular</code> 的依赖注入系统，我们设置的 <code>provider</code> 是 <code>multi provider</code></p>
+<p>我们可以使用相同的 <code>token</code> 值来注册不同的 <code>provider</code>，当我们使用对应的 <code>token</code> 去获取依赖项的时候，我们获取的是已注册的依赖对象列表</p>
+<h4 id="使用-multi-provider-的原因"><a href="#使用-multi-provider-的原因" class="headerlink" title="使用 multi provider 的原因"></a>使用 multi provider 的原因</h4><p>因为如果使用同一个 <code>token</code> 去注册 <code>provider</code>，后面注册的 <code>provider</code> 将会覆盖前面已经注册的 <code>probider</code></p>
+<p>此外，<code>Angular</code> 使用 <code>multi provider</code> 这种机制，为我们提供了可插拔的钩子（<code>pluggable hooks</code>）</p>
+<p>另外需要注意：<code>multi provider</code> 是不能和普通的 <code>provider</code> 混用的</p>
+<h2 id="使用-Provider"><a href="#使用-Provider" class="headerlink" title="使用 Provider"></a>使用 Provider</h2><p>步骤如下所示：</p>
+<ol>
+<li><p>创建 <code>Token</code></p>
+</li>
+<li><p>根据实际需求来选择依赖对象的创建方式，如 <code>useClass</code>，<code>useValue</code>，<code>useExisting</code>，<code>useFactory</code></p>
+</li>
+<li><p>在 <code>NgModule</code> 或 <code>Component</code> 中注册 <code>providers</code></p>
+</li>
+<li><p>使用构造注入的方式，注入与 <code>Token</code> 关联的依赖对象</p>
+</li>
+</ol>
+<p>下面是一个示例，封装 <code>http</code> 服务，比如在每个 <code>Http</code> 的请求头中添加 <code>token</code>（类似拦截器）</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 封装 http 为一个服务</span></span><br><span class="line">@Injectable()</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ApiService</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(</span><br><span class="line">    public http: Http</span><br><span class="line">  ) &#123;&#125;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 然后在使用的 Module 当中进行注入</span></span><br><span class="line">@NgModule(&#123;</span><br><span class="line">  providers: [</span><br><span class="line">    &#123; <span class="hljs-attr">provide</span>: ApiService, <span class="hljs-attr">usdClass</span>: ApiService &#125;</span><br><span class="line">  ],</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 然后在组件当中进行注入后使用</span></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HomePage</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(</span><br><span class="line">    public apiService: ApiService</span><br><span class="line">  ) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="hljs-keyword">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.apiService.get(url)</span><br><span class="line">      .map(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> res.json())</span><br><span class="line">      .subscribe(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="hljs-built_in">console</span>.log(v)</span><br><span class="line">      &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一些需要注意的地方：</p>
+<ul>
+<li><p>创建 <code>Token</code> 的时候为了避免命名冲突，尽量避免使用字符串作为 <code>Token</code></p>
+</li>
+<li><p>若要创建模块内通用的依赖对象，需要在 <code>NgModule</code> 中注册相关的 <code>provider</code></p>
+</li>
+<li><p>若在每个组件中都有唯一的依赖对象，就需要在 <code>Component</code> 中注册相关的 <code>provider</code></p>
+</li>
+<li><p>当 <code>DI</code> 解析 <code>Providers</code> 时，都会对提供的每个 <code>provider</code> 进行规范化处理，即转换成标准的形式</p>
+</li>
+</ul>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">function _normalizeProviders(providers: Provider[], res: Provider[]): Provider[] &#123;</span><br><span class="line">  providers.forEach(<span class="hljs-function"><span class="hljs-params">b</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// 支持简洁的语法，转换为标准格式</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (b <span class="hljs-keyword">instanceof</span> Type) &#123; </span><br><span class="line">      res.push(&#123; <span class="hljs-attr">provide</span>: b, <span class="hljs-attr">useClass</span>: b &#125;);</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (b &amp;&amp; <span class="hljs-keyword">typeof</span> b == <span class="hljs-string">'object'</span> &amp;&amp; (b <span class="hljs-keyword">as</span> any).provide !== <span class="hljs-literal">undefined</span>) &#123;</span><br><span class="line">      res.push(b <span class="hljs-keyword">as</span> NormalizedProvider);</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (b <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Array</span>) &#123;</span><br><span class="line">      <span class="hljs-comment">// 如果是数组，进行递归处理</span></span><br><span class="line">      _normalizeProviders(b, res); </span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">throw</span> invalidProviderError(b);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="hljs-keyword">return</span> res;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Forward-Reference"><a href="#Forward-Reference" class="headerlink" title="Forward Reference"></a>Forward Reference</h2><p><code>Angular</code> 通过引入 <code>forwardRef</code> 让我们可以在使用构造注入的时候，使用尚未定义的依赖对象类型</p>
+<p>如果不使用 <code>forwardRef</code> 就会遇到类似下面的问题</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">@Injectable()</span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Socket</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(private buffer: Buffer) &#123; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(Buffer); <span class="hljs-comment">// undefined</span></span><br><span class="line"></span><br><span class="line">@Injectable()</span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Buffer</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(@Inject(BUFFER_SIZE) private size: Number) &#123; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(Buffer); <span class="hljs-comment">// [Function: Buffer]</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 运行后报错</span></span><br><span class="line"><span class="hljs-comment">// Error: Cannot resolve all parameters for Socket(undefined).</span></span><br><span class="line"><span class="hljs-comment">// Make sure they all have valid type or annotations</span></span><br></pre></td></tr></table></figure>
+
+<p>因为我们编写的代码最终都会被转义为 <code>ES5</code> 来运行，所以在编译阶段<strong>变量声明和函数声明会自动提升，而函数表达式不会自动提升</strong></p>
+<p>如果要解决上面的问题，最简单的处理方式是交换类定义的顺序，或者还可以使用 <code>Angular</code> 提供的 <code>forward reference</code> 特性</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; forwardRef &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular2/core'</span>;</span><br><span class="line"></span><br><span class="line">@Injectable()</span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Socket</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(</span><br><span class="line">    @Inject(forwardRef(() =&gt; Buffer))</span><br><span class="line">    private buffer</span><br><span class="line">  ) &#123; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Buffer</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(@Inject(BUFFER_SIZE) private size: Number) &#123; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="forwardRef-原理分析"><a href="#forwardRef-原理分析" class="headerlink" title="forwardRef 原理分析"></a>forwardRef 原理分析</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// @angular/core/src/di/forward_ref.ts</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * Allows to refer to references which are not yet defined.</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">forwardRef</span>(<span class="hljs-params">forwardRefFn: ForwardRefFn</span>): <span class="hljs-title">Type</span>&lt;<span class="hljs-title">any</span>&gt; </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// forwardRefFn: () =&gt; Buffer</span></span><br><span class="line">  <span class="hljs-comment">// 当调用 forwardRef 方法时，我们只是在 forwardRefFn 函数对象上，增加了一个私有属性__forward_ref__</span></span><br><span class="line">  (<span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">any</span>&gt;</span>forwardRefFn).__forward_ref__ = forwardRef;</span></span><br><span class="line"><span class="hljs-xml">  // 然后覆写了函数的 toString 方法</span></span><br><span class="line">  (&lt;any&gt;forwardRefFn).toString = function () &#123; return stringify(this()); &#125;;</span><br><span class="line">  return (&lt;Type&lt;any&gt;&gt;&lt;any&gt;forwardRefFn);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Lazily retrieves the reference value from a forwardRef.</span><br><span class="line"> */</span><br><span class="line">// 用来解析通过 forwardRef 包装过的引用值</span><br><span class="line">// 由依赖注入系统调用，当解析 Provider 和创建依赖对象的时候，会自动调用该函数</span><br><span class="line">// 如下</span><br><span class="line">export function resolveForwardRef(type: any): any &#123;</span><br><span class="line">  if (typeof type === 'function' &amp;&amp; type.hasOwnProperty('__forward_ref__') &amp;&amp;</span><br><span class="line">    type.__forward_ref__ === forwardRef) &#123;</span><br><span class="line">    return (&lt;ForwardRefFn&gt;type)(); // Call forwardRefFn get Buffer </span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    return type;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/********************************************************************/</span><br><span class="line"></span><br><span class="line">// @angular/core/src/di/reflective_provider.ts</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 解析Provider</span><br><span class="line"> */</span><br><span class="line">function resolveReflectiveFactory(provider: NormalizedProvider): ResolvedReflectiveFactory &#123;</span><br><span class="line">  let factoryFn: Function;</span><br><span class="line">  let resolvedDeps: ReflectiveDependency[];</span><br><span class="line">  ...</span><br><span class="line">  if (provider.useClass) &#123;</span><br><span class="line">    const useClass = resolveForwardRef(provider.useClass);</span><br><span class="line">    factoryFn = reflector.factory(useClass);</span><br><span class="line">    resolvedDeps = _dependenciesFor(useClass);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/********************************************************************/</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 构造依赖对象</span><br><span class="line"> */</span><br><span class="line">export function constructDependencies(</span><br><span class="line">  typeOrFunc: any, dependencies: any[]): ReflectiveDependency[] &#123;</span><br><span class="line">  if (!dependencies) &#123;</span><br><span class="line">    return _dependenciesFor(typeOrFunc);</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    const params: any[][] = dependencies.map(t =&gt; [t]);</span><br><span class="line">    return dependencies.map(t =&gt; _extractToken(typeOrFunc, t, params));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 抽取Token</span><br><span class="line"> */</span><br><span class="line">function _extractToken(</span><br><span class="line">  typeOrFunc: any, metadata: any[] | any, params: any[][]): ReflectiveDependency &#123;</span><br><span class="line"></span><br><span class="line">  token = resolveForwardRef(token);</span><br><span class="line">  if (token != null) &#123;</span><br><span class="line">    return _createDependency(token, optional, visibility);</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    throw noAnnotationError(typeOrFunc, params);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="inject-装饰器"><a href="#inject-装饰器" class="headerlink" title="inject 装饰器"></a>inject 装饰器</h2><p>在 <code>Angular</code> 中，<code>Inject</code> 是<strong>参数装饰器，主要用来在类的构造函数中描述</strong>非 Type 类型的参数对象</p>
+<p>在 <code>Angular</code> 中的 <code>Type</code> 类型如下所示</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// Type类型 - @angular/core/src/type.ts</span></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> Type = <span class="hljs-built_in">Function</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isType</span>(<span class="hljs-params">v: any</span>): <span class="hljs-title">v</span> <span class="hljs-title">is</span> <span class="hljs-title">Type</span>&lt;<span class="hljs-title">any</span>&gt; </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">typeof</span> v === <span class="hljs-string">'function'</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> interface Type&lt;T&gt; extends <span class="hljs-built_in">Function</span> &#123; <span class="hljs-keyword">new</span> (...args: any[]): T; &#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>Angular</code> 中常用的非 <code>Type</code> 类型 <code>Token</code> 有：字符串（常量）、<code>OpaqueToken</code> 对象、<code>InjectionToken</code> 对象等</p>
+<p><code>OpaqueToken</code> 对象、<code>InjectionToken</code> 对象的构造如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/*</span></span><br><span class="line"><span class="hljs-comment">* 用于创建 OpaqueToken 实例</span></span><br><span class="line"><span class="hljs-comment">* export const CONFIG = new OpaqueToken('config');</span></span><br><span class="line"><span class="hljs-comment">*/</span></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">OpaqueToken</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(protected _desc: string) &#123;&#125;</span><br><span class="line">  toString(): string &#123; <span class="hljs-keyword">return</span> <span class="hljs-string">`Token <span class="hljs-subst">$&#123;<span class="hljs-keyword">this</span>._desc&#125;</span>`</span>; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">/*</span></span><br><span class="line"><span class="hljs-comment">* 用于创建 InjectionToken 实例，使用泛型描述该 Token 所关联的依赖对象的类型</span></span><br><span class="line"><span class="hljs-comment">* const API_URL = new InjectionToken&lt;string&gt;('apiUrl'); </span></span><br><span class="line"><span class="hljs-comment">*/</span></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">InjectionToken</span>&lt;<span class="hljs-title">T</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title">OpaqueToken</span> </span>&#123;</span><br><span class="line">  private _differentiate_from_OpaqueToken_structurally: any;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(desc: string) &#123; <span class="hljs-keyword">super</span>(desc); &#125;</span><br><span class="line"></span><br><span class="line">  toString(): string &#123; <span class="hljs-keyword">return</span> <span class="hljs-string">`InjectionToken <span class="hljs-subst">$&#123;<span class="hljs-keyword">this</span>._desc&#125;</span>`</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>一个简单的示例</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 公共模块，主要作用是导入 providers</span></span><br><span class="line"><span class="hljs-comment">// 定义一个常量，用来保存一个地址</span></span><br><span class="line">@NgModule(&#123;</span><br><span class="line">  providers: [</span><br><span class="line">    &#123;</span><br><span class="line">      provide: <span class="hljs-string">'BASE_CONFIG'</span>,</span><br><span class="line">      useValue: &#123;</span><br><span class="line">        uri: <span class="hljs-string">'http://localhost:3002'</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 然后在需要使用的地方使用 @Inject 导入进来即可</span></span><br><span class="line"><span class="hljs-comment">// 而对于 Http 这种 Type 类型则不需要使用 @Inject</span></span><br><span class="line"><span class="hljs-keyword">constructor</span>(</span><br><span class="line">  @Inject('BASE_CONFIG') private config,</span><br><span class="line">  private http: Http</span><br><span class="line">) &#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么这里就会涉及到几个问题</p>
+<h4 id="为什么在构造函数中，非-Type-类型的参数只能用-Inject-Something-的方式注入"><a href="#为什么在构造函数中，非-Type-类型的参数只能用-Inject-Something-的方式注入" class="headerlink" title="为什么在构造函数中，非 Type 类型的参数只能用 @Inject(Something) 的方式注入"></a>为什么在构造函数中，非 Type 类型的参数只能用 @Inject(Something) 的方式注入</h4><p>因为只有是 <code>Type</code> 类型的对象，才会被 <code>TypeScript</code> 编译器编译</p>
+<p>即我们通过 <code>class</code> 关键字声明的服务，最终都会编译成 <code>ES5</code> 的函数对象</p>
+<h4 id="AppService（服务）-中的-Injectable-是必须的么"><a href="#AppService（服务）-中的-Injectable-是必须的么" class="headerlink" title="AppService（服务） 中的 @Injectable() 是必须的么"></a>AppService（服务） 中的 @Injectable() 是必须的么</h4><p>如果 <code>AppService</code> 不依赖于其他对象，是可以不用使用 <code>Injectable</code> 类装饰器</p>
+<p>当 <code>AppService</code> 需要在构造函数中注入依赖对象，就需要使用 <code>Injectable</code> 类装饰器</p>
+<p>所以推荐的做法不管是否有依赖对象，<code>service</code> 中都使用 <code>Injectable</code> 类装饰器</p>
+<h4 id="在构造函数中，Type-类型的参数是否可以使用-Inject-Type-的方式注入"><a href="#在构造函数中，Type-类型的参数是否可以使用-Inject-Type-的方式注入" class="headerlink" title="在构造函数中，Type 类型的参数是否可以使用 @Inject(Type) 的方式注入"></a>在构造函数中，Type 类型的参数是否可以使用 @Inject(Type) 的方式注入</h4><p><code>Type</code> 类型的参数也能使用 <code>@Inject(Type)</code> 的方式注入，具体如下：</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 虽然可以正常使用，但是编辑器会有提示</span></span><br><span class="line"><span class="hljs-comment">// [ts] Parameter 'http' implicitly has an 'any' type.</span></span><br><span class="line"><span class="hljs-keyword">constructor</span>(@Inject(Http) private http) &#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 也可以这样使用，但是有些冗余</span></span><br><span class="line"><span class="hljs-keyword">constructor</span>(@Inject(Http) private http: Http) &#123; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果是 <code>Type</code> 类型的参数，还是推荐使用下面这样的注入方式</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">constructor</span>(private http: Http) &#123; &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="注入器和提供器"><a href="#注入器和提供器" class="headerlink" title="注入器和提供器"></a>注入器和提供器</h2><p>使用的时候定义一个变量用来接收对应的服务 <code>ProductServicr</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">constructor</span>(</span><br><span class="line">  private productServicr: ProductServicr</span><br><span class="line">) &#123; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>而在定义的时候，需要在提供器的 <code>providers</code> 属性当中指明</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">providers: [ProjectDirective]</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 等价于下面这种写法，因为 provide 和 useClass 两者的属性皆为 ProductServicr</span></span><br><span class="line"><span class="hljs-comment">// 所以可以简写成上面那种形式</span></span><br><span class="line">providers: [&#123;</span><br><span class="line">  <span class="hljs-comment">// provide 属性指定了提供器的 token（key）</span></span><br><span class="line">  <span class="hljs-comment">// 就是根据这个属性来匹配注入的对象和提供器</span></span><br><span class="line">  <span class="hljs-comment">// 然后才会根据提供器的 useClass 属性再去具体实例化某个类</span></span><br><span class="line">  provide: ProductServicr,</span><br><span class="line">  <span class="hljs-comment">// 指明实例化的方式为 new 操作（因为定义的为 useClass）</span></span><br><span class="line">  <span class="hljs-comment">// 比如上方在 constructor 当中注入的 ProductServicr 就是经过 new 操作之后的</span></span><br><span class="line">  <span class="hljs-comment">// 如果这里定义为 useClass: AnotherProductServicr 的话就不能使用简写的方式</span></span><br><span class="line">  useClass: ProductServicr</span><br><span class="line">&#125;]</span><br></pre></td></tr></table></figure>
+
+<p>还可以使用如下方式</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">providers: [&#123;</span><br><span class="line">  provide: ProductServicr,</span><br><span class="line">  <span class="hljs-comment">// 在这种情况下就不再是直接去执行 new 一个类的操作了</span></span><br><span class="line">  <span class="hljs-comment">// 而是通过一个工厂方法返回一个实例，再将这个实例注入到 providers 当中</span></span><br><span class="line">  <span class="hljs-comment">// 比如做一些初始化的工作</span></span><br><span class="line">  useFactory: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123; ... &#125;</span><br><span class="line">&#125;]</span><br></pre></td></tr></table></figure>
+
+<h2 id="提供器的作用域规则"><a href="#提供器的作用域规则" class="headerlink" title="提供器的作用域规则"></a>提供器的作用域规则</h2><ul>
+<li><p>当一个提供器声明在模块当中时（<code>Module</code>），对于该模块下的所有组件是可见的，所有组件都是可以注入的，即在当前模块的 <code>@NgModule</code> 当中的 <code>providers</code> 当中进行注入之后，当前模块下所有组件可用</p>
+</li>
+<li><p>当一个提供器声明在组件当中时（<code>Component</code>），只对声明它的组件及其子组件可见，其他组件不可注入</p>
+</li>
+<li><p>当在模块（<code>Module</code>）和组件（<code>Component</code>）当中声明的提供器具有相同的 <code>token</code>（<code>key</code>）的时候，那么组件当中的提供器会覆盖声明在模块当中的提供器（就近原则）</p>
+</li>
+</ul>
+<p>一般情况下优先将服务提供器声明在模块当中</p>
+<ul>
+<li><p>只有在服务只针对某个组件使用，并且对其他组件不可见的时候，才会声明在组件当中</p>
+</li>
+<li><p>这种情况十分少见，所以一般推荐声明在模块当中</p>
+</li>
+</ul>
+<p>因为服务最终能不能注入到其他地方，是由它在没有在当前模块的 <code>providers</code> 当中声明来决定的</p>
+<h2 id="Injectable-装饰器"><a href="#Injectable-装饰器" class="headerlink" title="@Injectable 装饰器"></a>@Injectable 装饰器</h2><p>如下，一个简单的示例</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 封装 http 为一个服务</span></span><br><span class="line">@Injectable()</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ApiService</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(</span><br><span class="line">    public http: Http</span><br><span class="line">  ) &#123;&#125;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>如果所创建的服务不依赖于其他对象，是可以不用使用 <code>@Injectable()</code> 类装饰器</p>
+</li>
+<li><p>但当该服务需要在构造函数中注入依赖对象，就需要使用 <code>@Injectable()</code> 装饰器，因为只有声明了 <code>@Injectable()</code> 这个装饰器的服务才可以注入其他服务</p>
+</li>
+<li><p>推荐的做法不管是否有依赖对象，在创建服务时都使用 <code>@Injectable()</code> 类装饰器，这样所有服务都遵循同样的规则，一致性</p>
+</li>
+</ul>
+<h2 id="如果所依赖的服务是动态加载的"><a href="#如果所依赖的服务是动态加载的" class="headerlink" title="如果所依赖的服务是动态加载的"></a>如果所依赖的服务是动态加载的</h2><p>一个简单的示例，随机生成的随机数动态加载对应服务</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// app.module.ts</span></span><br><span class="line">@NgModule(&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  providers: [&#123;</span><br><span class="line">    provide: ProductService,</span><br><span class="line">    useFactory: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">let</span> logger = <span class="hljs-keyword">new</span> LoggerService();</span><br><span class="line">      <span class="hljs-keyword">let</span> dev = <span class="hljs-built_in">Math</span>.random() &gt; <span class="hljs-number">0.5</span></span><br><span class="line">      <span class="hljs-keyword">if</span> (dev) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ProductService(logger)</span><br><span class="line">      &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> AnotherProductService(logger)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, LoggerService]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// logger.service.ts</span></span><br><span class="line"><span class="hljs-comment">// 一个简单的打印日志的服务</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123;&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span></span><br><span class="line"></span><br><span class="line">@Injectable()</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">LoggerService</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>() &#123; &#125;</span><br><span class="line">  log (messgae: string) &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(messgae)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要注意，如果多个组件共用这个服务，那么生成的实例都是相同的，因为工厂方法创建的对象是一个单例对象</p>
+<p>工厂方法只会在创建第一个对象的时候被调用一次，然后在整个应用当中所有被注入的服务的实例都是同一个对象</p>
+<p>上面的实例中存在两个问题</p>
+<h4 id="第一个问题"><a href="#第一个问题" class="headerlink" title="第一个问题"></a>第一个问题</h4><p>在方法内部，手动实例化了一个 <code>new LoggerService()</code>，意味着工厂方法与这个类是一种强耦合的关系</p>
+<p>而我们又声明了 <code>LoggerService</code> 的提供器，所以可以采用下面这种方式来解耦</p>
+<p>利用第三个参数 <code>deps</code> 来声明工厂方法所依赖的参数</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">@NgModule(&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  providers: [&#123;</span><br><span class="line">    provide: ProductService,</span><br><span class="line">    useFactory: <span class="hljs-function">(<span class="hljs-params">logger： LoggerService</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">let</span> dev = <span class="hljs-built_in">Math</span>.random() &gt; <span class="hljs-number">0.5</span></span><br><span class="line">      <span class="hljs-keyword">if</span> (dev) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ProductService(logger)</span><br><span class="line">      &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> AnotherProductService(logger)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    deps: [LoggerService]</span><br><span class="line">  &#125;, LoggerService]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>这时 <code>Angular</code> 将会使用 <code>LoggerService</code> 这个提供器来实例化一个 <code>LoggerService</code> 的实例</p>
+<p>并将其注入到 <code>ProductService</code> 的工厂方法的参数当中</p>
+<h4 id="第二个问题"><a href="#第二个问题" class="headerlink" title="第二个问题"></a>第二个问题</h4><p>我们是根据一个随机数来决定实例化哪个对象，这样测试是可以的，但是在发布的时候就不适用了</p>
+<p>在这种情况下就可以使用一个变量来决定调用哪个方法</p>
+<p>然后同样的在 <code>deps</code> 当中进行依赖声明，然后在当作参数的时候传递进去</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">@NgModule(&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  providers: [</span><br><span class="line">    &#123;</span><br><span class="line">      provide: ProductService,</span><br><span class="line">      useFactory: <span class="hljs-function">(<span class="hljs-params">logger： LoggerService, isDev</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (isDev) &#123;</span><br><span class="line">          <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ProductService(logger)</span><br><span class="line">        &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">          <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> AnotherProductService(logger)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      deps: [LoggerService, <span class="hljs-string">'IS_DEV_ENV'</span>]</span><br><span class="line">    &#125;, </span><br><span class="line">    LoggerService, </span><br><span class="line">    &#123;</span><br><span class="line">      provide: <span class="hljs-string">'IS_DEV_ENV'</span>,</span><br><span class="line">      useValue: <span class="hljs-literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>同样的，可以不单一的注入一个固定的值，也是可以注入一个对象，方便维护</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">@NgModule(&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  providers: [</span><br><span class="line">    &#123;</span><br><span class="line">      provide: ProductService,</span><br><span class="line">      useFactory: <span class="hljs-function">(<span class="hljs-params">logger： LoggerService, appConfig</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (appConfig.isDev) &#123;</span><br><span class="line">          <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ProductService(logger)</span><br><span class="line">        &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">          <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> AnotherProductService(logger)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      deps: [LoggerService, <span class="hljs-string">'APP_CONFIG'</span>]</span><br><span class="line">    &#125;, </span><br><span class="line">    LoggerService, </span><br><span class="line">    &#123;</span><br><span class="line">      provide: <span class="hljs-string">'APP_CONFIG'</span>,</span><br><span class="line">      useValue: &#123;</span><br><span class="line">        isDev: <span class="hljs-literal">false</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="注入器的层级关系"><a href="#注入器的层级关系" class="headerlink" title="注入器的层级关系"></a>注入器的层级关系</h2><p>前面的提供器只负责实例化所需的依赖对象，将实例化好的对象注入所需组件的工作则是由注入器来完成的</p>
+<p>在程序启动的时候， <code>Angular</code> 首先会创建一个应用级注入器，然后将模块中声明的提供器，都注册到这个注入器当中</p>
+<p>被注册的提供器除了应用的主模块声明的以外，还包括所有被引用的模块中声明的提供器</p>
+<p>比如</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// app.module.ts</span></span><br><span class="line">@NgModule(&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">  imports: [</span><br><span class="line">    BrowserModule, </span><br><span class="line">    FormsModule, </span><br><span class="line">    HttpModule</span><br><span class="line">  ],</span><br><span class="line">  providers: [</span><br><span class="line">    <span class="hljs-comment">// ...</span></span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>在应用级的注入器里面，除了 <code>AppModule</code> 本身声明的一些提供器（<code>providers</code>）会被注册以外</p>
+<p>它引入的部分（<code>imports</code>）所有其他的模块，这些模块当中声明的提供器都会被注册到应用级注入器当中</p>
+<p>然后 <code>Angular</code> 会创建启动模块指定的主组件（<code>bootstrap</code> 指定的模块），同时应用级别的注入器会为这个主组件创建一个组件级的注入器，并将组件中声明的提供器注册到这个组件级的注入器上</p>
+<p>当子组件被创建的时候，它的父组件的注入器会为这个子组件也创建一个注入器，然后将子组件声明的提供器注册上去</p>
+<p>以此类推，应用中会形成一组注入器，这些注入器会形成一个与组件的上下级关系一样的层级关系</p>
+<p>不过在一般情况下 <code>Angular</code> 可以通过构造函数的参数自动注入所需的依赖</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">constructor</span>(private http: Http) &#123; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>同时也需要注意，<code>Angular</code> 的依赖注入点只有一个，就是它的构造函数</p>
+<p>如果一个组件的构造函数为空，那么就可以断定，这个函数没有被注入任何东西</p>
+<p>简单来说，分为</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">应用级的注入器  ==&gt;  主组件注入器  ==&gt;  子组件注入器</span><br></pre></td></tr></table></figure>
+
+<h2 id="手动添加注入器（避免此类操作）"><a href="#手动添加注入器（避免此类操作）" class="headerlink" title="手动添加注入器（避免此类操作）"></a>手动添加注入器（避免此类操作）</h2><p>但是需要注意，在实际的使用当中避免使用这种方式</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; Component, OnInit, Injector &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; ProductService &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./product.service'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ProductComponent</span> <span class="hljs-title">implements</span> <span class="hljs-title">OnInit</span> </span>&#123;</span><br><span class="line">  private productService: ProductService;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(private injector: Injector) &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.productService = injector.get(<span class="hljs-keyword">this</span>.productService)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Angular/">Angular</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/11/11/Angular/04/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Angular 中的管道</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/10/14/Angular/02/">
+                <span class="level-item">依赖注入</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="comment-container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+	var gitment = new Gitment({
+		id: '2018/10/16/Angular/03/',
+		owner: 'heptaluan',
+		repo: 'blog-gitment',
+		oauth: {
+			client_id: 'ee317a1f9527f57fc555',
+			client_secret: '94bba574dd577716d4860ca484651d0b7c5b1b65',
+		},
+	})
+	gitment.render('comment-container')
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-2-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <figure class="image is-128x128 has-mb-6">
+                            <img class="is-rounded" src="https://avatars2.githubusercontent.com/u/18285736?s=460&amp;v=4" alt="heptaluan">
+                        </figure>
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        heptaluan
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        white lie.
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>WuHan China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <!-- <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        55
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        5
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        5
+                    </p>
+                </div>
+            </div>
+        </nav> -->
+        <!-- <div class="level">
+            <a class="level-item button is-link is-rounded" href="/" target="_blank">
+                关注我</a>
+        </div> -->
+        
+        
+    </div>
+</div>
+    
+        
+    
+        
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Angular/">
+            <span class="level-start">
+                <span class="level-item">Angular</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">9</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/CSS/">
+            <span class="level-start">
+                <span class="level-item">CSS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/HTTP/">
+            <span class="level-start">
+                <span class="level-item">HTTP</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/JavaScript/">
+            <span class="level-start">
+                <span class="level-item">JavaScript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">37</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Node-js/">
+            <span class="level-start">
+                <span class="level-item">Node.js</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Angular/" style="font-size: 17.5px;">Angular</a> <a href="/tags/CSS/" style="font-size: 12.5px;">CSS</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow  ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/03/13/Angular/09/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/09.jpg" alt="动态加载（补充）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-03-12T16:00:00.000Z">2019-03-13</time></div>
+                    <a href="/2019/03/13/Angular/09/" class="has-link-black-ter is-size-6">动态加载（补充）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/03/12/Angular/08/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/08.jpg" alt="动态加载已经声明的组件">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-03-11T16:00:00.000Z">2019-03-12</time></div>
+                    <a href="/2019/03/12/Angular/08/" class="has-link-black-ter is-size-6">动态加载已经声明的组件</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/01/11/Angular/07/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/07.jpg" alt="ExpressionChangedAfterItHasBeenCheckedError">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-10T16:00:00.000Z">2019-01-11</time></div>
+                    <a href="/2019/01/11/Angular/07/" class="has-link-black-ter is-size-6">ExpressionChangedAfterItHasBeenCheckedError</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/12/08/Angular/06/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/06.jpg" alt=":host 和 ::ng-deep">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-07T16:00:00.000Z">2018-12-08</time></div>
+                    <a href="/2018/12/08/Angular/06/" class="has-link-black-ter is-size-6">:host 和 ::ng-deep</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/12/05/Angular/05/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/05.jpg" alt="Angular 中的装饰器">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-04T16:00:00.000Z">2018-12-05</time></div>
+                    <a href="/2018/12/05/Angular/05/" class="has-link-black-ter is-size-6">Angular 中的装饰器</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Angular/">
+                        <span class="tag">Angular</span>
+                        <span class="tag is-grey">9</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/CSS/">
+                        <span class="tag">CSS</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/HTTP/">
+                        <span class="tag">HTTP</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/JavaScript/">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag is-grey">37</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Node-js/">
+                        <span class="tag">Node.js</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <!-- <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="依赖注入（补充）" height="28">
+                
+                </a> -->
+                <p class="is-size-7">
+                &copy; 2019 heptaluan&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <!-- <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/heptaluan">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div> -->
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

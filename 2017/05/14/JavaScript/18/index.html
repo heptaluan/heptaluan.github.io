@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+<title>原型和闭包 - heptaluan&#39;s blog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="接之前 Javascript 中的闭包 闭包的样列 最近又复习了一次 深入理解 javascript 原型和闭包">
+<meta name="keywords" content="JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="原型和闭包">
+<meta property="og:url" content="http://yoursite.com/2017/05/14/JavaScript/18/index.html">
+<meta property="og:site_name" content="heptaluan&#39;s blog">
+<meta property="og:description" content="接之前 Javascript 中的闭包 闭包的样列 最近又复习了一次 深入理解 javascript 原型和闭包">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/cover/03.jpg">
+<meta property="og:updated_time" content="2019-07-04T10:00:54.056Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="原型和闭包">
+<meta name="twitter:description" content="接之前 Javascript 中的闭包 闭包的样列 最近又复习了一次 深入理解 javascript 原型和闭包">
+<meta name="twitter:image" content="http://yoursite.com/images/cover/03.jpg">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.ico">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-2-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <!-- <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="原型和闭包" height="28">
+            
+            </a>
+        </div> -->
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/heptaluan">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-10-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-image">
+        <span class="image is-7by1">
+            <img class="thumbnail" src="/images/cover/03.jpg" alt="原型和闭包">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2017-05-13T16:00:00.000Z">2017-05-14</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    17 分钟 读完 (大约 2562 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                原型和闭包
+            
+        </h1>
+        <div class="content">
+            <p>接之前</p>
+<p><a href="https://github.com/heptaluan/blog/blob/master/blog/js/16.md" target="_blank" rel="noopener">Javascript 中的闭包</a></p>
+<p><a href="https://github.com/heptaluan/blog/blob/master/blog/js/17.md" target="_blank" rel="noopener">闭包的样列</a></p>
+<p>最近又复习了一次 <a href="http://www.cnblogs.com/wangfupeng1988/p/3977987.html" target="_blank" rel="noopener">深入理解 javascript 原型和闭包</a></p>
+<a id="more"></a>
+
+<p>算是一个小小的总结吧</p>
+<h2 id="对象-若干属性的集合"><a href="#对象-若干属性的集合" class="headerlink" title="对象 - 若干属性的集合"></a>对象 - 若干属性的集合</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 简单的值类型，不是对象</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">typeof</span> x);                 <span class="hljs-comment">// undefined</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">typeof</span> <span class="hljs-number">10</span>);                <span class="hljs-comment">// number</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">typeof</span> <span class="hljs-string">'abc'</span>);             <span class="hljs-comment">// string</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">typeof</span> <span class="hljs-literal">true</span>);              <span class="hljs-comment">// boolean</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 函数其实也是对象，也是可以做为参数传递的</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">typeof</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;);   <span class="hljs-comment">//function</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 引用类型</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">typeof</span> [<span class="hljs-number">1</span>, <span class="hljs-string">'a'</span>, <span class="hljs-literal">true</span>]);    <span class="hljs-comment">//object</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">typeof</span> &#123; <span class="hljs-attr">a</span>: <span class="hljs-number">10</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">20</span> &#125;);  <span class="hljs-comment">//object</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">typeof</span> <span class="hljs-literal">null</span>);              <span class="hljs-comment">//object</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">typeof</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Number</span>(<span class="hljs-number">10</span>));    <span class="hljs-comment">//object</span></span><br></pre></td></tr></table></figure>
+
+<p>判断一个变量是不是对象，值类型的类型判断用 <code>typeof</code>，引用类型的类型判断用 <code>instanceof</code></p>
+<h2 id="函数和对象的关系"><a href="#函数和对象的关系" class="headerlink" title="函数和对象的关系"></a>函数和对象的关系</h2><p>对象是可以通过函数来创建</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//var obj = &#123; a: 10, b: 20 &#125;;</span></span><br><span class="line"><span class="hljs-comment">//var arr = [5, 'x', true];</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> obj = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Object</span>();</span><br><span class="line">obj.a = <span class="hljs-number">10</span>;</span><br><span class="line">obj.b = <span class="hljs-number">20</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> arr = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>();</span><br><span class="line">arr[<span class="hljs-number">0</span>] = <span class="hljs-number">5</span>;</span><br><span class="line">arr[<span class="hljs-number">1</span>] = <span class="hljs-string">'x'</span>;</span><br><span class="line">arr[<span class="hljs-number">2</span>] = <span class="hljs-literal">true</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="prototype"><a href="#prototype" class="headerlink" title="prototype"></a>prototype</h2><p>每个函数都有一个属性叫做 <code>prorotype</code>，这个 <code>prototype</code> 的属性值是一个对象（属性的集合），默认的还有一个叫做 <code>constructor</code> 的属性，指向这个函数本身</p>
+<p><img src="http://images.cnitblog.com/blog/138012/201409/172121182841896.png" alt="prototype01"></p>
+<p>例如 <code>Object</code> 的 <code>prototype</code> 上就挂载了一系列方法</p>
+<p><img src="http://images.cnitblog.com/blog/138012/201409/172130097842386.png" alt="prototype02"></p>
+<p>我们也可以在自己自定义的方法的 <code>prototype</code> 中新增自己的属性</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Foo</span> (<span class="hljs-params"></span>) </span>&#123;...&#125;</span><br><span class="line"></span><br><span class="line">Foo.prototype.name = ..</span><br><span class="line"></span><br><span class="line">Foo.prototype.getName = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;..&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> bar = <span class="hljs-keyword">new</span> Foo();</span><br><span class="line"><span class="hljs-built_in">console</span>.log(bar.name);</span><br><span class="line"><span class="hljs-built_in">console</span>.log(bar.getName());</span><br></pre></td></tr></table></figure>
+
+<p><code>Foo</code> 是一个函数，<code>bar</code> 对象是通过 <code>Foo</code> 函数 <code>new</code> 出来的，这样一来，<code>bar</code> 对象就可以调用 <code>Foo.prototype</code> 上的属性和方法</p>
+<p>因为每个对象都有一个隐藏的属性 <code>__proto__</code>（一般称为 隐式原型），这个属性引用了创建这个对象的函数的 <code>prototype</code>，即</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bar.__proto__ === Foo.prototype  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="instanceof"><a href="#instanceof" class="headerlink" title="instanceof"></a>instanceof</h2><p>对于值类型可以使用 <code>typeof</code> 判断，但是对于引用类型的时候，返回值只有 <code>object/function</code>，这个时候就可以使用 <code>instanceof</code></p>
+<p><img src="http://images.cnitblog.com/blog/138012/201409/181635468939277.png" alt="instanceof"></p>
+<p>比如判断 <code>f1 instanceof Object</code>，按照上图来说就是：</p>
+<ul>
+<li>沿着 <code>f1</code> 的 <code>__proto__</code> 这条线来找，同时沿着 <code>Object</code> 的 <code>prototype</code> 这条线来找，如果两条线能找到同一个引用，即同一个对象，那么就返回 <code>true</code>，如果找到终点还未重合，则返回 <code>false</code></li>
+</ul>
+<p>这也解释了为何一下结果均返回 <code>true</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Object</span> <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Function</span>;    <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Function</span> <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Object</span>;    <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Function</span> <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Function</span>;  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>完整原型图如下所示：</p>
+<p><img src="http://images.cnitblog.com/blog/138012/201409/181637013624694.png" alt="原型链"></p>
+<ul>
+<li><code>instanceof</code> 表示的就是一种继承关系，或者原型链的结构</li>
+</ul>
+<p>一个小小的练习题：</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = &#123;</span><br><span class="line">  x: <span class="hljs-number">1</span>,</span><br><span class="line">  y: &#123; <span class="hljs-attr">z</span>: <span class="hljs-number">2</span> &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> b = &#123;&#125;;</span><br><span class="line">b.__proto__ = a;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// a 和 b 都是对象（通过new Object() 生成，这里是简写）</span></span><br><span class="line"><span class="hljs-comment">// 所以 a.__proto__ === b.__proto__ 是相等的（都是指向 Object.prototype）</span></span><br><span class="line"><span class="hljs-comment">// 所以在查找 b.x 的时候先去 b 查看，发现是空对象（&#123;&#125;），原则上应该去 Object.prototype 上查找 </span></span><br><span class="line"><span class="hljs-comment">// 但是现在把 b.__proto__ 从新指回了 a，所以应该就去 a 上查找</span></span><br><span class="line"><span class="hljs-comment">// 所以 b.x 为 1，b.y 为 &#123; z: 2 &#125;</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(a.x);</span><br><span class="line"><span class="hljs-built_in">console</span>.log(b.x);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 然后把 b.x 重新赋值为 22</span></span><br><span class="line"><span class="hljs-comment">// 因为是基本类型，所以 a.x 是不变的</span></span><br><span class="line">b.x = <span class="hljs-number">22</span>;</span><br><span class="line"><span class="hljs-built_in">console</span>.log(a.x);</span><br><span class="line"><span class="hljs-built_in">console</span>.log(b.x);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 这个同上面那个类似</span></span><br><span class="line"><span class="hljs-comment">// 但是由于是引用类型，所以 a.y 和 b.y 指向的都是同一个地址</span></span><br><span class="line"><span class="hljs-comment">// 其中一个变化的话自然会引起另外一个变化</span></span><br><span class="line">b.y.z = <span class="hljs-number">33</span>;</span><br><span class="line"><span class="hljs-built_in">console</span>.log(a.y.z);</span><br><span class="line"><span class="hljs-built_in">console</span>.log(b.y.z);</span><br></pre></td></tr></table></figure>
+
+<h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><p>访问一个对象的属性时，先在基本属性中查找，如果没有，再沿着 <code>__proto__</code> 这条链往上找，这就是原型链</p>
+<p>可以利用 <code>hasOwnProperty</code> 来区分一个属性是不是从原型上继承得到的（特别是在 <code>for..in</code> 循环中）</p>
+<p><code>hasOwnProperty</code> 这个方法存在与 <code>Object.prototype</code> 上，对象的原型链是沿着 <code>__proto__</code> 这条线走的，因此在查找对象的 <code>hasOwnProperty</code> 属性的时候，就会顺着原型链一直查找到 <code>Object.prototype</code></p>
+<p>由于所有的对象的原型链都会找到 <code>Object.prototype</code>，因此所有的对象都会有 <code>Object.prototype</code> 的方法，这就是所谓的<strong>继承</strong></p>
+<p>同样的，每个函数都有 <code>call</code>，<code>apply</code> 方法，这也是”继承”而来的，函数由 <code>Function</code> 函数构建，因此继承的 <code>Function.prototype</code> 中的方法</p>
+<p>至于为什么 <code>Function.prototype</code> 上也会有 <code>hasOwnProperty</code> 方法，这是因为 <code>Function.prototype</code> 同样继承自 <code>Object.prorotype</code></p>
+<h2 id="执行上下文环境"><a href="#执行上下文环境" class="headerlink" title="执行上下文环境"></a>执行上下文环境</h2><p>简单来说，函数<strong>每被</strong>调用一次，都会产生一个新的执行上下文环境，因为不同的调用可能就会有不同的参数</p>
+<p>需要注意一点：函数体内部自由变量在函数在定义的时候（不是调用的时候）就已经确定了</p>
+<p><code>javascript</code> 在执行一个代码段之前，都会进行这些 “准备工作” 来生成执行上下文，其实分三种情况 – 全局代码，函数体，<code>eval</code> 代码（不推荐这个）</p>
+<h2 id="全局执行上下文环境"><a href="#全局执行上下文环境" class="headerlink" title="全局执行上下文环境"></a>全局执行上下文环境</h2><p>在产生执行全局上下文时，浏览器通常会做以下三个准备工作：</p>
+<ul>
+<li><p>提取 <code>var</code> 声明的变量，并赋值（默认）为 <code>undefined</code>（变量提升）</p>
+</li>
+<li><p>提取声明式函数（<code>function foo () {..}</code>）</p>
+</li>
+<li><p>给 <code>this</code> 赋值（指向 <code>window</code> 或当前对象）</p>
+</li>
+</ul>
+<h2 id="函数体上下文环境（也就是所谓的局部）"><a href="#函数体上下文环境（也就是所谓的局部）" class="headerlink" title="函数体上下文环境（也就是所谓的局部）"></a>函数体上下文环境（也就是所谓的局部）</h2><p>会在以上三个的基础上增加以下三条：</p>
+<ul>
+<li><p>给函数参数赋值</p>
+</li>
+<li><p>给 <code>arguments</code> 赋值（是一个实参副本，与实参保持一致）</p>
+</li>
+<li><p>自由变量的取值作用域，查找并赋值</p>
+</li>
+</ul>
+<p>所以总结来说就是，<strong>在执行代码之前，把将要用到的所有的变量都事先拿出来，有的直接赋值了，有的先用 undefined 占个空</strong></p>
+<p>而在执行 <code>js</code> 代码时，会有数不清的函数调用次数，会产生许多个上下文环境，这么多上下文环境该如何管理，以及如何销毁而释放内存就主要依靠下面的<strong>执行上下文栈</strong></p>
+<h2 id="执行上下文栈"><a href="#执行上下文栈" class="headerlink" title="执行上下文栈"></a>执行上下文栈</h2><p>执行全局代码时，会产生一个执行上下文环境，每次调用函数都又会产生执行上下文环境，当函数调用完成时，这个上下文环境以及其中的数据都会被消除，再重新回到全局上下文环境</p>
+<p>处于活动状态的执行上下文环境只有一个</p>
+<p>其实这是一个 <strong>压栈</strong> ==&gt; <strong>出栈</strong> 的过程，如下图所示：</p>
+<ul>
+<li><p>压栈：函数未调用时只有全局上下文在执行，每次调用函数时会产生局部上下文，这就是压栈，也就是进栈</p>
+</li>
+<li><p>出栈：函数调用完成后，就会出栈，会销毁本次调用的局部上下文环境</p>
+</li>
+</ul>
+<p>注意：若函数里面是多层函数嵌套，也会出现多层执行上下文的嵌套（压栈和出栈也是嵌套产生的）</p>
+<p><img src="http://images.cnitblog.com/blog/138012/201409/232122300768665.png" alt="执行上下文栈"></p>
+<p>上面这种只是较为理想的情况，有一种情况无法做到这样干净利落的说销毁就销毁，这个就是 – 闭包</p>
+<h2 id="this"><a href="#this" class="headerlink" title="this"></a>this</h2><p><code>this</code> 是 <code>Javascript</code> 语言的一个关键字它代表函数运行时，自动生成的一个内部对象，只能在函数内部使用</p>
+<p>随着函数使用场合的不同，<code>this</code> 的值会发生变化，但是有一个总的原则，那就是 <code>this</code> 指的是，调用函数的那个对象</p>
+<p><code>JavaScript</code> 中函数的调用有以下几种方式：</p>
+<ul>
+<li><p>为对象方法调用</p>
+</li>
+<li><p>作为函数调用</p>
+</li>
+<li><p>作为构造函数调用</p>
+</li>
+<li><p>使用 <code>apply</code> 或 <code>call</code> 调用</p>
+</li>
+</ul>
+<p>一个小案例，在 <code>jQuery</code> 中，有下面这样一段代码：</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">jQuery.extend = jQuery.fn.extend = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (i === length) &#123;</span><br><span class="line">    target = <span class="hljs-keyword">this</span>;</span><br><span class="line">    i--;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>jQuery.extend</code> 和 <code>jQuery.fn.extend</code> 都指向了同一个函数，但是当执行时，函数中的 <code>this</code> 是不一样的</p>
+<p>执行 <code>jQuery.extend( .. )</code> 时，this 指向 <code>jQuery</code></p>
+<p>执行 <code>jQuery.fn.extend( .. )</code> 时，this 指向 <code>jQuery.fn</code></p>
+<p>这样就巧妙的将一段代码同时共享给两个功能使用，更加符合设计原则</p>
+<h2 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h2><p><code>javascript</code> 中没有块级作用域（<code>ES6</code> 之前），除了全局作用域以外，只有函数可以创建作用域</p>
+<p>我们在声明变量时，全局代码要在代码前端声明，函数中要在函数体一开始就声明好（先声明，在使用），除了这两个地方，其他地方都不要出现变量声明</p>
+<p>作用域有上下级的关系，上下级关系的确定就看函数是在哪个作用域下创建的</p>
+<p>作用域最大的用处就是隔离变量，不同作用域下同名变量不会有冲突</p>
+<p>除了全局作用域之外，每个函数都会创建自己的作用域，作用域在函数<strong>定义时</strong>就已经确定了，而不是在函数<strong>调用时</strong>确定</p>
+<p>抽象来看待的话，作用域只是一个 “地盘”，其中没有变量，要通过<strong>作用域对应的执行上下文环境</strong>来获取变量的值</p>
+<p>同一个作用域下，不同的调用会产生不同的执行上下文环境，继而产生不同的变量的值，所以，作用域中变量的值是在执行过程中产生的确定的，而作用域却是在函数创建时就确定了</p>
+<p>所以，如果要查找一个作用域下某个变量的值，就需要找到这个作用域对应的执行上下文环境，再在其中寻找变量的值</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/JavaScript/">JavaScript</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/05/19/JavaScript/19/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">JavaScript 中的 || 和 &amp;&amp;</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/05/12/JavaScript/16/">
+                <span class="level-item">Javascript 中的闭包</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="comment-container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+	var gitment = new Gitment({
+		id: '2017/05/14/JavaScript/18/',
+		owner: 'heptaluan',
+		repo: 'blog-gitment',
+		oauth: {
+			client_id: 'ee317a1f9527f57fc555',
+			client_secret: '94bba574dd577716d4860ca484651d0b7c5b1b65',
+		},
+	})
+	gitment.render('comment-container')
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-2-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <figure class="image is-128x128 has-mb-6">
+                            <img class="is-rounded" src="https://avatars2.githubusercontent.com/u/18285736?s=460&amp;v=4" alt="heptaluan">
+                        </figure>
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        heptaluan
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        white lie.
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>WuHan China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <!-- <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        55
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        5
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        5
+                    </p>
+                </div>
+            </div>
+        </nav> -->
+        <!-- <div class="level">
+            <a class="level-item button is-link is-rounded" href="/" target="_blank">
+                关注我</a>
+        </div> -->
+        
+        
+    </div>
+</div>
+    
+        
+    
+        
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Angular/">
+            <span class="level-start">
+                <span class="level-item">Angular</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">9</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/CSS/">
+            <span class="level-start">
+                <span class="level-item">CSS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/HTTP/">
+            <span class="level-start">
+                <span class="level-item">HTTP</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/JavaScript/">
+            <span class="level-start">
+                <span class="level-item">JavaScript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">37</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Node-js/">
+            <span class="level-start">
+                <span class="level-item">Node.js</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Angular/" style="font-size: 17.5px;">Angular</a> <a href="/tags/CSS/" style="font-size: 12.5px;">CSS</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow  ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/03/13/Angular/09/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/09.jpg" alt="动态加载（补充）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-03-12T16:00:00.000Z">2019-03-13</time></div>
+                    <a href="/2019/03/13/Angular/09/" class="has-link-black-ter is-size-6">动态加载（补充）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/03/12/Angular/08/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/08.jpg" alt="动态加载已经声明的组件">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-03-11T16:00:00.000Z">2019-03-12</time></div>
+                    <a href="/2019/03/12/Angular/08/" class="has-link-black-ter is-size-6">动态加载已经声明的组件</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/01/11/Angular/07/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/07.jpg" alt="ExpressionChangedAfterItHasBeenCheckedError">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-10T16:00:00.000Z">2019-01-11</time></div>
+                    <a href="/2019/01/11/Angular/07/" class="has-link-black-ter is-size-6">ExpressionChangedAfterItHasBeenCheckedError</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/12/08/Angular/06/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/06.jpg" alt=":host 和 ::ng-deep">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-07T16:00:00.000Z">2018-12-08</time></div>
+                    <a href="/2018/12/08/Angular/06/" class="has-link-black-ter is-size-6">:host 和 ::ng-deep</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2018/12/05/Angular/05/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/05.jpg" alt="Angular 中的装饰器">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-04T16:00:00.000Z">2018-12-05</time></div>
+                    <a href="/2018/12/05/Angular/05/" class="has-link-black-ter is-size-6">Angular 中的装饰器</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Angular/">
+                        <span class="tag">Angular</span>
+                        <span class="tag is-grey">9</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/CSS/">
+                        <span class="tag">CSS</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/HTTP/">
+                        <span class="tag">HTTP</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/JavaScript/">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag is-grey">37</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Node-js/">
+                        <span class="tag">Node.js</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <!-- <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="原型和闭包" height="28">
+                
+                </a> -->
+                <p class="is-size-7">
+                &copy; 2019 heptaluan&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <!-- <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/heptaluan">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div> -->
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
