@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+<title>Fetch - heptaluan&#39;s blog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="首先我们先来看看 Fetch 与 jQuery 的 ajax() 方法的一些不同点">
+<meta name="keywords" content="Vue">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Fetch">
+<meta property="og:url" content="http://yoursite.com/2018/04/11/Vue/01/index.html">
+<meta property="og:site_name" content="heptaluan&#39;s blog">
+<meta property="og:description" content="首先我们先来看看 Fetch 与 jQuery 的 ajax() 方法的一些不同点">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://pu5vc7wn3.bkt.clouddn.com/cover/01.jpg">
+<meta property="og:updated_time" content="2019-07-05T14:44:53.500Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Fetch">
+<meta name="twitter:description" content="首先我们先来看看 Fetch 与 jQuery 的 ajax() 方法的一些不同点">
+<meta name="twitter:image" content="http://pu5vc7wn3.bkt.clouddn.com/cover/01.jpg">
+
+
+
+
+
+
+
+<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/backups/favicon.ico">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-2-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <!-- <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="Fetch" height="28">
+            
+            </a>
+        </div> -->
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/heptaluan">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-image">
+        <span class="image is-7by1">
+            <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/01.jpg" alt="Fetch">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-04-10T16:00:00.000Z">2018-04-11</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Vue/">Vue</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    6 分钟 读完 (大约 885 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Fetch
+            
+        </h1>
+        <div class="content">
+            <p>首先我们先来看看 <code>Fetch</code> 与 <code>jQuery</code> 的 <code>ajax()</code> 方法的一些不同点</p>
+<a id="more"></a>
+
+
+<ul>
+<li><p>基于 <code>Promise</code> 设计</p>
+</li>
+<li><p>当接收一个代表错误的 <code>HTTP</code> 状态码的时候，从 <code>fetch()</code> 返回的 <code>Promise</code> 不会被标记为 <code>reject</code>，即使该 <code>HTTP</code> 响应的状态码是 <code>404</code> 或 <code>500</code>，相反，它会将 <code>Promise</code> 状态标记为 <code>resolve</code>（但是会将 <code>resolve</code> 的返回值的 <code>ok</code> 属性设置为 <code>false</code>），仅当网络故障或请求被阻止时，才会标记为 <code>reject</code></p>
+</li>
+<li><p>默认情况下，<code>fetch</code> 不会从服务端发送或接收任何 <code>cookies</code>，如果站点依赖用户 <code>session</code>，则会导致未经认证的请求（要发送 <code>cookie</code>，必须设置 <code>credentials</code> 选项），<code>credentials</code> 是 <code>request</code> 接收的只读属性，用于表示用户代理是否应该在跨域请求的情况下从其他域发送 <code>cookies</code>（与 <code>XHR</code> 的 <code>withCredentials</code> 标志相似）</p>
+</li>
+</ul>
+<h2 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fetch(url, options).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">response</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// handle HTTP response</span></span><br><span class="line">&#125;, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// handle network error</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="一个简单的示例"><a href="#一个简单的示例" class="headerlink" title="一个简单的示例"></a>一个简单的示例</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 因为现在支持性不是很好，所以需要兼容</span></span><br><span class="line"><span class="hljs-built_in">require</span>(<span class="hljs-string">'babel-polyfill'</span>);</span><br><span class="line"><span class="hljs-built_in">require</span>(<span class="hljs-string">'es6-promise'</span>).polyfill()</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">import</span> <span class="hljs-string">'whatwg-fetch'</span></span><br><span class="line"></span><br><span class="line">fetch(url, &#123;</span><br><span class="line">  method: <span class="hljs-string">'POST'</span>,</span><br><span class="line">  body: <span class="hljs-built_in">JSON</span>.stringify(data),</span><br><span class="line">  headers: &#123;</span><br><span class="line">    <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'application/json'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  credentials: <span class="hljs-string">'same-origin'</span></span><br><span class="line">&#125;).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">response</span>) </span>&#123;</span><br><span class="line">  response.status      <span class="hljs-comment">// =&gt; number 100-599</span></span><br><span class="line">  response.statusText  <span class="hljs-comment">// =&gt; String</span></span><br><span class="line">  response.headers     <span class="hljs-comment">// =&gt; Headers</span></span><br><span class="line">  response.url         <span class="hljs-comment">// =&gt; String</span></span><br><span class="line"></span><br><span class="line">  response.text().then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">responseText</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// ...</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err</span>) </span>&#123;</span><br><span class="line">  err.message  <span class="hljs-comment">// =&gt; String</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="相关参数"><a href="#相关参数" class="headerlink" title="相关参数"></a>相关参数</h2><h4 id="url"><a href="#url" class="headerlink" title="url"></a>url</h4><p>定义要获取的资源</p>
+<ul>
+<li><p>一个 <code>USVString</code> 字符串，包含要获取资源的 <code>URL</code></p>
+</li>
+<li><p>一个 <code>Reauest</code> 对象</p>
+</li>
+</ul>
+<h4 id="options（可选）"><a href="#options（可选）" class="headerlink" title="options（可选）"></a>options（可选）</h4><p>一个配置项对象，包括所有对请求的设置，可选的参数有</p>
+<ul>
+<li><p><code>methods</code> - 请求方法，<code>GET</code>、<code>POST</code></p>
+</li>
+<li><p><code>headers</code> - 请求的头信息，形式为 <code>Headers</code> 对象或 <code>ByteString</code></p>
+</li>
+<li><p><code>body</code> - 请求的 <code>body</code> 信息，可能是 <code>bold</code>，<code>BufferSource</code>，<code>FormData</code>，<code>URLSearchParams</code> 或者 <code>USVString</code> 对象（<code>GET</code> 或 <code>HEAD</code> 方法的请求不包含 <code>body</code> 信息）</p>
+</li>
+<li><p><code>mode</code> - 请求的模式，如 <code>cors</code>，<code>no-cors</code>，<code>some-origin</code></p>
+</li>
+<li><p><code>credentials</code> - 请求的 <code>credentials</code>，如 <code>omit</code>，<code>same-origin</code>，<code>include</code></p>
+</li>
+<li><p><code>cache</code> - 请求的 <code>cache</code> 模式，如 <code>default</code>，<code>no-store</code>，<code>reload</code>，<code>no-cache</code>，<code>force-cache</code>，<code>only-if-cached</code></p>
+</li>
+</ul>
+<h4 id="response"><a href="#response" class="headerlink" title="response"></a>response</h4><p>一个 <code>Promise</code>，<code>resolve</code> 时回传 <code>Response</code> 对象</p>
+<p>属性如下</p>
+<ul>
+<li><p><code>status (number) HTTP</code> - 请求结果参数 <code>100–599</code></p>
+</li>
+<li><p><code>statusText (String)</code> - 服务器返回的状态报告</p>
+</li>
+<li><p><code>ok (boolean)</code> - 如果返回 <code>200</code> 表示请求成功则为 <code>true</code></p>
+</li>
+<li><p><code>headers (Headers)</code> - 返回头部信息</p>
+</li>
+<li><p><code>url (String)</code> - 请求的地址</p>
+</li>
+</ul>
+<p>方法如下</p>
+<ul>
+<li><p><code>text()</code> - 以 <code>string</code> 的形式生成请求 <code>text</code></p>
+</li>
+<li><p><code>json()</code> - 生成 <code>JSON.parse(responseText)</code> 的结果</p>
+</li>
+<li><p><code>blob()</code> - 生成一个 <code>Blob</code></p>
+</li>
+<li><p><code>arrayBuffer()</code> - 生成一个 <code>ArrayBuffer</code></p>
+</li>
+<li><p><code>formData()</code> - 生成格式化的数据，可用于其他的请求</p>
+</li>
+</ul>
+<p>其他方法</p>
+<ul>
+<li><p><code>clone()</code></p>
+</li>
+<li><p><code>Response.error()</code></p>
+</li>
+<li><p><code>Response.redirect()</code></p>
+</li>
+</ul>
+<h4 id="response-headers"><a href="#response-headers" class="headerlink" title="response.headers"></a>response.headers</h4><ul>
+<li><p><code>has(name) (boolean)</code> - 判断是否存在该信息头</p>
+</li>
+<li><p><code>get(name) (String)</code> - 获取信息头的数据</p>
+</li>
+<li><p><code>getAll(name) (Array)</code> - 获取所有头部数据</p>
+</li>
+<li><p><code>set(name, value)</code> - 设置信息头的参数</p>
+</li>
+<li><p><code>append(name, value)</code> - 添加 header 的内容</p>
+</li>
+<li><p><code>delete(name)</code> - 删除 header 的信息</p>
+</li>
+<li><p><code>forEach(function(value, name){ ... }, [thisContext])</code> - 循环读取 <code>header</code> 的信息</p>
+</li>
+</ul>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><h4 id="GET"><a href="#GET" class="headerlink" title="GET"></a>GET</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// HTML</span></span><br><span class="line">fetch(<span class="hljs-string">'./index.html'</span>).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">response</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> response.text()</span><br><span class="line">&#125;).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">body</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">document</span>.body.innerHTML = body</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// IMAGE</span></span><br><span class="line"><span class="hljs-keyword">var</span> img = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'img'</span>)</span><br><span class="line"></span><br><span class="line">fetch(<span class="hljs-string">'index.jpg'</span>).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">response</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> response.blob()</span><br><span class="line">&#125;).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">bold</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> objectURL = URL.createObjectURL(bold)</span><br><span class="line">  img.src = objectURL</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// JSON</span></span><br><span class="line">fetch(url)</span><br><span class="line">  .then(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> <span class="hljs-keyword">return</span> response.json())</span><br><span class="line">  .then(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(data))</span><br><span class="line">  .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err))</span><br></pre></td></tr></table></figure>
+
+<h4 id="POST"><a href="#POST" class="headerlink" title="POST"></a>POST</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">fetch(<span class="hljs-string">'/users'</span>, &#123;</span><br><span class="line">  methods: <span class="hljs-string">'POST'</span>,</span><br><span class="line">  headers: &#123;</span><br><span class="line">    <span class="hljs-string">'Accept'</span>: <span class="hljs-string">'application/json'</span>,</span><br><span class="line">    <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'application/json'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  body: <span class="hljs-built_in">JSON</span>.stringify(&#123;</span><br><span class="line">    name: <span class="hljs-string">'zhangsan'</span>,</span><br><span class="line">    login: <span class="hljs-string">'zhangsan'</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 检查请求状态</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkStatus</span>(<span class="hljs-params">response</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (response.status &gt;= <span class="hljs-number">200</span> &amp;&amp; response.status &lt; <span class="hljs-number">300</span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> response</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> err = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(response.statusText)</span><br><span class="line">    err.response = response</span><br><span class="line">    <span class="hljs-keyword">throw</span> err</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">parseJSON</span>(<span class="hljs-params">response</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> response.json()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fetch(<span class="hljs-string">'/users'</span>)</span><br><span class="line">  .then(checkStatus)</span><br><span class="line">  .then(parseJSON)</span><br><span class="line">  .then(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(data))</span><br><span class="line">  .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// File Upload</span></span><br><span class="line"><span class="hljs-keyword">let</span> input = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'input[type="file"]'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> data = <span class="hljs-keyword">new</span> FormData()</span><br><span class="line">data.append(<span class="hljs-string">'file'</span>, input.files[<span class="hljs-number">0</span>])</span><br><span class="line">data.append(<span class="hljs-string">'user'</span>, <span class="hljs-string">'zhangsan'</span>)</span><br><span class="line"></span><br><span class="line">fetch(<span class="hljs-string">'/upload'</span>, &#123;</span><br><span class="line">    method: <span class="hljs-string">'POST'</span>,</span><br><span class="line">    body: data</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/Vue/">Vue</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/04/15/Vue/02/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Mixin</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/03/19/JavaScript/31/">
+                <span class="level-item">promise 和 setTimeout</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="comment-container"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: '584b59de0d23cd48fbdd',
+        clientSecret: '5554c9aab0a640015867806f438bd2e10f297e5a',
+        id: 'e8157b1f80e439e6a5eade89f2c0d61e',
+        repo: 'gitalk',
+        owner: 'heptaluan',
+        admin: "heptaluan"
+    })
+    gitalk.render('comment-container')
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <figure class="image is-128x128 has-mb-6">
+                            <img class="is-rounded" src="https://avatars2.githubusercontent.com/u/18285736?s=460&amp;v=4" alt="heptaluan">
+                        </figure>
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        heptaluan
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        GALLOWS BELL.
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>WuHan China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <!-- <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        104
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        7
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        7
+                    </p>
+                </div>
+            </div>
+        </nav> -->
+        <!-- <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/ppoffice" target="_blank">
+                关注我</a>
+        </div> -->
+        
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#基本语法">
+        <span class="has-mr-6">1</span>
+        <span>基本语法</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#一个简单的示例">
+        <span class="has-mr-6">1.1</span>
+        <span>一个简单的示例</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#相关参数">
+        <span class="has-mr-6">2</span>
+        <span>相关参数</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#url">
+        <span class="has-mr-6">2.1</span>
+        <span>url</span>
+        </a></li><li>
+        <a class="is-flex" href="#options（可选）">
+        <span class="has-mr-6">2.2</span>
+        <span>options（可选）</span>
+        </a></li><li>
+        <a class="is-flex" href="#response">
+        <span class="has-mr-6">2.3</span>
+        <span>response</span>
+        </a></li><li>
+        <a class="is-flex" href="#response-headers">
+        <span class="has-mr-6">2.4</span>
+        <span>response.headers</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#实例">
+        <span class="has-mr-6">3</span>
+        <span>实例</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#GET">
+        <span class="has-mr-6">3.1</span>
+        <span>GET</span>
+        </a></li><li>
+        <a class="is-flex" href="#POST">
+        <span class="has-mr-6">3.2</span>
+        <span>POST</span>
+        </a></li></ul></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+        
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Angular/">
+            <span class="level-start">
+                <span class="level-item">Angular</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">12</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/CSS/">
+            <span class="level-start">
+                <span class="level-item">CSS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">9</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/HTTP/">
+            <span class="level-start">
+                <span class="level-item">HTTP</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/JavaScript/">
+            <span class="level-start">
+                <span class="level-item">JavaScript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">43</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Node-js/">
+            <span class="level-start">
+                <span class="level-item">Node.js</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/React/">
+            <span class="level-start">
+                <span class="level-item">React</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">14</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Vue/">
+            <span class="level-start">
+                <span class="level-item">Vue</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">14</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Angular/" style="font-size: 15px;">Angular</a> <a href="/tags/CSS/" style="font-size: 12.5px;">CSS</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.5px;">React</a> <a href="/tags/Vue/" style="font-size: 17.5px;">Vue</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow  ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/07/05/Node/06/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/06.jpg" alt="libuv">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-04T16:00:00.000Z">2019-07-05</time></div>
+                    <a href="/2019/07/05/Node/06/" class="has-link-black-ter is-size-6">libuv</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/06/28/JavaScript/42/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/42.jpg" alt="遍历对象的几种方法">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-27T16:00:00.000Z">2019-06-28</time></div>
+                    <a href="/2019/06/28/JavaScript/42/" class="has-link-black-ter is-size-6">遍历对象的几种方法</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/06/16/React/14/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/14.jpg" alt="applyMiddleware(...middlewares)">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-15T16:00:00.000Z">2019-06-16</time></div>
+                    <a href="/2019/06/16/React/14/" class="has-link-black-ter is-size-6">applyMiddleware(...middlewares)</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/06/12/React/13/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/13.jpg" alt="中间件的洋葱模型">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-11T16:00:00.000Z">2019-06-12</time></div>
+                    <a href="/2019/06/12/React/13/" class="has-link-black-ter is-size-6">中间件的洋葱模型</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/06/08/React/12/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/12.jpg" alt="createStore()">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-07T16:00:00.000Z">2019-06-08</time></div>
+                    <a href="/2019/06/08/React/12/" class="has-link-black-ter is-size-6">createStore()</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Angular/">
+                        <span class="tag">Angular</span>
+                        <span class="tag is-grey">12</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/CSS/">
+                        <span class="tag">CSS</span>
+                        <span class="tag is-grey">9</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/HTTP/">
+                        <span class="tag">HTTP</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/JavaScript/">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag is-grey">43</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Node-js/">
+                        <span class="tag">Node.js</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/React/">
+                        <span class="tag">React</span>
+                        <span class="tag is-grey">14</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Vue/">
+                        <span class="tag">Vue</span>
+                        <span class="tag is-grey">14</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <!-- <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="Fetch" height="28">
+                
+                </a> -->
+                <p class="is-size-7">
+                &copy; 2016 - 2019
+                Made with ✿  heptaluan&nbsp;
+                
+                </p>
+            </div>
+            <!-- <div class="level-end">
+            
+            </div> -->
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
