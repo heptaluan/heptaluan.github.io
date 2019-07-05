@@ -16,7 +16,7 @@
 <meta property="og:description" content="先扩展一个知识：performance - 监控网页与程序性能">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://yoursite.com/images/cover/03.jpg">
-<meta property="og:updated_time" content="2019-07-04T13:01:08.006Z">
+<meta property="og:updated_time" content="2019-07-05T06:40:56.722Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="域名发散与收敛">
 <meta name="twitter:description" content="先扩展一个知识：performance - 监控网页与程序性能">
@@ -126,6 +126,10 @@
                     
                 
                 
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
                 
                 <a class="navbar-item search" title="搜索" href="javascript:;">
                     <i class="fas fa-search"></i>
@@ -161,7 +165,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    24 分钟 读完 (大约 3577 个字)
+                    24 分钟 读完 (大约 3623 个字)
                 </span>
                 
                 
@@ -179,27 +183,19 @@
 
 <h2 id="域名发散"><a href="#域名发散" class="headerlink" title="域名发散"></a>域名发散</h2><p>在 <code>PC</code> 时代为了突破浏览器的域名并发限制，遵循这样一条定律：<strong>http 静态资源采用多个子域名</strong></p>
 <p>目的是充分利用现代浏览器的多线程并发下载能力，由于浏览器的限制，每个浏览器，允许对每个域名的连接数一般是有上限的，附一张网上流传甚广的图：</p>
-<img width="434" alt="dns01" src="https://user-images.githubusercontent.com/18285736/51157005-fc73b000-18b8-11e9-8e16-420d3c3f3618.png">
-
-
+<p><img src="https://user-images.githubusercontent.com/18285736/51157005-fc73b000-18b8-11e9-8e16-420d3c3f3618.png" alt></p>
 <p>域名发散出现的原因其实是在以前，服务器的负载能力差，网速慢，设备差，稍微流量大一点 <code>Server</code> 就崩溃了</p>
 <p>为了保护你的服务器不崩溃，浏览器要对 <code>max connections</code> 有所限制，如果每个用户的 <code>max connections</code> 不限制的话， 结果就是服务器的负载能力会低至冰点（另外也有说是关于 <a href="https://zh.wikipedia.org/wiki/阻斷服務攻擊" target="_blank" rel="noopener">DDOS</a>）</p>
 <p>所以 <code>PC</code> 时代对静态资源优化时，通常将静态资源分布在几个不同域，保证资源最完美地分域名存储，以提供最大并行度，让客户端加载静态资源更为迅速</p>
 <p>假设现在浏览器对每个域名连接数为 <code>1</code>，那么现实情况是</p>
-<img width="347" alt="dns02" src="https://user-images.githubusercontent.com/18285736/51157020-08f80880-18b9-11e9-9427-9ede785b247a.png">
-
-
+<p><img src="https://user-images.githubusercontent.com/18285736/51157020-08f80880-18b9-11e9-9427-9ede785b247a.png" alt></p>
 <p>浏览器解析完我们的文档之后开始发起请求，对文件进行加载. 然后一个一个文件 在 <code>max connections</code> 下进行排队下载</p>
 <p>但如果我们使用了域名分散之后，使用多个 <code>domain</code> 进行资源的下载，就有</p>
-<img width="372" alt="dns03" src="https://user-images.githubusercontent.com/18285736/51157029-0e555300-18b9-11e9-9387-b536c641ba44.png">
-
-
+<p><img src="https://user-images.githubusercontent.com/18285736/51157029-0e555300-18b9-11e9-9387-b536c641ba44.png" alt></p>
 <p>这样完全可以省略掉排队的时间.提升网页加载的速度</p>
 <h2 id="域名收敛"><a href="#域名收敛" class="headerlink" title="域名收敛"></a>域名收敛</h2><p>这里首先会涉及到一个问题，为什么你手机打开网页时，白屏时间会这么长？</p>
 <p>一个网页白屏时间是由下面几部分决定的</p>
-<img width="400" alt="dns04" src="https://user-images.githubusercontent.com/18285736/51157032-11e8da00-18b9-11e9-9633-c2d41e385bf0.png">
-
-
+<p><img src="https://user-images.githubusercontent.com/18285736/51157032-11e8da00-18b9-11e9-9633-c2d41e385bf0.png" alt></p>
 <p>所以，网页的优化就可以从上述几个部分开始. 这里我们要提及的就是 <code>DNS</code> 优化, 即域名收敛，那么什么是域名收敛呢</p>
 <p>顾名思义，域名收敛的意思就是建议将静态资源只放在一个域名下面，而非发散情况下的多个域名下</p>
 <p>上面也说到了，域名发散可以突破浏览器的域名并发限制，那么为要反其道而行之呢？</p>
@@ -223,10 +219,10 @@
 <h2 id="域名结构"><a href="#域名结构" class="headerlink" title="域名结构"></a>域名结构</h2><p>或者叫命名空间，是一个树状结构，有树就得有根，这个根是一个点 <code>&quot;.&quot;（dot）</code></p>
 <p>以 <code>www.example.com</code> 为例，完整的形式应该是 <code>www.example.com.</code>（注意最后有一个点），就是根结点 <code>root</code> ，只不过平时是浏览器或者系统的解析器自动帮我们补全了</p>
 <p>我们要想获取根域都有那些，可以在终端下直接使用 <code>dig</code> 命令（需要安装 <code>dig</code> 指令），如下:</p>
-<p><img src="https://user-images.githubusercontent.com/18285736/51157038-19a87e80-18b9-11e9-8059-9e9e0e8f13e4.png" alt="dns05"></p>
+<p><img src="https://user-images.githubusercontent.com/18285736/51157038-19a87e80-18b9-11e9-8059-9e9e0e8f13e4.png" alt></p>
 <p>根节点之后就是顶级域名，就是 <code>.cn</code>，<code>.com</code>，<code>.gov</code> 这些，顶级域划分为通用顶级域 （<code>com</code>、<code>org</code>、<code>net</code> 等）和国家与地区顶级域（<code>cn</code>、<code>hk</code>、<code>us</code>、<code>tw</code>等）</p>
 <p>我们可以继续使用 <code>dig</code> 查看一下 顶级域名的解析路径，加上 <code>+ trace</code> 参数选项，意思是追踪 <code>DNS</code> 解析过程，如下：</p>
-<p><img src="https://user-images.githubusercontent.com/18285736/51157043-1dd49c00-18b9-11e9-8f09-77149b5c39cb.png" alt="dns06"></p>
+<p><img src="https://user-images.githubusercontent.com/18285736/51157043-1dd49c00-18b9-11e9-8f09-77149b5c39cb.png" alt></p>
 <p>可以看到是先到根节点，再查找到 <code>com</code> ，就是根结点会告知下一个结点 <code>com</code> 在哪：就是 <code>com. 172800 IN NS [a-m].gtld-servers.net</code></p>
 <p>顶级域之后就是我们熟知的一级域名，譬如 <code>www.example.com</code> 中的 <code>example</code> 就是一级域</p>
 <h2 id="NS"><a href="#NS" class="headerlink" title="NS"></a>NS</h2><p>上面两张 <code>dig</code> 命令贴图中间出现了很多次 <code>NS</code> ，<code>NS</code> 即是 <code>NameServer</code>，大部分情况下又叫权威名称服务器简称权威</p>
@@ -249,17 +245,19 @@
 </li>
 </ul>
 <p>之后，就是 <code>TCP</code> 的事了，下面是一张萌萌的简化图：</p>
-<p><img src="https://user-images.githubusercontent.com/18285736/51157050-23ca7d00-18b9-11e9-8b74-bdad6b7fa1ff.gif" alt="dns07"></p>
+<p><img src="https://user-images.githubusercontent.com/18285736/51157050-23ca7d00-18b9-11e9-8b74-bdad6b7fa1ff.gif" alt></p>
 <p>梳理一下，迭代查询的过程如下：</p>
+<blockquote>
 <p>流程: <code>.</code> ==&gt; <code>com.</code> ==&gt; <code>.exampl.com.</code> ==&gt; <code>www.example.com.</code> ==&gt; <code>IP adress</code></p>
+</blockquote>
 <h2 id="关于-TTL"><a href="#关于-TTL" class="headerlink" title="关于 TTL"></a>关于 TTL</h2><p><code>TTL</code> 是 <code>Time To Live</code> 的缩写，该字段指定 <code>IP</code> 包被路由器丢弃之前允许通过的最大网段数量，<code>TTL</code> 是 <code>IPv4</code> 包头的一个 <code>8 bit</code> 字段</p>
 <p>简单的说它表示 <code>DNS</code> 记录在 <code>DNS</code> 服务器上缓存时间</p>
 <p><code>DNS</code> 解析其实是一个很复杂的过程，在 <code>PC</code> 上，我们采用<strong>域名发散</strong>策略，是因为在 <code>PC</code> 端上，<code>DNS</code> 解析通常而言只需要几十 <code>ms</code> ，完全可以接受的</p>
 <p>而移动端，<code>2G / 3G / 4G / WIFI</code> 网络，而且移动 <code>4G</code> 容易在信号不理想的地段降级成 <code>2G</code> ，通过大量的数据采集和真实网络抓包分析（存在 <code>DNS</code> 解析的请求），<code>DNS</code> 的消耗相当可观，<code>2G</code> 网络大量 <code>5-10s</code>，<code>3G</code> 网络平均也要 <code>3-5s</code>（数据来源于淘宝）， 下面附上在 <code>2G / 3G / 4G / WIFI</code> 情况下 <code>DNS</code> 递归解析的时间 （<code>ms</code>）：</p>
-<p><img src="https://user-images.githubusercontent.com/18285736/51157061-2b8a2180-18b9-11e9-8d4f-28cd2f1e0c54.png" alt="dns08"></p>
+<p><img src="https://user-images.githubusercontent.com/18285736/51157061-2b8a2180-18b9-11e9-8d4f-28cd2f1e0c54.png" alt></p>
 <p>因为在增加域的同时，往往会给浏览器带来 <code>DNS</code> 解析的开销，所以在这种情况下，提出了<strong>域名收敛</strong>，减少域名数量可以降低 <code>DNS</code> 解析的成本</p>
 <p>下图是手机端页面加载数和域名分散数的关系:</p>
-<p><img src="https://user-images.githubusercontent.com/18285736/51157067-2f1da880-18b9-11e9-93c8-5280572c721b.png" alt="dns09"></p>
+<p><img src="https://user-images.githubusercontent.com/18285736/51157067-2f1da880-18b9-11e9-93c8-5280572c721b.png" alt></p>
 <p>在 <code>2</code> 个域名分散条件下，网页的加载速度提升较大，而第 <code>3</code> 个以后就比较慢了， 所以，一般来说，域名分散的数量最好在 <code>3</code> 以下</p>
 <h2 id="HttpDNS"><a href="#HttpDNS" class="headerlink" title="HttpDNS"></a>HttpDNS</h2><p>上面过程如果顺利，本地 <code>DNS</code> 有缓存，也就是几十 <code>ms</code> 到几百 <code>ms</code> 的事情，不顺利，几秒到十几秒都有可能</p>
 <p>严格来讲，<code>DNS</code> 才是我们发出去的第一个请求，所以减少开销就两条路：</p>
@@ -291,7 +289,7 @@
 <h4 id="3-SPDY-压缩了-HTTP-头"><a href="#3-SPDY-压缩了-HTTP-头" class="headerlink" title="3. SPDY 压缩了 HTTP 头"></a>3. SPDY 压缩了 HTTP 头</h4><p>舍弃掉了不必要的头信息，经过压缩之后可以节省多余数据传输所带来的等待时间和带宽</p>
 <h4 id="4-强制使用-SSL-传输协议"><a href="#4-强制使用-SSL-传输协议" class="headerlink" title="4. 强制使用 SSL 传输协议"></a>4. 强制使用 SSL 传输协议</h4><p><code>Google</code> 认为 <code>Web</code> 未来的发展方向必定是安全的网络连接，全部请求 <code>SSL</code> 加密后，信息传输更加安全</p>
 <p>看看 <code>SPDY</code> 的作用图：</p>
-<p><img src="https://user-images.githubusercontent.com/18285736/51157074-35138980-18b9-11e9-8daf-6bbaca015668.png" alt="dns10"></p>
+<p><img src="https://user-images.githubusercontent.com/18285736/51157074-35138980-18b9-11e9-8daf-6bbaca015668.png" alt></p>
 <p>参考：</p>
 <p><a href="http://www.pagefault.info/?p=358" target="_blank" rel="noopener">SPDY协议介绍</a></p>
 <p><a href="https://github.com/amfe/article/issues/21" target="_blank" rel="noopener">15年双11手淘前端技术巡演 - H5性能最佳实践</a></p>
@@ -410,7 +408,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        55
+                        84
                     </p>
                 </div>
             </div>
@@ -420,7 +418,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        5
+                        6
                     </p>
                 </div>
             </div>
@@ -430,7 +428,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        5
+                        6
                     </p>
                 </div>
             </div>
@@ -445,6 +443,69 @@
 </div>
     
         
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#域名发散">
+        <span class="has-mr-6">1</span>
+        <span>域名发散</span>
+        </a></li><li>
+        <a class="is-flex" href="#域名收敛">
+        <span class="has-mr-6">2</span>
+        <span>域名收敛</span>
+        </a></li><li>
+        <a class="is-flex" href="#域名结构">
+        <span class="has-mr-6">3</span>
+        <span>域名结构</span>
+        </a></li><li>
+        <a class="is-flex" href="#NS">
+        <span class="has-mr-6">4</span>
+        <span>NS</span>
+        </a></li><li>
+        <a class="is-flex" href="#DNS-解析">
+        <span class="has-mr-6">5</span>
+        <span>DNS 解析</span>
+        </a></li><li>
+        <a class="is-flex" href="#关于-TTL">
+        <span class="has-mr-6">6</span>
+        <span>关于 TTL</span>
+        </a></li><li>
+        <a class="is-flex" href="#HttpDNS">
+        <span class="has-mr-6">7</span>
+        <span>HttpDNS</span>
+        </a></li><li>
+        <a class="is-flex" href="#结论">
+        <span class="has-mr-6">8</span>
+        <span>结论</span>
+        </a></li><li>
+        <a class="is-flex" href="#扩展：关于-SPDY">
+        <span class="has-mr-6">9</span>
+        <span>扩展：关于 SPDY</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#1-多路复用-请求优化">
+        <span class="has-mr-6">9.1</span>
+        <span>1. 多路复用 请求优化</span>
+        </a></li><li>
+        <a class="is-flex" href="#2-支持服务器推送技术">
+        <span class="has-mr-6">9.2</span>
+        <span>2. 支持服务器推送技术</span>
+        </a></li><li>
+        <a class="is-flex" href="#3-SPDY-压缩了-HTTP-头">
+        <span class="has-mr-6">9.3</span>
+        <span>3. SPDY 压缩了 HTTP 头</span>
+        </a></li><li>
+        <a class="is-flex" href="#4-强制使用-SSL-传输协议">
+        <span class="has-mr-6">9.4</span>
+        <span>4. 强制使用 SSL 传输协议</span>
+        </a></li></ul></li></ul>
+        </div>
+    </div>
+</div>
+
     
         
 
@@ -464,7 +525,7 @@
                 <span class="level-item">Angular</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">12</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/CSS/">
@@ -472,7 +533,7 @@
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">3</span>
+                <span class="level-item tag">9</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTTP/">
@@ -480,7 +541,7 @@
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">4</span>
+                <span class="level-item tag">6</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -488,7 +549,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">37</span>
+                <span class="level-item tag">42</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -496,7 +557,15 @@
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">5</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/React/">
+            <span class="level-start">
+                <span class="level-item">React</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">10</span>
             </span>
         </a></li>
             </ul>
@@ -510,7 +579,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 17.5px;">Angular</a> <a href="/tags/CSS/" style="font-size: 12.5px;">CSS</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a>
+        <a href="/tags/Angular/" style="font-size: 18px;">Angular</a> <a href="/tags/CSS/" style="font-size: 14px;">CSS</a> <a href="/tags/HTTP/" style="font-size: 12px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/React/" style="font-size: 16px;">React</a>
     </div>
 </div>
 
@@ -527,16 +596,35 @@
         
         <article class="media">
             
-            <a href="/2019/03/13/Angular/09/" class="media-left">
+            <a href="/2019/06/28/JavaScript/42/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/cover/09.jpg" alt="动态加载（补充）">
+                    <img class="thumbnail" src="/images/cover/42.jpg" alt="遍历对象的几种方法">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-03-12T16:00:00.000Z">2019-03-13</time></div>
-                    <a href="/2019/03/13/Angular/09/" class="has-link-black-ter is-size-6">动态加载（补充）</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-27T16:00:00.000Z">2019-06-28</time></div>
+                    <a href="/2019/06/28/JavaScript/42/" class="has-link-black-ter is-size-6">遍历对象的几种方法</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/06/08/Angular/12/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/12.jpg" alt="rxjs 高阶操作符">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-07T16:00:00.000Z">2019-06-08</time></div>
+                    <a href="/2019/06/08/Angular/12/" class="has-link-black-ter is-size-6">rxjs 高阶操作符</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
                     </p>
@@ -546,16 +634,16 @@
         
         <article class="media">
             
-            <a href="/2019/03/12/Angular/08/" class="media-left">
+            <a href="/2019/06/04/Angular/11/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/cover/08.jpg" alt="动态加载已经声明的组件">
+                    <img class="thumbnail" src="/images/cover/11.jpg" alt="rxjs">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-03-11T16:00:00.000Z">2019-03-12</time></div>
-                    <a href="/2019/03/12/Angular/08/" class="has-link-black-ter is-size-6">动态加载已经声明的组件</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-03T16:00:00.000Z">2019-06-04</time></div>
+                    <a href="/2019/06/04/Angular/11/" class="has-link-black-ter is-size-6">rxjs</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
                     </p>
@@ -565,18 +653,18 @@
         
         <article class="media">
             
-            <a href="/2019/01/11/Angular/07/" class="media-left">
+            <a href="/2019/06/01/React/10/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/cover/07.jpg" alt="ExpressionChangedAfterItHasBeenCheckedError">
+                    <img class="thumbnail" src="/images/cover/10.jpg" alt="纯函数（reducer）和函数式编程，以及数组中的 reduce() 方法">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-01-10T16:00:00.000Z">2019-01-11</time></div>
-                    <a href="/2019/01/11/Angular/07/" class="has-link-black-ter is-size-6">ExpressionChangedAfterItHasBeenCheckedError</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-05-31T16:00:00.000Z">2019-06-01</time></div>
+                    <a href="/2019/06/01/React/10/" class="has-link-black-ter is-size-6">纯函数（reducer）和函数式编程，以及数组中的 reduce() 方法</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
                     </p>
                 </div>
             </div>
@@ -584,37 +672,18 @@
         
         <article class="media">
             
-            <a href="/2018/12/08/Angular/06/" class="media-left">
+            <a href="/2019/05/28/JavaScript/41/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/cover/06.jpg" alt=":host 和 ::ng-deep">
+                    <img class="thumbnail" src="/images/cover/41.jpg" alt="Zepto 架构设计">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-07T16:00:00.000Z">2018-12-08</time></div>
-                    <a href="/2018/12/08/Angular/06/" class="has-link-black-ter is-size-6">:host 和 ::ng-deep</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-05-27T16:00:00.000Z">2019-05-28</time></div>
+                    <a href="/2019/05/28/JavaScript/41/" class="has-link-black-ter is-size-6">Zepto 架构设计</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2018/12/05/Angular/05/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/cover/05.jpg" alt="Angular 中的装饰器">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2018-12-04T16:00:00.000Z">2018-12-05</time></div>
-                    <a href="/2018/12/05/Angular/05/" class="has-link-black-ter is-size-6">Angular 中的装饰器</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -633,6 +702,39 @@
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2019/03/">
                 <span class="level-start">
                     <span class="level-item">三月 2019</span>
@@ -649,7 +751,7 @@
                     <span class="level-item">一月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -660,7 +762,7 @@
                     <span class="level-item">十二月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -671,7 +773,7 @@
                     <span class="level-item">十一月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -693,7 +795,7 @@
                     <span class="level-item">九月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -721,12 +823,23 @@
         </li>
         
         <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2018/05/">
                 <span class="level-start">
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -737,7 +850,7 @@
                     <span class="level-item">四月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -759,7 +872,7 @@
                     <span class="level-item">一月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -803,7 +916,7 @@
                     <span class="level-item">九月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -891,7 +1004,7 @@
                     <span class="level-item">十二月 2016</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -923,35 +1036,42 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Angular/">
                         <span class="tag">Angular</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">3</span>
+                        <span class="tag is-grey">9</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">4</span>
+                        <span class="tag is-grey">6</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">37</span>
+                        <span class="tag is-grey">42</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/React/">
+                        <span class="tag">React</span>
+                        <span class="tag is-grey">10</span>
                     </a>
                 </div>
                 
@@ -978,8 +1098,8 @@
                 
                 </a> -->
                 <p class="is-size-7">
-                &copy; 2019 heptaluan&nbsp;
-                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                &copy; 2016 - 2019
+                Made with ✿  heptaluan&nbsp;
                 
                 </p>
             </div>

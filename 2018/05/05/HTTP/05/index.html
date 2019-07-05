@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+<title>HTTP 与 TCP - heptaluan&#39;s blog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="TCP 连接手机等一些移动设备，能够使用联网功能是因为手机底层实现了 TCP/IP 协议，可以使手机终端通过无线网络建立 TCP 连接">
+<meta name="keywords" content="HTTP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTTP 与 TCP">
+<meta property="og:url" content="http://yoursite.com/2018/05/05/HTTP/05/index.html">
+<meta property="og:site_name" content="heptaluan&#39;s blog">
+<meta property="og:description" content="TCP 连接手机等一些移动设备，能够使用联网功能是因为手机底层实现了 TCP/IP 协议，可以使手机终端通过无线网络建立 TCP 连接">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/images/cover/05.jpg">
+<meta property="og:updated_time" content="2019-07-05T06:40:56.723Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HTTP 与 TCP">
+<meta name="twitter:description" content="TCP 连接手机等一些移动设备，能够使用联网功能是因为手机底层实现了 TCP/IP 协议，可以使手机终端通过无线网络建立 TCP 连接">
+<meta name="twitter:image" content="http://yoursite.com/images/cover/05.jpg">
+
+
+
+
+
+
+
+<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/backups/favicon.ico">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-2-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <!-- <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="HTTP 与 TCP" height="28">
+            
+            </a>
+        </div> -->
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/heptaluan">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-10-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-image">
+        <span class="image is-7by1">
+            <img class="thumbnail" src="/images/cover/05.jpg" alt="HTTP 与 TCP">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2018-05-04T16:00:00.000Z">2018-05-05</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    35 分钟 读完 (大约 5200 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                HTTP 与 TCP
+            
+        </h1>
+        <div class="content">
+            <h2 id="TCP-连接"><a href="#TCP-连接" class="headerlink" title="TCP 连接"></a>TCP 连接</h2><p>手机等一些移动设备，能够使用联网功能是因为手机<strong>底层</strong>实现了 <code>TCP/IP</code> 协议，可以使手机终端通过无线网络建立 <code>TCP</code> 连接</p>
+<a id="more"></a>
+
+<p><code>TCP</code> 协议可以对上层网络提供接口，使上层网络数据的传输建立在”无差别”的网络之上</p>
+<p>在具体介绍之前，先来弄清一些基本概念</p>
+<ul>
+<li><p><code>SYN</code>（<code>synchronous</code>）是 <code>TCP/IP</code> 建立连接时使用的握手信号，表示建立连接</p>
+</li>
+<li><p><code>FIN</code> 表示关闭连接</p>
+</li>
+<li><p><code>ACK</code>（<code>Acknowledgement</code>）既确认字符，在数据通信中，接收站发给发送站的一种传输类控制字符，表示发来的数据已确认接收无误，表示响应</p>
+</li>
+<li><p><code>LISTEN</code> 表示服务器端的某个 <code>SOCKET</code> 处于监听状态，可以接受连接了</p>
+</li>
+<li><p><code>MIME</code>类型 在把输出结果传送到浏览器上的时候，浏览器必须启动适当的应用程序来处理这个输出文档</p>
+<ul>
+<li>这可以通过多种类型 <code>MIME</code>（多功能网际邮件扩充协议）来完成，在 <code>HTTP</code> 中，<code>MIME</code> 类型被定义在 <code>Content-Type header</code> 中</li>
+</ul>
+</li>
+</ul>
+<p><code>URL</code> 统一资源定位符（<code>URL</code>）也被称为网页地址，是因特网上标准的资源的地址，现在几乎所有的 <code>URI</code> 都是 <code>URL</code>，如下所示</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"> 协议      ip 地址      资源的具体位置</span><br><span class="line">  |          |              |</span><br><span class="line">  |          |              |</span><br><span class="line">-----  ----------------  -------</span><br><span class="line">HTTP:<span class="hljs-comment">//192.168.1.1:8888/index.html</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>第一部分是协议（或称为服务方式）</p>
+</li>
+<li><p>第二部分是存有该资源的主机 <code>IP</code> 地址（有时也包括端口号）</p>
+</li>
+<li><p>第三部分是主机资源的具体位置（如目录和文件名等）</p>
+</li>
+<li><p>第一部分和第三部分之间用 <code>&#39;：//&#39;</code> 符号隔开，第二部分和第三部分用 <code>&#39;/&#39;</code> 符号分隔，第一部分和第二部分是不可缺少的，第三部分有时也可以省略</p>
+</li>
+</ul>
+<h2 id="TCP-三层握手"><a href="#TCP-三层握手" class="headerlink" title="TCP 三层握手"></a>TCP 三层握手</h2><p>我们要和服务端连接 <code>TCP</code> 连接，需要通过三次连接，包括：<strong>请求</strong>，<strong>确认</strong>，<strong>建立连接</strong>，即传说中的”三次握手协议”</p>
+<p><img src="/images/http/07.png" alt></p>
+<ul>
+<li><p>第一次握手：客户端发送 <code>syn</code> 包<code>（syn = j）</code>到服务器，并进入 <code>SYN_SEND</code> 状态，等待服务器确认</p>
+</li>
+<li><p>第二次握手：服务器收到 <code>syn</code> 包，必须确认客户的 <code>SYN（ack = j + 1）</code>，同时自己也发送一个 <code>SYN</code> 包<code>（syn = k）</code>，即 <code>SYN + ACK</code> 包，此时服务器进入 <code>SYN_RECV</code> 状态</p>
+</li>
+<li><p>第三次握手：客户端收到服务器的 <code>SYN ＋ ACK</code> 包，向服务器发送确认包 <code>ACK（ack=k+1）</code>，此包发送完毕，客户端和服务器进入 <code>ESTABLISHED</code> 状态，完成三次握手</p>
+</li>
+</ul>
+<p><strong>握手过程中传送的包里不包含数据</strong>，三次握手完毕后，客户端与服务器才正式开始传送数据</p>
+<p>理想状态下，<code>TCP</code> 连接一旦建立，在通信双方中的任何一方主动关闭连接之前，<code>TCP</code> 连接都将被一直保持下去</p>
+<p>但是由于 <code>TCP</code> 连接是全双工的，所以每个方向都必须单独进行关闭，这原则是当一方完成它的数据发送任务后就能发送一个 <code>FIN</code> 来终止这个方向的连接</p>
+<p>收到一个 <code>FIN</code> 只意味着这一方向上没有数据流动，一个 <code>TCP</code> 连接在收到一个 <code>FIN</code> 后仍能发送数据，首先进行关闭的一方将执行主动关闭，而另一方执行被动关闭</p>
+<h2 id="TCP-四次挥手"><a href="#TCP-四次挥手" class="headerlink" title="TCP 四次挥手"></a>TCP 四次挥手</h2><p>断开连接时服务器和客户端均可以主动发起断开 <code>TCP</code> 连接的请求，断开过程需要经过”四次挥手”</p>
+<p><img src="/images/http/08.png" alt></p>
+<ul>
+<li><p>第一次挥手：<code>TCP</code> 客户端发送一个 <code>FIN</code>，用来关闭客户到服务器的数据传送</p>
+</li>
+<li><p>第二次挥手：服务器收到这个 <code>FIN</code>，它发回一个 <code>ACK</code>，确认序号为收到的序号加 <code>1</code>，和 <code>SYN</code> 一样，一个 <code>FIN</code> 将占用一个序号</p>
+</li>
+<li><p>第三次挥手：服务器关闭客户端的连接，发送一个 <code>FIN</code> 给客户端</p>
+</li>
+<li><p>第四次挥手：客户端发回 <code>ACK</code> 报文确认，并将确认序号设置为收到序号加 <code>1</code></p>
+</li>
+</ul>
+<p>那么这里就会有一个问题了，为什么建立连接协议是三次握手，而关闭连接却是四次握手呢？</p>
+<p>这是因为服务端的 <code>LISTEN</code> 状态下的 <code>SOCKET</code> 当收到 <code>SYN</code> 报文的建连请求后，它可以把 <code>ACK</code> 和 <code>SYN</code>（<code>ACK</code> 起应答作用，而 <code>SYN</code> 起同步作用）放在一个报文里来发送</p>
+<p>但关闭连接时，当收到对方的 <code>FIN</code> 报文通知时，它仅仅表示对方没有数据发送给你了，但未必你所有的数据都全部发送给对方了，所以你可以未必会马上会关闭 <code>SOCKET</code></p>
+<p>也即你可能还需要发送一些数据给对方之后，再发送 <code>FIN</code> 报文给对方来表示你同意现在可以关闭连接了，所以它这里的 <code>ACK</code> 报文和 <code>FIN</code> 报文多数情况下都是分开发送的</p>
+<h2 id="HTTP-协议"><a href="#HTTP-协议" class="headerlink" title="HTTP 协议"></a>HTTP 协议</h2><p><code>HTTP</code> 协议即<strong>超文本传送协议</strong>(<code>Hypertext Transfer Protocol</code>)，定义了浏览器怎样向万维网服务器请求万维网文档，以及服务器怎样把文档传送给浏览器</p>
+<p>从层次的角度看，<code>HTTP</code> 是面向（<code>transaction-oriented</code>）应用层协议，它是万维网上能够可靠地交换文件（包括文本，声音，图像等各种多媒体文件）的重要基础，也是 <code>Web</code> 联网的基础，也是手机联网常用的协议之一，<code>HTTP</code> 协议是建立在 <code>TCP</code> 协议之上的一种应用</p>
+<h4 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h4><p>一次 <code>HTTP</code> 操作称为一个<strong>事务</strong>，其工作过程可分为<strong>四步</strong></p>
+<ul>
+<li><p>1）首先客户机与服务器需要建立连接，只要单击某个超级链接，<code>HTTP</code> 的工作开始</p>
+</li>
+<li><p>2）建立连接后，客户机发送一个请求给服务器，请求方式的格式为：统一资源标识符（<code>URL</code>）、协议版本号、后边是 <code>MIME</code> 信息包括请求装饰符、客户机信息和可能的内容</p>
+</li>
+<li><p>3）服务器接到请求后，给予相应的响应信息，其格式为一个状态行，包括信息的协议版本号、一个成功或错误的代码，后边是 <code>MIME</code> 信息包含服务器信息、实体信息和可能的内容</p>
+</li>
+<li><p>4）客户端接收服务器所返回的信息通过浏览器显示在用户的显示屏上，然后客户机与服务器断开连接</p>
+</li>
+</ul>
+<p>如果在以上过程中的某一步出现错误，那么产生错误的信息将返回到客户端，由显示屏输出，对于用户来说，这些过程是由 <code>HTTP</code> 自己完成的，用户只要用鼠标点击，等待信息显示就可以了</p>
+<p>这样就限制了使用 <code>HTTP</code> 协议，无法实现在客户端没有发起请求的时候，服务器将消息推送给客户端</p>
+<p>需要注意的是：<code>HTTP</code> 协议是一个无状态的协议，同一个客户端的这次请求和上次请求是没有对应关系</p>
+<p><code>HTTP</code> 连接最显著的特点是客户端发送的每次请求都需要服务器回送响应（<strong>永远都是客户端发送请求，服务器回送响应</strong>），在请求结束后，会主动释放连接</p>
+<p>从建立连接到关闭连接的过程称为”一次连接”</p>
+<ul>
+<li><p>1）在 <code>HTTP 1.0</code> 中，客户端的每次请求都要求建立一次单独的连接，在处理完本次请求后，就自动释放连接</p>
+</li>
+<li><p>2）在 <code>HTTP 1.1</code> 中则可以在一次连接中处理多个请求，并且多个请求可以重叠进行，不需要等待一个请求结束后再发送下一个请求</p>
+</li>
+</ul>
+<p>由于 <code>HTTP</code> 在每次请求结束后都会主动释放连接，因此 <code>HTTP</code> 连接是一种”短连接”，要保持客户端程序的在线状态，需要不断地向服务器发起连接请求</p>
+<p>通常的做法是即使不需要获得任何数据，客户端也保持每隔一段固定的时间向服务器发送一次”保持连接”的请求，服务器在收到该请求后对客户端进行回复，表明知道客户端”在线”</p>
+<p>若服务器长时间无法收到客户端的请求，则认为客户端”下线”，若客户端长时间无法收到服务器的回复，则认为网络已经断开</p>
+<h2 id="socket"><a href="#socket" class="headerlink" title="socket"></a>socket</h2><p>网络上的两个程序通过一个双向的通信连接实现数据的交换，这个连接的一端称为一个 <code>socket</code></p>
+<p>套接字（<code>socket</code>）是通信的基石，是支持 <code>TCP/IP</code> 协议的网络通信的基本操作单元，它是网络通信过程中端点的抽象表示，包含进行网络通信必须的五种信息</p>
+<ul>
+<li><p>连接使用的协议</p>
+</li>
+<li><p>本地主机的 <code>IP</code> 地址</p>
+</li>
+<li><p>本地进程的协议端口</p>
+</li>
+<li><p>远地主机的 <code>IP</code> 地址</p>
+</li>
+<li><p>远地进程的协议端口</p>
+</li>
+</ul>
+<p>应用层通过传输层进行数据通信时，<code>TCP</code> 会遇到同时为多个应用程序进程提供并发服务的问题，多个 <code>TCP</code> 连接或多个应用程序进程可能需要通过同一个 <code>TCP</code> 协议端口传输数据</p>
+<p>为了区别不同的应用程序进程和连接，许多计算机操作系统为应用程序与 <code>TCP／IP</code> 协议交互提供了套接字(<code>Socket</code>)接口，应用层可以和传输层通过 <code>Socket</code> 接口，区分来自不同应用程序进程或网络连接的通信，实现数据传输的并发服务</p>
+<h4 id="建立-socket-连接"><a href="#建立-socket-连接" class="headerlink" title="建立 socket 连接"></a>建立 socket 连接</h4><p>建立 <code>Socket</code> 连接至少需要一对套接字，其中一个运行于客户端，称为 <code>ClientSocket</code>，另一个运行于服务器端，称为 <code>ServerSocket</code></p>
+<p>套接字之间的连接过程分为三个步骤：<strong>服务器监听</strong>，<strong>客户端请求</strong>，<strong>连接确认</strong></p>
+<ul>
+<li><p>服务器监听：服务器端套接字并不定位具体的客户端套接字，而是处于等待连接的状态，实时监控网络状态，等待客户端的连接请求</p>
+</li>
+<li><p>客户端请求：指客户端的套接字提出连接请求，要连接的目标是服务器端的套接字，为此，客户端的套接字必须首先描述它要连接的服务器的套接字，指出服务器端套接字的地址和端口号，然后就向服务器端套接字提出连接请求</p>
+</li>
+<li><p>连接确认：当服务器端套接字监听到或者说接收到客户端套接字的连接请求时，就响应客户端套接字的请求，建立一个新的线程，把服务器端套接字的描述发给客户 端，一旦客户端确认了此描述，双方就正式建立连接，而服务器端套接字继续处于监听状态，继续接收其他客户端套接字的连接请求</p>
+</li>
+</ul>
+<h4 id="SOCKET-连接与-TCP-连接"><a href="#SOCKET-连接与-TCP-连接" class="headerlink" title="SOCKET 连接与 TCP 连接"></a>SOCKET 连接与 TCP 连接</h4><p>创建 <code>Socket</code> 连接时，可以指定使用的传输层协议，<code>Socket</code> 可以支持不同的传输层协议（<code>TCP</code> 或 <code>UDP</code>（用户数据报协议，与 <code>TCP</code> 协议一样用于处理数据包，是一种无连接的协议））</p>
+<p>当使用 <code>TCP</code> 协议进行连接时，该 <code>Socket</code> 连接就是一个 <code>TCP</code> 连接</p>
+<h4 id="Socket-连接与-HTTP-连接"><a href="#Socket-连接与-HTTP-连接" class="headerlink" title="Socket 连接与 HTTP 连接"></a>Socket 连接与 HTTP 连接</h4><p>由于通常情况下 <code>Socket</code> 连接就是 <code>TCP</code> 连接，因此 <code>Socket</code> 连接一旦建立，通信双方即可开始相互发送数据内容，直到双方连接断开</p>
+<p>但在实际网络应用中，客户端到服务器之间的通信往往需要穿越多个中间节点，例如路由器、网关、防火墙等，大部分防火墙默认会关闭长时间处于非活跃状态的连接而导 致 <code>Socket</code> 连接断连，因此需要通过轮询告诉网络，该连接处于活跃状态</p>
+<p>而 <code>HTTP</code> 连接使用的是”<strong>请求—响应</strong>“的方式，不仅在请求时需要先建立连接，而且需要客户端向服务器发出请求后，服务器端才能回复数据</p>
+<p>很多情况下，需要服务器端主动向客户端推送数据，保持客户端与服务器数据的实时与同步</p>
+<p>此时若双方建立的是 <code>Socket</code> 连接，服务器就可以直接将数据传送给客户端，若双方建立的是 <code>HTTP</code> 连接，则服务器需要等到客户端发送一次请求后才能将数据传回给客户端，因此，客户端定时向服务器端发送连接请求，不仅可以保持在线，同时也是在”询问”服务器是否有新的数据，如果有就将数据传给客户端</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li><p><code>HTTP</code> 是要基于 <code>TCP</code> 连接基础上的，简单的说，<code>TCP</code> 就是单纯建立连接，不涉及任何我们需要请求的实际数据，简单的传输，<code>HTTP</code> 是用来收发数据，即实际应用上来的</p>
+<ul>
+<li><p><code>TCP</code> 是<strong>底层通讯协议</strong>，定义的是 <strong>数据传输和连接方式的规范</strong></p>
+</li>
+<li><p><code>HTTP</code> 是<strong>应用层协议</strong>，定义的是 <strong>传输数据的内容的规范</strong></p>
+</li>
+</ul>
+</li>
+<li><p><code>HTTP</code> 协议中的数据是利用 <code>TCP</code> 协议传输的，所以支持 <code>HTTP</code> 也就一定支持 <code>TCP</code></p>
+</li>
+<li><p><code>HTTP</code> 支持的是 <code>www</code> 服务，而 <code>TCP/IP</code> 是协议，它是 <code>Internet</code> 国际互联网络的基础，<code>TCP/IP</code> 是网络中使用的基本的通信协议</p>
+</li>
+<li><p><code>TCP/IP</code> 实际上是一组协议，它包括上百个各种功能的协议，如：远程登录、文件传输和电子邮件等，而 <code>TCP</code> 协议和 <code>IP</code> 协议是保证数据完整传输的两个基本的重要协议，通常说 <code>TCP/IP</code> 是 <code>Internet</code> 协议族，而不单单是 <code>TCP</code> 和 <code>IP</code></p>
+</li>
+</ul>
+<h2 id="扩展：HTTP-响应码信息"><a href="#扩展：HTTP-响应码信息" class="headerlink" title="扩展：HTTP 响应码信息"></a>扩展：HTTP 响应码信息</h2><ul>
+<li><p><code>HTTP</code> 状态返回代码 <code>1xx</code>（临时响应） 表示临时响应并需要请求者继续执行操作的状态代码</p>
+<ul>
+<li><p>100   （继续） 请求者应当继续提出请求，服务器返回此代码表示已收到请求的第一部分，正在等待其余部分 </p>
+</li>
+<li><p>101   （切换协议） 请求者已要求服务器切换协议，服务器已确认并准备切换</p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><code>HTTP</code> 状态返回代码 <code>2xx</code> （成功） 表示成功处理了请求的状态代码</li>
+</ul>
+<ul>
+<li><p>200   （成功）  服务器已成功处理了请求， 通常，这表示服务器提供了请求的网页</p>
+</li>
+<li><p>201   （已创建）  请求成功并且服务器创建了新的资源</p>
+</li>
+<li><p>202   （已接受）  服务器已接受请求，但尚未处理</p>
+</li>
+<li><p>203   （非授权信息）  服务器已成功处理了请求，但返回的信息可能来自另一来源</p>
+</li>
+<li><p>204   （无内容）  服务器成功处理了请求，但没有返回任何内容</p>
+</li>
+<li><p>205   （重置内容） 服务器成功处理了请求，但没有返回任何内容</p>
+</li>
+<li><p>206   （部分内容）  服务器成功处理了部分 <code>GET</code> 请求</p>
+</li>
+</ul>
+<ul>
+<li><p><code>HTTP</code> 状态返回代码 <code>3xx</code> （重定向） 表示要完成请求，需要进一步操作， 通常，这些状态代码用来重定向</p>
+<ul>
+<li><p>300   （多种选择）  针对请求，服务器可执行多种操作， 服务器可根据请求者 (<code>user agent</code>) 选择一项操作，或提供操作列表供请求者选择</p>
+</li>
+<li><p>301   （永久移动）  请求的网页已永久移动到新位置， 服务器返回此响应（对 <code>GET</code> 或 <code>HEAD</code> 请求的响应）时，会自动将请求者转到新位置</p>
+</li>
+<li><p>302   （临时移动）  服务器目前从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求</p>
+</li>
+<li><p>303   （查看其他位置） 请求者应当对不同的位置使用单独的 <code>GET</code> 请求来检索响应时，服务器返回此代码</p>
+</li>
+<li><p>304   （未修改） 自从上次请求后，请求的网页未修改过， 服务器返回此响应时，不会返回网页内容</p>
+</li>
+<li><p>305   （使用代理） 请求者只能使用代理访问请求的网页， 如果服务器返回此响应，还表示请求者应使用代理</p>
+</li>
+<li><p>307   （临时重定向）  服务器目前从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求</p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p><code>HTTP</code> 状态返回代码 <code>4xx</code>（请求错误） 这些状态代码表示请求可能出错，妨碍了服务器的处理</p>
+<ul>
+<li><p>400   （错误请求） 服务器不理解请求的语法</p>
+</li>
+<li><p>401   （未授权） 请求要求身份验证， 对于需要登录的网页，服务器可能返回此响应</p>
+</li>
+<li><p>403   （禁止） 服务器拒绝请求</p>
+</li>
+<li><p>404   （未找到） 服务器找不到请求的网页</p>
+</li>
+<li><p>405   （方法禁用） 禁用请求中指定的方法</p>
+</li>
+<li><p>406   （不接受） 无法使用请求的内容特性响应请求的网页</p>
+</li>
+<li><p>407   （需要代理授权） 此状态代码与 <code>401</code>（未授权）类似，但指定请求者应当授权使用代理</p>
+</li>
+<li><p>408   （请求超时）  服务器等候请求时发生超时</p>
+</li>
+<li><p>409   （冲突）  服务器在完成请求时发生冲突， 服务器必须在响应中包含有关冲突的信息</p>
+</li>
+<li><p>410   （已删除）  如果请求的资源已永久删除，服务器就会返回此响应</p>
+</li>
+<li><p>411   （需要有效长度） 服务器不接受不含有效内容长度标头字段的请求</p>
+</li>
+<li><p>412   （未满足前提条件） 服务器未满足请求者在请求中设置的其中一个前提条件</p>
+</li>
+<li><p>413   （请求实体过大） 服务器无法处理请求，因为请求实体过大，超出服务器的处理能力</p>
+</li>
+<li><p>414   （请求的 URI 过长） 请求的 <code>URI</code>（通常为网址）过长，服务器无法处理</p>
+</li>
+<li><p>415   （不支持的媒体类型） 请求的格式不受请求页面的支持</p>
+</li>
+<li><p>416   （请求范围不符合要求） 如果页面无法提供请求的范围，则服务器会返回此状态代码</p>
+</li>
+<li><p>417   （未满足期望值） 服务器未满足”期望”请求标头字段的要求</p>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p><code>HTTP</code> 状态返回代码 <code>5xx</code>（服务器错误） 这些状态代码表示服务器在尝试处理请求时发生内部错误， 这些错误可能是服务器本身的错误，而不是请求出错</p>
+<ul>
+<li><p>500   （服务器内部错误）  服务器遇到错误，无法完成请求</p>
+</li>
+<li><p>501   （尚未实施） 服务器不具备完成请求的功能， 例如，服务器无法识别请求方法时可能会返回此代码</p>
+</li>
+<li><p>502   （错误网关） 服务器作为网关或代理，从上游服务器收到无效响应</p>
+</li>
+<li><p>503   （服务不可用） 服务器目前无法使用（由于超载或停机维护）， 通常，这只是暂时状态</p>
+</li>
+<li><p>504   （网关超时）  服务器作为网关或代理，但是没有及时从上游服务器收到请求</p>
+</li>
+<li><p>505   （<code>HTTP</code> 版本不受支持） 服务器不支持请求中所用的 <code>HTTP</code> 协议版本</p>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/HTTP/">HTTP</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/05/09/HTTP/06/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">HTTP 2.0</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/04/26/JavaScript/39/">
+                <span class="level-item">跨域</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="comment-container"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: '584b59de0d23cd48fbdd',
+        clientSecret: '5554c9aab0a640015867806f438bd2e10f297e5a',
+        id: '3f6f65c2c22209d1cd64993b408fe6ba',
+        repo: 'gitalk',
+        owner: 'heptaluan',
+        admin: "heptaluan"
+    })
+    gitalk.render('comment-container')
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-2-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <figure class="image is-128x128 has-mb-6">
+                            <img class="is-rounded" src="https://avatars2.githubusercontent.com/u/18285736?s=460&amp;v=4" alt="heptaluan">
+                        </figure>
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        heptaluan
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        white lie.
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>WuHan China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <!-- <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        84
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        6
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        6
+                    </p>
+                </div>
+            </div>
+        </nav> -->
+        <!-- <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/ppoffice" target="_blank">
+                关注我</a>
+        </div> -->
+        
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#TCP-连接">
+        <span class="has-mr-6">1</span>
+        <span>TCP 连接</span>
+        </a></li><li>
+        <a class="is-flex" href="#TCP-三层握手">
+        <span class="has-mr-6">2</span>
+        <span>TCP 三层握手</span>
+        </a></li><li>
+        <a class="is-flex" href="#TCP-四次挥手">
+        <span class="has-mr-6">3</span>
+        <span>TCP 四次挥手</span>
+        </a></li><li>
+        <a class="is-flex" href="#HTTP-协议">
+        <span class="has-mr-6">4</span>
+        <span>HTTP 协议</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#工作流程">
+        <span class="has-mr-6">4.1</span>
+        <span>工作流程</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#socket">
+        <span class="has-mr-6">5</span>
+        <span>socket</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#建立-socket-连接">
+        <span class="has-mr-6">5.1</span>
+        <span>建立 socket 连接</span>
+        </a></li><li>
+        <a class="is-flex" href="#SOCKET-连接与-TCP-连接">
+        <span class="has-mr-6">5.2</span>
+        <span>SOCKET 连接与 TCP 连接</span>
+        </a></li><li>
+        <a class="is-flex" href="#Socket-连接与-HTTP-连接">
+        <span class="has-mr-6">5.3</span>
+        <span>Socket 连接与 HTTP 连接</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#总结">
+        <span class="has-mr-6">6</span>
+        <span>总结</span>
+        </a></li><li>
+        <a class="is-flex" href="#扩展：HTTP-响应码信息">
+        <span class="has-mr-6">7</span>
+        <span>扩展：HTTP 响应码信息</span>
+        </a></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+        
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Angular/">
+            <span class="level-start">
+                <span class="level-item">Angular</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">12</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/CSS/">
+            <span class="level-start">
+                <span class="level-item">CSS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">9</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/HTTP/">
+            <span class="level-start">
+                <span class="level-item">HTTP</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/JavaScript/">
+            <span class="level-start">
+                <span class="level-item">JavaScript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">42</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Node-js/">
+            <span class="level-start">
+                <span class="level-item">Node.js</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">5</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/React/">
+            <span class="level-start">
+                <span class="level-item">React</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">10</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Angular/" style="font-size: 18px;">Angular</a> <a href="/tags/CSS/" style="font-size: 14px;">CSS</a> <a href="/tags/HTTP/" style="font-size: 12px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/React/" style="font-size: 16px;">React</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow  ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/06/28/JavaScript/42/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/42.jpg" alt="遍历对象的几种方法">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-27T16:00:00.000Z">2019-06-28</time></div>
+                    <a href="/2019/06/28/JavaScript/42/" class="has-link-black-ter is-size-6">遍历对象的几种方法</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/06/08/Angular/12/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/12.jpg" alt="rxjs 高阶操作符">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-07T16:00:00.000Z">2019-06-08</time></div>
+                    <a href="/2019/06/08/Angular/12/" class="has-link-black-ter is-size-6">rxjs 高阶操作符</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/06/04/Angular/11/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/11.jpg" alt="rxjs">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-03T16:00:00.000Z">2019-06-04</time></div>
+                    <a href="/2019/06/04/Angular/11/" class="has-link-black-ter is-size-6">rxjs</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/06/01/React/10/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/10.jpg" alt="纯函数（reducer）和函数式编程，以及数组中的 reduce() 方法">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-05-31T16:00:00.000Z">2019-06-01</time></div>
+                    <a href="/2019/06/01/React/10/" class="has-link-black-ter is-size-6">纯函数（reducer）和函数式编程，以及数组中的 reduce() 方法</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/05/28/JavaScript/41/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/cover/41.jpg" alt="Zepto 架构设计">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-05-27T16:00:00.000Z">2019-05-28</time></div>
+                    <a href="/2019/05/28/JavaScript/41/" class="has-link-black-ter is-size-6">Zepto 架构设计</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Angular/">
+                        <span class="tag">Angular</span>
+                        <span class="tag is-grey">12</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/CSS/">
+                        <span class="tag">CSS</span>
+                        <span class="tag is-grey">9</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/HTTP/">
+                        <span class="tag">HTTP</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/JavaScript/">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag is-grey">42</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Node-js/">
+                        <span class="tag">Node.js</span>
+                        <span class="tag is-grey">5</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/React/">
+                        <span class="tag">React</span>
+                        <span class="tag is-grey">10</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <!-- <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="HTTP 与 TCP" height="28">
+                
+                </a> -->
+                <p class="is-size-7">
+                &copy; 2016 - 2019
+                Made with ✿  heptaluan&nbsp;
+                
+                </p>
+            </div>
+            <!-- <div class="level-end">
+            
+            </div> -->
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
