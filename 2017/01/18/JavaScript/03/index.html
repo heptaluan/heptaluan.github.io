@@ -16,7 +16,7 @@
 <meta property="og:description" content="在看作用域之前，我们先来看看 IIFE，也就是所谓的立即执行函数，那么为什么需要 IIFE  传统的方法啰嗦，定义和执行分开写  传统的方法直接污染全局命名空间（浏览器里的 global 对象，如 window）">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://pu5vc7wn3.bkt.clouddn.com/cover/03.jpg">
-<meta property="og:updated_time" content="2019-07-05T14:39:22.239Z">
+<meta property="og:updated_time" content="2019-07-07T15:16:30.786Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的作用域">
 <meta name="twitter:description" content="在看作用域之前，我们先来看看 IIFE，也就是所谓的立即执行函数，那么为什么需要 IIFE  传统的方法啰嗦，定义和执行分开写  传统的方法直接污染全局命名空间（浏览器里的 global 对象，如 window）">
@@ -165,7 +165,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    19 分钟 读完 (大约 2896 个字)
+                    19 分钟 读完 (大约 2901 个字)
                 </span>
                 
                 
@@ -187,18 +187,18 @@
 </ul>
 <a id="more"></a>
 
-<p>转变表达式的办法有很多，最常见的办法是把函数声明用一对 <code>()</code> 包裹起来，于是就变成了</p>
+<p>转变表达式的办法有很多，最常见的办法是把函数声明用一对 <code>()</code> 包裹起来，于是就变成了立即执行函数</p>
 <h2 id="IIFE"><a href="#IIFE" class="headerlink" title="IIFE"></a>IIFE</h2><p>一个简单的 <code>IIFE</code></p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;...&#125;)  <span class="hljs-comment">// 这里是故意换行，实际上可以和下面的括号连起来</span></span><br><span class="line">();</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 这里是故意换行，实际上可以和下面的括号连起来</span></span><br><span class="line">(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;...&#125;)</span><br><span class="line">();</span><br></pre></td></tr></table></figure>
 
 <p>这就等价于：</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> foo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;...&#125;;  <span class="hljs-comment">// 这就不是定义，而是表达式了</span></span><br><span class="line"></span><br><span class="line">foo();</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 这就不是定义，而是表达式了</span></span><br><span class="line"><span class="hljs-keyword">var</span> foo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;...&#125;;</span><br><span class="line"></span><br><span class="line">foo();</span><br></pre></td></tr></table></figure>
 
 <p>但是之前我们说不行的那个写法，其实也可以直接用括号包起来，这也是一种等价的表达式</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>)</span>&#123;...&#125;());</span><br></pre></td></tr></table></figure>
 
 <p>另外，刚才说过转变表达式的方式很多，的确还有很多别的写法，比如</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">!<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;...&#125;();</span><br><span class="line">	<span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 又或者</span></span><br><span class="line"></span><br><span class="line">+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;...&#125;();</span><br><span class="line">	<span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">void</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;();</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">!<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;...&#125;();</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// or</span></span><br><span class="line"></span><br><span class="line">+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;...&#125;();</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// or</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">void</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;();</span><br></pre></td></tr></table></figure>
 
 <p>所谓不去污染全局命名空间，是因为 <code>IIFE</code> 创建了一个新的函数作用域，你真正的业务代码被封装在其中，自然就不会触碰到全局对象了</p>
 <p>如果你需要全局对象，那就 <code>pass</code> 给 <code>IIFE</code></p>

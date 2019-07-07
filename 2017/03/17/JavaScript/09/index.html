@@ -16,7 +16,7 @@
 <meta property="og:description" content="两者的区别在于：== 允许在相等比较中进行强制类型转换，而 === 则不允许 javascript 拥有两套等性运算符： &amp;#39;===&amp;#39; 和 &amp;#39;!==&amp;#39;，和他们的双胞胎 &amp;#39;==&amp;#39; 和 &amp;#39;!=&amp;#39;">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="http://pu5vc7wn3.bkt.clouddn.com/cover/09.jpg">
-<meta property="og:updated_time" content="2019-07-05T14:39:21.983Z">
+<meta property="og:updated_time" content="2019-07-07T15:38:18.696Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的 == 和 ===">
 <meta name="twitter:description" content="两者的区别在于：== 允许在相等比较中进行强制类型转换，而 === 则不允许 javascript 拥有两套等性运算符： &amp;#39;===&amp;#39; 和 &amp;#39;!==&amp;#39;，和他们的双胞胎 &amp;#39;==&amp;#39; 和 &amp;#39;!=&amp;#39;">
@@ -165,7 +165,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    10 分钟 读完 (大约 1467 个字)
+                    10 分钟 读完 (大约 1465 个字)
                 </span>
                 
                 
@@ -182,8 +182,10 @@
 <p><code>javascript</code> 拥有两套等性运算符： <code>&#39;===&#39;</code> 和 <code>&#39;!==&#39;</code>，和他们的双胞胎 <code>&#39;==&#39;</code> 和 <code>&#39;!=&#39;</code></p>
 <a id="more"></a>
 
-<p>好的那一个会按你所期望的方式工作，如果两个操作数是相同的类型，具有相同的值，那么 <code>&#39;===&#39;</code> 产生 <code>&#39;true&#39;</code>，<code>&#39;!==&#39;</code> 产生 <code>&#39;false&#39;</code>，当操作数具有相同类型时，双胞胎做正确的事，但是如果他们是不同类型，它们试图强制值</p>
-<p><code>==</code> 操作符在做任意按需类型转换后将比较相等性，而 <code>===</code> 操作符并不会， <code>===</code> 运算符将不做转换，所以如果两值不一样类型 <code>===</code> 将返回 <code>false</code>，这种情况下，<code>===</code> 将更快，并可能比 <code>==</code> 返回不同的结果，在所有其他情况下的性能都是一样的，这里有一些有趣的例子：</p>
+<p>好的那一个会按你所期望的方式工作，如果两个操作数是相同的类型，具有相同的值，那么 <code>&#39;===&#39;</code> 产生 <code>&#39;true&#39;</code>，<code>&#39;!==&#39;</code> 产生 <code>&#39;false&#39;</code></p>
+<p>当操作数具有相同类型时，双胞胎做正确的事，但是如果他们是不同类型，它们试图强制值</p>
+<p><code>==</code> 操作符在做任意按需类型转换后将比较相等性，而 <code>===</code> 操作符并不会， <code>===</code> 运算符将不做转换，所以如果两值不一样类型 <code>===</code> 将返回 <code>false</code></p>
+<p>这种情况下，<code>===</code> 将更快，并可能比 <code>==</code> 返回不同的结果，在所有其他情况下的性能都是一样的，这里有一些有趣的例子：</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">[] == ![]         <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-string">''</span> == <span class="hljs-string">'0'</span>         <span class="hljs-comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-number">2</span> == [<span class="hljs-number">2</span>]          <span class="hljs-comment">// true</span></span><br><span class="line"><span class="hljs-string">''</span> == [<span class="hljs-literal">null</span>]      <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-number">0</span> == <span class="hljs-string">'\n'</span>         <span class="hljs-comment">// true</span></span><br><span class="line"><span class="hljs-number">0</span> == <span class="hljs-string">''</span>           <span class="hljs-comment">// true</span></span><br><span class="line"><span class="hljs-number">0</span> == <span class="hljs-string">'0'</span>          <span class="hljs-comment">// true</span></span><br><span class="line"><span class="hljs-string">'0'</span> == <span class="hljs-literal">false</span>      <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line">fasle == <span class="hljs-string">'false'</span>  <span class="hljs-comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-string">'true'</span> == <span class="hljs-literal">true</span>    <span class="hljs-comment">// false</span></span><br><span class="line"><span class="hljs-number">42</span> == <span class="hljs-string">'42'</span>        <span class="hljs-comment">// true</span></span><br><span class="line"><span class="hljs-string">'foo'</span> == [<span class="hljs-string">'foo'</span>]  <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 七种比较少见的情况</span></span><br><span class="line"><span class="hljs-string">'0'</span> == <span class="hljs-literal">false</span>;     <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-literal">false</span> == <span class="hljs-number">0</span>        <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-literal">false</span> == <span class="hljs-string">''</span>       <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-literal">false</span> == []       <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-string">''</span> == <span class="hljs-number">0</span>           <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-string">''</span> == []          <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-number">0</span> == []           <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
 
 <p>总之，始终建议使用 <code>===</code> 和 <code>!==</code> </p>
@@ -196,12 +198,9 @@
 <p>再看一个综合的实例</p>
 <h2 id="为什么是-true"><a href="#为什么是-true" class="headerlink" title="[] == ![] 为什么是 true"></a>[] == ![] 为什么是 true</h2><p>首先我们需要明确一下：相等运算符 <code>&#39;==&#39;</code> 的规则，有 <code>boolean</code> 的转为数字，有 <code>Object</code> 的转为原始值（<a href="http://lzw.me/pages/ecmascript/#102" target="_blank" rel="noopener">类型转换与测试</a>）</p>
 <p>有了这个观点我们可以先看几个比较直白点的比较</p>
-<p><code>[] == []</code></p>
-<p>当两个值都是对象 (引用值) 时, 比较的是两个引用值在内存中是否是同一个对象. 因为此 <code>[]</code> 非彼 <code>[]</code>, 虽然同为空数组, 确是两个互不相关的空数组, 自然 <code>==</code> 为 <code>false</code></p>
-<p><code>[] == false</code></p>
-<p>当 <code>&#39;==&#39;</code> 号两边其中一个是布尔值的话，先把它转换为数字（见规范），于是就变成了求 <code>[] == 0</code></p>
-<p><code>[] == 0</code></p>
-<p>当 <code>&#39;==&#39;</code> 的一边是字符串或数字，另一边是对象的时候（数组也是对象），先把对象值转换为原始值再判断相等，对象值到原始值是怎么转换的呢？对于所有非日期类对象来说，对象到原始值的转换基本上就是对象到数字的转换，也就是所谓的抽象操作 <code>ToPrimitive</code></p>
+<h4 id><a href="#" class="headerlink" title="[] == []"></a>[] == []</h4><p>当两个值都是对象 (引用值) 时, 比较的是两个引用值在内存中是否是同一个对象. 因为此 <code>[]</code> 非彼 <code>[]</code>, 虽然同为空数组, 确是两个互不相关的空数组, 自然 <code>==</code> 为 <code>false</code></p>
+<h4 id="false"><a href="#false" class="headerlink" title="[] == false"></a>[] == false</h4><p>当 <code>&#39;==&#39;</code> 号两边其中一个是布尔值的话，先把它转换为数字（见规范），于是就变成了求 <code>[] == 0</code></p>
+<h4 id="0"><a href="#0" class="headerlink" title="[] == 0"></a>[] == 0</h4><p>当 <code>&#39;==&#39;</code> 的一边是字符串或数字，另一边是对象的时候（数组也是对象），先把对象值转换为原始值再判断相等，对象值到原始值是怎么转换的呢？对于所有非日期类对象来说，对象到原始值的转换基本上就是对象到数字的转换，也就是所谓的抽象操作 <code>ToPrimitive</code></p>
 <p>大致有以下 <code>3</code> 个步骤：</p>
 <ol>
 <li><p>首先检查该值是否有 <code>valueOf()</code> 的方法，如果有并且返回基本类型值，就使用该值进行强制类型转换为这个原始值</p>
@@ -213,7 +212,8 @@
 </ol>
 <p>根据以上可以得知，首先调用 <code>[].valueOf()</code> 方法，返回值是对象自身，即 <code>[]</code>，这不是一个原始值，所以继续调用 <code>[].toString()</code> 方法，返回的是空字符串 <code>&#39;&#39;</code>，这是一个原始值，所以此值就作为对象转换为原始值的输出，于是问题就变成了求 <code>&#39;&#39; == 0</code></p>
 <p>然后根据之前所知，会将 <code>&#39;&#39;</code> 转成数字为 <code>0</code>，所以最后的结果为 <code>true</code></p>
-<h4 id="那么现在在回到主题"><a href="#那么现在在回到主题" class="headerlink" title="那么现在在回到主题 [] == ![]"></a>那么现在在回到主题 [] == ![]</h4><p>因为 <code>!</code> 的优先级比 <code>==</code> 要高，所以会先执行 <code>![]</code>，也就是先把 <code>[]</code> 转为布尔类型再取反，<code>[]</code> 转布尔值是 <code>true</code></p>
+<h2 id="-1"><a href="#-1" class="headerlink" title="[] == ![]"></a>[] == ![]</h2><p>那么现在在回到主题 <code>[] == ![]</code></p>
+<p>因为 <code>!</code> 的优先级比 <code>==</code> 要高，所以会先执行 <code>![]</code>，也就是先把 <code>[]</code> 转为布尔类型再取反，<code>[]</code> 转布尔值是 <code>true</code></p>
 <p>因为在 <code>JavaScript</code> 里除了 <code>false</code> 自身以外只有 <code>5</code> 个<a href="http://lzw.me/pages/ecmascript/#104" target="_blank" rel="noopener">假值</a>，分别是 <code>&#39;&#39;</code>，<code>undefined</code>, <code>null</code>, <code>+0，-0</code>， <code>NaN</code>，除了这 <code>5</code> 个假值以外，其他所有值转布尔类型都是 <code>true</code></p>
 <p>一切对象都是真值，包括 <code>new Boolean(false)</code>，于是问题就成了刚才我们讨论的 <code>[] == false</code> 了</p>
 <p>参照标准, 该比较变成了 [] == <a href="http://lzw.me/pages/ecmascript/#105" target="_blank" rel="noopener">ToNumber</a>(false), 即 <code>[] == 0</code>，这个时候又变成了 <a href="http://lzw.me/pages/ecmascript/#103" target="_blank" rel="noopener">ToPrimitive</a>([]) == 0, 即 <code>&#39;&#39; == 0</code></p>
@@ -401,28 +401,40 @@
         <span class="has-mr-6">1</span>
         <span>[] == ![] 为什么是 true</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#那么现在在回到主题">
+        <a class="is-flex" href="#">
         <span class="has-mr-6">1.1</span>
-        <span>那么现在在回到主题 [] == ![]</span>
+        <span>[] == []</span>
+        </a></li><li>
+        <a class="is-flex" href="#false">
+        <span class="has-mr-6">1.2</span>
+        <span>[] == false</span>
+        </a></li><li>
+        <a class="is-flex" href="#0">
+        <span class="has-mr-6">1.3</span>
+        <span>[] == 0</span>
         </a></li></ul></li><li>
-        <a class="is-flex" href="#查询规范后的总结">
+        <a class="is-flex" href="#-1">
         <span class="has-mr-6">2</span>
+        <span>[] == ![]</span>
+        </a></li><li>
+        <a class="is-flex" href="#查询规范后的总结">
+        <span class="has-mr-6">3</span>
         <span>查询规范后的总结</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#字符串-和-数字-之间的比较（字符串-gt-数字）">
-        <span class="has-mr-6">2.1</span>
+        <span class="has-mr-6">3.1</span>
         <span>字符串 和 数字 之间的比较（字符串 ==&gt; 数字）</span>
         </a></li><li>
         <a class="is-flex" href="#其他类型-和-布尔类型-之间的比较（布尔-gt-数字）">
-        <span class="has-mr-6">2.2</span>
+        <span class="has-mr-6">3.2</span>
         <span>其他类型 和 布尔类型 之间的比较（布尔 ==&gt; 数字）</span>
         </a></li><li>
         <a class="is-flex" href="#null-和-undefined-之间的比较">
-        <span class="has-mr-6">2.3</span>
+        <span class="has-mr-6">3.3</span>
         <span>null 和 undefined 之间的比较</span>
         </a></li><li>
         <a class="is-flex" href="#对象-和-非对象-之间的比较（对象-gt-ToPrimitive-对象-）">
-        <span class="has-mr-6">2.4</span>
+        <span class="has-mr-6">3.4</span>
         <span>对象 和 非对象 之间的比较（对象 ==&gt; ToPrimitive(对象)）</span>
         </a></li></ul></li></ul>
         </div>
