@@ -15,12 +15,12 @@
 <meta property="og:site_name" content="heptaluan&#39;s blog">
 <meta property="og:description" content="先扩展一个知识：performance - 监控网页与程序性能">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://pu5vc7wn3.bkt.clouddn.com/cover/03.jpg">
-<meta property="og:updated_time" content="2019-07-05T17:56:14.972Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/03.jpg">
+<meta property="og:updated_time" content="2019-07-08T13:26:20.064Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="域名发散与收敛">
 <meta name="twitter:description" content="先扩展一个知识：performance - 监控网页与程序性能">
-<meta name="twitter:image" content="http://pu5vc7wn3.bkt.clouddn.com/cover/03.jpg">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/03.jpg">
 
 
 
@@ -28,7 +28,7 @@
 
 
 
-<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/backups/favicon.ico">
+<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/favicon.ico">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -147,7 +147,7 @@
     
     <div class="card-image">
         <span class="image is-7by1">
-            <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/03.jpg" alt="域名发散与收敛">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/03.jpg" alt="域名发散与收敛">
         </span>
     </div>
     
@@ -189,14 +189,14 @@
 <p>所以 <code>PC</code> 时代对静态资源优化时，通常将静态资源分布在几个不同域，保证资源最完美地分域名存储，以提供最大并行度，让客户端加载静态资源更为迅速</p>
 <p>假设现在浏览器对每个域名连接数为 <code>1</code>，那么现实情况是</p>
 <p><img src="https://user-images.githubusercontent.com/18285736/51157020-08f80880-18b9-11e9-9427-9ede785b247a.png" alt></p>
-<p>浏览器解析完我们的文档之后开始发起请求，对文件进行加载. 然后一个一个文件 在 <code>max connections</code> 下进行排队下载</p>
+<p>浏览器解析完我们的文档之后开始发起请求，对文件进行加载，然后一个一个文件 在 <code>max connections</code> 下进行排队下载</p>
 <p>但如果我们使用了域名分散之后，使用多个 <code>domain</code> 进行资源的下载，就有</p>
 <p><img src="https://user-images.githubusercontent.com/18285736/51157029-0e555300-18b9-11e9-9387-b536c641ba44.png" alt></p>
 <p>这样完全可以省略掉排队的时间.提升网页加载的速度</p>
 <h2 id="域名收敛"><a href="#域名收敛" class="headerlink" title="域名收敛"></a>域名收敛</h2><p>这里首先会涉及到一个问题，为什么你手机打开网页时，白屏时间会这么长？</p>
 <p>一个网页白屏时间是由下面几部分决定的</p>
 <p><img src="https://user-images.githubusercontent.com/18285736/51157032-11e8da00-18b9-11e9-9633-c2d41e385bf0.png" alt></p>
-<p>所以，网页的优化就可以从上述几个部分开始. 这里我们要提及的就是 <code>DNS</code> 优化, 即域名收敛，那么什么是域名收敛呢</p>
+<p>所以，网页的优化就可以从上述几个部分开始，这里我们要提及的就是 <code>DNS</code> 优化, 即域名收敛，那么什么是域名收敛呢</p>
 <p>顾名思义，域名收敛的意思就是建议将静态资源只放在一个域名下面，而非发散情况下的多个域名下</p>
 <p>上面也说到了，域名发散可以突破浏览器的域名并发限制，那么为要反其道而行之呢？</p>
 <p>因为因地制宜，不同情况区别对待，域名发散是 <code>PC</code> 时代的产物，而现在进入移动互联网时代，通过无线设备访问网站，<code>App</code> 的用户已占据了很大一部分比重，而域名收敛正是在这种情况下提出的</p>
@@ -235,7 +235,7 @@
 </li>
 <li><p>Step3: 如果上述的 <code>DNS Servers</code> 没有你要的域名地址，则就会发送迭代查询，即会先从 <code>root nameservers</code> 找起， 即是假如你要查询 <code>www.example.com</code> ，会先从包含根结点的 <code>13</code> 台最高级域名服务器开始</p>
 </li>
-<li><p>Step4: 接着，以从右向左的方式递进，找到 <code>com</code>.  然后向包含 <code>com</code> 的 <code>TLD</code>（顶级域名）<code>nameservers</code> 发送 <code>DNS</code> 请求，接着找到包含 <code>example</code> 的 <code>DNS server</code></p>
+<li><p>Step4: 接着，以从右向左的方式递进，找到 <code>com</code>，然后向包含 <code>com</code> 的 <code>TLD</code>（顶级域名）<code>nameservers</code> 发送 <code>DNS</code> 请求，接着找到包含 <code>example</code> 的 <code>DNS server</code></p>
 </li>
 <li><p>Step5: 现在进入到了 <code>example.com</code> 部分，即是现在正在询问的是权威服务器，该服务器里面包含了你想要的域名信息，也就是拿到了最后的结果 <code>record</code></p>
 </li>
@@ -278,16 +278,16 @@
 </li>
 </ul>
 <p>从上面的各种网络环境下 <code>DNS</code> 解析时间对比，减少 <code>DNS</code> 请求是我们做域名收敛的主要原因，<code>HttpDNS</code> 的诞生不仅可以合并请求，缩短 <code>DNS</code> 解析路径，还有防止运营商劫持等功效</p>
-<h2 id="扩展：关于-SPDY"><a href="#扩展：关于-SPDY" class="headerlink" title="扩展：关于 SPDY"></a>扩展：关于 SPDY</h2><p>单纯的在移动端采用域名收敛并不能很大幅度的提升性能，很重要的一点是，在移动端建连的消耗非常大，而 <code>SPDY</code> 协议可以完成多路复用的加密全双工通道，显著提升非 <code>wifi</code> 环境下的网络体验，当域名收敛配合 <code>SPDY</code> 才能最大程度发挥他们的效用，达到事半功倍</p>
+<h2 id="关于-SPDY"><a href="#关于-SPDY" class="headerlink" title="关于 SPDY"></a>关于 SPDY</h2><p>单纯的在移动端采用域名收敛并不能很大幅度的提升性能，很重要的一点是，在移动端建连的消耗非常大，而 <code>SPDY</code> 协议可以完成多路复用的加密全双工通道，显著提升非 <code>wifi</code> 环境下的网络体验，当域名收敛配合 <code>SPDY</code> 才能最大程度发挥他们的效用，达到事半功倍</p>
 <p>所谓 <code>SPDY</code> 就是一种开放的网络传输协议，由 <code>Google</code> 开发，用来发送网页内容，基于传输控制协议（<code>TCP</code>）的应用层协议 ，是 <code>HTTP/2</code> 的前身</p>
 <p><code>SPDY</code> 的作用就是，在不增加域名的情况下，解除最大连接数的限制，主要的特点就是多路复用，他的目的就是致力于取消并发连接上限</p>
 <p>那么相比 HTTP，SPDY 具体的优势在哪里呢：</p>
-<h4 id="1-多路复用-请求优化"><a href="#1-多路复用-请求优化" class="headerlink" title="1. 多路复用 请求优化"></a>1. 多路复用 请求优化</h4><p><code>SPDY</code> 规定在一个 <code>SPDY</code> 连接内可以有无限个并行请求，即允许多个并发 <code>HTTP</code> 请求共用一个 <code>TCP</code> 会话</p>
+<h4 id="多路复用-请求优化"><a href="#多路复用-请求优化" class="headerlink" title="多路复用 请求优化"></a>多路复用 请求优化</h4><p><code>SPDY</code> 规定在一个 <code>SPDY</code> 连接内可以有无限个并行请求，即允许多个并发 <code>HTTP</code> 请求共用一个 <code>TCP</code> 会话</p>
 <p>这样 <code>SPDY</code> 通过复用在单个 <code>TCP</code> 连接上的多次请求，而非为每个请求单独开放连接，这样只需建立一个 <code>TCP</code> 连接就可以传送网页上所有资源，不仅可以减少消息交互往返的时间还可以避免创建新连接造成的延迟，使得 <code>TCP</code> 的效率更高</p>
 <p>此外，<code>SPDY</code> 的多路复用可以设置优先级，而不像传统 <code>HTTP</code> 那样严格按照先入先出一个一个处理请求，它会选择性的先传输 <code>CSS</code> 这样更重要的资源，然后再传输网站图标之类不太重要的资源，可以避免让非关键资源占用网络通道的问题，提升 <code>TCP</code> 的性能</p>
-<h4 id="2-支持服务器推送技术"><a href="#2-支持服务器推送技术" class="headerlink" title="2. 支持服务器推送技术"></a>2. 支持服务器推送技术</h4><p>服务器可以主动向客户端发起通信向客户端推送数据，这种预加载可以使用户一直保持一个快速的网络</p>
-<h4 id="3-SPDY-压缩了-HTTP-头"><a href="#3-SPDY-压缩了-HTTP-头" class="headerlink" title="3. SPDY 压缩了 HTTP 头"></a>3. SPDY 压缩了 HTTP 头</h4><p>舍弃掉了不必要的头信息，经过压缩之后可以节省多余数据传输所带来的等待时间和带宽</p>
-<h4 id="4-强制使用-SSL-传输协议"><a href="#4-强制使用-SSL-传输协议" class="headerlink" title="4. 强制使用 SSL 传输协议"></a>4. 强制使用 SSL 传输协议</h4><p><code>Google</code> 认为 <code>Web</code> 未来的发展方向必定是安全的网络连接，全部请求 <code>SSL</code> 加密后，信息传输更加安全</p>
+<h4 id="支持服务器推送技术"><a href="#支持服务器推送技术" class="headerlink" title="支持服务器推送技术"></a>支持服务器推送技术</h4><p>服务器可以主动向客户端发起通信向客户端推送数据，这种预加载可以使用户一直保持一个快速的网络</p>
+<h4 id="SPDY-压缩了-HTTP-头"><a href="#SPDY-压缩了-HTTP-头" class="headerlink" title="SPDY 压缩了 HTTP 头"></a>SPDY 压缩了 HTTP 头</h4><p>舍弃掉了不必要的头信息，经过压缩之后可以节省多余数据传输所带来的等待时间和带宽</p>
+<h4 id="强制使用-SSL-传输协议"><a href="#强制使用-SSL-传输协议" class="headerlink" title="强制使用 SSL 传输协议"></a>强制使用 SSL 传输协议</h4><p><code>Google</code> 认为 <code>Web</code> 未来的发展方向必定是安全的网络连接，全部请求 <code>SSL</code> 加密后，信息传输更加安全</p>
 <p>看看 <code>SPDY</code> 的作用图：</p>
 <p><img src="https://user-images.githubusercontent.com/18285736/51157074-35138980-18b9-11e9-8daf-6bbaca015668.png" alt></p>
 <p>参考：</p>
@@ -389,7 +389,7 @@
                     
                     
                     <p class="is-size-6 is-block">
-                        GALLOWS BELL.
+                        white lie.
                     </p>
                     
                     
@@ -482,25 +482,25 @@
         <span class="has-mr-6">8</span>
         <span>结论</span>
         </a></li><li>
-        <a class="is-flex" href="#扩展：关于-SPDY">
+        <a class="is-flex" href="#关于-SPDY">
         <span class="has-mr-6">9</span>
-        <span>扩展：关于 SPDY</span>
+        <span>关于 SPDY</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#1-多路复用-请求优化">
+        <a class="is-flex" href="#多路复用-请求优化">
         <span class="has-mr-6">9.1</span>
-        <span>1. 多路复用 请求优化</span>
+        <span>多路复用 请求优化</span>
         </a></li><li>
-        <a class="is-flex" href="#2-支持服务器推送技术">
+        <a class="is-flex" href="#支持服务器推送技术">
         <span class="has-mr-6">9.2</span>
-        <span>2. 支持服务器推送技术</span>
+        <span>支持服务器推送技术</span>
         </a></li><li>
-        <a class="is-flex" href="#3-SPDY-压缩了-HTTP-头">
+        <a class="is-flex" href="#SPDY-压缩了-HTTP-头">
         <span class="has-mr-6">9.3</span>
-        <span>3. SPDY 压缩了 HTTP 头</span>
+        <span>SPDY 压缩了 HTTP 头</span>
         </a></li><li>
-        <a class="is-flex" href="#4-强制使用-SSL-传输协议">
+        <a class="is-flex" href="#强制使用-SSL-传输协议">
         <span class="has-mr-6">9.4</span>
-        <span>4. 强制使用 SSL 传输协议</span>
+        <span>强制使用 SSL 传输协议</span>
         </a></li></ul></li></ul>
         </div>
     </div>
@@ -606,7 +606,7 @@
             
             <a href="/2019/07/05/Node/06/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/06.jpg" alt="libuv">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/06.jpg" alt="libuv">
                 </p>
             </a>
             
@@ -625,7 +625,7 @@
             
             <a href="/2019/06/28/JavaScript/42/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/42.jpg" alt="遍历对象的几种方法">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/42.jpg" alt="遍历对象的几种方法">
                 </p>
             </a>
             
@@ -644,7 +644,7 @@
             
             <a href="/2019/06/16/React/14/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/14.jpg" alt="applyMiddleware(...middlewares)">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/14.jpg" alt="applyMiddleware(...middlewares)">
                 </p>
             </a>
             
@@ -663,7 +663,7 @@
             
             <a href="/2019/06/12/React/13/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/13.jpg" alt="中间件的洋葱模型">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/13.jpg" alt="中间件的洋葱模型">
                 </p>
             </a>
             
@@ -682,7 +682,7 @@
             
             <a href="/2019/06/08/React/12/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/12.jpg" alt="createStore()">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/12.jpg" alt="createStore()">
                 </p>
             </a>
             

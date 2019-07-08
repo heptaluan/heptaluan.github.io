@@ -15,12 +15,12 @@
 <meta property="og:site_name" content="heptaluan&#39;s blog">
 <meta property="og:description" content="我们在使用 Vuex 的时候，通常会实例化 Store 类，然后传入一个对象，包括我们定义号的 actions，getters，mutations，state 等，甚至当我们有多个子模块的时候，我们可以添加一个 modules 对象">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://pu5vc7wn3.bkt.clouddn.com/cover/09.jpg">
-<meta property="og:updated_time" content="2019-07-05T17:56:14.992Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/09.jpg">
+<meta property="og:updated_time" content="2019-07-08T14:22:23.435Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Store">
 <meta name="twitter:description" content="我们在使用 Vuex 的时候，通常会实例化 Store 类，然后传入一个对象，包括我们定义号的 actions，getters，mutations，state 等，甚至当我们有多个子模块的时候，我们可以添加一个 modules 对象">
-<meta name="twitter:image" content="http://pu5vc7wn3.bkt.clouddn.com/cover/09.jpg">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/09.jpg">
 
 
 
@@ -28,7 +28,7 @@
 
 
 
-<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/backups/favicon.ico">
+<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/favicon.ico">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -147,7 +147,7 @@
     
     <div class="card-image">
         <span class="image is-7by1">
-            <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/09.jpg" alt="Store">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/09.jpg" alt="Store">
         </span>
     </div>
     
@@ -165,7 +165,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    9 分钟 读完 (大约 1286 个字)
+                    9 分钟 读完 (大约 1279 个字)
                 </span>
                 
                 
@@ -194,13 +194,13 @@
 
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 是否在进行提交状态标识，作用是保证对 Vuex 中 state 的修改只能在 mutation 的回调函数中</span></span><br><span class="line"><span class="hljs-comment">// 而不能在外部随意修改 state</span></span><br><span class="line"><span class="hljs-keyword">this</span>._committing = <span class="hljs-literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 存储用户定义的所有的 actions</span></span><br><span class="line"><span class="hljs-keyword">this</span>._actions = <span class="hljs-built_in">Object</span>.create(<span class="hljs-literal">null</span>)</span><br><span class="line"><span class="hljs-keyword">this</span>._actionSubscribers = []</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// mutations</span></span><br><span class="line"><span class="hljs-keyword">this</span>._mutations = <span class="hljs-built_in">Object</span>.create(<span class="hljs-literal">null</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 封装后的 getters 集合对象</span></span><br><span class="line"><span class="hljs-keyword">this</span>._wrappedGetters = <span class="hljs-built_in">Object</span>.create(<span class="hljs-literal">null</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 用于支持 store 分模块传入，存储分析后的 modules</span></span><br><span class="line"><span class="hljs-keyword">this</span>._modules = <span class="hljs-keyword">new</span> ModuleCollection(options)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 模块命名空间 map</span></span><br><span class="line"><span class="hljs-keyword">this</span>._modulesNamespaceMap = <span class="hljs-built_in">Object</span>.create(<span class="hljs-literal">null</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 订阅函数集合，Vuex 提供了 substcribe 功能，用来存储所有对 mutation 变化的订阅者</span></span><br><span class="line"><span class="hljs-keyword">this</span>._subscribers = []</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 一个 Vue 对象的实例，主要是利用 Vue 实例方法 $watch 来观测变化</span></span><br><span class="line"><span class="hljs-keyword">this</span>._watcherVM = <span class="hljs-keyword">new</span> Vue()</span><br></pre></td></tr></table></figure>
 
-<h2 id="关于-new-ModuleCollection-options"><a href="#关于-new-ModuleCollection-options" class="headerlink" title="关于 new ModuleCollection(options)"></a>关于 new ModuleCollection(options)</h2><p>调用 <code>new Vuex.Store(options)</code> 时传入的 <code>options</code> 对象，用于构造 <code>MoudleCollection</code> 类</p>
+<h2 id="new-ModuleCollection-options"><a href="#new-ModuleCollection-options" class="headerlink" title="new ModuleCollection(options)"></a>new ModuleCollection(options)</h2><p>调用 <code>new Vuex.Store(options)</code> 时传入的 <code>options</code> 对象，用于构造 <code>MoudleCollection</code> 类</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// module/module-collection.js</span></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ModuleCollection</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(rawRootModule) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 将传入的 options 对象整个构造为一个 module 对象</span></span><br><span class="line">    <span class="hljs-comment">// 并循环调用 register() 方法为其中的 modules 属性进行模块注册，使其都成为 module 对象</span></span><br><span class="line">    <span class="hljs-comment">// 最后 options 对象被构造成一个完整的组件树</span></span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// register root module (Vuex.Store options)</span></span><br><span class="line">    <span class="hljs-keyword">this</span>.register([], rawRootModule, <span class="hljs-literal">false</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  register(path, rawModule, runtime = <span class="hljs-literal">true</span>) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 分割模块的情况</span></span><br><span class="line">    <span class="hljs-keyword">const</span> newModule = <span class="hljs-keyword">new</span> Module(rawModule, runtime)</span><br><span class="line">    <span class="hljs-keyword">if</span> (path.length === <span class="hljs-number">0</span>) &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.root = newModule   <span class="hljs-comment">//  &lt;=== 这里是 ①</span></span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">const</span> parent = <span class="hljs-keyword">this</span>.get(path.slice(<span class="hljs-number">0</span>, <span class="hljs-number">-1</span>))</span><br><span class="line">      parent.addChild(path[path.length - <span class="hljs-number">1</span>], newModule)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// register nested modules</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (rawModule.modules) &#123;</span><br><span class="line">      forEachValue(rawModule.modules, (rawChildModule, key) =&gt; &#123;</span><br><span class="line">        <span class="hljs-keyword">this</span>.register(path.concat(key), rawChildModule, runtime)</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// util.js</span></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">forEachValue</span>(<span class="hljs-params">obj, fn</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">Object</span>.keys(obj).forEach(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> fn(obj[key], key))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>然后绑定 <code>dispatch</code> 与 <code>commit</code> 方法</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 把 Store 类的 dispatch 和 commit 方法的 this 指针指向当前 store 的实例上</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// bind commit and dispatch to self</span></span><br><span class="line"><span class="hljs-keyword">const</span> store = <span class="hljs-keyword">this</span></span><br><span class="line"><span class="hljs-keyword">const</span> &#123; dispatch, commit &#125; = <span class="hljs-keyword">this</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 封装替换原型中的 dispatch 和 commit 方法，详细解释见下方</span></span><br><span class="line"><span class="hljs-keyword">this</span>.dispatch = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">boundDispatch</span>(<span class="hljs-params">type, payload</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> dispatch.call(store, type, payload)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">this</span>.commit = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">boundCommit</span>(<span class="hljs-params">type, payload, options</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> commit.call(store, type, payload, options)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 是否开启严格模式</span></span><br><span class="line"><span class="hljs-keyword">this</span>.strict = strict</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// state 没有放在上面 options 对象中初始化了，改为在 module/module.js 下初始化</span></span><br><span class="line"><span class="hljs-comment">// 详细可见 module/module.js</span></span><br><span class="line"><span class="hljs-keyword">const</span> state = <span class="hljs-keyword">this</span>._modules.root.state</span><br></pre></td></tr></table></figure>
 
-<h2 id="API-中-提供的-commit-和-dispatch-方法"><a href="#API-中-提供的-commit-和-dispatch-方法" class="headerlink" title="API 中 提供的 commit 和 dispatch 方法"></a>API 中 提供的 commit 和 dispatch 方法</h2><h4 id="dispatch"><a href="#dispatch" class="headerlink" title="dispatch"></a>dispatch</h4><p><code>dispatch</code> 的功能是触发并传递一些参数（<code>payload</code>）给对应 <code>type</code> 的 <code>action</code></p>
+<h2 id="dispatch-和-commit-方法"><a href="#dispatch-和-commit-方法" class="headerlink" title="dispatch 和 commit 方法"></a>dispatch 和 commit 方法</h2><h4 id="dispatch"><a href="#dispatch" class="headerlink" title="dispatch"></a>dispatch</h4><p><code>dispatch</code> 的功能是触发并传递一些参数（<code>payload</code>）给对应 <code>type</code> 的 <code>action</code></p>
 <p>因为支持两种调用方式，所以在 <code>dispatch</code> 中，先进行参数的适配处理，然后判断 <code>action type</code> 是否存在，若存在就逐个执行</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">dispatch(_type, _payload) &#123;</span><br><span class="line">  <span class="hljs-comment">// check object-style dispatch</span></span><br><span class="line">  <span class="hljs-keyword">const</span> &#123;</span><br><span class="line">    type,</span><br><span class="line">    payload</span><br><span class="line">  &#125; = unifyObjectStyle(_type, _payload)  <span class="hljs-comment">// 配置参数处理</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">const</span> action = &#123; type, payload &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 当前 type 下所有 action 处理函数集合</span></span><br><span class="line">  <span class="hljs-keyword">const</span> entry = <span class="hljs-keyword">this</span>._actions[type]</span><br><span class="line">  <span class="hljs-keyword">if</span> (!entry) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (process.env.NODE_ENV !== <span class="hljs-string">'production'</span>) &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.error(<span class="hljs-string">`[vuex] unknown action type: <span class="hljs-subst">$&#123;type&#125;</span>`</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 订阅者函数遍历执行，传入当前的 action 对象和当前的 state</span></span><br><span class="line">  <span class="hljs-keyword">this</span>._actionSubscribers.forEach(<span class="hljs-function"><span class="hljs-params">sub</span> =&gt;</span> sub(action, <span class="hljs-keyword">this</span>.state))</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> entry.length &gt; <span class="hljs-number">1</span></span><br><span class="line">    ? <span class="hljs-built_in">Promise</span>.all(entry.map(<span class="hljs-function"><span class="hljs-params">handler</span> =&gt;</span> handler(payload)))</span><br><span class="line">    : entry[<span class="hljs-number">0</span>](payload)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -309,7 +309,7 @@
                     
                     
                     <p class="is-size-6 is-block">
-                        GALLOWS BELL.
+                        white lie.
                     </p>
                     
                     
@@ -378,13 +378,13 @@
         <span class="has-mr-6">2</span>
         <span>数据初始化、module 树构造</span>
         </a></li><li>
-        <a class="is-flex" href="#关于-new-ModuleCollection-options">
+        <a class="is-flex" href="#new-ModuleCollection-options">
         <span class="has-mr-6">3</span>
-        <span>关于 new ModuleCollection(options)</span>
+        <span>new ModuleCollection(options)</span>
         </a></li><li>
-        <a class="is-flex" href="#API-中-提供的-commit-和-dispatch-方法">
+        <a class="is-flex" href="#dispatch-和-commit-方法">
         <span class="has-mr-6">4</span>
-        <span>API 中 提供的 commit 和 dispatch 方法</span>
+        <span>dispatch 和 commit 方法</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#dispatch">
         <span class="has-mr-6">4.1</span>
@@ -502,7 +502,7 @@
             
             <a href="/2019/07/05/Node/06/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/06.jpg" alt="libuv">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/06.jpg" alt="libuv">
                 </p>
             </a>
             
@@ -521,7 +521,7 @@
             
             <a href="/2019/06/28/JavaScript/42/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/42.jpg" alt="遍历对象的几种方法">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/42.jpg" alt="遍历对象的几种方法">
                 </p>
             </a>
             
@@ -540,7 +540,7 @@
             
             <a href="/2019/06/16/React/14/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/14.jpg" alt="applyMiddleware(...middlewares)">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/14.jpg" alt="applyMiddleware(...middlewares)">
                 </p>
             </a>
             
@@ -559,7 +559,7 @@
             
             <a href="/2019/06/12/React/13/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/13.jpg" alt="中间件的洋葱模型">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/13.jpg" alt="中间件的洋葱模型">
                 </p>
             </a>
             
@@ -578,7 +578,7 @@
             
             <a href="/2019/06/08/React/12/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/12.jpg" alt="createStore()">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/12.jpg" alt="createStore()">
                 </p>
             </a>
             

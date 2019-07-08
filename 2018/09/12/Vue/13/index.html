@@ -7,20 +7,20 @@
 
 
 
-    <meta name="description" content="问题发现webpack 是一个模块打包器（module bundler），提供了一个核心，核心提供了很多开箱即用的功能，同时它可以用 loader 和 plugin 来扩展">
+    <meta name="description" content="webpack 是一个模块打包器（module bundler），提供了一个核心，核心提供了很多开箱即用的功能，同时它可以用 loader 和 plugin 来扩展">
 <meta name="keywords" content="Vue">
 <meta property="og:type" content="article">
 <meta property="og:title" content="webpack 中的 loader 和 plugin">
 <meta property="og:url" content="http://yoursite.com/2018/09/12/Vue/13/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="问题发现webpack 是一个模块打包器（module bundler），提供了一个核心，核心提供了很多开箱即用的功能，同时它可以用 loader 和 plugin 来扩展">
+<meta property="og:description" content="webpack 是一个模块打包器（module bundler），提供了一个核心，核心提供了很多开箱即用的功能，同时它可以用 loader 和 plugin 来扩展">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://pu5vc7wn3.bkt.clouddn.com/cover/13.jpg">
-<meta property="og:updated_time" content="2019-07-05T17:56:14.993Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/13.jpg">
+<meta property="og:updated_time" content="2019-07-08T14:26:41.510Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="webpack 中的 loader 和 plugin">
-<meta name="twitter:description" content="问题发现webpack 是一个模块打包器（module bundler），提供了一个核心，核心提供了很多开箱即用的功能，同时它可以用 loader 和 plugin 来扩展">
-<meta name="twitter:image" content="http://pu5vc7wn3.bkt.clouddn.com/cover/13.jpg">
+<meta name="twitter:description" content="webpack 是一个模块打包器（module bundler），提供了一个核心，核心提供了很多开箱即用的功能，同时它可以用 loader 和 plugin 来扩展">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/13.jpg">
 
 
 
@@ -28,7 +28,7 @@
 
 
 
-<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/backups/favicon.ico">
+<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/favicon.ico">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -147,7 +147,7 @@
     
     <div class="card-image">
         <span class="image is-7by1">
-            <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/13.jpg" alt="webpack 中的 loader 和 plugin">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/13.jpg" alt="webpack 中的 loader 和 plugin">
         </span>
     </div>
     
@@ -165,7 +165,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    4 分钟 读完 (大约 609 个字)
+                    4 分钟 读完 (大约 592 个字)
                 </span>
                 
                 
@@ -178,14 +178,14 @@
             
         </h1>
         <div class="content">
-            <h2 id="问题发现"><a href="#问题发现" class="headerlink" title="问题发现"></a>问题发现</h2><p><code>webpack</code> 是一个模块打包器（<code>module bundler</code>），提供了一个核心，核心提供了很多开箱即用的功能，同时它可以用 <code>loader</code> 和 <code>plugin</code> 来扩展</p>
+            <p><code>webpack</code> 是一个模块打包器（<code>module bundler</code>），提供了一个核心，核心提供了很多开箱即用的功能，同时它可以用 <code>loader</code> 和 <code>plugin</code> 来扩展</p>
 <a id="more"></a>
 
 <p><code>webpack</code> 常用配置包括：<code>devtool</code>、<code>entry</code>、<code>output</code>、<code>module</code>、<code>resolve</code>、<code>plugins</code>、<code>externals</code> 等</p>
 <p>这里主要介绍 <code>webpack</code> 常用的 <code>loader</code> 和 <code>plugin</code></p>
 <p><code>webpack</code> 允许我们使用 <code>loader</code> 来处理文件，<code>loader</code> 是一个导出为 <code>function</code> 的 <code>node</code> 模块，可以将匹配到的文件进行一次转换，同时 <code>loader</code> 可以链式传递</p>
-<h2 id="loader-的使用方式"><a href="#loader-的使用方式" class="headerlink" title="loader 的使用方式"></a>loader 的使用方式</h2><p>一般 <code>loader</code> 的使用方式分为三种：</p>
-<h4 id="在配置文件-webpack-config-js-中配置（这种方式用的较多）"><a href="#在配置文件-webpack-config-js-中配置（这种方式用的较多）" class="headerlink" title="在配置文件 webpack.config.js 中配置（这种方式用的较多）"></a>在配置文件 webpack.config.js 中配置（这种方式用的较多）</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="hljs-built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="hljs-regexp">/\.txt$/</span>,</span><br><span class="line">        use: <span class="hljs-string">'raw-loader'</span></span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h2><p>一般 <code>loader</code> 的使用方式分为三种：</p>
+<h4 id="webpack-config-js-中配置（较多）"><a href="#webpack-config-js-中配置（较多）" class="headerlink" title="webpack.config.js 中配置（较多）"></a>webpack.config.js 中配置（较多）</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="hljs-built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="hljs-regexp">/\.txt$/</span>,</span><br><span class="line">        use: <span class="hljs-string">'raw-loader'</span></span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h4 id="通过命令行参数方式"><a href="#通过命令行参数方式" class="headerlink" title="通过命令行参数方式"></a>通过命令行参数方式</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">webpack --<span class="hljs-built_in">module</span>-bind <span class="hljs-string">'txt=raw-loader'</span></span><br></pre></td></tr></table></figure>
 
@@ -208,7 +208,7 @@
 <p><code>css-loader</code> 则处理其中的 <code>@import</code> 和 <code>url()</code></p>
 <p><code>sass-loader</code> 转化 <code>sass</code> 为 <code>css</code> 文件，并且包一层 <code>module.exports</code> 成为一个 <code>js module</code></p>
 <h2 id="其他一些相关-loader-介绍"><a href="#其他一些相关-loader-介绍" class="headerlink" title="其他一些相关 loader 介绍"></a>其他一些相关 loader 介绍</h2><ul>
-<li><p><code>vue-loader</code>、<code>coffee-loader</code>、<code>babel-loader</code> 等可以将特定文件格式转成 <code>js</code> 模块、将其他语言转化为 <code>js</code> 语言和编译下一代 <code>js</code> 语言</p>
+<li><p><code>vue-loader</code>、<code>coffee-loader</code>、<code>babel-loader</code> 等可以将特定文件格式转成 <code>JavaScript</code> 模块、将其他语言转化为 <code>JavaScript</code> 语言和编译下一代 <code>JavaScript</code> 语言</p>
 </li>
 <li><p><code>file-loader</code>、<code>url-loader</code> 等可以处理资源</p>
 </li>
@@ -322,7 +322,7 @@
                     
                     
                     <p class="is-size-6 is-block">
-                        GALLOWS BELL.
+                        white lie.
                     </p>
                     
                     
@@ -383,32 +383,28 @@
                 目录
             </h3>
             <ul class="menu-list"><li>
-        <a class="is-flex" href="#问题发现">
+        <a class="is-flex" href="#使用方式">
         <span class="has-mr-6">1</span>
-        <span>问题发现</span>
-        </a></li><li>
-        <a class="is-flex" href="#loader-的使用方式">
-        <span class="has-mr-6">2</span>
-        <span>loader 的使用方式</span>
+        <span>使用方式</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#在配置文件-webpack-config-js-中配置（这种方式用的较多）">
-        <span class="has-mr-6">2.1</span>
-        <span>在配置文件 webpack.config.js 中配置（这种方式用的较多）</span>
+        <a class="is-flex" href="#webpack-config-js-中配置（较多）">
+        <span class="has-mr-6">1.1</span>
+        <span>webpack.config.js 中配置（较多）</span>
         </a></li><li>
         <a class="is-flex" href="#通过命令行参数方式">
-        <span class="has-mr-6">2.2</span>
+        <span class="has-mr-6">1.2</span>
         <span>通过命令行参数方式</span>
         </a></li><li>
         <a class="is-flex" href="#通过内联使用">
-        <span class="has-mr-6">2.3</span>
+        <span class="has-mr-6">1.3</span>
         <span>通过内联使用</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#一些比较常用的-loader">
-        <span class="has-mr-6">3</span>
+        <span class="has-mr-6">2</span>
         <span>一些比较常用的 loader</span>
         </a></li><li>
         <a class="is-flex" href="#其他一些相关-loader-介绍">
-        <span class="has-mr-6">4</span>
+        <span class="has-mr-6">3</span>
         <span>其他一些相关 loader 介绍</span>
         </a></li></ul>
         </div>
@@ -515,7 +511,7 @@
             
             <a href="/2019/07/05/Node/06/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/06.jpg" alt="libuv">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/06.jpg" alt="libuv">
                 </p>
             </a>
             
@@ -534,7 +530,7 @@
             
             <a href="/2019/06/28/JavaScript/42/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/42.jpg" alt="遍历对象的几种方法">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/42.jpg" alt="遍历对象的几种方法">
                 </p>
             </a>
             
@@ -553,7 +549,7 @@
             
             <a href="/2019/06/16/React/14/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/14.jpg" alt="applyMiddleware(...middlewares)">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/14.jpg" alt="applyMiddleware(...middlewares)">
                 </p>
             </a>
             
@@ -572,7 +568,7 @@
             
             <a href="/2019/06/12/React/13/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/13.jpg" alt="中间件的洋葱模型">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/13.jpg" alt="中间件的洋葱模型">
                 </p>
             </a>
             
@@ -591,7 +587,7 @@
             
             <a href="/2019/06/08/React/12/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/12.jpg" alt="createStore()">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/12.jpg" alt="createStore()">
                 </p>
             </a>
             

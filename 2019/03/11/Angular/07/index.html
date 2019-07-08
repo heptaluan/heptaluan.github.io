@@ -15,12 +15,12 @@
 <meta property="og:site_name" content="heptaluan&#39;s blog">
 <meta property="og:description" content="最近在开发过程中，遇到了 ExpressionChangedAfterItHasBeenCheckedError 这个错误 google 一翻后，发现各种说法众说纷纭，所有抽出时间深入了解一下这个错误，做一下总结，也可以避免以后在遇到这个问题的时候不知道怎么处理">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://pu5vc7wn3.bkt.clouddn.com/cover/07.jpg">
-<meta property="og:updated_time" content="2019-07-05T17:56:14.967Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/07.jpg">
+<meta property="og:updated_time" content="2019-07-08T14:44:05.461Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ExpressionChangedAfterItHasBeenCheckedError">
 <meta name="twitter:description" content="最近在开发过程中，遇到了 ExpressionChangedAfterItHasBeenCheckedError 这个错误 google 一翻后，发现各种说法众说纷纭，所有抽出时间深入了解一下这个错误，做一下总结，也可以避免以后在遇到这个问题的时候不知道怎么处理">
-<meta name="twitter:image" content="http://pu5vc7wn3.bkt.clouddn.com/cover/07.jpg">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/07.jpg">
 
 
 
@@ -28,7 +28,7 @@
 
 
 
-<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/backups/favicon.ico">
+<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/favicon.ico">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -147,7 +147,7 @@
     
     <div class="card-image">
         <span class="image is-7by1">
-            <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/07.jpg" alt="ExpressionChangedAfterItHasBeenCheckedError">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/07.jpg" alt="ExpressionChangedAfterItHasBeenCheckedError">
         </span>
     </div>
     
@@ -165,7 +165,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    21 分钟 读完 (大约 3218 个字)
+                    22 分钟 读完 (大约 3228 个字)
                 </span>
                 
                 
@@ -183,7 +183,7 @@
 <a id="more"></a>
 
 <p>简单来说，这个错误主要涉及到 <code>Angular</code> 的变化监测机制</p>
-<h2 id="关于变化监测"><a href="#关于变化监测" class="headerlink" title="关于变化监测"></a>关于变化监测</h2><p>每个 <code>Angular</code> 应用都是以组件树的形态呈现的，<code>Angular</code> 在变化监测阶段会按以下的顺序对每个组件执行如下操作（标记为 <code>List1</code>）</p>
+<h2 id="Angular-中的变化监测机制"><a href="#Angular-中的变化监测机制" class="headerlink" title="Angular 中的变化监测机制"></a>Angular 中的变化监测机制</h2><p>每个 <code>Angular</code> 应用都是以组件树的形态呈现的，<code>Angular</code> 在变化监测阶段会按以下的顺序对每个组件执行如下操作（标记为 <code>List1</code>）</p>
 <ul>
 <li><p>更新所有绑定在子 <code>component/directive</code> 上的属性</p>
 </li>
@@ -207,7 +207,7 @@
 </li>
 </ul>
 <p>需要注意的是：这些额外的检查（<code>List2</code>）只发生在开发模式下</p>
-<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>接下来我们来看一个例子，假设你有一个父组件 <code>A</code> 和一个子组件 <code>B</code>，<code>A</code> 组件中有两个属性 <code>name</code> 和 <code>text</code>，<code>A</code> 组件的模板中使用了 <code>name</code> 属性</p>
+<h2 id="出现原因"><a href="#出现原因" class="headerlink" title="出现原因"></a>出现原因</h2><p>接下来我们来看一个例子，假设你有一个父组件 <code>A</code> 和一个子组件 <code>B</code>，<code>A</code> 组件中有两个属性 <code>name</code> 和 <code>text</code>，<code>A</code> 组件的模板中使用了 <code>name</code> 属性</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">template: <span class="hljs-string">'&lt;span&gt;&#123;&#123;name&#125;&#125;&lt;/span&gt;'</span></span><br></pre></td></tr></table></figure>
 
 <p>然后在模板中加入 <code>B</code> 组件，并且通过输入属性绑定给 <code>B</code> 组件输入 <code>text</code> 属性</p>
@@ -285,11 +285,11 @@
 <p>这将是个无限循环，之前展示了很多组件对属性直接更新或依赖的情况，但实际中的应用对属性的更新和依赖通常是间接，不易排查的</p>
 <p>最后一个问题是，为什么第二次循环监测只在开发模式下运行？</p>
 <p>我猜想这是因为数据层不稳定在框架运行时并不会产生引人关注的错误，毕竟数据在下一次监测循环后就会稳定下来，当然，在开发时期将可能得错误解决总好过在上线后的应用中排查错误</p>
-<h2 id="附录：三个实例"><a href="#附录：三个实例" class="headerlink" title="附录：三个实例"></a>附录：三个实例</h2><h4 id="共享服务"><a href="#共享服务" class="headerlink" title="共享服务"></a>共享服务</h4><p>地址见 <a href="https://plnkr.co/edit/zPIXDHYJjBCPjmieAcSG?p=preview" target="_blank" rel="noopener">demo01</a></p>
+<h2 id="实例一：共享服务"><a href="#实例一：共享服务" class="headerlink" title="实例一：共享服务"></a>实例一：共享服务</h2><p>地址见 <a href="https://plnkr.co/edit/zPIXDHYJjBCPjmieAcSG?p=preview" target="_blank" rel="noopener">demo01</a></p>
 <p>这个应用中父组件和子组件共用一个共享服务，子元素通过共享服务设置一个属性的值并反映到父元素上，这个模式下子元素改变父元素的值的方式并不像上面简单例子中那么显而易见，是间接更新了父元素的属性</p>
-<h4 id="同步事件广播"><a href="#同步事件广播" class="headerlink" title="同步事件广播"></a>同步事件广播</h4><p>地址见 <a href="https://plnkr.co/edit/VtcGEuBpAC3mQ0MFPcbU?p=preview" target="_blank" rel="noopener">demo02</a></p>
+<h2 id="实例二：同步事件广播"><a href="#实例二：同步事件广播" class="headerlink" title="实例二：同步事件广播"></a>实例二：同步事件广播</h2><p>地址见 <a href="https://plnkr.co/edit/VtcGEuBpAC3mQ0MFPcbU?p=preview" target="_blank" rel="noopener">demo02</a></p>
 <p>这个应用中父元素监听一个子元素广播的事件，这个事件导致父元素的属性被更新，这个属性又被用于子元素的 <code>Input</code> 绑定，这同样间接更新了父元素的属性</p>
-<h4 id="动态的组件实例化"><a href="#动态的组件实例化" class="headerlink" title="动态的组件实例化"></a>动态的组件实例化</h4><p>地址见 <a href="https://plnkr.co/edit/lehon0WU14LxDIZFZcmp?p=info" target="_blank" rel="noopener">demo03</a></p>
+<h2 id="实例三：动态的组件实例化"><a href="#实例三：动态的组件实例化" class="headerlink" title="实例三：动态的组件实例化"></a>实例三：动态的组件实例化</h2><p>地址见 <a href="https://plnkr.co/edit/lehon0WU14LxDIZFZcmp?p=info" target="_blank" rel="noopener">demo03</a></p>
 <p>这种模式与之前两种模式略有不同，前两种模式都是 <code>List2</code> 中的第一步检测抛出的错误，而这种模式是由 <code>DOM</code> 更新检测（<code>List2</code> 第二步）抛出的错误，这个应用中父组件在 <code>ngAfterViewInit</code> 生命周期中动态添加子组件</p>
 <p>该生命周期发生在当前组件 <code>DOM</code> 初次更新之后，而添加子组件将会修改 <code>DOM</code> 结构，那么前后两次 <code>DOM</code> 中所使用的 <code>values</code> 值就不同了（前提是子组件带有新的 <code>value</code> 引用），所以抛出了错误</p>
 <p>解决这个问题最好的方案是改变创建组件时所处的生命周期钩子，动态创建组件的流程就可以被移到 <code>ngOnInit</code> 中</p>
@@ -389,7 +389,7 @@
                     
                     
                     <p class="is-size-6 is-block">
-                        GALLOWS BELL.
+                        white lie.
                     </p>
                     
                     
@@ -450,13 +450,13 @@
                 目录
             </h3>
             <ul class="menu-list"><li>
-        <a class="is-flex" href="#关于变化监测">
+        <a class="is-flex" href="#Angular-中的变化监测机制">
         <span class="has-mr-6">1</span>
-        <span>关于变化监测</span>
+        <span>Angular 中的变化监测机制</span>
         </a></li><li>
-        <a class="is-flex" href="#示例">
+        <a class="is-flex" href="#出现原因">
         <span class="has-mr-6">2</span>
-        <span>示例</span>
+        <span>出现原因</span>
         </a></li><li>
         <a class="is-flex" href="#数据改变的原因">
         <span class="has-mr-6">3</span>
@@ -478,22 +478,18 @@
         <span class="has-mr-6">5</span>
         <span>为什么需要第二次监测循环</span>
         </a></li><li>
-        <a class="is-flex" href="#附录：三个实例">
+        <a class="is-flex" href="#实例一：共享服务">
         <span class="has-mr-6">6</span>
-        <span>附录：三个实例</span>
-        </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#共享服务">
-        <span class="has-mr-6">6.1</span>
-        <span>共享服务</span>
+        <span>实例一：共享服务</span>
         </a></li><li>
-        <a class="is-flex" href="#同步事件广播">
-        <span class="has-mr-6">6.2</span>
-        <span>同步事件广播</span>
+        <a class="is-flex" href="#实例二：同步事件广播">
+        <span class="has-mr-6">7</span>
+        <span>实例二：同步事件广播</span>
         </a></li><li>
-        <a class="is-flex" href="#动态的组件实例化">
-        <span class="has-mr-6">6.3</span>
-        <span>动态的组件实例化</span>
-        </a></li></ul></li></ul>
+        <a class="is-flex" href="#实例三：动态的组件实例化">
+        <span class="has-mr-6">8</span>
+        <span>实例三：动态的组件实例化</span>
+        </a></li></ul>
         </div>
     </div>
 </div>
@@ -598,7 +594,7 @@
             
             <a href="/2019/07/05/Node/06/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/06.jpg" alt="libuv">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/06.jpg" alt="libuv">
                 </p>
             </a>
             
@@ -617,7 +613,7 @@
             
             <a href="/2019/06/28/JavaScript/42/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/42.jpg" alt="遍历对象的几种方法">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/42.jpg" alt="遍历对象的几种方法">
                 </p>
             </a>
             
@@ -636,7 +632,7 @@
             
             <a href="/2019/06/16/React/14/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/14.jpg" alt="applyMiddleware(...middlewares)">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/14.jpg" alt="applyMiddleware(...middlewares)">
                 </p>
             </a>
             
@@ -655,7 +651,7 @@
             
             <a href="/2019/06/12/React/13/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/13.jpg" alt="中间件的洋葱模型">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/13.jpg" alt="中间件的洋葱模型">
                 </p>
             </a>
             
@@ -674,7 +670,7 @@
             
             <a href="/2019/06/08/React/12/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/12.jpg" alt="createStore()">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/12.jpg" alt="createStore()">
                 </p>
             </a>
             

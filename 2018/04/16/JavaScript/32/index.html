@@ -2,25 +2,25 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-<title>call，apply，bind 的定义与实现 - heptaluan&#39;s blog</title>
+<title>JavaScript 中的 call 和 apply - heptaluan&#39;s blog</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-    <meta name="description" content="bind 方法的定义见 [Function.prototype.bind (thisArg [, arg1 [, arg2, …]])](http://lzw.me/pages/ecmascript/#324) 使用方式如下">
+    <meta name="description" content="call() 和 apply() 方法主要是用来扩充函数的作用域和改变 this 的指向（改变被调用函数的上下文），都接收两个参数  apply() 方法 第一个参数是作用域，第二个是参数数组，其中第二个参数可以是数组实例，也可以是 arguments 对象  call() 方法 也接收两个参数，仅仅在于和 apply() 的传参方式不同，传递函数的参数必须逐个写入">
 <meta name="keywords" content="JavaScript">
 <meta property="og:type" content="article">
-<meta property="og:title" content="call，apply，bind 的定义与实现">
+<meta property="og:title" content="JavaScript 中的 call 和 apply">
 <meta property="og:url" content="http://yoursite.com/2018/04/16/JavaScript/32/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="bind 方法的定义见 [Function.prototype.bind (thisArg [, arg1 [, arg2, …]])](http://lzw.me/pages/ecmascript/#324) 使用方式如下">
+<meta property="og:description" content="call() 和 apply() 方法主要是用来扩充函数的作用域和改变 this 的指向（改变被调用函数的上下文），都接收两个参数  apply() 方法 第一个参数是作用域，第二个是参数数组，其中第二个参数可以是数组实例，也可以是 arguments 对象  call() 方法 也接收两个参数，仅仅在于和 apply() 的传参方式不同，传递函数的参数必须逐个写入">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://pu5vc7wn3.bkt.clouddn.com/cover/32.jpg">
-<meta property="og:updated_time" content="2019-07-05T17:56:14.981Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/32.jpg">
+<meta property="og:updated_time" content="2019-07-08T13:54:33.217Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="call，apply，bind 的定义与实现">
-<meta name="twitter:description" content="bind 方法的定义见 [Function.prototype.bind (thisArg [, arg1 [, arg2, …]])](http://lzw.me/pages/ecmascript/#324) 使用方式如下">
-<meta name="twitter:image" content="http://pu5vc7wn3.bkt.clouddn.com/cover/32.jpg">
+<meta name="twitter:title" content="JavaScript 中的 call 和 apply">
+<meta name="twitter:description" content="call() 和 apply() 方法主要是用来扩充函数的作用域和改变 this 的指向（改变被调用函数的上下文），都接收两个参数  apply() 方法 第一个参数是作用域，第二个是参数数组，其中第二个参数可以是数组实例，也可以是 arguments 对象  call() 方法 也接收两个参数，仅仅在于和 apply() 的传参方式不同，传递函数的参数必须逐个写入">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/32.jpg">
 
 
 
@@ -28,7 +28,7 @@
 
 
 
-<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/backups/favicon.ico">
+<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/favicon.ico">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -94,7 +94,7 @@
         <!-- <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="call，apply，bind 的定义与实现" height="28">
+                <img src="/images/logo.svg" alt="JavaScript 中的 call 和 apply" height="28">
             
             </a>
         </div> -->
@@ -147,7 +147,7 @@
     
     <div class="card-image">
         <span class="image is-7by1">
-            <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/32.jpg" alt="call，apply，bind 的定义与实现">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/32.jpg" alt="JavaScript 中的 call 和 apply">
         </span>
     </div>
     
@@ -165,7 +165,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    10 分钟 读完 (大约 1519 个字)
+                    23 分钟 读完 (大约 3429 个字)
                 </span>
                 
                 
@@ -174,44 +174,33 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                call，apply，bind 的定义与实现
+                JavaScript 中的 call 和 apply
             
         </h1>
         <div class="content">
-            <p><code>bind</code> 方法的定义见 [Function.prototype.bind (thisArg [, arg1 [, arg2, …]])](<a href="http://lzw.me/pages/ecmascript/#324" target="_blank" rel="noopener">http://lzw.me/pages/ecmascript/#324</a>)</p>
-<p>使用方式如下</p>
+            <p><code>call()</code> 和 <code>apply()</code> 方法主要是用来扩充函数的作用域和改变 <code>this</code> 的指向（改变被调用函数的上下文），都接收两个参数</p>
+<ul>
+<li><p><code>apply()</code> 方法 第一个参数是作用域，第二个是参数数组，其中第二个参数可以是数组实例，也可以是 <code>arguments</code> 对象</p>
+</li>
+<li><p><code>call()</code> 方法 也接收两个参数，仅仅在于和 <code>apply()</code> 的传参方式不同，传递函数的参数必须逐个写入</p>
+</li>
+</ul>
 <a id="more"></a>
 
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fun.bind(thisArg[, arg1[, arg2[, ...]]])</span><br></pre></td></tr></table></figure>
 
-<p><code>bind()</code> 方法会创建一个新函数，当这个新函数被调用时，它的 <code>this</code> 值是传递给 <code>bind()</code> 的第一个参数, 它的参数是 <code>bind()</code> 的其他参数和其原本的参数</p>
-<p><code>bind</code> 返回的绑定函数也能使用 <code>new</code> 操作符创建对象（这种行为就像把原函数当成构造器），提供的 <code>this</code> 值被忽略，同时调用时的参数被提供给模拟函数</p>
-<p><code>bind</code> 方法与 <code>call</code>、<code>apply</code> 最大的不同就是前者返回一个绑定上下文的函数，而后两者是直接执行了函数</p>
-<blockquote>
-<p>还可以写成 <code>fn.bind(obj, arg1)(arg2)</code></p>
-</blockquote>
-<p>一句话概括就是</p>
-<p>该方法创建一个新函数，称为绑定函数，绑定函数会以创建它时传入 <code>bind</code> 方法的第一个参数作为 <code>this</code>，传入 <code>bind</code> 方法的第二个以及以后的参数加上绑定函数运行时本身的参数按照顺序作为原函数的参数来调用原函数</p>
-<h2 id="bind"><a href="#bind" class="headerlink" title="bind"></a>bind</h2><p>初级实现</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Function</span>.prototype.bind = <span class="hljs-built_in">Function</span>.prototype.bind || <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">context</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 记住 this，就是需要绑定 this 的实例函数（原函数）</span></span><br><span class="line">  <span class="hljs-keyword">var</span> _this = <span class="hljs-keyword">this</span>;</span><br><span class="line">  <span class="hljs-keyword">var</span> argsArray = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>);</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// 剔除第一个参数，其余作为参数来传递（提供给原函数）</span></span><br><span class="line">    <span class="hljs-keyword">return</span> _this.apply(context, argsArray.slice(<span class="hljs-number">1</span>));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="两者的区别"><a href="#两者的区别" class="headerlink" title="两者的区别"></a>两者的区别</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>).<span class="hljs-title">call</span>(<span class="hljs-params">object, a, b, c ...</span>)</span></span><br><span class="line"><span class="hljs-function"></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-title">function</span>(<span class="hljs-params"></span>).<span class="hljs-title">apply</span>(<span class="hljs-params">object, [a, b, c ...]</span>)</span></span><br></pre></td></tr></table></figure>
 
-<p>这里存在一些问题，在于在预置参数功能丢失的现象（因为使用了 <code>argsArray.slice(1)</code>），比较好的解决方式是下面这种</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Function</span>.prototype.bind = <span class="hljs-built_in">Function</span>.prototype.bind || <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">context</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> _this = <span class="hljs-keyword">this</span>;</span><br><span class="line">  <span class="hljs-keyword">var</span> args = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-keyword">this</span>.arguments, <span class="hljs-number">1</span>);</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> _this.apply(context, args.concat(<span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>)))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>功能基本一样，都是对象 <code>object</code> 调用这里的 <code>funciton()</code></p>
+<p>不同之处是 <code>call</code> 参数从第二个开始都是传递给 <code>funciton</code> 的，可以依次罗列用 <code>&#39;，&#39;</code> 隔开</p>
+<p>而 <code>apply</code> 只有两个参数，第二个是一个数组，其中存储了所有传递给 <code>function</code> 的参数</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> bar = &#123;<span class="hljs-attr">baz</span>: <span class="hljs-string">'baz'</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo.call(<span class="hljs-string">'bar'</span>);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 输出 Object &#123;baz: 'baz'&#125;</span></span><br><span class="line"><span class="hljs-comment">// 其实就是让一个对象调用一个函数，在使用了 call 以后，即调用了显式绑定，this 就指向了所传进去的对象</span></span><br></pre></td></tr></table></figure>
 
-<p>但是 <code>bind</code> 当中还有一点比较特殊</p>
-<p><code>bind</code> 返回的函数如果作为构造函数，搭配 <code>new</code> 关键字出现的话，我们的绑定 <code>this</code> 就需要”被忽略”</p>
-<p>这样一来就需要在构造函数的场景下来进行兼容</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Function</span>.prototype.bind = <span class="hljs-built_in">Function</span>.prototype.bind || <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">context</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> _this = <span class="hljs-keyword">this</span>;</span><br><span class="line">  <span class="hljs-keyword">var</span> args = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">1</span>);</span><br><span class="line">  <span class="hljs-keyword">var</span> F = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;;</span><br><span class="line">  F.prototype = <span class="hljs-keyword">this</span>.prototype;</span><br><span class="line">  <span class="hljs-keyword">var</span> bound = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> _this.apply(<span class="hljs-keyword">this</span> <span class="hljs-keyword">instanceof</span> F </span><br><span class="line">      ? <span class="hljs-keyword">this</span> </span><br><span class="line">      : context || <span class="hljs-keyword">this</span>, args.concat(<span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>)));</span><br><span class="line">  &#125;</span><br><span class="line">  bound.prototype = <span class="hljs-keyword">new</span> F();</span><br><span class="line">  <span class="hljs-keyword">return</span> bound;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>不过需要注意的是，<code>apply</code> 和 <code>call</code> 在严格模式下的不同</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span> (<span class="hljs-params">x, y</span>) </span>&#123;</span><br><span class="line"><span class="hljs-meta">  'use strict'</span>;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(x, y, <span class="hljs-keyword">this</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo.apply(<span class="hljs-literal">null</span>);       <span class="hljs-comment">// undefined undefined null</span></span><br><span class="line">foo.apply(<span class="hljs-literal">undefined</span>);  <span class="hljs-comment">// undefined undefined undefined</span></span><br></pre></td></tr></table></figure>
 
-<p>如果比较严谨的话，还需要判断调用 <code>bind</code> 方法的一定要为一个函数，否则就抛出一个错误</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span> !== <span class="hljs-string">'function'</span>) &#123;</span><br><span class="line">  <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`Function.prototype.bind - what is trying to be bound is not callable`</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>完整代码如下</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Function</span>.prototype.bind = <span class="hljs-built_in">Function</span>.prototype.bind || <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">context</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 判断调用对象是否是函数</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span> !== <span class="hljs-string">'function'</span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`Function.prototype.bind - what is trying to be bound is not callable`</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 记住 this，就是需要绑定 this 的实例函数（原函数）</span></span><br><span class="line">  <span class="hljs-keyword">var</span> _this = <span class="hljs-keyword">this</span>;</span><br><span class="line">  <span class="hljs-keyword">var</span> args = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">1</span>);</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 在构造函数的场景下来进行兼容（因为在搭配 new 使用的时候，绑定的 this 需要被忽略）</span></span><br><span class="line">  <span class="hljs-keyword">var</span> F = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;;</span><br><span class="line">  F.prototype = <span class="hljs-keyword">this</span>.prototype;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">var</span> bound = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> _this.apply(<span class="hljs-keyword">this</span> <span class="hljs-keyword">instanceof</span> F ? <span class="hljs-keyword">this</span> : context || <span class="hljs-keyword">this</span>, args.concat(<span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>)));</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  bound.prototype = <span class="hljs-keyword">new</span> F();</span><br><span class="line">  </span><br><span class="line">  <span class="hljs-keyword">return</span> bound;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="call-和-apply-的实现"><a href="#call-和-apply-的实现" class="headerlink" title="call 和 apply 的实现"></a>call 和 apply 的实现</h2><p>通过观察可以发现，在之前的实现里面，我们使用了很多 <code>call</code> 和 <code>apply</code> 这两个内部方法，接下来我们就尝试自己实现一下这两个方法</p>
-<p><code>call</code> 和 <code>apply</code> 本质是一样的，区别就在于参数的不同</p>
-<p><code>call</code> 方法的定义 [15.3.4.4 Function.prototype.call (thisArg [ , arg1 [ , arg2, … ] ] )](<a href="http://lzw.me/pages/ecmascript/#323" target="_blank" rel="noopener">http://lzw.me/pages/ecmascript/#323</a>)</p>
+<p>我们可以尝试来手动实现一下这两个函数</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p><code>call</code> 和 <code>apply</code> 本质是一样的，区别就在于参数的不同</p>
+<p><code>call</code> 方法的定义 <a href="http://yanhaijing.com/es5/#323" target="_blank" rel="noopener">ES5 - Call</a></p>
 <p>简单来说就是</p>
 <ul>
 <li><p><code>call()</code> 方法在使用一个指定的 <code>this</code> 值和若干个指定的参数值的前提下调用某个函数或方法</p>
@@ -219,7 +208,7 @@
 <li><p><code>apply()</code> 方法在使用一个指定的 <code>this</code> 值和参数值必须是数组类型的前提下调用某个函数或方法</p>
 </li>
 </ul>
-<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p><code>call()</code> 和 <code>apply()</code> 的第一个参数是要调用函数的母对象，它是调用上下文，在函数体内通过 <code>this</code> 来获得它的引用，比如以对象 <code>o</code> 的方法来调用函数 <code>f()</code></p>
+<p><code>call()</code> 和 <code>apply()</code> 的第一个参数是要调用函数的母对象，它是调用上下文，在函数体内通过 <code>this</code> 来获得它的引用，比如以对象 <code>o</code> 的方法来调用函数 <code>f()</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">f.call(o)</span><br><span class="line"></span><br><span class="line">f.apply(o)</span><br></pre></td></tr></table></figure>
 
 <p>大致原理如下所示</p>
@@ -228,21 +217,112 @@
 <p>在严格模式中，<code>call()</code> 和 <code>apply()</code> 的第一个参数都会变成 <code>this</code> 的值，哪怕传入的实参是原始值甚至是 <code>null</code> 或 <code>undefined</code></p>
 <p>在 <code>ES3</code> 或者非严格模式中，传入的 <code>null</code> 和 <code>undefined</code> 都会被全局对象代替，而其他原始值则会被相应的包装对象（<code>wrapper object</code>）所替代</p>
 <p>简单来说就是，<code>f.call(o)</code> 其原理就是先通过 <code>o.m = f</code> 将 <code>f</code> 作为 <code>o</code> 的某个临时属性 <code>m</code> 存储，然后执行 <code>m</code>，执行完毕后将 <code>m</code> 属性删除</p>
-<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><p>这里以 <code>apply</code> 为例</p>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>这里以 <code>apply</code> 为例</p>
 <p>初级实现</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Function</span>.prototype.apply = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">context</span>) </span>&#123;</span><br><span class="line">  context.fn = <span class="hljs-keyword">this</span>;</span><br><span class="line">  context.fn();</span><br><span class="line">  <span class="hljs-keyword">delete</span> context.fn;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>但是需要注意，这里分为两种情况，传递参数和没有传递参数，并且 <code>apply</code> 有一点不同，它的参数是一个数组，在执行的时候会把数组的值依次传递给函数当参数</p>
-<p>所以就需要实现类似 <code>context.fn(arg1, arg2, arg3 ...)</code> 的调用方式，所以这里采用 <code>...</code> 扩展运算符来依次传递参数</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Function</span>.prototype.apply = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">context</span>) </span>&#123;</span><br><span class="line">  context.fn(...arguments[<span class="hljs-number">1</span>])</span><br><span class="line">  <span class="hljs-keyword">delete</span> context.fn;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是 <code>apply</code> 有一点不同，它的参数是一个数组，在执行的时候会把数组的值依次传递给函数当参数</p>
+<p>需要实现类似 <code>context.fn(arg1, arg2, arg3 ...)</code> 的调用方式，这里采用 <code>evel</code> 来实现</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Function</span>.prototype.apply = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">context</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> args = <span class="hljs-built_in">arguments</span>[<span class="hljs-number">1</span>];</span><br><span class="line">  context.fn = <span class="hljs-keyword">this</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 使用 evel 来实现（并不是唯一的方式）</span></span><br><span class="line">  <span class="hljs-comment">// 来得到 context.fn(arg1,arg2,arg3...)</span></span><br><span class="line">  <span class="hljs-keyword">var</span> fnStr = <span class="hljs-string">'context.fn('</span>;</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; args.length; i++) &#123;</span><br><span class="line">    fnStr += i == args.length - <span class="hljs-number">1</span> ? args[i] : args[i] + <span class="hljs-string">','</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  fnStr += <span class="hljs-string">')'</span>;</span><br><span class="line">  <span class="hljs-built_in">eval</span>(fnStr);</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">delete</span> context.fn;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>有几个需要注意的地方</p>
-<p><code>this</code> 参数可以传递 <code>null</code> 或者不传，当为 <code>null</code> 的时候，则指向 <code>window</code>，并且函数也是可以指定返回值的</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Function</span>.prototype.myApply = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">context = window</span>) </span>&#123;</span><br><span class="line">  context.fn = <span class="hljs-keyword">this</span>;</span><br><span class="line">  <span class="hljs-keyword">let</span> result = <span class="hljs-built_in">arguments</span>[<span class="hljs-number">1</span>] ? context.fn(...arguments[<span class="hljs-number">1</span>]) : context.fn()</span><br><span class="line">  <span class="hljs-keyword">delete</span> context.fn;</span><br><span class="line">  <span class="hljs-keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>this</code> 参数可以传递 <code>null</code> 或者不传，当为 <code>null</code> 的时候，则指向 <code>window</code></p>
+<p>函数是可以指定返回值的</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Function</span>.prototype.apply = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">context</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> context = context || <span class="hljs-built_in">window</span>;</span><br><span class="line">  <span class="hljs-keyword">var</span> args = <span class="hljs-built_in">arguments</span>[<span class="hljs-number">1</span>];</span><br><span class="line">  context.fn = <span class="hljs-keyword">this</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (args === <span class="hljs-keyword">void</span> <span class="hljs-number">0</span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> context.fn();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 使用 evel 来实现（并不是唯一的方式）</span></span><br><span class="line">  <span class="hljs-comment">// 来得到 context.fn(arg1, arg2, arg3 ...)</span></span><br><span class="line">  <span class="hljs-keyword">var</span> fnStr = <span class="hljs-string">'context.fn('</span>;</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; args.length; i++) &#123;</span><br><span class="line">    fnStr += i == args.length - <span class="hljs-number">1</span> ? args[i] : args[i] + <span class="hljs-string">','</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  fnStr += <span class="hljs-string">')'</span>;</span><br><span class="line">  <span class="hljs-keyword">var</span> returnVal = <span class="hljs-built_in">eval</span>(fnStr);</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">delete</span> context.fn;</span><br><span class="line">  <span class="hljs-keyword">return</span> returnVal;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>而 <code>call</code> 方法，则跟 <code>apply</code> 类似，只需要注意每个函数都可以调用 <code>call</code> 方法，来改变当前这个函数执行的 <code>this</code> 关键字，并且支持传入参数</p>
-<p>实现如下所示</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Function</span>.prototype.call = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">context = window</span>) </span>&#123;</span><br><span class="line">  context.fn = <span class="hljs-keyword">this</span>;</span><br><span class="line">  <span class="hljs-keyword">let</span> args = [...arguments].slice(<span class="hljs-number">1</span>);</span><br><span class="line">  <span class="hljs-keyword">let</span> result = content.fn(...args)</span><br><span class="line">  <span class="hljs-keyword">delete</span> context.fn;</span><br><span class="line">  <span class="hljs-keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>还有一个问题，即 <code>context.fn = this</code>，这里我们只是假设不存在名为 <code>fn</code> 的属性，所以这里我们需要保证 <code>fn</code> 的唯一性</p>
+<p>这里可以采用 <code>ES6</code> 提供的 <code>symbol</code> 数据类型，直接添加即可</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> fn = <span class="hljs-built_in">Symbol</span>()</span><br><span class="line">context[fn] = <span class="hljs-keyword">this</span></span><br></pre></td></tr></table></figure>
+
+<p>如果不使用 <code>symbol</code>，也可以来手动模拟一个，简单来说就是随机定义一个属性名称，然后在进行赋值的时候判断一下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">symbol</span>(<span class="hljs-params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> unique_proper = <span class="hljs-string">"00"</span> + <span class="hljs-built_in">Math</span>.random();</span><br><span class="line">  <span class="hljs-keyword">if</span> (obj.hasOwnProperty(unique_proper)) &#123;</span><br><span class="line">    <span class="hljs-comment">// 如果已经存在这个属性，则递归调用，直到没有这个属性</span></span><br><span class="line">    <span class="hljs-built_in">arguments</span>.callee(obj)</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> unique_proper;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 使用</span></span><br><span class="line"><span class="hljs-keyword">var</span> fn = symbol(context);</span><br></pre></td></tr></table></figure>
+
+<p>而 <code>call</code> 方法，可以利用上面的 <code>apply</code> 来简单实现</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Function</span>.prototype.call = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">context</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.apply(([].shift.apply(<span class="hljs-built_in">arguments</span>), <span class="hljs-built_in">arguments</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="延伸"><a href="#延伸" class="headerlink" title="延伸"></a>延伸</h2><p>下面是两个实际使用场景</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sum</span> (<span class="hljs-params">num1, num2</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> num1 + num2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">callSum1</span> (<span class="hljs-params">num1, num2</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 使用 sum 这个函数来完成一次调用，调用的参数就是 callSum1 这个函数的参数</span></span><br><span class="line">  <span class="hljs-comment">// apply 的第二个参数表示一组参数数组</span></span><br><span class="line">  <span class="hljs-keyword">return</span> sum.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">callSum2</span> (<span class="hljs-params">num1, num2</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 第二个参数是数组</span></span><br><span class="line">  <span class="hljs-keyword">return</span> sum.apply(<span class="hljs-keyword">this</span>, [num1, num2]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">callSum1(<span class="hljs-number">12</span>, <span class="hljs-number">22</span>);</span><br><span class="line">callSum2(<span class="hljs-number">22</span>, <span class="hljs-number">32</span>);</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">callSum3</span> (<span class="hljs-params">num1, num2</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// call 是通过参数列表来完成传递，其余和 apply 没什么区别</span></span><br><span class="line">  <span class="hljs-keyword">return</span> sum.call(<span class="hljs-keyword">this</span>, num1, num2);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">callSum3(<span class="hljs-number">32</span>, <span class="hljs-number">42</span>);</span><br></pre></td></tr></table></figure>
+
+<p>另外一个实例</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> color = <span class="hljs-string">'red'</span>;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showColor</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  alert(<span class="hljs-keyword">this</span>.color);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Circle</span> (<span class="hljs-params">color</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.color = color;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> c = <span class="hljs-keyword">new</span> Circle(<span class="hljs-string">'yellow'</span>);</span><br><span class="line"></span><br><span class="line">showColor.call(<span class="hljs-keyword">this</span>); <span class="hljs-comment">// 使用上下文来调用 showColor，结果是red</span></span><br><span class="line">showColor.call(c);    <span class="hljs-comment">// 上下文对象是 c，结果就是 yellow</span></span><br></pre></td></tr></table></figure>
+
+<p>通过以上发现，使用 <code>call</code> 和 <code>apply</code> 以后，对象中可以不需要定义方法了</p>
+<p>这就是 <code>call</code> 和 <code>apply</code> 的一种运用</p>
+<h2 id="this-init-apply-this-arguments"><a href="#this-init-apply-this-arguments" class="headerlink" title="this.init.apply(this, arguments)"></a>this.init.apply(this, arguments)</h2><p>在 <code>prototype</code> 框架中有如下一段代码</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> Class = &#123;</span><br><span class="line">  create: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.initialize.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// Class 使用方法如下</span></span><br><span class="line"><span class="hljs-keyword">var</span> A = Class.create();</span><br><span class="line"></span><br><span class="line">A.prototype = &#123;</span><br><span class="line">  initialize: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">v</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.value = v;</span><br><span class="line">  &#125;,</span><br><span class="line">  showValue: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    alert(<span class="hljs-keyword">this</span>.value);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-keyword">new</span> A(<span class="hljs-string">"helloWord!"</span>);</span><br><span class="line">a.showValue();</span><br></pre></td></tr></table></figure>
+
+<p><code>var a = new A(&quot;helloWord!&quot;)</code> 其实这句话的含义就是构造个一个 <code>function</code> 复制给 <code>a</code>，这个 <code>function</code> 是</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.initialize.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个 <code>function</code> 方法是用来做构造函数的。使用 <code>function</code> 构造对象时，会让构造出来的对象的 <code>initialize</code> 方法执行 <code>apply()</code> 方法</p>
+<p><code>function</code> 中的第一个 <code>this</code> 是指用 <code>new</code> 调用构造函数之后生成的对象，也就是前面的 <code>a</code>，那么第二个 <code>this</code> 也当然应该是指同一个对象</p>
+<p><code>this</code> 调用 <code>initialize</code> 方法，参数是 <code>arguments</code> 对象（参数的数组对象），在构造函数执行时，对象 <code>a</code> 就会去执行 <code>initialize</code> 方法来初始化 <code>arguments</code> 作为 <code>create</code> 返回的构造函数的实参数组</p>
+<p>传递给方法 <code>apply</code>，在调用 <code>initialize</code> 时作为参数传递给初始化函数 <code>initialize</code></p>
+<p>那么在 <code>var a = new A(&quot;helloWord!&quot;);</code> 的时候 <code>&quot;helloWord!&quot;</code> 就是实参数组（虽然只有一个字符串），传递给方法 <code>apply</code></p>
+<p>然后在调用 <code>initialize</code> 的时候作为参数传递给初始化函数 <code>initialize</code></p>
+<p>一个实际使用场景</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Circle</span> (<span class="hljs-params">nRadius, sMessage</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.init.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  Circle.prototype = &#123;</span><br><span class="line">    init : <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">nRadius, sMessage</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.nR = nRadius;</span><br><span class="line">      <span class="hljs-keyword">this</span>.sMessage = sMessage;</span><br><span class="line">    &#125;,</span><br><span class="line">    PI : <span class="hljs-number">3.14</span>,</span><br><span class="line">    fnGetArea : <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.sMessage + <span class="hljs-string">': '</span> + <span class="hljs-keyword">this</span>.PI * <span class="hljs-keyword">this</span>.nR * <span class="hljs-keyword">this</span>.nR;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">var</span> c = <span class="hljs-keyword">new</span> Circle(<span class="hljs-number">5</span>, <span class="hljs-string">'构造初始化 面积'</span>);</span><br><span class="line">  alert(c.fnGetArea()); <span class="hljs-comment">//构造初始化 面积: 78.5</span></span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+
+<h2 id="Math-max-apply-null-arr"><a href="#Math-max-apply-null-arr" class="headerlink" title="Math.max.apply(null, arr)"></a>Math.max.apply(null, arr)</h2><p><code>max()</code> 方法可以返回两个指定的数中带有较大的值的那个数</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">7</span>, <span class="hljs-number">9</span>, <span class="hljs-number">11</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">6</span>, <span class="hljs-number">8</span>, <span class="hljs-number">10</span>];</span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">Math</span>.max.apply(<span class="hljs-literal">null</span>, arr));</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 使用 call 方法可以达到同样目的</span></span><br><span class="line"><span class="hljs-comment">// Math.max.call(null, 1, 2, 3, 4, 5);</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Math.max()</code> 方法，支持传递多个参数，比如：<code>Math.max(1, 3, 5, 7, 9, 11)</code>  </p>
+<p>但是它不支持直接传递一个数组作为参数，比如：<code>Math.max(new Array(1, 3, 5, 7, 9, 11))</code></p>
+<p>这里，只要我们有方法把数组，一个一个拆分开来，传递到 <code>Math.max()</code> 方法中，就实现了传递数组的方法，这里就可以利用到 <code>apply()</code> 函数</p>
+<p>所有函数都有 <code>apply(作用域链, 参数)</code> 这个方法，这个函数的 “参数”，接收一个数组，并且是将数组中的每个值分开来，传递给调用函数，所以就实现了传递一个数组，取得最大值的方法</p>
+<p><code>Function.apply()</code> 是 <code>JavaScript</code> 的一个 <code>OOP</code> 特性，一般用来模拟继承和扩展 <code>this</code> 的用途</p>
+<p><code>xx.apply</code> 是一个调用函数的方法，其参数为：<code>apply(Function, Args)</code></p>
+<p><code>Function</code> 为要调用的方法，<code>Args</code> 是参数列表，当 <code>Function</code> 为 <code>null</code> 时，默认为上文</p>
+<p>即</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Math</span>.max.apply(<span class="hljs-literal">null</span>, arr)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Array-prototype-slice-call-arguments-0"><a href="#Array-prototype-slice-call-arguments-0" class="headerlink" title="Array.prototype.slice.call(arguments, 0)"></a>Array.prototype.slice.call(arguments, 0)</h2><p>在 <code>JavaScript</code> 中我们经常会看到 <code>Array.prototype.slice.call(arguments, 0)</code> 的写法，这个方法的作用是<strong>把类数组对象转换成一个真正的数组</strong></p>
+<p>这里涉及到 <code>slice()</code> 方法和 <code>call()</code> 方法</p>
+<h4 id="slice-方法"><a href="#slice-方法" class="headerlink" title="slice()方法"></a>slice()方法</h4><p>数组和字符串都有这个 <code>slice</code> 方法，这个方法的作用是截取一段数据，在数组中，该方法的返回值是<strong>包含</strong>截取元素的组成的数组，在字符串中，该方法的返回值是<strong>包含</strong>截取字符串组成的字符串</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 参数 start 表示数组片段开始处的下标，如果是负数，它声明从数组末尾开始算起的位置</span></span><br><span class="line"><span class="hljs-comment">// 参数 end 表示数组片段结束处的后一个元素的下标，如果没有指定这个参数，切分的数组包含从 start 开始到数组结束的所有元素</span></span><br><span class="line"><span class="hljs-comment">// 如果这个参数是负数，它声明的是从数组尾部开始算起的元素（不包括结束位置）</span></span><br><span class="line">array.slice(start, end)</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是，如果 <code>slice()</code> 方法没有传递参数，则默认是从 <code>index</code> 序列为 <code>0</code> 开始截取（见 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/slice" target="_blank" rel="noopener">MDN - Array.prototype.slice()</a>）</p>
+<p>比如：</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>].slice(<span class="hljs-number">2</span>, <span class="hljs-number">4</span>);</span><br><span class="line">[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>].slice(<span class="hljs-number">-4</span>, <span class="hljs-number">-2</span>);</span><br><span class="line">[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>].slice();</span><br><span class="line"></span><br><span class="line"><span class="hljs-string">'everything'</span>.slice(<span class="hljs-number">2</span>, <span class="hljs-number">4</span>);</span><br><span class="line"><span class="hljs-string">'everything'</span>.slice(<span class="hljs-number">-4</span>, <span class="hljs-number">-2</span>);</span><br><span class="line"><span class="hljs-string">'everything'</span>.slice();</span><br></pre></td></tr></table></figure>
+
+<p>前两个的返回值均为 <code>[3, 4]</code>，为数组，而后两个的返回值分别为 <code>&#39;er&#39;</code> 和 <code>&#39;hi&#39;</code>，为字符串</p>
+<ul>
+<li><p>如果之传入一个参数的话，那就是输出从开始位置到结束位置的所有元素</p>
+</li>
+<li><p>而如果不传递参数，则是从 <code>0</code> 开始计算（可以认为返回一个原对象的副本，因为 <code>slice</code> 方法返回的是一个新的数组）</p>
+</li>
+</ul>
+<p>在字符串中，和 <code>slice()</code> 方法类型的还有两个方法：<code>substring()</code> 和 <code>substr()</code> 方法</p>
+<p>其中，<code>substring()</code> 方法表示<strong>返回从开始位置到结束位置的字符串</strong>，<code>substr()</code> 接收两个参数，<strong>第一个参数表示开始位置，第二个参数表示要截取的字符个数</strong>，和前两个方法略有不同</p>
+<p>当传入方法的参数为负数时，这三种方法又略有不同：</p>
+<ul>
+<li><p><code>slice()</code> 像上面说的，是负数加上字符串的长度得出相应的正值</p>
+</li>
+<li><p><code>substring()</code> 方法的参数均置为零</p>
+</li>
+<li><p><code>substr()</code> 方法的第一个参数为负值加上字符串长度得到的正值，第二个参数置为零</p>
+</li>
+</ul>
+<p>下面再来看看 <code>Array.prototype.slice.call(arguments, 0)</code> 具体含义</p>
+<p>在 <code>Array.prototype.slice.call(arguments, 0)</code> 中，<code>Array.prototype.slice</code> 调用的是 <code>Array</code> 的原型方法，对于正真的数组是有 <code>slice()</code> 方法，但是对于像 <code>arguments</code> 或者自己定义的一些<strong>类数组对象</strong>虽然存在 <code>length</code> 等若干属性，但是并没有 <code>slice()</code> 方法</p>
+<p>所以对于这种类数组对象就得使用原型方法来使用 <code>slice()</code> 方法，即 <code>Array.prototype.slice</code>（如果在自定义中的类数组对象中自定义了 <code>slice()</code> 方法，那么自然可以直接调用）</p>
+<p>简单点说就是：对于 <code>arguments</code> 类数组，我们调用 <code>Array.prototype.slice</code> 原型方法，并用 <code>call()</code> 方法，将作用域限定在 <code>arguments</code> 中，这里 <code>Array.prototype</code> 就可以理解为 <code>arguments</code>，同参数 <code>0</code> 为 <code>slice()</code> 方法的第一个参数，即开始位置索引，通过这种方法就将 <code>arguments</code> 类数组转换成了真数组</p>
+<blockquote>
+<p><code>Array.prototype.slice.call(arguments)</code> 能将具有 <code>length</code> 属性的对象转成数组，除了 <code>IE</code> 下的节点集合</p>
+<p>因为 <code>ie</code> 下的 <code>dom</code> 对象是以 <code>com</code> 对象的形式实现的，<code>JavaScript</code> 对象与 <code>com</code> 对象不能进行转换</p>
+</blockquote>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = &#123; </span><br><span class="line">  length: <span class="hljs-number">2</span>, </span><br><span class="line">  <span class="hljs-number">0</span>: <span class="hljs-string">'first'</span>, </span><br><span class="line">  <span class="hljs-number">1</span>: <span class="hljs-string">'second'</span> </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Array</span>.prototype.slice.call(a);  <span class="hljs-comment">// ['first', 'second']</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> a = &#123; </span><br><span class="line">  length: <span class="hljs-number">2</span> </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Array</span>.prototype.slice.call(a);  <span class="hljs-comment">// [undefined, undefined]</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="猜测-slice-的内部实现"><a href="#猜测-slice-的内部实现" class="headerlink" title="猜测 slice 的内部实现"></a>猜测 slice 的内部实现</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Array</span>.prototype.slice = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">start, end</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> result = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>();</span><br><span class="line">  start = start || <span class="hljs-number">0</span>;</span><br><span class="line">  <span class="hljs-comment">// this 指向调用的对象，当用了 call 后，能够改变 this 的指向，也就是指向传进来的对象</span></span><br><span class="line">  end = end || <span class="hljs-keyword">this</span>.length;</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = start; i &lt; end; i++) &#123;</span><br><span class="line">    result.push(<span class="hljs-keyword">this</span>[i]);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="一个转成数组的通用函数"><a href="#一个转成数组的通用函数" class="headerlink" title="一个转成数组的通用函数"></a>一个转成数组的通用函数</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> toArray = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">s</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">try</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Array</span>.prototype.slice.call(s);</span><br><span class="line">  &#125; <span class="hljs-keyword">catch</span> (e) &#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> arr = [];</span><br><span class="line">      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>, len = s.length; i &lt; len; i++) &#123;</span><br><span class="line">      <span class="hljs-comment">// arr.push(s[i]);</span></span><br><span class="line">      <span class="hljs-comment">// 据说这样比 push 快</span></span><br><span class="line">      arr[i] = s[i]; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> arr;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="jQuery-中的-toArray"><a href="#jQuery-中的-toArray" class="headerlink" title="jQuery 中的 toArray()"></a>jQuery 中的 toArray()</h2><p><code>jQuery</code> 中的方法 <code>.toArray()</code> 是将当前 <code>jQuery</code> 对象转换为真正的数组，转换后的数组包含了所有元素，方法 <code>.toArray()</code> 的实现巧妙地借用了数组的方法 <code>slice()</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//...</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// Save a reference to some core methods</span></span><br><span class="line"></span><br><span class="line">toString = <span class="hljs-built_in">Object</span>.prototype.toString,</span><br><span class="line">hasOwn = <span class="hljs-built_in">Object</span>.prototype.hasOwnProperty,</span><br><span class="line">push = <span class="hljs-built_in">Array</span>.prototype.push,</span><br><span class="line">slice = <span class="hljs-built_in">Array</span>.prototype.slice,</span><br><span class="line">trim = <span class="hljs-built_in">String</span>.prototype.trim,</span><br><span class="line">indexOf = <span class="hljs-built_in">Array</span>.prototype.indexOf,</span><br><span class="line"></span><br><span class="line">toArray: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> slice.call(<span class="hljs-keyword">this</span>, <span class="hljs-number">0</span>);</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//...</span></span><br></pre></td></tr></table></figure>
+
+<p>连同 <code>slice()</code> 一起声明的还有 <code>toString()</code> 、<code>hasOwn()</code> 、<code>trim()</code> 、<code>indexOf()</code>，这里通过声明对这些核心方法的引用</p>
+<p>使得在 <code>jQuery</code> 代码中可以借用这些核心方法的功能，执行时可通过方法 <code>call()</code> 和 <code>apply()</code> 指定方法执行的环境，即关键字 <code>this</code> 所引用的对象</p>
+
         </div>
         
         <div class="level is-size-7 is-uppercase">
@@ -333,7 +413,7 @@
                     
                     
                     <p class="is-size-6 is-block">
-                        GALLOWS BELL.
+                        white lie.
                     </p>
                     
                     
@@ -394,22 +474,50 @@
                 目录
             </h3>
             <ul class="menu-list"><li>
-        <a class="is-flex" href="#bind">
+        <a class="is-flex" href="#两者的区别">
         <span class="has-mr-6">1</span>
-        <span>bind</span>
+        <span>两者的区别</span>
         </a></li><li>
-        <a class="is-flex" href="#call-和-apply-的实现">
-        <span class="has-mr-6">2</span>
-        <span>call 和 apply 的实现</span>
-        </a><ul class="menu-list"><li>
         <a class="is-flex" href="#原理">
-        <span class="has-mr-6">2.1</span>
+        <span class="has-mr-6">2</span>
         <span>原理</span>
         </a></li><li>
         <a class="is-flex" href="#实现">
-        <span class="has-mr-6">2.2</span>
+        <span class="has-mr-6">3</span>
         <span>实现</span>
-        </a></li></ul></li></ul>
+        </a></li><li>
+        <a class="is-flex" href="#延伸">
+        <span class="has-mr-6">4</span>
+        <span>延伸</span>
+        </a></li><li>
+        <a class="is-flex" href="#this-init-apply-this-arguments">
+        <span class="has-mr-6">5</span>
+        <span>this.init.apply(this, arguments)</span>
+        </a></li><li>
+        <a class="is-flex" href="#Math-max-apply-null-arr">
+        <span class="has-mr-6">6</span>
+        <span>Math.max.apply(null, arr)</span>
+        </a></li><li>
+        <a class="is-flex" href="#Array-prototype-slice-call-arguments-0">
+        <span class="has-mr-6">7</span>
+        <span>Array.prototype.slice.call(arguments, 0)</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#slice-方法">
+        <span class="has-mr-6">7.1</span>
+        <span>slice()方法</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#猜测-slice-的内部实现">
+        <span class="has-mr-6">8</span>
+        <span>猜测 slice 的内部实现</span>
+        </a></li><li>
+        <a class="is-flex" href="#一个转成数组的通用函数">
+        <span class="has-mr-6">9</span>
+        <span>一个转成数组的通用函数</span>
+        </a></li><li>
+        <a class="is-flex" href="#jQuery-中的-toArray">
+        <span class="has-mr-6">10</span>
+        <span>jQuery 中的 toArray()</span>
+        </a></li></ul>
         </div>
     </div>
 </div>
@@ -514,7 +622,7 @@
             
             <a href="/2019/07/05/Node/06/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/06.jpg" alt="libuv">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/06.jpg" alt="libuv">
                 </p>
             </a>
             
@@ -533,7 +641,7 @@
             
             <a href="/2019/06/28/JavaScript/42/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/42.jpg" alt="遍历对象的几种方法">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/42.jpg" alt="遍历对象的几种方法">
                 </p>
             </a>
             
@@ -552,7 +660,7 @@
             
             <a href="/2019/06/16/React/14/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/14.jpg" alt="applyMiddleware(...middlewares)">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/14.jpg" alt="applyMiddleware(...middlewares)">
                 </p>
             </a>
             
@@ -571,7 +679,7 @@
             
             <a href="/2019/06/12/React/13/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/13.jpg" alt="中间件的洋葱模型">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/13.jpg" alt="中间件的洋葱模型">
                 </p>
             </a>
             
@@ -590,7 +698,7 @@
             
             <a href="/2019/06/08/React/12/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/12.jpg" alt="createStore()">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/12.jpg" alt="createStore()">
                 </p>
             </a>
             
@@ -1028,7 +1136,7 @@
             <div class="level-start has-text-centered-mobile">
                 <!-- <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="call，apply，bind 的定义与实现" height="28">
+                    <img src="/images/logo.svg" alt="JavaScript 中的 call 和 apply" height="28">
                 
                 </a> -->
                 <p class="is-size-7">

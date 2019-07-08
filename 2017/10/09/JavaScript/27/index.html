@@ -15,12 +15,12 @@
 <meta property="og:site_name" content="heptaluan&#39;s blog">
 <meta property="og:description" content="this 是 JavaScript 语言的一个关键字它代表函数运行时，自动生成的一个内部对象，只能在函数内部使用 随着函数使用场合的不同，this 的值会发生变化，但是有一个总的原则，那就是 this 指向的是，调用函数的那个对象">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://pu5vc7wn3.bkt.clouddn.com/cover/27.jpg">
-<meta property="og:updated_time" content="2019-07-05T17:56:14.980Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/27.jpg">
+<meta property="og:updated_time" content="2019-07-08T13:20:05.194Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的 this">
 <meta name="twitter:description" content="this 是 JavaScript 语言的一个关键字它代表函数运行时，自动生成的一个内部对象，只能在函数内部使用 随着函数使用场合的不同，this 的值会发生变化，但是有一个总的原则，那就是 this 指向的是，调用函数的那个对象">
-<meta name="twitter:image" content="http://pu5vc7wn3.bkt.clouddn.com/cover/27.jpg">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/27.jpg">
 
 
 
@@ -28,7 +28,7 @@
 
 
 
-<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/backups/favicon.ico">
+<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/favicon.ico">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -147,7 +147,7 @@
     
     <div class="card-image">
         <span class="image is-7by1">
-            <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/27.jpg" alt="JavaScript 中的 this">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/27.jpg" alt="JavaScript 中的 this">
         </span>
     </div>
     
@@ -199,12 +199,12 @@
 
 <h2 id="纯粹的函数调用"><a href="#纯粹的函数调用" class="headerlink" title="纯粹的函数调用"></a>纯粹的函数调用</h2><p>函数也可以直接被调用，此时 <code>this</code> 绑定到全局对象，在浏览器中，<code>window</code> 就是该全局对象（<code>Node.js</code> 中为 <code>Global</code>）</p>
 <p>比如下面的例子，函数被调用时，<code>this</code> 被绑定到全局对象，接下来执行赋值语句，相当于隐式的声明了一个全局变量，这显然不是调用者希望的</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">makeNoSense</span>(<span class="hljs-params">x</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.x = x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">makeNoSense(<span class="hljs-number">5</span>);</span><br><span class="line">x;  <span class="hljs-comment">// x 已经成为一个值为 5 的全局变量</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">makeNoSense</span>(<span class="hljs-params">x</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.x = x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">makeNoSense(<span class="hljs-number">5</span>);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// x 已经成为一个值为 5 的全局变量</span></span><br><span class="line">x;</span><br></pre></td></tr></table></figure>
 
 <p>对于内部函数，即声明在另外一个函数体内的函数，这种绑定到全局对象的方式会产生另外一个问题</p>
 <p>我们仍然以前面提到的 <code>point</code> 对象为例，这次我们希望在 <code>moveTo</code> 方法内定义两个函数，分别将 <code>x</code>，<code>y</code> 坐标进行平移</p>
 <p>结果可能出乎大家意料，不仅 <code>point</code> 对象没有移动，反而多出两个全局变量 <code>x</code>，<code>y</code></p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> point = &#123;</span><br><span class="line">  x: <span class="hljs-number">0</span>,</span><br><span class="line">  y: <span class="hljs-number">0</span>,</span><br><span class="line">  moveTo: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// 内部函数</span></span><br><span class="line">    <span class="hljs-keyword">var</span> moveX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.x = x;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 内部函数</span></span><br><span class="line">    <span class="hljs-keyword">var</span> moveY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">y</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.y = y;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    moveX(x);</span><br><span class="line">    moveY(y);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">point.moveTo(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>);</span><br><span class="line"></span><br><span class="line">point.x; <span class="hljs-comment">// ==&gt;0 </span></span><br><span class="line">point.y; <span class="hljs-comment">// ==&gt;0 </span></span><br><span class="line"></span><br><span class="line">x; <span class="hljs-comment">// ==&gt;1 </span></span><br><span class="line">y; <span class="hljs-comment">// ==&gt;1</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> point = &#123;</span><br><span class="line">  x: <span class="hljs-number">0</span>,</span><br><span class="line">  y: <span class="hljs-number">0</span>,</span><br><span class="line">  moveTo: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-comment">// 内部函数</span></span><br><span class="line">    <span class="hljs-keyword">var</span> moveX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.x = x;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 内部函数</span></span><br><span class="line">    <span class="hljs-keyword">var</span> moveY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">y</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.y = y;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    moveX(x);</span><br><span class="line">    moveY(y);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">point.moveTo(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>);</span><br><span class="line"></span><br><span class="line">point.x; <span class="hljs-comment">// ==&gt;0 </span></span><br><span class="line">point.y; <span class="hljs-comment">// ==&gt;0 </span></span><br><span class="line"></span><br><span class="line">x; <span class="hljs-comment">// ==&gt;1 </span></span><br><span class="line">y; <span class="hljs-comment">// ==&gt;1</span></span><br></pre></td></tr></table></figure>
 
 <p>内部函数中的 <code>this</code> 成为全局的了，为了规避这一设计缺陷，一般使用变量替代的方法，该变量常被命名为 <code>that/_this/self</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> point = &#123;</span><br><span class="line">  x: <span class="hljs-number">0</span>,</span><br><span class="line">  y: <span class="hljs-number">0</span>,</span><br><span class="line">  moveTo: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;</span><br><span class="line">    <span class="hljs-comment">// 内部函数</span></span><br><span class="line">    <span class="hljs-keyword">var</span> moveX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x</span>) </span>&#123;</span><br><span class="line">      that.x = x;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="hljs-comment">// 内部函数</span></span><br><span class="line">    <span class="hljs-keyword">var</span> moveY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">y</span>) </span>&#123;</span><br><span class="line">      that.y = y;</span><br><span class="line">    &#125;</span><br><span class="line">    moveX(x);</span><br><span class="line">    moveY(y);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">point.moveTo(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>);</span><br><span class="line"></span><br><span class="line">point.x; <span class="hljs-comment">// ==&gt;1 </span></span><br><span class="line">point.y; <span class="hljs-comment">// ==&gt;1</span></span><br></pre></td></tr></table></figure>
@@ -353,7 +353,7 @@
                     
                     
                     <p class="is-size-6 is-block">
-                        GALLOWS BELL.
+                        white lie.
                     </p>
                     
                     
@@ -554,7 +554,7 @@
             
             <a href="/2019/07/05/Node/06/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/06.jpg" alt="libuv">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/06.jpg" alt="libuv">
                 </p>
             </a>
             
@@ -573,7 +573,7 @@
             
             <a href="/2019/06/28/JavaScript/42/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/42.jpg" alt="遍历对象的几种方法">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/42.jpg" alt="遍历对象的几种方法">
                 </p>
             </a>
             
@@ -592,7 +592,7 @@
             
             <a href="/2019/06/16/React/14/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/14.jpg" alt="applyMiddleware(...middlewares)">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/14.jpg" alt="applyMiddleware(...middlewares)">
                 </p>
             </a>
             
@@ -611,7 +611,7 @@
             
             <a href="/2019/06/12/React/13/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/13.jpg" alt="中间件的洋葱模型">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/13.jpg" alt="中间件的洋葱模型">
                 </p>
             </a>
             
@@ -630,7 +630,7 @@
             
             <a href="/2019/06/08/React/12/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/12.jpg" alt="createStore()">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/12.jpg" alt="createStore()">
                 </p>
             </a>
             

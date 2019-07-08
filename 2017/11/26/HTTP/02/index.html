@@ -15,12 +15,12 @@
 <meta property="og:site_name" content="heptaluan&#39;s blog">
 <meta property="og:description" content="这篇在跟着学习 node-lessons 过程中遇到的一些问题整合而成">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://pu5vc7wn3.bkt.clouddn.com/cover/02.jpg">
-<meta property="og:updated_time" content="2019-07-05T17:56:14.971Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/02.jpg">
+<meta property="og:updated_time" content="2019-07-08T13:23:40.900Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="session 和 cookie">
 <meta name="twitter:description" content="这篇在跟着学习 node-lessons 过程中遇到的一些问题整合而成">
-<meta name="twitter:image" content="http://pu5vc7wn3.bkt.clouddn.com/cover/02.jpg">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/02.jpg">
 
 
 
@@ -28,7 +28,7 @@
 
 
 
-<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/backups/favicon.ico">
+<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/favicon.ico">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -147,7 +147,7 @@
     
     <div class="card-image">
         <span class="image is-7by1">
-            <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/02.jpg" alt="session 和 cookie">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/02.jpg" alt="session 和 cookie">
         </span>
     </div>
     
@@ -165,7 +165,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    21 分钟 读完 (大约 3216 个字)
+                    22 分钟 读完 (大约 3225 个字)
                 </span>
                 
                 
@@ -250,12 +250,18 @@
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>);</span><br><span class="line"><span class="hljs-keyword">var</span> session = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express-session'</span>);</span><br><span class="line"><span class="hljs-keyword">var</span> redisStore = <span class="hljs-built_in">require</span>(<span class="hljs-string">'connect-redis'</span>)(session);</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> app = express();</span><br><span class="line">app.listen(<span class="hljs-number">5000</span>);</span><br><span class="line"></span><br><span class="line">app.use(session(&#123;</span><br><span class="line">  <span class="hljs-comment">// 假如你不想使用 redis 而想要使用 memcached 的话，代码改动也不会超过 5 行</span></span><br><span class="line">  <span class="hljs-comment">// 这些 store 都遵循着统一的接口，凡是实现了那些接口的库，都可以作为 session 的 store 使用</span></span><br><span class="line">  <span class="hljs-comment">// 比如都需要实现 .get(keyString) 和 .set(keyString, value) 方法</span></span><br><span class="line">  <span class="hljs-comment">// 编写自己的 store 也很简单</span></span><br><span class="line">  store: <span class="hljs-keyword">new</span> redisStore(),</span><br><span class="line">  secret: <span class="hljs-string">'somesecrettoken'</span></span><br><span class="line">&#125;));</span><br><span class="line"></span><br><span class="line">app.get(<span class="hljs-string">'/'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (req.session.isVisit) &#123;</span><br><span class="line">    req.session.isVisit++;</span><br><span class="line">    res.send(<span class="hljs-string">'&lt;p&gt;第 '</span> + req.session.isVisit + <span class="hljs-string">'次来到此页面&lt;/p&gt;'</span>);</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    req.session.isVisit = <span class="hljs-number">1</span>;</span><br><span class="line">    res.send(<span class="hljs-string">'欢迎第一次来这里'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
 <p>我们可以运行 <code>redis-cli</code> 查看结果，如图可以看到 <code>redis</code> 中缓存结果</p>
-<img width="648" alt="cookiesession" src="https://user-images.githubusercontent.com/18285736/50634480-c6196500-0f89-11e9-87e3-bec9bcfda6bf.png">
-
-
-
-
-<h2 id="各种存储的利弊"><a href="#各种存储的利弊" class="headerlink" title="各种存储的利弊"></a>各种存储的利弊</h2><p>上面我们说到，<code>session</code> 的 <code>store</code> 有四个常用选项：1）<code>内存</code> 2）<code>cookie</code> 3）<code>缓存</code> 4）<code>数据库</code></p>
+<p><img src="https://user-images.githubusercontent.com/18285736/50634480-c6196500-0f89-11e9-87e3-bec9bcfda6bf.png" alt></p>
+<h2 id="各种存储的利弊"><a href="#各种存储的利弊" class="headerlink" title="各种存储的利弊"></a>各种存储的利弊</h2><p>上面我们说到，<code>session</code> 的 <code>store</code> 有四个常用选项：</p>
+<ol>
+<li><p>内存</p>
+</li>
+<li><p><code>cookie</code></p>
+</li>
+<li><p>缓存 </p>
+</li>
+<li><p>数据库</p>
+</li>
+</ol>
 <p>其中，开发环境存内存就好了，一般的小程序为了省事，如果不涉及状态共享的问题，用内存 <code>session</code> 也没问题，但内存 <code>session</code> 除了省事之外，没有别的好处</p>
 <p><code>cookie session</code> 我们下面会提到，现在说说利弊，用 <code>cookie session</code> 的话，是不用担心状态共享问题的，因为 <code>session</code> 的 <code>data</code> 不是由服务器来保存，而是保存在用户浏览器端，每次用户访问时，都会主动带上他自己的信息，当然在这里，安全性之类的，只要遵照最佳实践来，也是有保证的，它的弊端是增大了数据量传输，利端是方便</p>
 <p>缓存方式是最常用的方式了，即快，又能共享状态，相比 <code>cookie session</code> 来说，当 <code>session data</code> 比较大的时候，可以节省网络传输，推荐使用</p>
@@ -381,7 +387,7 @@
                     
                     
                     <p class="is-size-6 is-block">
-                        GALLOWS BELL.
+                        white lie.
                     </p>
                     
                     
@@ -582,7 +588,7 @@
             
             <a href="/2019/07/05/Node/06/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/06.jpg" alt="libuv">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/06.jpg" alt="libuv">
                 </p>
             </a>
             
@@ -601,7 +607,7 @@
             
             <a href="/2019/06/28/JavaScript/42/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/42.jpg" alt="遍历对象的几种方法">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/42.jpg" alt="遍历对象的几种方法">
                 </p>
             </a>
             
@@ -620,7 +626,7 @@
             
             <a href="/2019/06/16/React/14/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/14.jpg" alt="applyMiddleware(...middlewares)">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/14.jpg" alt="applyMiddleware(...middlewares)">
                 </p>
             </a>
             
@@ -639,7 +645,7 @@
             
             <a href="/2019/06/12/React/13/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/13.jpg" alt="中间件的洋葱模型">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/13.jpg" alt="中间件的洋葱模型">
                 </p>
             </a>
             
@@ -658,7 +664,7 @@
             
             <a href="/2019/06/08/React/12/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/12.jpg" alt="createStore()">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/12.jpg" alt="createStore()">
                 </p>
             </a>
             

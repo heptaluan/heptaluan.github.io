@@ -15,12 +15,12 @@
 <meta property="og:site_name" content="heptaluan&#39;s blog">
 <meta property="og:description" content="先来小小的回顾一下，再来看看继承相关问题 每一个构造函数都有一个属性叫做 prototype，指向一个对象，当这个构造函数被 new 的时候，它的每一个实例的 __proto__ 属性都会指向这个属性 每一个函数天生都有 prototype 属性，指向一个空对象，也就是说，不需要去手动的定义这个属性">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://pu5vc7wn3.bkt.clouddn.com/cover/28.jpg">
-<meta property="og:updated_time" content="2019-07-05T17:56:14.980Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/28.jpg">
+<meta property="og:updated_time" content="2019-07-08T13:30:52.888Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="原型链和继承">
 <meta name="twitter:description" content="先来小小的回顾一下，再来看看继承相关问题 每一个构造函数都有一个属性叫做 prototype，指向一个对象，当这个构造函数被 new 的时候，它的每一个实例的 __proto__ 属性都会指向这个属性 每一个函数天生都有 prototype 属性，指向一个空对象，也就是说，不需要去手动的定义这个属性">
-<meta name="twitter:image" content="http://pu5vc7wn3.bkt.clouddn.com/cover/28.jpg">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/28.jpg">
 
 
 
@@ -28,7 +28,7 @@
 
 
 
-<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/backups/favicon.ico">
+<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/favicon.ico">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -147,7 +147,7 @@
     
     <div class="card-image">
         <span class="image is-7by1">
-            <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/28.jpg" alt="原型链和继承">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/28.jpg" alt="原型链和继承">
         </span>
     </div>
     
@@ -165,7 +165,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    16 分钟 读完 (大约 2329 个字)
+                    15 分钟 读完 (大约 2322 个字)
                 </span>
                 
                 
@@ -250,7 +250,7 @@
 
 <p>说起来也会存在一些小问题，这样一来相当于直接运行了一遍 <code>father</code>（new 的作用），如果在 <code>father</code> 里做了一些其他事情（比如改变全局变量等）就会造成一些副作用</p>
 <p>所以如果要实现继承的话，推荐使用 <code>Object.create(...)</code></p>
-<h2 id="一个原型继承的综合实例"><a href="#一个原型继承的综合实例" class="headerlink" title="一个原型继承的综合实例"></a>一个原型继承的综合实例</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// Person 类</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Person</span> (<span class="hljs-params">name, age</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.name = name;</span><br><span class="line">  <span class="hljs-keyword">this</span>.age = age;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.hi = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.name + <span class="hljs-keyword">this</span>.age);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.LEGS_NUM = <span class="hljs-number">2</span>;</span><br><span class="line">Person.prototype.ARMS_NUM = <span class="hljs-number">2</span>;</span><br><span class="line"></span><br><span class="line">Person.prototype.walk = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'walk'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// Student 类</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Student</span> (<span class="hljs-params">age, name, className</span>) </span>&#123;</span><br><span class="line">  Person.call(<span class="hljs-keyword">this</span>, age, name);</span><br><span class="line">  <span class="hljs-keyword">this</span>.className = className;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 使用 Object.create 来得到以 Person.prototype 做为原型的一个空对象</span></span><br><span class="line">Student.prototype = <span class="hljs-built_in">Object</span>.create(Person.prototype);</span><br><span class="line">Student.prototype.constructor = Student;</span><br></pre></td></tr></table></figure>
+<h2 id="综合实例"><a href="#综合实例" class="headerlink" title="综合实例"></a>综合实例</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// Person 类</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Person</span> (<span class="hljs-params">name, age</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.name = name;</span><br><span class="line">  <span class="hljs-keyword">this</span>.age = age;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.hi = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.name + <span class="hljs-keyword">this</span>.age);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.LEGS_NUM = <span class="hljs-number">2</span>;</span><br><span class="line">Person.prototype.ARMS_NUM = <span class="hljs-number">2</span>;</span><br><span class="line"></span><br><span class="line">Person.prototype.walk = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'walk'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// Student 类</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Student</span> (<span class="hljs-params">age, name, className</span>) </span>&#123;</span><br><span class="line">  Person.call(<span class="hljs-keyword">this</span>, age, name);</span><br><span class="line">  <span class="hljs-keyword">this</span>.className = className;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 使用 Object.create 来得到以 Person.prototype 做为原型的一个空对象</span></span><br><span class="line">Student.prototype = <span class="hljs-built_in">Object</span>.create(Person.prototype);</span><br><span class="line">Student.prototype.constructor = Student;</span><br></pre></td></tr></table></figure>
 
 <h4 id="添加自己新的方法来覆盖-Person-上的方法"><a href="#添加自己新的方法来覆盖-Person-上的方法" class="headerlink" title="添加自己新的方法来覆盖 Person 上的方法"></a>添加自己新的方法来覆盖 Person 上的方法</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Student.prototype.hi = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.name + <span class="hljs-keyword">this</span>.age + <span class="hljs-keyword">this</span>.className);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 添加自己新的方法</span></span><br><span class="line">Student.prototype.learn = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">subject</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.name + subject + <span class="hljs-keyword">this</span>.className);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// test</span></span><br><span class="line"><span class="hljs-keyword">var</span> man = <span class="hljs-keyword">new</span> Student(<span class="hljs-string">'name'</span>,<span class="hljs-number">20</span>,<span class="hljs-string">'Class 3 , Grade 2'</span>);</span><br><span class="line"></span><br><span class="line">man.hi();         <span class="hljs-comment">// name 20 Class 3 , Grade 2</span></span><br><span class="line">man.LEGS_NUM;     <span class="hljs-comment">// 2</span></span><br><span class="line"></span><br><span class="line">man.walk();       <span class="hljs-comment">// walk</span></span><br><span class="line">man.learn(<span class="hljs-string">'math'</span>) <span class="hljs-comment">// man math Class 3 , Grade 2</span></span><br></pre></td></tr></table></figure>
 
@@ -261,7 +261,8 @@
 <p>但是如果修改整个 <code>prototype</code> 赋值为新的对象的话，新的实例是不会修改的，但是会影响后续的实例</p>
 <h2 id="几种实现继承方式的优缺点"><a href="#几种实现继承方式的优缺点" class="headerlink" title="几种实现继承方式的优缺点"></a>几种实现继承方式的优缺点</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Person</span> (<span class="hljs-params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Student</span> (<span class="hljs-params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">Student.prototype = Person.prototype; </span><br><span class="line"><span class="hljs-comment">// 1  在改变 Student 的同时，也改变了 Person，不推荐</span></span><br><span class="line"></span><br><span class="line">Student.prototype = <span class="hljs-keyword">new</span> Person(); </span><br><span class="line"><span class="hljs-comment">// 2 也可以实现继承，但是 Student 只是一个类，还没有实例化，只是为了继承，而调用构造函数</span></span><br><span class="line"></span><br><span class="line">Student.prototype = <span class="hljs-built_in">Object</span>.create(Person.prototype);</span><br><span class="line"><span class="hljs-comment">// 3 相对来说比较妥当的，自己的修改不会影响到原型链，ES5 之后才实现</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES5之前的话，可以判断一下</span></span><br><span class="line"><span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Object</span>.create) &#123;</span><br><span class="line">  <span class="hljs-built_in">Object</span>.create = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">proto</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">F</span>(<span class="hljs-params"></span>) </span>&#123;&#125;</span><br><span class="line">    F.prototype = proto;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> F;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="调用子类方法"><a href="#调用子类方法" class="headerlink" title="调用子类方法"></a>调用子类方法</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Person</span> (<span class="hljs-params">name</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.name = name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Student</span> (<span class="hljs-params">name, className</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.className = className;</span><br><span class="line">  Person.call(<span class="hljs-keyword">this</span>, name);    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// test</span></span><br><span class="line"><span class="hljs-keyword">var</span> man = <span class="hljs-keyword">new</span> Student(<span class="hljs-string">'man'</span>,<span class="hljs-string">'abc'</span>);</span><br><span class="line">man; <span class="hljs-comment">// Student&#123;className: 'abc', name: 'man'&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 若子类的方法覆盖了基类的方法</span></span><br><span class="line">Person.prototype.init = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line">Student.prototype.init = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// do something...</span></span><br><span class="line">  Person.prototype.init.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用子类方法</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Person</span> (<span class="hljs-params">name</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.name = name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Student</span> (<span class="hljs-params">name, className</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.className = className;</span><br><span class="line">  Person.call(<span class="hljs-keyword">this</span>, name);    </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// test</span></span><br><span class="line"><span class="hljs-keyword">var</span> man = <span class="hljs-keyword">new</span> Student(<span class="hljs-string">'man'</span>,<span class="hljs-string">'abc'</span>);</span><br><span class="line">man; <span class="hljs-comment">// Student&#123;className: 'abc', name: 'man'&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 若子类的方法覆盖了基类的方法</span></span><br><span class="line">Person.prototype.init = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;&#125;;</span><br><span class="line"></span><br><span class="line">Student.prototype.init = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// do something...</span></span><br><span class="line">  Person.prototype.init.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
         </div>
@@ -354,7 +355,7 @@
                     
                     
                     <p class="is-size-6 is-block">
-                        GALLOWS BELL.
+                        white lie.
                     </p>
                     
                     
@@ -447,9 +448,9 @@
         <span class="has-mr-6">1.7</span>
         <span>总结</span>
         </a></li></ul></li><li>
-        <a class="is-flex" href="#一个原型继承的综合实例">
+        <a class="is-flex" href="#综合实例">
         <span class="has-mr-6">2</span>
-        <span>一个原型继承的综合实例</span>
+        <span>综合实例</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#添加自己新的方法来覆盖-Person-上的方法">
         <span class="has-mr-6">2.1</span>
@@ -466,11 +467,7 @@
         <a class="is-flex" href="#几种实现继承方式的优缺点">
         <span class="has-mr-6">3</span>
         <span>几种实现继承方式的优缺点</span>
-        </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#调用子类方法">
-        <span class="has-mr-6">3.1</span>
-        <span>调用子类方法</span>
-        </a></li></ul></li></ul>
+        </a></li></ul>
         </div>
     </div>
 </div>
@@ -575,7 +572,7 @@
             
             <a href="/2019/07/05/Node/06/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/06.jpg" alt="libuv">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/06.jpg" alt="libuv">
                 </p>
             </a>
             
@@ -594,7 +591,7 @@
             
             <a href="/2019/06/28/JavaScript/42/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/42.jpg" alt="遍历对象的几种方法">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/42.jpg" alt="遍历对象的几种方法">
                 </p>
             </a>
             
@@ -613,7 +610,7 @@
             
             <a href="/2019/06/16/React/14/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/14.jpg" alt="applyMiddleware(...middlewares)">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/14.jpg" alt="applyMiddleware(...middlewares)">
                 </p>
             </a>
             
@@ -632,7 +629,7 @@
             
             <a href="/2019/06/12/React/13/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/13.jpg" alt="中间件的洋葱模型">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/13.jpg" alt="中间件的洋葱模型">
                 </p>
             </a>
             
@@ -651,7 +648,7 @@
             
             <a href="/2019/06/08/React/12/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/12.jpg" alt="createStore()">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cover/12.jpg" alt="createStore()">
                 </p>
             </a>
             
