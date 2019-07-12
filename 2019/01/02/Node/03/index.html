@@ -16,7 +16,7 @@
 <meta property="og:description" content="SuperAgent 是 node.js 里一个非常方便的客户端请求代理模块，当你想处理 get，post，put，delete，head 请求时，你就应该想起该用它了">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/03.jpg">
-<meta property="og:updated_time" content="2019-07-10T03:25:09.251Z">
+<meta property="og:updated_time" content="2019-07-12T07:58:00.368Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="SuperAgent 模块">
 <meta name="twitter:description" content="SuperAgent 是 node.js 里一个非常方便的客户端请求代理模块，当你想处理 get，post，put，delete，head 请求时，你就应该想起该用它了">
@@ -258,7 +258,7 @@
 <p><code>res.body</code> 跟请求数据自动序列化一样，响应数据也会自动的解析，当为一个 <code>Content-Type</code> 定义一个解析器后，就能自动解析，默认解析包含 <code>application/json</code> 和 <code>application/x-www-form-urlencoded</code>，可以通过访问 <code>res.body</code> 来访问解析对象</p>
 <p><code>res.header</code> 包含解析之后的响应头数据，键值都是 <code>node</code> 处理成小写字母形式，比如 <code>res.header[&#39;content-length&#39;]</code></p>
 <p><code>res.type</code> <code>Content-Type</code> 响应头字段是一个特列，服务器提供 <code>res.type</code> 来访问它，默认 <code>res.charset</code> 是空的,如果有的话，则自动填充，例如 <code>Content-Type</code> 值为 <code>text/html; charset = utf8</code>，则 <code>res.type</code> 为 <code>text/html</code>，<code>res.charst</code> 为 <code>utf8</code></p>
-<h2 id="利用-SuperAgent-完成一个简单的爬虫"><a href="#利用-SuperAgent-完成一个简单的爬虫" class="headerlink" title="利用 SuperAgent 完成一个简单的爬虫"></a>利用 SuperAgent 完成一个简单的爬虫</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">"express"</span>);</span><br><span class="line"><span class="hljs-keyword">var</span> superagent = <span class="hljs-built_in">require</span>(<span class="hljs-string">"superagent"</span>);</span><br><span class="line"><span class="hljs-keyword">var</span> cheerio = <span class="hljs-built_in">require</span>(<span class="hljs-string">"cheerio"</span>);</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line">app.get(<span class="hljs-string">"/"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 用 superagent 去抓取 https://cnodejs.org 的内容</span></span><br><span class="line">  superagent.get(<span class="hljs-string">"https://cnodejs.org"</span>)</span><br><span class="line">    .end(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, sres</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (err) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> next(err);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="hljs-comment">// sres.text 里面存储着网页的 html 内容，将它传给 cheerio.load 之后</span></span><br><span class="line">      <span class="hljs-comment">// 就可以得到一个实现了 jquery 接口的变量，我们习惯性的将它命名为 "$"</span></span><br><span class="line"></span><br><span class="line">      <span class="hljs-keyword">var</span> $ = cheerio.load(sres.text);</span><br><span class="line">      <span class="hljs-keyword">var</span> items = [];</span><br><span class="line">      $(<span class="hljs-string">'#topic_list .topic_title'</span>).each(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index, element</span>) </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">var</span> $element = $(element);</span><br><span class="line">        <span class="hljs-keyword">var</span> $author = $(<span class="hljs-string">".user_avatar img"</span>);</span><br><span class="line">        items.push(&#123;</span><br><span class="line">          title: $element.attr(<span class="hljs-string">"title"</span>),</span><br><span class="line">          href: $element.attr(<span class="hljs-string">"href"</span>),</span><br><span class="line">          author: $author.attr(<span class="hljs-string">"title"</span>)</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">      res.send(items)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.listen(<span class="hljs-string">"3000"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"app is running at port 3000"</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="利用-SuperAgent-完成一个简单的爬虫"><a href="#利用-SuperAgent-完成一个简单的爬虫" class="headerlink" title="利用 SuperAgent 完成一个简单的爬虫"></a>利用 SuperAgent 完成一个简单的爬虫</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">"express"</span>);</span><br><span class="line"><span class="hljs-keyword">var</span> superagent = <span class="hljs-built_in">require</span>(<span class="hljs-string">"superagent"</span>);</span><br><span class="line"><span class="hljs-keyword">var</span> cheerio = <span class="hljs-built_in">require</span>(<span class="hljs-string">"cheerio"</span>);</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> app = express();</span><br><span class="line"></span><br><span class="line">app.get(<span class="hljs-string">"/"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res, next</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 用 superagent 去抓取 https://cnodejs.org 的内容</span></span><br><span class="line">  superagent.get(<span class="hljs-string">"https://cnodejs.org"</span>)</span><br><span class="line">    .end(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, sres</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (err) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> next(err);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="hljs-comment">// sres.text 里面存储着网页的 html 内容，将它传给 cheerio.load 之后</span></span><br><span class="line">      <span class="hljs-comment">// 就可以得到一个实现了 jQuery 接口的变量，我们习惯性的将它命名为 "$"</span></span><br><span class="line"></span><br><span class="line">      <span class="hljs-keyword">var</span> $ = cheerio.load(sres.text);</span><br><span class="line">      <span class="hljs-keyword">var</span> items = [];</span><br><span class="line">      $(<span class="hljs-string">'#topic_list .topic_title'</span>).each(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index, element</span>) </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">var</span> $element = $(element);</span><br><span class="line">        <span class="hljs-keyword">var</span> $author = $(<span class="hljs-string">".user_avatar img"</span>);</span><br><span class="line">        items.push(&#123;</span><br><span class="line">          title: $element.attr(<span class="hljs-string">"title"</span>),</span><br><span class="line">          href: $element.attr(<span class="hljs-string">"href"</span>),</span><br><span class="line">          author: $author.attr(<span class="hljs-string">"title"</span>)</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">      res.send(items)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.listen(<span class="hljs-string">"3000"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"app is running at port 3000"</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
 <p>完善一下上面的例子，使用 <code>eventproxy</code> 控制并发</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> eventproxy = <span class="hljs-built_in">require</span>(<span class="hljs-string">"eventproxy"</span>);</span><br><span class="line"><span class="hljs-keyword">var</span> superagent = <span class="hljs-built_in">require</span>(<span class="hljs-string">"superagent"</span>);</span><br><span class="line"><span class="hljs-keyword">var</span> cheerio = <span class="hljs-built_in">require</span>(<span class="hljs-string">"cheerio"</span>);</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> url = <span class="hljs-built_in">require</span>(<span class="hljs-string">"url"</span>);</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> cnodeUrl = <span class="hljs-string">'https://cnodejs.org/'</span>;</span><br><span class="line"></span><br><span class="line">superagent.get(cnodeUrl).end(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, res</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (err) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-built_in">console</span>.error(err);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">var</span> topicUrls = [];</span><br><span class="line">  <span class="hljs-keyword">var</span> $ = cheerio.load(res.text);</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 获取首页所有链接</span></span><br><span class="line">  $(<span class="hljs-string">"#topic_list .topic_title"</span>).each(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index, element</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> $element = $(element);</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// href 原本是 /topic/542acd7d5d28233425538b04</span></span><br><span class="line">    <span class="hljs-comment">// 利用 url.resolve(from, to) 拼接成完整的 'https://cnodejs.org/topic/581b0c4ebb9452c9052e7acb'</span></span><br><span class="line">    <span class="hljs-keyword">var</span> href = url.resolve(cnodeUrl, $element.attr(<span class="hljs-string">"href"</span>));</span><br><span class="line">    topicUrls.push(href);</span><br><span class="line"></span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 得到 topicUrls 之后</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 创建一个 eventproxy 的实例</span></span><br><span class="line">  <span class="hljs-keyword">var</span> ep = <span class="hljs-keyword">new</span> eventproxy();</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 命令 ep 重复监听 topicUrls.length 次（在这里也就是 40 次） `topic_html` 事件再行动</span></span><br><span class="line">  ep.after(<span class="hljs-string">'topic_html'</span>, topicUrls.length, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">topics</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// topics 是个数组，包含了 40 次 ep.emit('topic_html', pair) 中的那 40 个 pair</span></span><br><span class="line"></span><br><span class="line">    topics = topics.map(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">topicPair</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">var</span> topicUrl = topicPair[<span class="hljs-number">0</span>];</span><br><span class="line">      <span class="hljs-keyword">var</span> topicHtml = topicPair[<span class="hljs-number">1</span>];</span><br><span class="line">      <span class="hljs-keyword">var</span> $ = cheerio.load(topicHtml);</span><br><span class="line">      <span class="hljs-keyword">return</span> (&#123;</span><br><span class="line">        title: $(<span class="hljs-string">'.topic_full_title'</span>).text().trim(),</span><br><span class="line">        href: topicUrl,</span><br><span class="line">        comment1: $(<span class="hljs-string">'.reply_content'</span>).eq(<span class="hljs-number">0</span>).text().trim(),</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'final:'</span>);</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(topics);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  topicUrls.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">topicUrl</span>) </span>&#123;</span><br><span class="line">    superagent.get(topicUrl)</span><br><span class="line">      .end(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, res</span>) </span>&#123;</span><br><span class="line">        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'fetch '</span> + topicUrl + <span class="hljs-string">' successful'</span>);</span><br><span class="line">        ep.emit(<span class="hljs-string">'topic_html'</span>, [topicUrl, res.text]);</span><br><span class="line">      &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
@@ -373,7 +373,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        105
+                        112
                     </p>
                 </div>
             </div>
@@ -383,7 +383,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        7
+                        8
                     </p>
                 </div>
             </div>
@@ -393,7 +393,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        7
+                        8
                     </p>
                 </div>
             </div>
@@ -486,7 +486,7 @@
                 <span class="level-item">Angular</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">12</span>
+                <span class="level-item tag">13</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/CSS/">
@@ -494,7 +494,7 @@
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">11</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTTP/">
@@ -510,7 +510,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">44</span>
+                <span class="level-item tag">46</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -536,6 +536,14 @@
             <span class="level-end">
                 <span class="level-item tag">14</span>
             </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/jQuery/">
+            <span class="level-start">
+                <span class="level-item">jQuery</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
         </a></li>
             </ul>
         </div>
@@ -548,7 +556,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 15px;">Angular</a> <a href="/tags/CSS/" style="font-size: 12.5px;">CSS</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.5px;">React</a> <a href="/tags/Vue/" style="font-size: 17.5px;">Vue</a>
+        <a href="/tags/Angular/" style="font-size: 16px;">Angular</a> <a href="/tags/CSS/" style="font-size: 14px;">CSS</a> <a href="/tags/HTTP/" style="font-size: 12px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 12px;">Node.js</a> <a href="/tags/React/" style="font-size: 18px;">React</a> <a href="/tags/Vue/" style="font-size: 18px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
     </div>
 </div>
 
@@ -562,6 +570,25 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/07/11/Angular/13/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/13.jpg" alt="Angular 中路由传递参数的几种方式">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-10T16:00:00.000Z">2019-07-11</time></div>
+                    <a href="/2019/07/11/Angular/13/" class="has-link-black-ter is-size-6">Angular 中路由传递参数的几种方式</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -639,25 +666,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/06/12/React/13/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/13.jpg" alt="中间件的洋葱模型">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-11T16:00:00.000Z">2019-06-12</time></div>
-                    <a href="/2019/06/12/React/13/" class="has-link-black-ter is-size-6">中间件的洋葱模型</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -676,7 +684,7 @@
                     <span class="level-item">七月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -709,7 +717,7 @@
                     <span class="level-item">四月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -808,7 +816,7 @@
                     <span class="level-item">六月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -874,7 +882,7 @@
                     <span class="level-item">十一月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -896,7 +904,7 @@
                     <span class="level-item">九月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -918,7 +926,7 @@
                     <span class="level-item">六月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -1016,14 +1024,14 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Angular/">
                         <span class="tag">Angular</span>
-                        <span class="tag is-grey">12</span>
+                        <span class="tag is-grey">13</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
@@ -1037,7 +1045,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">44</span>
+                        <span class="tag is-grey">46</span>
                     </a>
                 </div>
                 
@@ -1059,6 +1067,13 @@
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
                         <span class="tag is-grey">14</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/jQuery/">
+                        <span class="tag">jQuery</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
