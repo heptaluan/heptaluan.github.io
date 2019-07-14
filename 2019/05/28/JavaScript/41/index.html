@@ -16,7 +16,7 @@
 <meta property="og:description" content="最近看了 zepto 设计和源码分析 ，耳目一新，作者没有老套的去讲各个方法怎么实现的，能做些什么 而是讲了许多为什么源码要这样去设计，这样设计有什么好处，也分享了一些自己的看源码心得">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/41.jpg">
-<meta property="og:updated_time" content="2019-07-10T03:25:09.314Z">
+<meta property="og:updated_time" content="2019-07-14T09:16:28.507Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Zepto 架构设计">
 <meta name="twitter:description" content="最近看了 zepto 设计和源码分析 ，耳目一新，作者没有老套的去讲各个方法怎么实现的，能做些什么 而是讲了许多为什么源码要这样去设计，这样设计有什么好处，也分享了一些自己的看源码心得">
@@ -197,7 +197,7 @@
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">selector, context</span>)</span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> zepto.init(selector, context)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>它本身并没没有做什么具体的操作，而是直接返回了一个函数 <code>zepto.init(selector, context)</code></p>
-<p>查看源码可知，<code>init</code> 函数中添加了一系列判断来梳理 <code>selector</code> 参数的各种可能，然后根据不同条件下对 <code>dom</code> 变量进行赋值，最终，它将通过 <code>selector</code> 一起传递给 <code>zepto.Z</code> 函数并返回值</p>
+<p>查看源码可知，<code>init</code> 函数中添加了一系列判断来梳理 <code>selector</code> 参数的各种可能，然后根据不同条件下对 <code>DOM</code> 变量进行赋值，最终，它将通过 <code>selector</code> 一起传递给 <code>zepto.Z</code> 函数并返回值</p>
 <p>我们一条一条的来看</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">zepto.init = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">selector, context</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">var</span> dom</span><br><span class="line">  <span class="hljs-comment">// 如果 selector 为空（null，undefined...），即 $() 那么就直接返回一个空的 Zepto 对象</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (!selector) <span class="hljs-keyword">return</span> zepto.Z()</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 参数是 String 的情况（$('p')，$('&lt;div&gt;')）</span></span><br><span class="line">  <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> selector == <span class="hljs-string">'string'</span>) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 字符串的情况，一般有两种：</span></span><br><span class="line">    <span class="hljs-comment">// 第一，一段 html 代码，旨在通过 zepto 生成 dom 对象</span></span><br><span class="line">    <span class="hljs-comment">// 第二，一段查询字符串，旨在通过 zepto 查找 dom 对象</span></span><br><span class="line">    <span class="hljs-comment">// 将查询结果存储到 dom 变量中</span></span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 先剔除掉两边的空格</span></span><br><span class="line">    selector = selector.trim()</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// fragmentRE = /^\s*&lt;(\w+|!)[^&gt;]*&gt;/</span></span><br><span class="line">    <span class="hljs-comment">// 取出 html 代码中第一个 html 标签（或注释），如取出 &lt;p&gt;123&lt;/p&gt;&lt;h1&gt;345&lt;/h1&gt; 中的 &lt;p&gt;</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (selector[<span class="hljs-number">0</span>] == <span class="hljs-string">'&lt;'</span> &amp;&amp; fragmentRE.test(selector))</span><br><span class="line"></span><br><span class="line">      <span class="hljs-comment">// 第一，RegExp.$1 取出来的就是第一个标签名称，即正则中 (\w+|!) 对应的内容</span></span><br><span class="line">      <span class="hljs-comment">// 第二，此时的 context 应该传入的是 css 属性对象（这里会产生歧义，老版的不会传入 context）</span></span><br><span class="line">      dom = zepto.fragment(selector, <span class="hljs-built_in">RegExp</span>.$<span class="hljs-number">1</span>, context), selector = <span class="hljs-literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 如果 selector 不是 html 字符串标签，并且 context 有值，则从 context 中查找</span></span><br><span class="line">    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (context !== <span class="hljs-literal">undefined</span>) <span class="hljs-keyword">return</span> $(context).find(selector)</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 除了以上情况，就从整个 document 执行 qsa 的查找</span></span><br><span class="line">    <span class="hljs-comment">// qsa 就是 document.querySelectAll</span></span><br><span class="line">    <span class="hljs-keyword">else</span> dom = zepto.qsa(<span class="hljs-built_in">document</span>, selector)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 如果是函数，则放在 dom ready 时执行</span></span><br><span class="line">  <span class="hljs-comment">// 即 $(document).ready(function()&#123; ... &#125;)</span></span><br><span class="line">  <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isFunction(selector)) <span class="hljs-keyword">return</span> $(<span class="hljs-built_in">document</span>).ready(selector)</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 如果传入的参数本身就已经是 zepto 对象，则直接返回</span></span><br><span class="line">  <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (zepto.isZ(selector)) <span class="hljs-keyword">return</span> selector</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// compact 函数，剔除数组中 == null（undefined） 的元素</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (isArray(selector)) dom = compact(selector)</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 如果传入的是 object，直接强制塞进一个数组</span></span><br><span class="line">    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isObject(selector)) dom = [selector], selector = <span class="hljs-literal">null</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 从此往下，和上文 selector 是字符串的情况处理相同</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// fragmentRE.test 即判断字符串是否是 html 标签开头（即是否是 html fragement）</span></span><br><span class="line">    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (fragmentRE.test(selector))</span><br><span class="line"></span><br><span class="line">      <span class="hljs-comment">// 此时，context 也是属性集合，不是容器（这里会产生歧义，老版的不会传入 context）</span></span><br><span class="line">      <span class="hljs-comment">// 然后清空 selector 不妨碍下面的判断</span></span><br><span class="line">      dom = zepto.fragment(selector.trim(), <span class="hljs-built_in">RegExp</span>.$<span class="hljs-number">1</span>, context), selector = <span class="hljs-literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (context !== <span class="hljs-literal">undefined</span>) <span class="hljs-keyword">return</span> $(context).find(selector)</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">else</span> dom = zepto.qsa(<span class="hljs-built_in">document</span>, selector)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 最后通过 zepto.Z 创建了对象</span></span><br><span class="line">  <span class="hljs-comment">// 这里的 dom 其实就是一个数组</span></span><br><span class="line">  <span class="hljs-keyword">return</span> zepto.Z(dom, selector)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -325,7 +325,7 @@
                     
                     
                     <p class="is-size-6 is-block">
-                        white lie.
+                        GALLOWS BELL.
                     </p>
                     
                     
@@ -344,7 +344,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        112
+                        141
                     </p>
                 </div>
             </div>
@@ -354,7 +354,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        8
+                        10
                     </p>
                 </div>
             </div>
@@ -364,7 +364,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        8
+                        10
                     </p>
                 </div>
             </div>
@@ -425,7 +425,7 @@
                 <span class="level-item">Angular</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">13</span>
+                <span class="level-item tag">15</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/CSS/">
@@ -434,6 +434,14 @@
             </span>
             <span class="level-end">
                 <span class="level-item tag">11</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Essay/">
+            <span class="level-start">
+                <span class="level-item">Essay</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTTP/">
@@ -449,7 +457,15 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">46</span>
+                <span class="level-item tag">55</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/MySQL/">
+            <span class="level-start">
+                <span class="level-item">MySQL</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -457,7 +473,7 @@
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">6</span>
+                <span class="level-item tag">7</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -473,7 +489,7 @@
                 <span class="level-item">Vue</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">14</span>
+                <span class="level-item tag">15</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/jQuery/">
@@ -481,7 +497,7 @@
                 <span class="level-item">jQuery</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">9</span>
             </span>
         </a></li>
             </ul>
@@ -495,7 +511,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 16px;">Angular</a> <a href="/tags/CSS/" style="font-size: 14px;">CSS</a> <a href="/tags/HTTP/" style="font-size: 12px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 12px;">Node.js</a> <a href="/tags/React/" style="font-size: 18px;">React</a> <a href="/tags/Vue/" style="font-size: 18px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 18.57px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 11.43px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.43px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 12.86px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.14px;">React</a> <a href="/tags/Vue/" style="font-size: 18.57px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 14.29px;">jQuery</a>
     </div>
 </div>
 
@@ -588,18 +604,18 @@
         
         <article class="media">
             
-            <a href="/2019/06/16/React/14/" class="media-left">
+            <a href="/2019/06/22/Angular/14/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/14.jpg" alt="applyMiddleware(...middlewares)">
+                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/14.jpg" alt="Angular 属性绑定 [] 和 {{}} 的差异">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-15T16:00:00.000Z">2019-06-16</time></div>
-                    <a href="/2019/06/16/React/14/" class="has-link-black-ter is-size-6">applyMiddleware(...middlewares)</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-21T16:00:00.000Z">2019-06-22</time></div>
+                    <a href="/2019/06/22/Angular/14/" class="has-link-black-ter is-size-6">Angular 属性绑定 [] 和 {{}} 的差异</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
                     </p>
                 </div>
             </div>
@@ -634,7 +650,7 @@
                     <span class="level-item">六月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">8</span>
                 </span>
             </a>
         </li>
@@ -645,7 +661,7 @@
                     <span class="level-item">五月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -711,7 +727,7 @@
                     <span class="level-item">十一月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -777,7 +793,7 @@
                     <span class="level-item">四月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -788,7 +804,7 @@
                     <span class="level-item">三月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -810,7 +826,7 @@
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -832,7 +848,7 @@
                     <span class="level-item">十月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -843,7 +859,18 @@
                     <span class="level-item">九月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -854,7 +881,7 @@
                     <span class="level-item">七月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -865,7 +892,7 @@
                     <span class="level-item">六月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -963,7 +990,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Angular/">
                         <span class="tag">Angular</span>
-                        <span class="tag is-grey">13</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 
@@ -971,6 +998,13 @@
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
                         <span class="tag is-grey">11</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Essay/">
+                        <span class="tag">Essay</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -984,14 +1018,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">46</span>
+                        <span class="tag is-grey">55</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/MySQL/">
+                        <span class="tag">MySQL</span>
+                        <span class="tag is-grey">6</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">6</span>
+                        <span class="tag is-grey">7</span>
                     </a>
                 </div>
                 
@@ -1005,14 +1046,14 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
-                        <span class="tag is-grey">14</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/jQuery/">
                         <span class="tag">jQuery</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">9</span>
                     </a>
                 </div>
                 

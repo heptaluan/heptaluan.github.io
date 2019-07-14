@@ -16,7 +16,7 @@
 <meta property="og:description" content="我们先来看看 $(selector).each() 的使用">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/01.jpg">
-<meta property="og:updated_time" content="2019-07-12T08:06:45.380Z">
+<meta property="og:updated_time" content="2019-07-13T11:14:59.820Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jQuery.each 和 $(selector).each() 的区别">
 <meta name="twitter:description" content="我们先来看看 $(selector).each() 的使用">
@@ -165,7 +165,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    9 分钟 读完 (大约 1280 个字)
+                    9 分钟 读完 (大约 1320 个字)
                 </span>
                 
                 
@@ -194,7 +194,7 @@
 
 <h2 id="each-方法剖析"><a href="#each-方法剖析" class="headerlink" title="each 方法剖析"></a>each 方法剖析</h2><p>方法 <code>.each()</code> 遍历当前 <code>jQuery</code> 对象，并在每个元素上执行回调函数，每当回调函数执行时，会传递当前循环次数作为参数，循环次数从 <code>0</code> 开始计数</p>
 <p>更重要的是，<strong>回调函数是在当前元素为上下文的语境中触发的，即关键字 this 总是指向当前元素</strong>，在回调函数中返回 <code>false</code> 可以终止遍历</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//  jQuery.each 方法用于遍历一个数组或对象,并对当前遍历的元素进行处理  </span></span><br><span class="line"><span class="hljs-comment">//  jQuery.each 方法可以为处理函数增加附带的参数(带参数与不带参数的回调使用方法不完全一致)  </span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 静态方法 jQuery.each() 是一个通用的遍历迭代方法，用于无缝地遍历对象和数组</span></span><br><span class="line"><span class="hljs-comment">// 对于数组和含有 length 属性的类数组对象（如函数参数对象 arguments），该方法通过下标遍历，从 0 到 length-1</span></span><br><span class="line"><span class="hljs-comment">// 对于其他对象则通过属性名遍历（for-in），在遍历过程中，如果回调函数返回 false</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 总的来说就是：</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 1. 对于对象，通过 for-in 循环遍历属性名，对于数组或类数组对象，则通过 for 循环遍历下标</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 2. 如果传入了参数 args，使用 apply，执行回调函数时只传入一个参数 args</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 3. 如果未传入参数 args，使用 call，执行回调函数时传入两个参数：下标或属性名，对应的元素或属性值</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 关于参数 args：传给回调函数 callback 的参数数组，可选</span></span><br><span class="line"><span class="hljs-comment">// 如果没有传入参数 args，则执行回调函数时会传入两个参数（下标或属性名，对应的元素或属性值）</span></span><br><span class="line"><span class="hljs-comment">// 如果传入了参数 args，则只把该参数传给回调函数</span></span><br><span class="line">each: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">object, callback, args</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 当需要遍历的是一个对象时, name 变量用于记录对象的属性名   </span></span><br><span class="line">  <span class="hljs-keyword">var</span> name,</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 当需要遍历的是一个数组时, i 变量用于记录循环的数组下标   </span></span><br><span class="line">    i = <span class="hljs-number">0</span>,</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 遍历数组长度,当需要遍历的对象是一个数组时存储数组长度   </span></span><br><span class="line">    <span class="hljs-comment">// 如果需要遍历的是一个对象, 则 length === undefined   </span></span><br><span class="line">    length = object.length,</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 变量 isObj 表示参数 object 是对象还是数组，以便决定遍历方式</span></span><br><span class="line">    <span class="hljs-comment">// 如果 object.length 是 undefined 或 object 是函数，则认为 object 是对象，设置变量 isObj 为 true，将通过属性名遍历</span></span><br><span class="line">    <span class="hljs-comment">// 否则认为是数组或类数组对象，设置变量 isObj 为 false，将通过下标遍历</span></span><br><span class="line">    isObj = length === <span class="hljs-literal">undefined</span> || jQuery.isFunction(object);</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 回调函数具有附加参数时, 执行第一个分支   </span></span><br><span class="line">  <span class="hljs-comment">// if(!!args) &#123;   </span></span><br><span class="line">  <span class="hljs-keyword">if</span> (args) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 需要遍历的是一个对象   </span></span><br><span class="line">    <span class="hljs-keyword">if</span> (isObj) &#123;</span><br><span class="line"></span><br><span class="line">      <span class="hljs-comment">// 遍历对象属性, name 是对象的属性名,再函数顶部已声明 </span></span><br><span class="line">      <span class="hljs-keyword">for</span> (name <span class="hljs-keyword">in</span> object) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-comment">// 调用 callback 回调函数, 且回调函数的作用域表示为当前属性的值   </span></span><br><span class="line">        <span class="hljs-keyword">if</span> (callback.apply(object[name], args) === <span class="hljs-literal">false</span>) &#123;</span><br><span class="line"></span><br><span class="line">          <span class="hljs-comment">// 如果在 callback 回调函数中使用 return false; 则不执行下一次循环   </span></span><br><span class="line">          <span class="hljs-keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-comment">// 需要遍历的是一个数组   </span></span><br><span class="line">    <span class="hljs-keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">      <span class="hljs-comment">// 循环变量的自增在循环内部执行   </span></span><br><span class="line">      <span class="hljs-keyword">for</span> (; i &lt; length;) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-comment">// 调用 callback 函数, 与上面的 callback 调用一致   </span></span><br><span class="line">        <span class="hljs-comment">// 此处 callback 函数中的 this 指向当前数组元素   </span></span><br><span class="line">        <span class="hljs-comment">// 根据下标 i 依次执行</span></span><br><span class="line">        <span class="hljs-keyword">if</span> (callback.apply(object[i++], args) === <span class="hljs-literal">false</span>) &#123;</span><br><span class="line">          <span class="hljs-keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 回调函数没有附加参数时,执行第二个分支   </span></span><br><span class="line">  <span class="hljs-keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 需要遍历的是一个对象   </span></span><br><span class="line">    <span class="hljs-keyword">if</span> (isObj) &#123;</span><br><span class="line"></span><br><span class="line">      <span class="hljs-keyword">for</span> (name <span class="hljs-keyword">in</span> object) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-comment">// 调用 callback 回调函数   </span></span><br><span class="line">        <span class="hljs-comment">// 在不带参数的对象遍历中, 作用域表示为当前属性的值   </span></span><br><span class="line">        <span class="hljs-comment">// 且回调函数包含两个参数, 第一个数当前属性名, 第二个是当前属性值    </span></span><br><span class="line">        <span class="hljs-keyword">if</span> (callback.call(object[name], name, object[name]) === <span class="hljs-literal">false</span>) &#123;</span><br><span class="line"></span><br><span class="line">          <span class="hljs-comment">// 作用同上</span></span><br><span class="line">          <span class="hljs-keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-comment">// 需要遍历的是一个数组   </span></span><br><span class="line">    <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> value = object[<span class="hljs-number">0</span>]; i &lt; length &amp;&amp; callback.call(value, i, value) !== <span class="hljs-literal">false</span>; value = object[++i]) &#123;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 最后，返回传入的参数 object</span></span><br><span class="line">  <span class="hljs-comment">// 方法 .each() 调用 jQuery.each() 时，把当前 jQuery 对象作为参数 object 传入，这里返回该参数，以支持链式语法 </span></span><br><span class="line">  <span class="hljs-keyword">return</span> object;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//  jQuery.each 方法用于遍历一个数组或对象,并对当前遍历的元素进行处理  </span></span><br><span class="line"><span class="hljs-comment">//  jQuery.each 方法可以为处理函数增加附带的参数(带参数与不带参数的回调使用方法不完全一致)  </span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 静态方法 jQuery.each() 是一个通用的遍历迭代方法，用于无缝地遍历对象和数组</span></span><br><span class="line"><span class="hljs-comment">// 对于数组和含有 length 属性的类数组对象（如函数参数对象 arguments），该方法通过下标遍历，从 0 到 length-1</span></span><br><span class="line"><span class="hljs-comment">// 对于其他对象则通过属性名遍历（for-in），在遍历过程中，如果回调函数返回 false</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 总的来说就是：</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 1. 对于对象，通过 for-in 循环遍历属性名，对于数组或类数组对象，则通过 for 循环遍历下标</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 2. 如果传入了参数 args，使用 apply，执行回调函数时只传入一个参数 args</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 3. 如果未传入参数 args，使用 call，执行回调函数时传入两个参数：下标或属性名，对应的元素或属性值</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 关于参数 args：传给回调函数 callback 的参数数组，可选</span></span><br><span class="line"><span class="hljs-comment">// 如果没有传入参数 args，则执行回调函数时会传入两个参数（下标或属性名，对应的元素或属性值）</span></span><br><span class="line"><span class="hljs-comment">// 如果传入了参数 args，则只把该参数传给回调函数</span></span><br><span class="line">each: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">object, callback, args</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 当需要遍历的是一个对象时, name 变量用于记录对象的属性名   </span></span><br><span class="line">  <span class="hljs-keyword">var</span> name,</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 当需要遍历的是一个数组时, i 变量用于记录循环的数组下标   </span></span><br><span class="line">    i = <span class="hljs-number">0</span>,</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 遍历数组长度,当需要遍历的对象是一个数组时存储数组长度   </span></span><br><span class="line">    <span class="hljs-comment">// 如果需要遍历的是一个对象, 则 length === undefined   </span></span><br><span class="line">    length = object.length,</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 变量 isObj 表示参数 object 是对象还是数组，以便决定遍历方式</span></span><br><span class="line">    <span class="hljs-comment">// 如果 object.length 是 undefined 或 object 是函数，则认为 object 是对象，设置变量 isObj 为 true，将通过属性名遍历</span></span><br><span class="line">    <span class="hljs-comment">// 否则认为是数组或类数组对象，设置变量 isObj 为 false，将通过下标遍历</span></span><br><span class="line">    isObj = length === <span class="hljs-literal">undefined</span> || jQuery.isFunction(object);</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 回调函数具有附加参数时, 执行第一个分支   </span></span><br><span class="line">  <span class="hljs-comment">// if(!!args) &#123;   </span></span><br><span class="line">  <span class="hljs-keyword">if</span> (args) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 需要遍历的是一个对象   </span></span><br><span class="line">    <span class="hljs-keyword">if</span> (isObj) &#123;</span><br><span class="line"></span><br><span class="line">      <span class="hljs-comment">// 遍历对象属性, name 是对象的属性名,再函数顶部已声明 </span></span><br><span class="line">      <span class="hljs-keyword">for</span> (name <span class="hljs-keyword">in</span> object) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-comment">// 调用 callback 回调函数, 且回调函数的作用域表示为当前属性的值   </span></span><br><span class="line">        <span class="hljs-keyword">if</span> (callback.apply(object[name], args) === <span class="hljs-literal">false</span>) &#123;</span><br><span class="line"></span><br><span class="line">          <span class="hljs-comment">// 如果在 callback 回调函数中使用 return false; 则不执行下一次循环   </span></span><br><span class="line">          <span class="hljs-keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-comment">// 需要遍历的是一个数组   </span></span><br><span class="line">    <span class="hljs-keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">      <span class="hljs-comment">// 循环变量的自增在循环内部执行   </span></span><br><span class="line">      <span class="hljs-keyword">for</span> (; i &lt; length;) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-comment">// 调用 callback 函数, 与上面的 callback 调用一致   </span></span><br><span class="line">        <span class="hljs-comment">// 此处 callback 函数中的 this 指向当前数组元素   </span></span><br><span class="line">        <span class="hljs-comment">// 根据下标 i 依次执行</span></span><br><span class="line">        <span class="hljs-keyword">if</span> (callback.apply(object[i++], args) === <span class="hljs-literal">false</span>) &#123;</span><br><span class="line">          <span class="hljs-keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 回调函数没有附加参数时,执行第二个分支   </span></span><br><span class="line">  <span class="hljs-keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 需要遍历的是一个对象   </span></span><br><span class="line">    <span class="hljs-keyword">if</span> (isObj) &#123;</span><br><span class="line"></span><br><span class="line">      <span class="hljs-keyword">for</span> (name <span class="hljs-keyword">in</span> object) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-comment">// 调用 callback 回调函数   </span></span><br><span class="line">        <span class="hljs-comment">// 在不带参数的对象遍历中, 作用域表示为当前属性的值   </span></span><br><span class="line">        <span class="hljs-comment">// 且回调函数包含两个参数, 第一个数当前属性名, 第二个是当前属性值    </span></span><br><span class="line">        <span class="hljs-keyword">if</span> (callback.call(object[name], name, object[name]) === <span class="hljs-literal">false</span>) &#123;</span><br><span class="line"></span><br><span class="line">          <span class="hljs-comment">// 作用同上</span></span><br><span class="line">          <span class="hljs-keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-comment">// 需要遍历的是一个数组   </span></span><br><span class="line">    <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> value = object[<span class="hljs-number">0</span>]; i &lt; length &amp;&amp; callback.call(value, i, value) !== <span class="hljs-literal">false</span>; value = object[++i]) &#123;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// jQuery 并没有把以上两段很相似的代码合并，这是因为在合并后需要反复判断变量 isObj 的值，避免性能下降</span></span><br><span class="line">  <span class="hljs-comment">// 返回 object ，方法 .each 调用 jQuery.each() 的时候，把当前的 jQuery 对象作为参数 object 传入</span></span><br><span class="line">  <span class="hljs-comment">// 在这里返回该参数，以支持链式语法</span></span><br><span class="line">  <span class="hljs-keyword">return</span> object;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
         </div>
         
         <div class="level is-size-7 is-uppercase">
@@ -285,7 +285,7 @@
                     
                     
                     <p class="is-size-6 is-block">
-                        white lie.
+                        GALLOWS BELL.
                     </p>
                     
                     
@@ -304,7 +304,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        112
+                        141
                     </p>
                 </div>
             </div>
@@ -314,7 +314,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        8
+                        10
                     </p>
                 </div>
             </div>
@@ -324,7 +324,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        8
+                        10
                     </p>
                 </div>
             </div>
@@ -381,7 +381,7 @@
                 <span class="level-item">Angular</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">13</span>
+                <span class="level-item tag">15</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/CSS/">
@@ -390,6 +390,14 @@
             </span>
             <span class="level-end">
                 <span class="level-item tag">11</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Essay/">
+            <span class="level-start">
+                <span class="level-item">Essay</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTTP/">
@@ -405,7 +413,15 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">46</span>
+                <span class="level-item tag">55</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/MySQL/">
+            <span class="level-start">
+                <span class="level-item">MySQL</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -413,7 +429,7 @@
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">6</span>
+                <span class="level-item tag">7</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -429,7 +445,7 @@
                 <span class="level-item">Vue</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">14</span>
+                <span class="level-item tag">15</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/jQuery/">
@@ -437,7 +453,7 @@
                 <span class="level-item">jQuery</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">9</span>
             </span>
         </a></li>
             </ul>
@@ -451,7 +467,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 16px;">Angular</a> <a href="/tags/CSS/" style="font-size: 14px;">CSS</a> <a href="/tags/HTTP/" style="font-size: 12px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 12px;">Node.js</a> <a href="/tags/React/" style="font-size: 18px;">React</a> <a href="/tags/Vue/" style="font-size: 18px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 18.57px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 11.43px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.43px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 12.86px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.14px;">React</a> <a href="/tags/Vue/" style="font-size: 18.57px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 14.29px;">jQuery</a>
     </div>
 </div>
 
@@ -544,18 +560,18 @@
         
         <article class="media">
             
-            <a href="/2019/06/16/React/14/" class="media-left">
+            <a href="/2019/06/22/Angular/14/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/14.jpg" alt="applyMiddleware(...middlewares)">
+                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/14.jpg" alt="Angular 属性绑定 [] 和 {{}} 的差异">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-15T16:00:00.000Z">2019-06-16</time></div>
-                    <a href="/2019/06/16/React/14/" class="has-link-black-ter is-size-6">applyMiddleware(...middlewares)</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-21T16:00:00.000Z">2019-06-22</time></div>
+                    <a href="/2019/06/22/Angular/14/" class="has-link-black-ter is-size-6">Angular 属性绑定 [] 和 {{}} 的差异</a>
                     <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
                     </p>
                 </div>
             </div>
@@ -590,7 +606,7 @@
                     <span class="level-item">六月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">8</span>
                 </span>
             </a>
         </li>
@@ -601,7 +617,7 @@
                     <span class="level-item">五月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -667,7 +683,7 @@
                     <span class="level-item">十一月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -733,7 +749,7 @@
                     <span class="level-item">四月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -744,7 +760,7 @@
                     <span class="level-item">三月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -766,7 +782,7 @@
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -788,7 +804,7 @@
                     <span class="level-item">十月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -799,7 +815,18 @@
                     <span class="level-item">九月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -810,7 +837,7 @@
                     <span class="level-item">七月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -821,7 +848,7 @@
                     <span class="level-item">六月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -919,7 +946,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Angular/">
                         <span class="tag">Angular</span>
-                        <span class="tag is-grey">13</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 
@@ -927,6 +954,13 @@
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
                         <span class="tag is-grey">11</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Essay/">
+                        <span class="tag">Essay</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -940,14 +974,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">46</span>
+                        <span class="tag is-grey">55</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/MySQL/">
+                        <span class="tag">MySQL</span>
+                        <span class="tag is-grey">6</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">6</span>
+                        <span class="tag is-grey">7</span>
                     </a>
                 </div>
                 
@@ -961,14 +1002,14 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
-                        <span class="tag is-grey">14</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/jQuery/">
                         <span class="tag">jQuery</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">9</span>
                     </a>
                 </div>
                 
