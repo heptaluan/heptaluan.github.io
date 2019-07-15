@@ -16,7 +16,7 @@
 <meta property="og:description" content="因为最近在项目当中使用 jQuery 比较多，所以打算抽点时间去研究一下 jQuery 源码，深入了解一下 主要参考的是 jQuery 技术内幕，大致整理了一下，方便自己理解，更多详细可以去参考原书籍">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/03.jpg">
-<meta property="og:updated_time" content="2019-07-14T09:16:28.504Z">
+<meta property="og:updated_time" content="2019-07-15T09:04:11.095Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jQuery 源码的总体架构">
 <meta name="twitter:description" content="因为最近在项目当中使用 jQuery 比较多，所以打算抽点时间去研究一下 jQuery 源码，深入了解一下 主要参考的是 jQuery 技术内幕，大致整理了一下，方便自己理解，更多详细可以去参考原书籍">
@@ -155,7 +155,8 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2017-06-22T16:00:00.000Z">2017-06-23</time>
+                <div class="level-item has-text-grey">2017-06-23</div>
+                <!-- <time class="level-item has-text-grey" datetime="2017-06-22T16:00:00.000Z">2017-06-23</time> -->
                 
                 <div class="level-item">
                 <a class="has-link-grey -link" href="/categories/jQuery/">jQuery</a>
@@ -182,14 +183,16 @@
 <p>主要参考的是 <a href="https://book.douban.com/subject/25823709/" target="_blank" rel="noopener">jQuery 技术内幕</a>，大致整理了一下，方便自己理解，更多详细可以去参考原书籍</p>
 <a id="more"></a>
 
-<h2 id="源码的总体架构"><a href="#源码的总体架构" class="headerlink" title="源码的总体架构"></a>源码的总体架构</h2><p>整体的架构如下</p>
+<p> 源码的总体架构</p>
+<p>整体的架构如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">window, undefined</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 构造 jQuery 对象</span></span><br><span class="line">  <span class="hljs-keyword">var</span> jQuery = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">selector, context</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> jQuery.fn.init(selector, context, rootjQuery);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 工具函数 Utilities</span></span><br><span class="line">  <span class="hljs-comment">// 异步队列 Deferred</span></span><br><span class="line">  <span class="hljs-comment">// 浏览器测试 Support</span></span><br><span class="line">  <span class="hljs-comment">// 数据缓存 Data</span></span><br><span class="line">  <span class="hljs-comment">// 队列 queue</span></span><br><span class="line">  <span class="hljs-comment">// 属性操作 Attribute</span></span><br><span class="line">  <span class="hljs-comment">// 事件处理 Event</span></span><br><span class="line">  <span class="hljs-comment">// 选择器 Sizzle</span></span><br><span class="line">  <span class="hljs-comment">// DOM遍历</span></span><br><span class="line">  <span class="hljs-comment">// DOM操作</span></span><br><span class="line">  <span class="hljs-comment">// CSS操作</span></span><br><span class="line">  <span class="hljs-comment">// 异步请求 Ajax</span></span><br><span class="line">  <span class="hljs-comment">// 动画 FX</span></span><br><span class="line">  <span class="hljs-comment">// 坐标和大小</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-built_in">window</span>.jQuery = <span class="hljs-built_in">window</span>.$ = jQuery;</span><br><span class="line"></span><br><span class="line">&#125;)(<span class="hljs-built_in">window</span>);</span><br></pre></td></tr></table></figure>
 
 <p><code>jQuery</code> 的最外层是一个自调用匿名函数，通过定义一个匿名函数，创建了一个 “私有” 的命名空间，该命名空间的变量和方法，不会破坏全局的命名空间</p>
 <p>参数中传入 <code>window</code> 变量，使得 <code>window</code> 由全局变量变为局部变量，当在 <code>jQuery</code> 代码块中访问 <code>window</code> 时，不需要将作用域链回退到顶层作用域，这样可以更快的访问 <code>window</code>，更重要的是将 <code>window</code> 作为参数传入，可以在压缩代码时进行优化</p>
 <p>传入 <code>undefined</code> 是因为在自调用匿名函数的作用域内，确保 <code>undefined</code> 是真的未定义，因为 <code>undefined</code> 在某些浏览器下是能够被重写，被赋予新的值的</p>
-<h2 id="构造函数-jQuery"><a href="#构造函数-jQuery" class="headerlink" title="构造函数 jQuery()"></a>构造函数 jQuery()</h2><p>构造函数 <code>jQuery()</code> 有 <code>7</code> 种用法，如下：</p>
-<h4 id="jQuery-selector-context"><a href="#jQuery-selector-context" class="headerlink" title="jQuery(selector, context)"></a>jQuery(selector, context)</h4><p>接收一个 <code>CSS</code> 选择器表达式(<code>selector</code>)和可选的选择器上下文(<code>context</code>)，返回一个包含了匹配的 <code>DOM</code> 元素的 <code>jQuery</code> 对象</p>
+<p> 构造函数 jQuery()</p>
+<p>构造函数 <code>jQuery()</code> 有 <code>7</code> 种用法，如下：</p>
+<h2 id="jQuery-selector-context"><a href="#jQuery-selector-context" class="headerlink" title="jQuery(selector, context)"></a>jQuery(selector, context)</h2><p>接收一个 <code>CSS</code> 选择器表达式(<code>selector</code>)和可选的选择器上下文(<code>context</code>)，返回一个包含了匹配的 <code>DOM</code> 元素的 <code>jQuery</code> 对象</p>
 <p>例如，在一个事件监听函数中，可以像下面这样限制查找范围：</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="hljs-string">'div.foo'</span>).click(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 限定查找范围</span></span><br><span class="line">  $(<span class="hljs-string">'span'</span>, <span class="hljs-keyword">this</span>).addClass(<span class="hljs-string">'bar'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
@@ -199,22 +202,23 @@
 <li><p>如果是比 <code>&quot;#id&quot;</code> 复杂的选择器表达式或指定了上下文，则通过 <code>jQuery</code> 方法 <code>.find()</code> 查找，因此 <code>$(&#39;span&#39;, this)</code> 等价于 <code>$(this).find(&#39;span&#39;)</code></p>
 </li>
 </ul>
-<h4 id="jQuery-html-ownerDocument-和-jQuery-html-props"><a href="#jQuery-html-ownerDocument-和-jQuery-html-props" class="headerlink" title="jQuery(html, ownerDocument) 和 jQuery(html, props)"></a>jQuery(html, ownerDocument) 和 jQuery(html, props)</h4><p>用所提供的 <code>html</code> 代码创建 <code>DOM</code> 元素</p>
+<h2 id="jQuery-html-ownerDocument-和-jQuery-html-props"><a href="#jQuery-html-ownerDocument-和-jQuery-html-props" class="headerlink" title="jQuery(html, ownerDocument) 和 jQuery(html, props)"></a>jQuery(html, ownerDocument) 和 jQuery(html, props)</h2><p>用所提供的 <code>html</code> 代码创建 <code>DOM</code> 元素</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 单标签 两种方式都可以往 body 中插入 div</span></span><br><span class="line"><span class="hljs-comment">/*   </span></span><br><span class="line"><span class="hljs-comment"> *   1  $('&lt;div&gt;').appendTo('body');</span></span><br><span class="line"><span class="hljs-comment"> *   2  $('&lt;div&gt;&lt;/div&gt;').appendTo('body');  </span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 多标签嵌套</span></span><br><span class="line">$(<span class="hljs-string">'&lt;div&gt;&lt;span&gt;foo&lt;/span&gt;&lt;/div&gt;'</span>).appendTo(<span class="hljs-string">'body'</span>);</span><br></pre></td></tr></table></figure>
 
-<h4 id="jQuery-element-or-elementsArray"><a href="#jQuery-element-or-elementsArray" class="headerlink" title="jQuery(element or elementsArray)"></a>jQuery(element or elementsArray)</h4><p>如果传入一个 <code>DOM</code> 元素或 <code>DOM</code> 元素数组，则把 <code>DOM</code> 元素封装到 <code>jQuery</code> 对象中并返回</p>
+<h2 id="jQuery-element-or-elementsArray"><a href="#jQuery-element-or-elementsArray" class="headerlink" title="jQuery(element or elementsArray)"></a>jQuery(element or elementsArray)</h2><p>如果传入一个 <code>DOM</code> 元素或 <code>DOM</code> 元素数组，则把 <code>DOM</code> 元素封装到 <code>jQuery</code> 对象中并返回</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 传入 DOM 元素</span></span><br><span class="line">$(<span class="hljs-string">'li'</span>).each(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">index, ele</span>) </span>&#123;</span><br><span class="line">  $(ele).on(<span class="hljs-string">'click'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// 这里的 DOM 元素就是 this</span></span><br><span class="line">    $(<span class="hljs-keyword">this</span>).css(<span class="hljs-string">'background'</span>, <span class="hljs-string">'red'</span>);</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 传入 DOM 数组</span></span><br><span class="line"><span class="hljs-keyword">var</span> aLi = <span class="hljs-built_in">document</span>.getElementsByTagName(<span class="hljs-string">'li'</span>);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 集合转数组</span></span><br><span class="line">aLi = [].slice.call(aLi);</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> $aLi = $(aLi);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 所有的 li 的内容都变成 '我是jQuery对象'</span></span><br><span class="line">$aLi.html(<span class="hljs-string">`我是jQuery对象`</span>);</span><br></pre></td></tr></table></figure>
 
-<h4 id="jQuery-object"><a href="#jQuery-object" class="headerlink" title="jQuery(object)"></a>jQuery(object)</h4><p>如果传入一个普通 <code>JavaScript</code> 对象，则把该对象封装到 <code>jQuery</code> 对象中并返回</p>
+<h2 id="jQuery-object"><a href="#jQuery-object" class="headerlink" title="jQuery(object)"></a>jQuery(object)</h2><p>如果传入一个普通 <code>JavaScript</code> 对象，则把该对象封装到 <code>jQuery</code> 对象中并返回</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 定义一个普通 JavaScript 对象</span></span><br><span class="line"><span class="hljs-keyword">var</span> foo = &#123; <span class="hljs-attr">foo</span>: <span class="hljs-string">'bar'</span>, <span class="hljs-attr">hello</span>: <span class="hljs-string">'world'</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 封装成 jQuery 对象</span></span><br><span class="line"><span class="hljs-keyword">var</span> $foo = $(foo);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 绑定一个事件</span></span><br><span class="line">$foo.on(<span class="hljs-string">'custom'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`custom event was called`</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 触发这个事件</span></span><br><span class="line">$foo.trigger(<span class="hljs-string">'custom'</span>);  <span class="hljs-comment">// 在控制台打印 `custom event was called`</span></span><br></pre></td></tr></table></figure>
 
-<h4 id="jQuery-callback"><a href="#jQuery-callback" class="headerlink" title="jQuery( callback )"></a>jQuery( callback )</h4><p>当传进去的参数是函数的时候，则在 <code>document</code> 对象上绑定一个 <code>ready</code> 事件监听函数，当 <code>DOM</code> 结构加载完成的时候执行</p>
+<h2 id="jQuery-callback"><a href="#jQuery-callback" class="headerlink" title="jQuery( callback )"></a>jQuery( callback )</h2><p>当传进去的参数是函数的时候，则在 <code>document</code> 对象上绑定一个 <code>ready</code> 事件监听函数，当 <code>DOM</code> 结构加载完成的时候执行</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 以上代码和下面的效果是一样的</span></span><br><span class="line">$(<span class="hljs-built_in">document</span>).ready(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
-<h4 id="jQuery-jQuery-object"><a href="#jQuery-jQuery-object" class="headerlink" title="jQuery(jQuery object)"></a>jQuery(jQuery object)</h4><p>如果传入一个 <code>jQuery</code> 对象，则创建该 <code>jQuery</code> 对象的一个副本并返回，副本与传入的 <code>jQuery</code> 对象引用完全相同的 <code>DOM</code> 元素</p>
-<h4 id="jQuery"><a href="#jQuery" class="headerlink" title="jQuery()"></a>jQuery()</h4><p>如果不传入任何的参数，则返回一个空的 <code>jQuery</code> 对象，属性 <code>length</code> 为 <code>0</code></p>
+<h2 id="jQuery-jQuery-object"><a href="#jQuery-jQuery-object" class="headerlink" title="jQuery(jQuery object)"></a>jQuery(jQuery object)</h2><p>如果传入一个 <code>jQuery</code> 对象，则创建该 <code>jQuery</code> 对象的一个副本并返回，副本与传入的 <code>jQuery</code> 对象引用完全相同的 <code>DOM</code> 元素</p>
+<h2 id="jQuery"><a href="#jQuery" class="headerlink" title="jQuery()"></a>jQuery()</h2><p>如果不传入任何的参数，则返回一个空的 <code>jQuery</code> 对象，属性 <code>length</code> 为 <code>0</code></p>
 <p>这个功能可以用来复用 <code>jQuery</code> 对象，例如，创建一个空的 <code>jQuery</code> 对象，然后在需要时先手动修改其中的元素，再调用 <code>jQuery</code> 方法，从而避免重复创建 <code>jQuery</code> 对象</p>
-<h2 id="总体结构"><a href="#总体结构" class="headerlink" title="总体结构"></a>总体结构</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> <span class="hljs-number">16</span>  (<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">window, undefined</span>) </span>&#123;</span><br><span class="line">       <span class="hljs-comment">// 构造 jQuery 对象</span></span><br><span class="line"> <span class="hljs-number">22</span>    <span class="hljs-keyword">var</span> jQuery = (<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line"> <span class="hljs-number">25</span>    <span class="hljs-keyword">var</span> jQuery = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> selector, context </span>) </span>&#123;</span><br><span class="line"> <span class="hljs-number">27</span>      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> jQuery.fn.init( selector, context, rootjQuery );</span><br><span class="line"> <span class="hljs-number">28</span>    &#125;,</span><br><span class="line"></span><br><span class="line">       <span class="hljs-comment">// 一堆局部变量声明</span></span><br><span class="line"> <span class="hljs-number">97</span>    jQuery.fn = jQuery.prototype = &#123;</span><br><span class="line"> <span class="hljs-number">98</span>      <span class="hljs-keyword">constructor</span>: jQuery,</span><br><span class="line"> 99      init: function( selector, context, rootjQuery ) &#123; ... &#125;,</span><br><span class="line">           <span class="hljs-comment">// 一堆原型属性和方法</span></span><br><span class="line"><span class="hljs-number">319</span>      &#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-number">322</span>      jQuery.fn.init.prototype = jQuery.fn;</span><br><span class="line"></span><br><span class="line"><span class="hljs-number">324</span>      jQuery.extend = jQuery.fn.extend = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123; ... &#125;;</span><br><span class="line"><span class="hljs-number">388</span>      jQuery.extend(&#123;</span><br><span class="line">           <span class="hljs-comment">// 一堆静态属性和方法</span></span><br><span class="line"><span class="hljs-number">892</span>      &#125;);</span><br><span class="line"></span><br><span class="line"><span class="hljs-number">955</span>      <span class="hljs-keyword">return</span> jQuery;</span><br><span class="line"></span><br><span class="line"><span class="hljs-number">957</span>    &#125;)();</span><br><span class="line">        </span><br><span class="line">       <span class="hljs-comment">// 省略其他模块的代码</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-number">9246</span>   <span class="hljs-built_in">window</span>.jQuery = <span class="hljs-built_in">window</span>.$ = jQuery;</span><br><span class="line"></span><br><span class="line"><span class="hljs-number">9266</span> &#125;)(<span class="hljs-built_in">window</span>);</span><br></pre></td></tr></table></figure>
+<p> 总体结构</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> <span class="hljs-number">16</span>  (<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">window, undefined</span>) </span>&#123;</span><br><span class="line">       <span class="hljs-comment">// 构造 jQuery 对象</span></span><br><span class="line"> <span class="hljs-number">22</span>    <span class="hljs-keyword">var</span> jQuery = (<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line"> <span class="hljs-number">25</span>    <span class="hljs-keyword">var</span> jQuery = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> selector, context </span>) </span>&#123;</span><br><span class="line"> <span class="hljs-number">27</span>      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> jQuery.fn.init( selector, context, rootjQuery );</span><br><span class="line"> <span class="hljs-number">28</span>    &#125;,</span><br><span class="line"></span><br><span class="line">       <span class="hljs-comment">// 一堆局部变量声明</span></span><br><span class="line"> <span class="hljs-number">97</span>    jQuery.fn = jQuery.prototype = &#123;</span><br><span class="line"> <span class="hljs-number">98</span>      <span class="hljs-keyword">constructor</span>: jQuery,</span><br><span class="line"> 99      init: function( selector, context, rootjQuery ) &#123; ... &#125;,</span><br><span class="line">           <span class="hljs-comment">// 一堆原型属性和方法</span></span><br><span class="line"><span class="hljs-number">319</span>      &#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-number">322</span>      jQuery.fn.init.prototype = jQuery.fn;</span><br><span class="line"></span><br><span class="line"><span class="hljs-number">324</span>      jQuery.extend = jQuery.fn.extend = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123; ... &#125;;</span><br><span class="line"><span class="hljs-number">388</span>      jQuery.extend(&#123;</span><br><span class="line">           <span class="hljs-comment">// 一堆静态属性和方法</span></span><br><span class="line"><span class="hljs-number">892</span>      &#125;);</span><br><span class="line"></span><br><span class="line"><span class="hljs-number">955</span>      <span class="hljs-keyword">return</span> jQuery;</span><br><span class="line"></span><br><span class="line"><span class="hljs-number">957</span>    &#125;)();</span><br><span class="line">        </span><br><span class="line">       <span class="hljs-comment">// 省略其他模块的代码</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-number">9246</span>   <span class="hljs-built_in">window</span>.jQuery = <span class="hljs-built_in">window</span>.$ = jQuery;</span><br><span class="line"></span><br><span class="line"><span class="hljs-number">9266</span> &#125;)(<span class="hljs-built_in">window</span>);</span><br></pre></td></tr></table></figure>
 
 
         </div>
@@ -326,7 +330,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        141
+                        142
                     </p>
                 </div>
             </div>
@@ -368,45 +372,33 @@
                 目录
             </h3>
             <ul class="menu-list"><li>
-        <a class="is-flex" href="#源码的总体架构">
-        <span class="has-mr-6">1</span>
-        <span>源码的总体架构</span>
-        </a></li><li>
-        <a class="is-flex" href="#构造函数-jQuery">
-        <span class="has-mr-6">2</span>
-        <span>构造函数 jQuery()</span>
-        </a><ul class="menu-list"><li>
         <a class="is-flex" href="#jQuery-selector-context">
-        <span class="has-mr-6">2.1</span>
+        <span class="has-mr-6">1</span>
         <span>jQuery(selector, context)</span>
         </a></li><li>
         <a class="is-flex" href="#jQuery-html-ownerDocument-和-jQuery-html-props">
-        <span class="has-mr-6">2.2</span>
+        <span class="has-mr-6">2</span>
         <span>jQuery(html, ownerDocument) 和 jQuery(html, props)</span>
         </a></li><li>
         <a class="is-flex" href="#jQuery-element-or-elementsArray">
-        <span class="has-mr-6">2.3</span>
+        <span class="has-mr-6">3</span>
         <span>jQuery(element or elementsArray)</span>
         </a></li><li>
         <a class="is-flex" href="#jQuery-object">
-        <span class="has-mr-6">2.4</span>
+        <span class="has-mr-6">4</span>
         <span>jQuery(object)</span>
         </a></li><li>
         <a class="is-flex" href="#jQuery-callback">
-        <span class="has-mr-6">2.5</span>
+        <span class="has-mr-6">5</span>
         <span>jQuery( callback )</span>
         </a></li><li>
         <a class="is-flex" href="#jQuery-jQuery-object">
-        <span class="has-mr-6">2.6</span>
+        <span class="has-mr-6">6</span>
         <span>jQuery(jQuery object)</span>
         </a></li><li>
         <a class="is-flex" href="#jQuery">
-        <span class="has-mr-6">2.7</span>
+        <span class="has-mr-6">7</span>
         <span>jQuery()</span>
-        </a></li></ul></li><li>
-        <a class="is-flex" href="#总体结构">
-        <span class="has-mr-6">3</span>
-        <span>总体结构</span>
         </a></li></ul>
         </div>
     </div>
@@ -463,7 +455,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">55</span>
+                <span class="level-item tag">56</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -531,6 +523,25 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/07/13/JavaScript/56/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/56.jpg" alt="迭代协议与生成器">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-12T16:00:00.000Z">2019-07-13</time></div>
+                    <a href="/2019/07/13/JavaScript/56/" class="has-link-black-ter is-size-6">迭代协议与生成器</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -608,25 +619,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/06/22/Angular/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="http://pu5vc7wn3.bkt.clouddn.com/cover/14.jpg" alt="Angular 属性绑定 [] 和 {{}} 的差异">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-21T16:00:00.000Z">2019-06-22</time></div>
-                    <a href="/2019/06/22/Angular/14/" class="has-link-black-ter is-size-6">Angular 属性绑定 [] 和 {{}} 的差异</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -645,7 +637,7 @@
                     <span class="level-item">七月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1024,7 +1016,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">55</span>
+                        <span class="tag is-grey">56</span>
                     </a>
                 </div>
                 
