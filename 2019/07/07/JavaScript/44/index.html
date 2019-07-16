@@ -16,7 +16,7 @@
 <meta property="og:description" content="在页面加载解析时，文档结构表（HTML）一般会优于样式表（CSS）渲染 这时候渲染出来的是没有样式的页面，然后当浏览器解析到样式表的时候，又结合样式表重新渲染了一遍文档，这时候页面就添加了样式，而前后两次的页面变换会出现一瞬间的闪烁 这种现象称之为文档样式短暂失效（Flash of Unstyled Content），简称为 FOUC">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/44.jpg">
-<meta property="og:updated_time" content="2019-07-10T07:23:42.506Z">
+<meta property="og:updated_time" content="2019-07-16T13:54:16.633Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="什么是 FOUC">
 <meta name="twitter:description" content="在页面加载解析时，文档结构表（HTML）一般会优于样式表（CSS）渲染 这时候渲染出来的是没有样式的页面，然后当浏览器解析到样式表的时候，又结合样式表重新渲染了一遍文档，这时候页面就添加了样式，而前后两次的页面变换会出现一瞬间的闪烁 这种现象称之为文档样式短暂失效（Flash of Unstyled Content），简称为 FOUC">
@@ -166,7 +166,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    11 分钟 读完 (大约 1625 个字)
+                    15 分钟 读完 (大约 2191 个字)
                 </span>
                 
                 
@@ -185,27 +185,12 @@
 <a id="more"></a>
 
 <p>当然，这跟浏览器的渲染有关，不同浏览器的有不同的渲染机制，这并不是 <code>BUG</code>，有的浏览器会采用白屏来处理，而有的又会使用 <code>FOUC</code> 无样式内容闪烁</p>
-<h2 id="渲染机制"><a href="#渲染机制" class="headerlink" title="渲染机制"></a>渲染机制</h2><p>想要理清楚为什么会这样，我们需要先来了解一下 <code>Web</code> 浏览器的渲染机制，简单来说有以下几个步骤</p>
-<ul>
-<li><p>解析 <code>HTML</code> 标签, 构建 <code>DOM</code> 树</p>
-</li>
-<li><p>解析 <code>CSS</code> 标签, 构建 <code>CSSOM</code>（见下方） 树</p>
-</li>
-<li><p>把 <code>DOM</code> 和 <code>CSSOM</code> 组合成 渲染树（<code>render tree</code>）</p>
-</li>
-<li><p>在渲染树的基础上进行布局, 计算每个节点的几何结构</p>
-</li>
-<li><p>把每个节点绘制到屏幕上（<code>painting</code>）</p>
-</li>
-</ul>
-<p>由于样式文件存在下载这个延时不确定的阶段，因此网络环境不好或样式资源体积大的情况下我们可以看到样式闪烁明显</p>
-<p>这就是为什么我们将外部引用的样式的引入放在 <code>head</code> 标签中的原因，因为需要在 <code>body</code> 渲染前先把相对完整的 <code>CSSOM Tree</code> 构建好</p>
 <h2 id="页面解析和页面渲染"><a href="#页面解析和页面渲染" class="headerlink" title="页面解析和页面渲染"></a>页面解析和页面渲染</h2><p>大家都听说过 <code>script</code> 会阻塞 <code>html</code> 页面解析，而 <code>link</code> 则不会，结果也确实是这样的，<code>style</code>，<code>link</code> 等样式资源的下载、解析确实不会阻塞页面的解析，但它们会阻塞页面的渲染</p>
 <p>来看看两者的区别</p>
 <ul>
-<li><p>页面解析 阻塞 <code>HTML</code> 页面解析，<code>HTML</code> 页面会被继续下载，但阻塞点后面的标签不会被解析，<code>img</code>，<code>link</code> 等不会发请求获取外部资源</p>
+<li><p>页面解析 - 阻塞 <code>HTML</code> 页面解析，<code>HTML</code> 页面会被继续下载，但阻塞点后面的标签不会被解析，<code>img</code>，<code>link</code> 等不会发请求获取外部资源</p>
 </li>
-<li><p>页面渲染 阻塞 <code>HTML</code> 页面渲染，<code>HTML</code> 页面会被继续下载，阻塞点后面的标签会继续被解析，<code>img</code>，<code>link</code> 等会继续发送请求获取外部资源，但不会合成 <code>Rendering Tree</code> 或不会触发页面渲染，也不会执行 <code>JavaScript</code> 代码</p>
+<li><p>页面渲染 - 阻塞 <code>HTML</code> 页面渲染，<code>HTML</code> 页面会被继续下载，阻塞点后面的标签会继续被解析，<code>img</code>，<code>link</code> 等会继续发送请求获取外部资源，但不会合成 <code>Rendering Tree</code> 或不会触发页面渲染，也不会执行 <code>JavaScript</code> 代码</p>
 </li>
 </ul>
 <h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>现在我们知道 <code>FOUC</code> 是由于页面采用临时样式来渲染页面而导致的，那有什么方案可以解决呢？</p>
@@ -214,6 +199,33 @@
 <p>这是因为脚本会阻塞其后组件的下载，进而影响到后面内容的呈现</p>
 </blockquote>
 <p>另外一种方式可以先隐藏 <code>body</code>，然后当样式资源加载完成后再显示 <code>body</code></p>
+<h2 id="渲染机制"><a href="#渲染机制" class="headerlink" title="渲染机制"></a>渲染机制</h2><p>节选自 <a href="https://developers.google.com/web/fundamentals/performance/critical-rendering-path/?hl=en" target="_blank" rel="noopener">Critical Rendering Path</a></p>
+<p>想要理清楚为什么会这样，我们需要先来了解一下 <code>Web</code> 浏览器的渲染机制，简单来说有以下几个步骤</p>
+<p>1、解析 <code>HTML</code> 标签, 构建 <code>DOM</code> 树（<code>Document Object Model</code>，浏览器将 <code>HTML</code> 解析成树形的数据结构，简称 <code>DOM</code>）</p>
+<p>2、解析 <code>CSS</code> 标签, 构建 <code>CSSOM</code>（<code>CSS Object Model</code>，浏览器将 <code>CSS</code> 代码解析成树形的数据结构，见下方）树</p>
+<p><code>DOM</code> 和 <code>CSSOM</code> 都是以 <code>Bytes → characters → tokens → nodes → object model</code> 这样的方式生成最终的数据</p>
+<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/js/38.png" alt></p>
+<blockquote>
+<p><code>DOM</code> 树的构建过程是一个深度遍历过程：当前节点的所有子节点都构建好后才会去构建当前节点的下一个兄弟节点</p>
+</blockquote>
+<p>3、把 <code>DOM</code> 和 <code>CSSOM</code> 组合成 渲染树（<code>render tree</code>）</p>
+<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/js/39.png" alt></p>
+<p>4、在渲染树的基础上进行布局, 计算每个节点的几何结构</p>
+<p>5、把每个节点绘制到屏幕上（<code>painting</code>）</p>
+<p><code>Render Tree</code> 和 <code>DOM</code> 一样，以多叉树的形式保存了每个节点的 <code>CSS</code> 属性、节点本身属性、以及节点的孩子节点</p>
+<blockquote>
+<p><code>display: none</code> 的节点不会被加入 <code>Render Tree</code>，而 <code>visibility: hidden</code> 则会，所以如果某个节点最开始是不显示的，设为 <code>display: none</code> 是更优的</p>
+</blockquote>
+<h2 id="浏览器的渲染过程"><a href="#浏览器的渲染过程" class="headerlink" title="浏览器的渲染过程"></a>浏览器的渲染过程</h2><p>1、<code>Create/Update DOM And request css/image/js</code>：浏览器请求到 <code>HTML</code> 代码后，在生成 <code>DOM</code> 的最开始阶段（应该是 <code>Bytes → characters</code> 后），并行发起 <code>CSS</code>、图片、<code>js</code> 的请求，无论他们是否在 <code>HEAD</code> 里</p>
+<blockquote>
+<p>注意：发起 <code>js</code> 文件的下载 <code>request</code> 并不需要 <code>DOM</code> 处理到那个 <code>script</code>节点</p>
+</blockquote>
+<p>2、<code>Create/Update Render CSSOM</code>：<code>CSS</code> 文件下载完成，开始构建 <code>CSSOM</code></p>
+<p>3、<code>Create/Update Render Tree</code>：所有 <code>CSS</code> 文件下载完成，<code>CSSOM</code> 构建结束后，和 <code>DOM</code> 一起生成 <code>Render Tree</code></p>
+<p>4、<code>Layout</code>：有了 <code>Render Tree</code>，浏览器已经能知道网页中有哪些节点、各个节点的 <code>CSS</code> 定义以及他们的从属关系，下一步操作称之为 <code>Layout</code>，顾名思义就是计算出每个节点在屏幕中的位置</p>
+<p>5、<code>Painting</code>：<code>Layout</code> 后，浏览器已经知道了哪些节点要显示（<code>which nodes are visible</code>）、每个节点的 <code>CSS</code> 属性是什么（<code>their computed styles</code>）、每个节点在屏幕中的位置是哪里（<code>geometry</code>），就进入了最后一步：<code>Painting</code>，按照算出来的规则，通过显卡，把内容画到屏幕上</p>
+<p>以上五个步骤前三个步骤之所有使用 <code>&#39;Create/Update&#39;</code> 是因为 <code>DOM</code>、<code>CSSOM</code>、<code>Render Tree</code> 都可能在第一次 <code>Painting</code> 后又被更新多次，比如 <code>JS</code> 修改了 <code>DOM</code> 或者 <code>CSS</code> 属性</p>
+<p><code>Layout</code> 和 <code>Painting</code> 也会被重复执行，除了 <code>DOM</code>、<code>CSSOM</code> 更新的原因外，图片下载完成后也需要调用 <code>Layout</code> 和 <code>Painting</code> 来更新网页</p>
 <h2 id="关于-CSSOM"><a href="#关于-CSSOM" class="headerlink" title="关于 CSSOM"></a>关于 CSSOM</h2><p><code>CSSOM</code> 是 <code>CSS Object Model</code> 的缩写</p>
 <p>大体上来说，<code>CSSOM</code> 是一个建立在 <code>Web</code> 页面上的 <code>CSS</code> 样式的映射，它和 <code>DOM</code> 类似，但是只针对 <code>CSS</code> 而不是 <code>HTML</code>，浏览器将 <code>DOM</code> 和 <code>CSSOM</code> 结合来渲染 <code>Web</code> 页面</p>
 <p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/js/35.png" alt></p>
@@ -409,28 +421,32 @@
                 目录
             </h3>
             <ul class="menu-list"><li>
-        <a class="is-flex" href="#渲染机制">
-        <span class="has-mr-6">1</span>
-        <span>渲染机制</span>
-        </a></li><li>
         <a class="is-flex" href="#页面解析和页面渲染">
-        <span class="has-mr-6">2</span>
+        <span class="has-mr-6">1</span>
         <span>页面解析和页面渲染</span>
         </a></li><li>
         <a class="is-flex" href="#解决办法">
-        <span class="has-mr-6">3</span>
+        <span class="has-mr-6">2</span>
         <span>解决办法</span>
         </a></li><li>
-        <a class="is-flex" href="#关于-CSSOM">
+        <a class="is-flex" href="#渲染机制">
+        <span class="has-mr-6">3</span>
+        <span>渲染机制</span>
+        </a></li><li>
+        <a class="is-flex" href="#浏览器的渲染过程">
         <span class="has-mr-6">4</span>
+        <span>浏览器的渲染过程</span>
+        </a></li><li>
+        <a class="is-flex" href="#关于-CSSOM">
+        <span class="has-mr-6">5</span>
         <span>关于 CSSOM</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#CSSOM是做什么的">
-        <span class="has-mr-6">4.1</span>
+        <span class="has-mr-6">5.1</span>
         <span>CSSOM是做什么的</span>
         </a></li><li>
         <a class="is-flex" href="#使用CSSOM">
-        <span class="has-mr-6">4.2</span>
+        <span class="has-mr-6">5.2</span>
         <span>使用CSSOM</span>
         </a></li></ul></li></ul>
         </div>
