@@ -16,7 +16,7 @@
 <meta property="og:description" content="Object.create() 是 E5 的一个新特性，其实可以理解为继承一个对象 官方的定义为 Object.create() 方法创建一个拥有指定原型和若干个指定属性的对象">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/07.jpg">
-<meta property="og:updated_time" content="2019-07-13T04:13:48.520Z">
+<meta property="og:updated_time" content="2019-07-25T03:45:37.184Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Object.create( ... )">
 <meta name="twitter:description" content="Object.create() 是 E5 的一个新特性，其实可以理解为继承一个对象 官方的定义为 Object.create() 方法创建一个拥有指定原型和若干个指定属性的对象">
@@ -166,7 +166,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    11 分钟 读完 (大约 1696 个字)
+                    11 分钟 读完 (大约 1723 个字)
                 </span>
                 
                 
@@ -194,10 +194,13 @@
 </li>
 </ul>
 <blockquote>
-<p>注意，该参数对象不能是 <code>undefined</code>，另外只有该对象中自身拥有的可枚举的属性才有效，也就是说该对象的原型链上属性是无效的</p>
+<p>需要注意的是，该参数对象不能是 <code>undefined</code>，另外只有该对象中自身拥有的可枚举的属性才有效，也就是说该对象的原型链上属性是无效的</p>
 </blockquote>
 <p>使用 <code>Object.create</code> 的 <code>propertyObject</code> 参数</p>
-<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> o;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 创建一个原型为 null 的空对象</span></span><br><span class="line">o = <span class="hljs-built_in">Object</span>.create(<span class="hljs-literal">null</span>);</span><br><span class="line"></span><br><span class="line">o = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 以字面量方式创建的空对象就相当于</span></span><br><span class="line">o = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);</span><br><span class="line"></span><br><span class="line">o = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype, &#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// foo 会成为所创建对象的数据属性</span></span><br><span class="line">  foo: &#123; <span class="hljs-attr">writable</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">configurable</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">value</span>: <span class="hljs-string">'hello'</span> &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// bar 会成为所创建对象的访问器属性</span></span><br><span class="line">  bar: &#123;</span><br><span class="line">    configurable: <span class="hljs-literal">false</span>,</span><br><span class="line">    <span class="hljs-keyword">get</span>: function () &#123; <span class="hljs-keyword">return</span> <span class="hljs-number">10</span> &#125;,</span><br><span class="line">    <span class="hljs-keyword">set</span>: function (value) &#123; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Setting `o.bar` to'</span>, value) &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Constructor</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line">o = <span class="hljs-keyword">new</span> Constructor();</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 上面的一句就相当于:</span></span><br><span class="line"></span><br><span class="line">o = <span class="hljs-built_in">Object</span>.create(Constructor.prototype);</span><br><span class="line"><span class="hljs-comment">// 当然，如果在 Constructor 函数中有一些初始化代码，Object.create 不能执行那些代码</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 创建一个以另一个空对象为原型，且拥有一个属性 p 的对象</span></span><br><span class="line">o = <span class="hljs-built_in">Object</span>.create(&#123;&#125;, &#123; <span class="hljs-attr">p</span>: &#123; <span class="hljs-attr">value</span>: <span class="hljs-number">42</span> &#125; &#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 省略了的属性特性默认为 false，所以属性 p 是不可写，不可枚举，不可配置的</span></span><br><span class="line">o.p = <span class="hljs-number">24</span></span><br><span class="line">o.p</span><br><span class="line"><span class="hljs-comment">// 42</span></span><br><span class="line"></span><br><span class="line">o.q = <span class="hljs-number">12</span></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> prop <span class="hljs-keyword">in</span> o) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(prop)</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-comment">// 'q'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">delete</span> o.p</span><br><span class="line"><span class="hljs-comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 创建一个可写的，可枚举的，可配置的属性 p</span></span><br><span class="line">o2 = <span class="hljs-built_in">Object</span>.create(&#123;&#125;, &#123; <span class="hljs-attr">p</span>: &#123; <span class="hljs-attr">value</span>: <span class="hljs-number">42</span>, <span class="hljs-attr">writable</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">enumerable</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">configurable</span>: <span class="hljs-literal">true</span> &#125; &#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> o;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 创建一个原型为 null 的空对象</span></span><br><span class="line">o = <span class="hljs-built_in">Object</span>.create(<span class="hljs-literal">null</span>);</span><br><span class="line"></span><br><span class="line">o = &#123;&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 以字面量方式创建的空对象就相当于</span></span><br><span class="line">o = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype);</span><br><span class="line"></span><br><span class="line">o = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Object</span>.prototype, &#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// foo 会成为所创建对象的数据属性</span></span><br><span class="line">  foo: &#123; <span class="hljs-attr">writable</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">configurable</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">value</span>: <span class="hljs-string">'hello'</span> &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// bar 会成为所创建对象的访问器属性</span></span><br><span class="line">  bar: &#123;</span><br><span class="line">    configurable: <span class="hljs-literal">false</span>,</span><br><span class="line">    <span class="hljs-keyword">get</span>: function () &#123; <span class="hljs-keyword">return</span> <span class="hljs-number">10</span> &#125;,</span><br><span class="line">    <span class="hljs-keyword">set</span>: function (value) &#123; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Setting `o.bar` to'</span>, value) &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>另外一个示例</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Constructor</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line">o = <span class="hljs-keyword">new</span> Constructor();</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 上面的一句就相当于:</span></span><br><span class="line"></span><br><span class="line">o = <span class="hljs-built_in">Object</span>.create(Constructor.prototype);</span><br><span class="line"><span class="hljs-comment">// 当然，如果在 Constructor 函数中有一些初始化代码，Object.create 不能执行那些代码</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 创建一个以另一个空对象为原型，且拥有一个属性 p 的对象</span></span><br><span class="line">o = <span class="hljs-built_in">Object</span>.create(&#123;&#125;, &#123; <span class="hljs-attr">p</span>: &#123; <span class="hljs-attr">value</span>: <span class="hljs-number">42</span> &#125; &#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 省略了的属性特性默认为 false，所以属性 p 是不可写，不可枚举，不可配置的</span></span><br><span class="line">o.p = <span class="hljs-number">24</span></span><br><span class="line">o.p</span><br><span class="line"><span class="hljs-comment">// 42</span></span><br><span class="line"></span><br><span class="line">o.q = <span class="hljs-number">12</span></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> prop <span class="hljs-keyword">in</span> o) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(prop)</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-comment">// 'q'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">delete</span> o.p</span><br><span class="line"><span class="hljs-comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 创建一个可写的，可枚举的，可配置的属性 p</span></span><br><span class="line">o2 = <span class="hljs-built_in">Object</span>.create(&#123;&#125;, &#123; <span class="hljs-attr">p</span>: &#123; <span class="hljs-attr">value</span>: <span class="hljs-number">42</span>, <span class="hljs-attr">writable</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">enumerable</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">configurable</span>: <span class="hljs-literal">true</span> &#125; &#125;);</span><br></pre></td></tr></table></figure>
 
 <p>使用 <code>Object.create</code> 实现类式继承（单继承）</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// Shape - superclass</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Shape</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.x = <span class="hljs-number">0</span>;</span><br><span class="line">  <span class="hljs-keyword">this</span>.y = <span class="hljs-number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Shape.prototype.move = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.x += x;</span><br><span class="line">  <span class="hljs-keyword">this</span>.y += y;</span><br><span class="line">  <span class="hljs-built_in">console</span>.info(<span class="hljs-string">'Shape moved.'</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// Rectangle - subclass</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Rectangle</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  Shape.call(<span class="hljs-keyword">this</span>);  <span class="hljs-comment">// call super constructor.</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Rectangle.prototype = <span class="hljs-built_in">Object</span>.create(Shape.prototype);</span><br><span class="line"><span class="hljs-comment">// 可以把 constructor 指回去</span></span><br><span class="line">Rectangle.prototype.constructor = Rectangle;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> rect = <span class="hljs-keyword">new</span> Rectangle();</span><br><span class="line"></span><br><span class="line">rect <span class="hljs-keyword">instanceof</span> Rectangle  <span class="hljs-comment">// true.</span></span><br><span class="line">rect <span class="hljs-keyword">instanceof</span> Shape      <span class="hljs-comment">// true.</span></span><br><span class="line"></span><br><span class="line">rect.move(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>);           <span class="hljs-comment">// Outputs, 'Shape moved.'</span></span><br></pre></td></tr></table></figure>
@@ -208,11 +211,12 @@
 <p>第二种情况</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 如果用的是 </span></span><br><span class="line">b = <span class="hljs-keyword">new</span> object(a)</span><br><span class="line"></span><br><span class="line">connsole.log(b);            <span class="hljs-comment">// 输出 &#123;x: 1&#125;</span></span><br><span class="line">congsole.log(b.__proto__);  <span class="hljs-comment">// 输出 &#123;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 注意区分 __proto__ 和 prototype</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Foo</span>(<span class="hljs-params">name</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.name = name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Foo.prototype.myName = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.name;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Bar</span>(<span class="hljs-params">name, label</span>) </span>&#123;</span><br><span class="line">  Foo.call(<span class="hljs-keyword">this</span>, name);</span><br><span class="line">  <span class="hljs-keyword">this</span>.label = label;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 我们创建了一个新的 Bar.prototype 对象并关联到 Foo.prototype</span></span><br><span class="line">Bar.prototype = <span class="hljs-built_in">Object</span>.create(Foo.prototype);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 注意！现在没有 Bar.prototype.constructor 了</span></span><br><span class="line"><span class="hljs-comment">// 如果你需要这个属性的话可能需要手动修复一下它</span></span><br><span class="line"><span class="hljs-comment">// Bar.prototype.constructor = Bar;</span></span><br><span class="line"></span><br><span class="line">Bar.prototype.myLabel = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.label;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-keyword">new</span> Bar(<span class="hljs-string">'a'</span>, <span class="hljs-string">'obj a'</span>);</span><br><span class="line"></span><br><span class="line">a.myName();  <span class="hljs-comment">// 'a' </span></span><br><span class="line">a.myLabel(); <span class="hljs-comment">// 'obj a'</span></span><br></pre></td></tr></table></figure>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p>下面这个实例跟上面那个类似，只是加深一下印象</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Foo</span>(<span class="hljs-params">name</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.name = name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Foo.prototype.myName = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.name;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Bar</span>(<span class="hljs-params">name, label</span>) </span>&#123;</span><br><span class="line">  Foo.call(<span class="hljs-keyword">this</span>, name);</span><br><span class="line">  <span class="hljs-keyword">this</span>.label = label;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 我们创建了一个新的 Bar.prototype 对象并关联到 Foo.prototype</span></span><br><span class="line">Bar.prototype = <span class="hljs-built_in">Object</span>.create(Foo.prototype);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 注意！现在没有 Bar.prototype.constructor 了</span></span><br><span class="line"><span class="hljs-comment">// 如果你需要这个属性的话可能需要手动修复一下它</span></span><br><span class="line"><span class="hljs-comment">// Bar.prototype.constructor = Bar;</span></span><br><span class="line"></span><br><span class="line">Bar.prototype.myLabel = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.label;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-keyword">new</span> Bar(<span class="hljs-string">'a'</span>, <span class="hljs-string">'obj a'</span>);</span><br><span class="line"></span><br><span class="line">a.myName();  <span class="hljs-comment">// 'a' </span></span><br><span class="line">a.myLabel(); <span class="hljs-comment">// 'obj a'</span></span><br></pre></td></tr></table></figure>
 
 <p>这段代码的核心部分就是语句 <code>Bar.prototype = Object.create( Foo.prototype )</code></p>
-<p>调用 <code>Object.create(..)</code> 会凭空创建一个’新’对象并把新对象内部的 <code>[[Prototype]]</code> 关联到你指定的对象（本例中是 <code>Foo.prototype</code>）</p>
-<p>换句话说，这条语句的意思是，’创建一个新的 <code>Bar.prototype</code> 对象并把它关联到 <code>Foo.prototype</code>‘</p>
+<p>调用 <code>Object.create()</code> 会凭空创建一个新对象并把新对象内部的 <code>[[Prototype]]</code> 关联到你指定的对象（本例中是 <code>Foo.prototype</code>）</p>
+<p>换句话说，这条语句的意思是，创建一个新的 <code>Bar.prototype</code> 对象并把它关联到 <code>Foo.prototype</code></p>
 <p>声明函数 <code>Bar()</code> 的时候，和其他函数一样，<code>Bar</code> 会有一个 <code>.prototype</code> 关联到默认的对象，但是这个对象并不是我们想要的 <code>Foo.prototype</code></p>
 <p>因此我们创建了一个新对象并把它关联到我们希望的对象上，直接把原始的关联对象抛弃掉</p>
 <p>注意，下面这两种方式是常见的错误做法，实际上它们都存在一些问题</p>
@@ -220,16 +224,16 @@
 
 <p><code>Bar.prototype = Foo.prototype</code> 并不会创建一个关联到 <code>Bar.prototype</code> 的新对象，它只是让 <code>Bar.prototype</code> 直接引用 <code>Foo.prototype</code> 对象</p>
 <p>因此当你执行类似 <code>Bar.prototype.myLabel = ...</code> 的赋值语句时会直接修改 <code>Foo.prototype</code> 对象本身</p>
-<p><code>Bar.prototype = new Foo()</code> 的确会创建一个关联到 <code>Bar.prototype</code> 的新对象，但是它使用了 <code>Foo(..)</code> 的’构造函数调用’</p>
-<p>如果函数 <code>Foo</code> 有一些副作用（比如写日志、修改状态、注册到其他对象、给 <code>this</code> 添加数据属性，等等）的话，就会影响到 <code>Bar()</code> 的’后代’，后果不堪设想</p>
-<p>因此，要创建一个合适的关联对象，我们必须使用 <code>Object.create(..)</code> 而不是使用具有副作用的 <code>Foo(..)</code></p>
+<p><code>Bar.prototype = new Foo()</code> 的确会创建一个关联到 <code>Bar.prototype</code> 的新对象，但是它使用了 <code>new</code> 操作符来进行调用</p>
+<p>如果函数 <code>Foo</code> 有一些副作用（比如写日志、修改状态、注册到其他对象、给 <code>this</code> 添加数据属性，等等）的话，就会影响到 <code>Bar()</code> 的后代</p>
+<p>因此，要创建一个合适的关联对象，我们必须使用 <code>Object.create()</code> 而不是使用具有副作用的 <code>Foo()</code></p>
 <p>这样做唯一的缺点就是需要创建一个新对象然后把旧对象抛弃掉，不能直接修改已有的默认对象</p>
-<h2 id="ES6-中的-Object-setPrototypeOf"><a href="#ES6-中的-Object-setPrototypeOf" class="headerlink" title="ES6 中的 Object.setPrototypeOf(..)"></a>ES6 中的 Object.setPrototypeOf(..)</h2><p>如果能有一个标准并且可靠的方法来修改对象的 <code>[[Prototype]]</code> 关联就好了，在 ES6 之前，我们只能通过设置 <code>.__proto__</code> 属性来实现</p>
-<p>但是这个方法并不是标准并且无法兼容所有浏览器，<code>ES6</code> 添加了辅助函数 <code>Object.setPrototypeOf(..)</code>，可以用标准并且可靠的方法来修改关联</p>
+<h2 id="ES6-中的-Object-setPrototypeOf"><a href="#ES6-中的-Object-setPrototypeOf" class="headerlink" title="ES6 中的 Object.setPrototypeOf()"></a>ES6 中的 Object.setPrototypeOf()</h2><p>如果能有一个标准并且可靠的方法来修改对象的 <code>[[Prototype]]</code> 关联就好了，在 <code>ES6</code> 之前，我们只能通过设置 <code>.__proto__</code> 属性来实现</p>
+<p>但是这个方法并不是标准并且无法兼容所有浏览器，<code>ES6</code> 添加了辅助函数 <code>Object.setPrototypeOf()</code>，可以用标准并且可靠的方法来修改关联</p>
 <p>我们来对比一下两种把 <code>Bar.prototype</code> 关联到 <code>Foo.prototype</code> 的方法</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// ES6 之前需要抛弃默认的 Bar.prototype</span></span><br><span class="line">Bar.ptototype = <span class="hljs-built_in">Object</span>.create(Foo.prototype);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES6 开始可以直接修改现有的 Bar.prototype</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.setPrototypeOf(Bar.prototype, Foo.prototype);</span><br></pre></td></tr></table></figure>
 
-<p>如果忽略掉 <code>Object.create(..)</code> 方法带来的轻微性能损失（抛弃的对象需要进行垃圾回收），它实际上比 <code>ES6</code> 及其之后的方法更短而且可读性更高，不过无论如何，这是两种完全不同的语法</p>
+<p>如果忽略掉 <code>Object.create()</code> 方法带来的轻微性能损失（抛弃的对象需要进行垃圾回收），它实际上比 <code>ES6</code> 及其之后的方法更短而且可读性更高，不过无论如何，这是两种完全不同的语法</p>
 <h2 id="Object-create-null"><a href="#Object-create-null" class="headerlink" title="Object.create(null)"></a>Object.create(null)</h2><p>通过 <code>Object.create(null)</code> 创建出来的对象，就没有 <code>Object.prototype</code> 上的一些方法，所以并不是所有的对象都继承有 <code>Object.prototype</code> 上的一些方法</p>
 <p>看下面代码</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> obj = <span class="hljs-built_in">Object</span>.create(<span class="hljs-literal">null</span>);</span><br><span class="line"></span><br><span class="line">obj.__proto__;   <span class="hljs-comment">// undefined</span></span><br><span class="line"></span><br><span class="line">obj.toString();  <span class="hljs-comment">// obj.toString is not a function</span></span><br></pre></td></tr></table></figure>
@@ -240,7 +244,7 @@
 <li><p>由于这个对象没有原型链，所以 <code>instanceof</code> 操作符无法进行判断，因此总是会返回 <code>false</code></p>
 </li>
 </ul>
-<p>这些特殊的空 <code>[[Prototype]]</code> 对象通常被称作’字典’，它们完全不会受到原型链的干扰，因此非常适合用来存储数据</p>
+<p>这些特殊的空 <code>[[Prototype]]</code> 对象通常被称作字典，它们完全不会受到原型链的干扰，因此非常适合用来存储数据</p>
 <p>另外一个需要注意的地方，那就是并不是所有的函数对象都会有 <code>prototype</code> 属性，代码如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">abc</span>(<span class="hljs-params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">abc.prototype  <span class="hljs-comment">// abc&#123;&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> binded = abc.bind(<span class="hljs-literal">null</span>);</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">typeof</span> binded  <span class="hljs-comment">// 'function'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 但是需要注意，binded 没有 prototype 属性</span></span><br><span class="line">binded.prototype  <span class="hljs-comment">// undefined</span></span><br></pre></td></tr></table></figure>
 
@@ -354,7 +358,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        142
+                        143
                     </p>
                 </div>
             </div>
@@ -406,7 +410,7 @@
         </a></li><li>
         <a class="is-flex" href="#ES6-中的-Object-setPrototypeOf">
         <span class="has-mr-6">3</span>
-        <span>ES6 中的 Object.setPrototypeOf(..)</span>
+        <span>ES6 中的 Object.setPrototypeOf()</span>
         </a></li><li>
         <a class="is-flex" href="#Object-create-null">
         <span class="has-mr-6">4</span>
@@ -435,7 +439,7 @@
                 <span class="level-item">Angular</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">15</span>
+                <span class="level-item tag">16</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/CSS/">
@@ -521,7 +525,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 18.57px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 11.43px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.43px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 12.86px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.14px;">React</a> <a href="/tags/Vue/" style="font-size: 18.57px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 14.29px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 18.75px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 11.25px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.25px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 12.5px;">Node.js</a> <a href="/tags/React/" style="font-size: 16.25px;">React</a> <a href="/tags/Vue/" style="font-size: 17.5px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 13.75px;">jQuery</a>
     </div>
 </div>
 
@@ -535,6 +539,25 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/07/22/Angular/16/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/16.jpg" alt="Angular 中的变化检测机制">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-21T16:00:00.000Z">2019-07-22</time></div>
+                    <a href="/2019/07/22/Angular/16/" class="has-link-black-ter is-size-6">Angular 中的变化检测机制</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -612,25 +635,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/06/28/JavaScript/42/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/42.jpg" alt="遍历对象的几种方法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-27T16:00:00.000Z">2019-06-28</time></div>
-                    <a href="/2019/06/28/JavaScript/42/" class="has-link-black-ter is-size-6">遍历对象的几种方法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -649,7 +653,7 @@
                     <span class="level-item">七月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -1000,7 +1004,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Angular/">
                         <span class="tag">Angular</span>
-                        <span class="tag is-grey">15</span>
+                        <span class="tag is-grey">16</span>
                     </a>
                 </div>
                 
