@@ -16,7 +16,7 @@
 <meta property="og:description" content="constructor 属性返回对创建此对象的数组函数的引用，它是不会影响任何 JavaScript 的内部属性的">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/10.jpg">
-<meta property="og:updated_time" content="2019-07-30T10:23:25.319Z">
+<meta property="og:updated_time" content="2019-07-31T02:25:47.401Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="constructor、__proto__ 和 prototype 区别和关系">
 <meta name="twitter:description" content="constructor 属性返回对创建此对象的数组函数的引用，它是不会影响任何 JavaScript 的内部属性的">
@@ -166,7 +166,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    15 分钟 读完 (大约 2209 个字)
+                    15 分钟 读完 (大约 2234 个字)
                 </span>
                 
                 
@@ -182,7 +182,7 @@
             <p><code>constructor</code> 属性返回对创建此对象的数组函数的引用，它是不会影响任何 <code>JavaScript</code> 的内部属性的</p>
 <a id="more"></a>
 
-<p>看下面一段代码</p>
+<h2 id="constructor-NaN"><a href="#constructor-NaN" class="headerlink" title="constructor"></a>constructor</h2><p>看下面一段代码</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Foo</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// ... </span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// true </span></span><br><span class="line">Foo.prototype.constructor === Foo;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-keyword">new</span> Foo();</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// true</span></span><br><span class="line">a.constructor === Foo;</span><br></pre></td></tr></table></figure>
 
 <p>看起来 <code>a.constructor === Foo</code> 为 <code>true</code> 则意味着 <code>a</code> 确实有一个指向 <code>Foo</code> 的 <code>.constructor</code> 属性，但是事实不是这样</p>
@@ -190,7 +190,7 @@
 <p><code>Foo.prototype</code> 的 <code>.constructor</code> 属性只是 <code>Foo</code> 函数在声明时的默认属性</p>
 <p>如果你创建了一个新对象并替换了函数默认的 <code>.prototype</code> 对象引用，那么新对象并不会自动获得 <code>.constructor</code> 属性</p>
 <p>思考下面的代码</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Foo</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line">Foo.prototype = &#123;&#125;;         <span class="hljs-comment">// 创建一个新原型对象 </span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> a1 = <span class="hljs-keyword">new</span> Foo();</span><br><span class="line"></span><br><span class="line">a1.constructor === Foo;     <span class="hljs-comment">// false </span></span><br><span class="line">a1.constructor === <span class="hljs-built_in">Object</span>;  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Foo</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line">Foo.prototype = &#123;&#125;;         <span class="hljs-comment">// 创建一个新原型对象，这个操作相当于重写了函数的原型，不推荐这么操作</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> a1 = <span class="hljs-keyword">new</span> Foo();</span><br><span class="line"></span><br><span class="line">a1.constructor === Foo;     <span class="hljs-comment">// false </span></span><br><span class="line">a1.constructor === <span class="hljs-built_in">Object</span>;  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
 
 <p><code>a1</code> 并没有 <code>.constructor</code> 属性，所以它会委托 <code>prototype</code> 链上的 <code>Foo.prototype</code>，但是这个对象也没有 <code>.constructor</code> 属性（不过默认的 <code>Foo.prototype</code> 对象有这个属性）</p>
 <p>所以它会继续委托，这次会委托给委托链顶端的 <code>Object.prototype</code>，这个对象有 <code>.constructor</code> 属性，指向内置的 <code>Object()</code> 函数</p>
@@ -425,52 +425,56 @@
                 目录
             </h3>
             <ul class="menu-list"><li>
-        <a class="is-flex" href="#proto-与-prototype">
+        <a class="is-flex" href="#constructor-NaN">
         <span class="has-mr-6">1</span>
+        <span>constructor</span>
+        </a></li><li>
+        <a class="is-flex" href="#proto-与-prototype">
+        <span class="has-mr-6">2</span>
         <span>__proto__ 与 prototype</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#proto">
-        <span class="has-mr-6">1.1</span>
+        <span class="has-mr-6">2.1</span>
         <span>__proto__</span>
         </a></li><li>
         <a class="is-flex" href="#prototype">
-        <span class="has-mr-6">1.2</span>
+        <span class="has-mr-6">2.2</span>
         <span>prototype</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#两者间的联系">
-        <span class="has-mr-6">2</span>
+        <span class="has-mr-6">3</span>
         <span>两者间的联系</span>
         </a></li><li>
         <a class="is-flex" href="#显式原型">
-        <span class="has-mr-6">3</span>
+        <span class="has-mr-6">4</span>
         <span>显式原型</span>
         </a></li><li>
         <a class="is-flex" href="#隐式原型">
-        <span class="has-mr-6">4</span>
+        <span class="has-mr-6">5</span>
         <span>隐式原型</span>
         </a></li><li>
         <a class="is-flex" href="#二者的关系">
-        <span class="has-mr-6">5</span>
+        <span class="has-mr-6">6</span>
         <span>二者的关系</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#通过下面的一些实例巩固一下">
-        <span class="has-mr-6">5.1</span>
+        <span class="has-mr-6">6.1</span>
         <span>通过下面的一些实例巩固一下</span>
         </a></li><li>
         <a class="is-flex" href="#一些说明">
-        <span class="has-mr-6">5.2</span>
+        <span class="has-mr-6">6.2</span>
         <span>一些说明</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#Array-prototype-proto-指向什么？">
-        <span class="has-mr-6">6</span>
+        <span class="has-mr-6">7</span>
         <span>Array.prototype.proto 指向什么？</span>
         </a></li><li>
         <a class="is-flex" href="#自定义对象">
-        <span class="has-mr-6">7</span>
+        <span class="has-mr-6">8</span>
         <span>自定义对象</span>
         </a></li><li>
         <a class="is-flex" href="#instanceof">
-        <span class="has-mr-6">8</span>
+        <span class="has-mr-6">9</span>
         <span>instanceof</span>
         </a></li></ul>
         </div>

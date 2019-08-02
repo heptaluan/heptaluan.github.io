@@ -16,7 +16,7 @@
 <meta property="og:description" content="先来简单说一下 Web 缓存，所谓 Web 缓存，是一种保存 Web 资源副本并在下次请求时直接使用该副本的技术 Web 缓存可以分为这几种，浏览器缓存、CDN 缓存、服务器缓存、数据库数据缓存">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/04.jpg">
-<meta property="og:updated_time" content="2019-07-10T03:36:23.416Z">
+<meta property="og:updated_time" content="2019-07-31T06:28:00.206Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HTTP 缓存机制">
 <meta name="twitter:description" content="先来简单说一下 Web 缓存，所谓 Web 缓存，是一种保存 Web 资源副本并在下次请求时直接使用该副本的技术 Web 缓存可以分为这几种，浏览器缓存、CDN 缓存、服务器缓存、数据库数据缓存">
@@ -189,11 +189,11 @@
 <ul>
 <li><p>首先浏览器会判断，这个资源是否有缓存，没有的话，正常请求</p>
 </li>
-<li><p>如果有缓存的话，浏览会判断缓存是否过期，如果缓存没有过期，则直接使用，此时就是 <code>200（from cache）</code>，通过上次缓存留下的 <code>cache-control</code>，<code>max-age</code> 和 <code>Expires</code>（需要注意的是，<code>cache-control</code> 的优先级高于 <code>Expires</code>，下面会详细介绍）</p>
+<li><p>如果有缓存的话，浏览会判断缓存是否过期，如果缓存没有过期，则直接使用，此时就是 <code>200</code>（<code>from cache</code>），通过上次缓存留下的 <code>cache-control</code>，<code>max-age</code> 和 <code>Expires</code>（需要注意的是，<code>cache-control</code> 的优先级高于 <code>Expires</code>，下面会详细介绍）</p>
 </li>
 <li><p>如果浏览器的缓存过期了，它会请求服务器，服务器会校验缓存的数据是否真的发生了更改</p>
 <ul>
-<li><p>如果服务器端发现数据没有变，就会返回一个 <code>304</code> 告诉浏览器，你请求的数据 <code>&quot;Not Modified&quot;</code>，可以继续用缓存，同时浏览器会更新缓存首部的过期时间等信息</p>
+<li><p>如果服务器端发现数据没有变，就会返回一个 <code>304</code> 告诉浏览器，你请求的数据 <code>Not Modified</code>，可以继续用缓存，同时浏览器会更新缓存首部的过期时间等信息</p>
 </li>
 <li><p>这里浏览器发起请求时，会用到上次缓存首部的 <code>Last-Modified/E-tag</code></p>
 <ul>
@@ -334,7 +334,7 @@
 <td>响应的最大值</td>
 </tr>
 </tbody></table>
-<h4 id="max-age（单位为-s）"><a href="#max-age（单位为-s）" class="headerlink" title="max-age（单位为 s）"></a>max-age（单位为 s）</h4><p>设置缓存的存在时间，相对于发送请求的时间，只有响应报文首部设置 <code>Cache-Control</code> 为非 <code>0</code> 的 <code>max-age</code> 或者设置了大于请求日期的 <code>Expires</code>才有可能命中强缓存</p>
+<h4 id="max-age"><a href="#max-age" class="headerlink" title="max-age"></a>max-age</h4><p>设置缓存的存在时间（单位为 <code>s</code>），相对于发送请求的时间，只有响应报文首部设置 <code>Cache-Control</code> 为非 <code>0</code> 的 <code>max-age</code> 或者设置了大于请求日期的 <code>Expires</code> 才有可能命中强缓存</p>
 <p>当满足这个条件，同时响应报文首部中 <code>Cache-Control</code> 不存在 <code>no-cache</code>、<code>no-store</code> 且请求报文首部不存在 <code>Pragma</code> 字段，才会真正命中强缓存</p>
 <h4 id="no-cache"><a href="#no-cache" class="headerlink" title="no-cache"></a>no-cache</h4><p>表示请求必须先与服务器确认缓存的有效性，如果有效才能使用缓存（协商缓存），无论是响应报文首部还是请求报文首部出现这个字段均一定不会命中强缓存</p>
 <p><code>Chrome</code> 硬性重新加载（<code>Command + shift + R</code>）会在请求的首部加上 <code>Pragma：no-cache</code> 和 <code>Cache-Control：no-cache</code></p>
@@ -421,8 +421,8 @@
 <figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">http-equiv</span>=<span class="hljs-string">"Cache-Control"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"no-cache，no-store，must-revalidate"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>上述虽能禁用缓存，但只有部分浏览器支持，而且由于代理不解析 <code>HTML</code> 文档，故代理服务器也不支持这种方式</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>Expires / Cache-Control</code> 用来设置缓存时间，即资源有效时间（状态码 <code>200（from cache）</code>），可避免请求发送到服务器</p>
-<p><code>Last-Modified / ETag</code> 用来判断资源是否被修改了（状态码 <code>304（not change）</code>），可避免传输相同的资源内容，造成带宽和时间的浪费</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>Expires / Cache-Control</code> 用来设置缓存时间，即资源有效时间（状态码 <code>200</code>（<code>from cache</code>）），可避免请求发送到服务器</p>
+<p><code>Last-Modified / ETag</code> 用来判断资源是否被修改了（状态码 <code>304</code>（<code>not change</code>）），可避免传输相同的资源内容，造成带宽和时间的浪费</p>
 <p>使用原则</p>
 <p>需要兼容 <code>HTTP1.0</code> 的时候需要使用 <code>Expires</code>，不然可以考虑直接使用 <code>Cache-Control</code></p>
 <p>需要处理一秒内多次修改的情况，或者其他 <code>Last-Modified</code> 处理不了的情况，才使用 <code>ETag</code>，否则使用 <code>Last-- Modified</code></p>
@@ -600,9 +600,9 @@
         <span class="has-mr-6">5</span>
         <span>Cache-Control</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#max-age（单位为-s）">
+        <a class="is-flex" href="#max-age">
         <span class="has-mr-6">5.1</span>
-        <span>max-age（单位为 s）</span>
+        <span>max-age</span>
         </a></li><li>
         <a class="is-flex" href="#no-cache">
         <span class="has-mr-6">5.2</span>
