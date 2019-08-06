@@ -2,7 +2,7 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-<title>jQuery 中的 deferred 对象 - heptaluan&#39;s blog</title>
+<title>deferred 对象 - heptaluan&#39;s blog</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
@@ -10,15 +10,15 @@
     <meta name="description" content="jQuery.Deferred() 基于 Promises/A 规范实现，因为 jQuery 本身的设计风格，jQuery.Deferred() 并没有完全遵循 Promises/A 规范 jQuery 的 Deferred 对象支持多个回调绑定多个任务，任务本身既可以是同步也可以是异步的，deferred 对象就是 jQuery 的回调函数解决方案">
 <meta name="keywords" content="jQuery">
 <meta property="og:type" content="article">
-<meta property="og:title" content="jQuery 中的 deferred 对象">
+<meta property="og:title" content="deferred 对象">
 <meta property="og:url" content="http://yoursite.com/2017/06/21/jQuery/02/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
 <meta property="og:description" content="jQuery.Deferred() 基于 Promises/A 规范实现，因为 jQuery 本身的设计风格，jQuery.Deferred() 并没有完全遵循 Promises/A 规范 jQuery 的 Deferred 对象支持多个回调绑定多个任务，任务本身既可以是同步也可以是异步的，deferred 对象就是 jQuery 的回调函数解决方案">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/02.jpg">
-<meta property="og:updated_time" content="2019-07-12T10:34:26.376Z">
+<meta property="og:updated_time" content="2019-08-06T04:01:23.919Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="jQuery 中的 deferred 对象">
+<meta name="twitter:title" content="deferred 对象">
 <meta name="twitter:description" content="jQuery.Deferred() 基于 Promises/A 规范实现，因为 jQuery 本身的设计风格，jQuery.Deferred() 并没有完全遵循 Promises/A 规范 jQuery 的 Deferred 对象支持多个回调绑定多个任务，任务本身既可以是同步也可以是异步的，deferred 对象就是 jQuery 的回调函数解决方案">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/02.jpg">
 
@@ -94,7 +94,7 @@
         <!-- <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="jQuery 中的 deferred 对象" height="28">
+                <img src="/images/logo.svg" alt="deferred 对象" height="28">
             
             </a>
         </div> -->
@@ -147,7 +147,7 @@
     
     <div class="card-image">
         <span class="image is-7by1">
-            <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/02.jpg" alt="jQuery 中的 deferred 对象">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/02.jpg" alt="deferred 对象">
         </span>
     </div>
     
@@ -166,7 +166,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    13 分钟 读完 (大约 1948 个字)
+                    15 分钟 读完 (大约 2315 个字)
                 </span>
                 
                 
@@ -175,7 +175,7 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                jQuery 中的 deferred 对象
+                deferred 对象
             
         </h1>
         <div class="content">
@@ -183,7 +183,20 @@
 <p><code>jQuery</code> 的 <code>Deferred</code> 对象支持多个回调绑定多个任务，任务本身既可以是同步也可以是异步的，<code>deferred</code> 对象就是 <code>jQuery</code> 的回调函数解决方案</p>
 <a id="more"></a>
 
-<p><code>deferred</code> 对象的含义就是”延迟”到未来某个点再执行，它解决了如何处理耗时操作的问题，对那些操作提供了更好的控制，以及统一的编程接口</p>
+<p>说起 <code>deferred</code>，就不得不提到 <code>promise</code>，<code>deferred</code> 和 <code>promise</code> 不同，它们没有共通的规范</p>
+<h2 id="deferred-和-promise-的关系"><a href="#deferred-和-promise-的关系" class="headerlink" title="deferred 和 promise 的关系"></a>deferred 和 promise 的关系</h2><p>简单来说，<code>deferred</code> 和 <code>promise</code> 具有如下的关系</p>
+<ul>
+<li><p><code>deferred</code> 拥有 <code>promise</code></p>
+</li>
+<li><p><code>deferred</code> 具备对 <code>promise</code> 的状态进行操作的特权方法</p>
+</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/jquery/01.png" alt></p>
+<p>如果说 <code>promise</code> 是用来对值进行抽象的话，<code>deferred</code> 则是对处理还没有结束的状态或操作进行抽象化的对象，我们也可以从这一层的区别来理解一下这两者之间的差异</p>
+<p><code>promise</code> 代表了一个对象，这个对象的状态现在还不确定，但是未来一个时间点它的状态要么变为正常值（<code>FulFilled</code>），要么变为异常值（<code>Rejected</code>）</p>
+<p>而 <code>deferred</code> 对象表示了一个处理还没有结束的这种事实，在它的处理结束的时候，可以通过 <code>promise</code> 来取得处理结果</p>
+<p>而本文中主要介绍 <code>deferred</code> 对象，更多关于 <code>promise</code> 和 <code>deferred</code> 的内容可以参考文底链接</p>
+<p><code>deferred</code> 对象的含义就是延迟到未来某个点再执行，它解决了如何处理耗时操作的问题，对那些操作提供了更好的控制，以及统一的编程接口</p>
 <h2 id="deferred-的使用"><a href="#deferred-的使用" class="headerlink" title="deferred 的使用"></a>deferred 的使用</h2><p>有了 <code>deferred</code> 对象以后，我们可以这样写：</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(<span class="hljs-string">'test.html'</span>)</span><br><span class="line">  .done(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; alert(<span class="hljs-string">'success'</span>); &#125;)</span><br><span class="line">  .fail(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; alert(<span class="hljs-string">'error'</span>); &#125;);</span><br></pre></td></tr></table></figure>
 
@@ -193,16 +206,16 @@
 
 <h2 id="resolve-和-reject"><a href="#resolve-和-reject" class="headerlink" title="resolve() 和 reject()"></a>resolve() 和 reject()</h2><p><code>jQuery</code> 规定，<code>deferred</code> 对象有三种执行状态 - 未完成，已完成和已失败</p>
 <ul>
-<li><p>如果执行状态是”已完成”（<code>resolved</code>），<code>deferred</code> 对象立刻调用 <code>done()</code> 方法指定的回调函数</p>
+<li><p>如果执行状态是已完成（<code>resolved</code>），<code>deferred</code> 对象立刻调用 <code>done()</code> 方法指定的回调函数</p>
 </li>
-<li><p>如果执行状态是”已失败”，调用 <code>fail()</code> 方法指定的回调函数</p>
+<li><p>如果执行状态是已失败，调用 <code>fail()</code> 方法指定的回调函数</p>
 </li>
-<li><p>如果执行状态是”未完成”，则继续等待，或者调用 <code>progress()</code> 方法指定的回调函数（<code>jQuery1.7</code> 版本添加）</p>
+<li><p>如果执行状态是未完成，则继续等待，或者调用 <code>progress()</code> 方法指定的回调函数（<code>jQuery1.7</code> 版本添加）</p>
 </li>
 </ul>
 <p>前面部分的 <code>ajax</code> 操作时，<code>deferred</code> 对象会根据返回结果，自动改变自身的执行状态，但是，在 <code>wait()</code> 函数中，这个执行状态必须由程序员手动指定</p>
-<p><code>dtd.resolve()</code> 的意思是，将 <code>dtd</code> 对象的执行状态从”未完成”改为”已完成”，从而触发 <code>done()</code> 方法</p>
-<p>类似的，还存在一个 <code>deferred.reject()</code> 方法，作用是将 <code>dtd</code> 对象的执行状态从”未完成”改为”已失败”，从而触发 <code>fail()</code> 方法：</p>
+<p><code>dtd.resolve()</code> 的意思是，将 <code>dtd</code> 对象的执行状态从未完成改为已完成，从而触发 <code>done()</code> 方法</p>
+<p>类似的，还存在一个 <code>deferred.reject()</code> 方法，作用是将 <code>dtd</code> 对象的执行状态从未完成改为已失败，从而触发 <code>fail()</code> 方法：</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 新建一个 Deferred 对象</span></span><br><span class="line"><span class="hljs-keyword">var</span> dtd = $.Deferred();</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> wait = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">dtd</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> tasks = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    alert(<span class="hljs-string">'done'</span>);</span><br><span class="line">    <span class="hljs-comment">// 改变 Deferred 对象的执行状态</span></span><br><span class="line">    dtd.reject();</span><br><span class="line">  &#125;;</span><br><span class="line">  setTimeout(tasks, <span class="hljs-number">5000</span>);</span><br><span class="line">  <span class="hljs-keyword">return</span> dtd;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">$.when(wait(dtd))</span><br><span class="line">  .done(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; alert(<span class="hljs-string">'success'</span>); &#125;)</span><br><span class="line">  .fail(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; alert(<span class="hljs-string">'error'</span>); &#125;);</span><br></pre></td></tr></table></figure>
 
 <h2 id="promise-对象"><a href="#promise-对象" class="headerlink" title="promise 对象"></a>promise 对象</h2><p>大多数情况下，我们不想让用户从外部更改 <code>deferred</code> 对象的状态，这时，你可以在 <code>deferred</code> 对象的基础上，返回一个针对它的 <code>promise</code> 对象</p>
@@ -255,6 +268,15 @@
 <h4 id="pipe-方法"><a href="#pipe-方法" class="headerlink" title="pipe 方法"></a>pipe 方法</h4><p><code>pipe</code> 方法接受一个函数作为参数，表示在调用 <code>then</code>、 <code>done</code>、 <code>fail</code> 或者 <code>always</code> 方法并且指定的回调函数之前</p>
 <p>先运行 <code>pipe</code> 方法指定的回调函数，它通常用来对服务器返回的数据做初步处理</p>
 <h2 id="综合实例"><a href="#综合实例" class="headerlink" title="综合实例"></a>综合实例</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 使用 deferred 对象写一个 wait 方法，表示等待多少毫秒后再执行</span></span><br><span class="line">$.wait = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">time</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> $.Deferred(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">dfd</span>) </span>&#123;</span><br><span class="line">    setTimeout(dfd.resolve, time);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 使用</span></span><br><span class="line">$.wait(<span class="hljs-number">5000</span>).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  alert(<span class="hljs-string">'from the future!'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 改写 setTimeout 方法</span></span><br><span class="line"><span class="hljs-comment">// 在上面的 wait 方法的基础上，还可以改写 setTimeout 方法，让其返回一个 deferred 对象</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">doSomethingLater</span>(<span class="hljs-params">fn, time</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> dfd = $.Deferred();</span><br><span class="line">  setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    dfd.resolve(fn());</span><br><span class="line">  &#125;, time || <span class="hljs-number">0</span>);</span><br><span class="line">  <span class="hljs-keyword">return</span> dfd.promise();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> promise = doSomethingLater(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'已经延迟执行'</span>);</span><br><span class="line">&#125;, <span class="hljs-number">100</span>);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 自定义操作使用 deferred 接口</span></span><br><span class="line"><span class="hljs-comment">// 利用 deferred 接口，使得任意操作都可以用 done() 和 fail() 指定回调函数</span></span><br><span class="line">Twitter = &#123;</span><br><span class="line">  search: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">query</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> dfr = $.Deferred();</span><br><span class="line">    $.ajax(&#123;</span><br><span class="line">      url: <span class="hljs-string">'http://search.twitter.com/search.json'</span>,</span><br><span class="line">      data: &#123; <span class="hljs-attr">q</span>: query &#125;,</span><br><span class="line">      dataType: <span class="hljs-string">'jsonp'</span>,</span><br><span class="line">      success: dfr.resolve</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="hljs-keyword">return</span> dfr.promise();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 使用方法</span></span><br><span class="line">Twitter.search(<span class="hljs-string">'intridea'</span>).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) </span>&#123;</span><br><span class="line">  alert(data.results[<span class="hljs-number">0</span>].text);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// deferred 对象的另一个优势是可以附加多个回调函数</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">doSomething</span>(<span class="hljs-params">arg</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> dfr = $.Deferred();</span><br><span class="line">  setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    dfr.reject(<span class="hljs-string">'Sorry, something went wrong.'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="hljs-keyword">return</span> dfr;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">doSomething(<span class="hljs-string">'uh oh'</span>).done(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  alert(<span class="hljs-string">'erroring here!'</span>);</span><br><span class="line">&#125;).fail(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">message</span>) </span>&#123;</span><br><span class="line">  alert(message)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>参考</p>
+<p><a href="https://www.kancloud.cn/kancloud/promises-book/44258" target="_blank" rel="noopener">什么是 Promise</a></p>
+<p><a href="http://es6.ruanyifeng.com/#docs/promise" target="_blank" rel="noopener">Promise 对象</a></p>
+<p><a href="https://www.cnblogs.com/lvdabao/p/es6-promise-1.html" target="_blank" rel="noopener">大白话讲解 Promise</a></p>
+<p><a href="http://blog.mediumequalsmessage.com/promise-deferred-objects-in-javascript-pt1-theory-and-semantics" target="_blank" rel="noopener">Promise &amp; Deferred objects in JavaScript Pt.1: Theory and Semantics.</a></p>
+<p><a href="https://github.com/petkaantonov/bluebird/wiki/Promise-anti-patterns#the-deferred-anti-pattern" target="_blank" rel="noopener">The Deferred anti-pattern</a></p>
+<p><a href="https://github.com/kriskowal/q/wiki/Coming-from-jQuery" target="_blank" rel="noopener">Coming from jQuery</a></p>
+
         </div>
         
         <div class="level is-size-7 is-uppercase">
@@ -406,40 +428,44 @@
                 目录
             </h3>
             <ul class="menu-list"><li>
-        <a class="is-flex" href="#deferred-的使用">
+        <a class="is-flex" href="#deferred-和-promise-的关系">
         <span class="has-mr-6">1</span>
+        <span>deferred 和 promise 的关系</span>
+        </a></li><li>
+        <a class="is-flex" href="#deferred-的使用">
+        <span class="has-mr-6">2</span>
         <span>deferred 的使用</span>
         </a></li><li>
         <a class="is-flex" href="#resolve-和-reject">
-        <span class="has-mr-6">2</span>
+        <span class="has-mr-6">3</span>
         <span>resolve() 和 reject()</span>
         </a></li><li>
         <a class="is-flex" href="#promise-对象">
-        <span class="has-mr-6">3</span>
+        <span class="has-mr-6">4</span>
         <span>promise 对象</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#then-方法">
-        <span class="has-mr-6">3.1</span>
+        <span class="has-mr-6">4.1</span>
         <span>then() 方法</span>
         </a></li><li>
         <a class="is-flex" href="#state-方法">
-        <span class="has-mr-6">3.2</span>
+        <span class="has-mr-6">4.2</span>
         <span>state 方法</span>
         </a></li><li>
         <a class="is-flex" href="#notify-和-progress">
-        <span class="has-mr-6">3.3</span>
+        <span class="has-mr-6">4.3</span>
         <span>notify() 和 progress()</span>
         </a></li><li>
         <a class="is-flex" href="#always">
-        <span class="has-mr-6">3.4</span>
+        <span class="has-mr-6">4.4</span>
         <span>always()</span>
         </a></li><li>
         <a class="is-flex" href="#pipe-方法">
-        <span class="has-mr-6">3.5</span>
+        <span class="has-mr-6">4.5</span>
         <span>pipe 方法</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#综合实例">
-        <span class="has-mr-6">4</span>
+        <span class="has-mr-6">5</span>
         <span>综合实例</span>
         </a></li></ul>
         </div>
@@ -1116,7 +1142,7 @@
             <div class="level-start has-text-centered-mobile">
                 <!-- <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="jQuery 中的 deferred 对象" height="28">
+                    <img src="/images/logo.svg" alt="deferred 对象" height="28">
                 
                 </a> -->
                 <p class="is-size-7">

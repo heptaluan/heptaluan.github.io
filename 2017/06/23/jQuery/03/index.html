@@ -16,7 +16,7 @@
 <meta property="og:description" content="因为最近在项目当中使用 jQuery 比较多，所以打算抽点时间去研究一下 jQuery 源码，深入了解一下 主要参考的是 jQuery 技术内幕，大致整理了一下，方便自己理解，更多详细可以去参考原书籍">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/03.jpg">
-<meta property="og:updated_time" content="2019-07-15T09:04:11.095Z">
+<meta property="og:updated_time" content="2019-08-06T08:28:09.779Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jQuery 源码的总体架构">
 <meta name="twitter:description" content="因为最近在项目当中使用 jQuery 比较多，所以打算抽点时间去研究一下 jQuery 源码，深入了解一下 主要参考的是 jQuery 技术内幕，大致整理了一下，方便自己理解，更多详细可以去参考原书籍">
@@ -166,7 +166,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    8 分钟 读完 (大约 1133 个字)
+                    8 分钟 读完 (大约 1137 个字)
                 </span>
                 
                 
@@ -183,16 +183,14 @@
 <p>主要参考的是 <a href="https://book.douban.com/subject/25823709/" target="_blank" rel="noopener">jQuery 技术内幕</a>，大致整理了一下，方便自己理解，更多详细可以去参考原书籍</p>
 <a id="more"></a>
 
-<p> 源码的总体架构</p>
-<p>整体的架构如下</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">window, undefined</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 构造 jQuery 对象</span></span><br><span class="line">  <span class="hljs-keyword">var</span> jQuery = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">selector, context</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> jQuery.fn.init(selector, context, rootjQuery);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 工具函数 Utilities</span></span><br><span class="line">  <span class="hljs-comment">// 异步队列 Deferred</span></span><br><span class="line">  <span class="hljs-comment">// 浏览器测试 Support</span></span><br><span class="line">  <span class="hljs-comment">// 数据缓存 Data</span></span><br><span class="line">  <span class="hljs-comment">// 队列 queue</span></span><br><span class="line">  <span class="hljs-comment">// 属性操作 Attribute</span></span><br><span class="line">  <span class="hljs-comment">// 事件处理 Event</span></span><br><span class="line">  <span class="hljs-comment">// 选择器 Sizzle</span></span><br><span class="line">  <span class="hljs-comment">// DOM遍历</span></span><br><span class="line">  <span class="hljs-comment">// DOM操作</span></span><br><span class="line">  <span class="hljs-comment">// CSS操作</span></span><br><span class="line">  <span class="hljs-comment">// 异步请求 Ajax</span></span><br><span class="line">  <span class="hljs-comment">// 动画 FX</span></span><br><span class="line">  <span class="hljs-comment">// 坐标和大小</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-built_in">window</span>.jQuery = <span class="hljs-built_in">window</span>.$ = jQuery;</span><br><span class="line"></span><br><span class="line">&#125;)(<span class="hljs-built_in">window</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="源码的总体架构"><a href="#源码的总体架构" class="headerlink" title="源码的总体架构"></a>源码的总体架构</h2><p>整体的架构如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">window, undefined</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 构造 jQuery 对象</span></span><br><span class="line">  <span class="hljs-keyword">var</span> jQuery = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">selector, context</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> jQuery.fn.init(selector, context, rootjQuery);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 工具函数 Utilities</span></span><br><span class="line">  <span class="hljs-comment">// 异步队列 Deferred</span></span><br><span class="line">  <span class="hljs-comment">// 浏览器测试 Support</span></span><br><span class="line">  <span class="hljs-comment">// 数据缓存 Data</span></span><br><span class="line">  <span class="hljs-comment">// 队列 queue</span></span><br><span class="line">  <span class="hljs-comment">// 属性操作 Attribute</span></span><br><span class="line">  <span class="hljs-comment">// 事件处理 Event</span></span><br><span class="line">  <span class="hljs-comment">// 选择器 Sizzle</span></span><br><span class="line">  <span class="hljs-comment">// DOM 遍历</span></span><br><span class="line">  <span class="hljs-comment">// DOM 操作</span></span><br><span class="line">  <span class="hljs-comment">// CSS 操作</span></span><br><span class="line">  <span class="hljs-comment">// 异步请求 Ajax</span></span><br><span class="line">  <span class="hljs-comment">// 动画 FX</span></span><br><span class="line">  <span class="hljs-comment">// 坐标和大小</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-built_in">window</span>.jQuery = <span class="hljs-built_in">window</span>.$ = jQuery;</span><br><span class="line"></span><br><span class="line">&#125;)(<span class="hljs-built_in">window</span>);</span><br></pre></td></tr></table></figure>
 
-<p><code>jQuery</code> 的最外层是一个自调用匿名函数，通过定义一个匿名函数，创建了一个 “私有” 的命名空间，该命名空间的变量和方法，不会破坏全局的命名空间</p>
+<p><code>jQuery</code> 的最外层是一个自调用匿名函数，通过定义一个匿名函数，创建了一个私有的命名空间，该命名空间的变量和方法，不会破坏全局的命名空间</p>
 <p>参数中传入 <code>window</code> 变量，使得 <code>window</code> 由全局变量变为局部变量，当在 <code>jQuery</code> 代码块中访问 <code>window</code> 时，不需要将作用域链回退到顶层作用域，这样可以更快的访问 <code>window</code>，更重要的是将 <code>window</code> 作为参数传入，可以在压缩代码时进行优化</p>
 <p>传入 <code>undefined</code> 是因为在自调用匿名函数的作用域内，确保 <code>undefined</code> 是真的未定义，因为 <code>undefined</code> 在某些浏览器下是能够被重写，被赋予新的值的</p>
-<p> 构造函数 jQuery()</p>
-<p>构造函数 <code>jQuery()</code> 有 <code>7</code> 种用法，如下：</p>
-<h2 id="jQuery-selector-context"><a href="#jQuery-selector-context" class="headerlink" title="jQuery(selector, context)"></a>jQuery(selector, context)</h2><p>接收一个 <code>CSS</code> 选择器表达式(<code>selector</code>)和可选的选择器上下文(<code>context</code>)，返回一个包含了匹配的 <code>DOM</code> 元素的 <code>jQuery</code> 对象</p>
+<h2 id="构造函数-jQuery"><a href="#构造函数-jQuery" class="headerlink" title="构造函数 jQuery()"></a>构造函数 jQuery()</h2><p>构造函数 <code>jQuery()</code> 有 <code>7</code> 种用法，如下：</p>
+<h2 id="jQuery-selector-context"><a href="#jQuery-selector-context" class="headerlink" title="jQuery(selector, context)"></a>jQuery(selector, context)</h2><p>接收一个 <code>CSS</code> 选择器表达式（<code>selector</code>）和可选的选择器上下文（<code>context</code>），返回一个包含了匹配的 <code>DOM</code> 元素的 <code>jQuery</code> 对象</p>
 <p>例如，在一个事件监听函数中，可以像下面这样限制查找范围：</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="hljs-string">'div.foo'</span>).click(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 限定查找范围</span></span><br><span class="line">  $(<span class="hljs-string">'span'</span>, <span class="hljs-keyword">this</span>).addClass(<span class="hljs-string">'bar'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
@@ -218,7 +216,7 @@
 <h2 id="jQuery"><a href="#jQuery" class="headerlink" title="jQuery()"></a>jQuery()</h2><p>如果不传入任何的参数，则返回一个空的 <code>jQuery</code> 对象，属性 <code>length</code> 为 <code>0</code></p>
 <p>这个功能可以用来复用 <code>jQuery</code> 对象，例如，创建一个空的 <code>jQuery</code> 对象，然后在需要时先手动修改其中的元素，再调用 <code>jQuery</code> 方法，从而避免重复创建 <code>jQuery</code> 对象</p>
 <p> 总体结构</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> <span class="hljs-number">16</span>  (<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">window, undefined</span>) </span>&#123;</span><br><span class="line">       <span class="hljs-comment">// 构造 jQuery 对象</span></span><br><span class="line"> <span class="hljs-number">22</span>    <span class="hljs-keyword">var</span> jQuery = (<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line"> <span class="hljs-number">25</span>    <span class="hljs-keyword">var</span> jQuery = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> selector, context </span>) </span>&#123;</span><br><span class="line"> <span class="hljs-number">27</span>      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> jQuery.fn.init( selector, context, rootjQuery );</span><br><span class="line"> <span class="hljs-number">28</span>    &#125;,</span><br><span class="line"></span><br><span class="line">       <span class="hljs-comment">// 一堆局部变量声明</span></span><br><span class="line"> <span class="hljs-number">97</span>    jQuery.fn = jQuery.prototype = &#123;</span><br><span class="line"> <span class="hljs-number">98</span>      <span class="hljs-keyword">constructor</span>: jQuery,</span><br><span class="line"> 99      init: function( selector, context, rootjQuery ) &#123; ... &#125;,</span><br><span class="line">           <span class="hljs-comment">// 一堆原型属性和方法</span></span><br><span class="line"><span class="hljs-number">319</span>      &#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-number">322</span>      jQuery.fn.init.prototype = jQuery.fn;</span><br><span class="line"></span><br><span class="line"><span class="hljs-number">324</span>      jQuery.extend = jQuery.fn.extend = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123; ... &#125;;</span><br><span class="line"><span class="hljs-number">388</span>      jQuery.extend(&#123;</span><br><span class="line">           <span class="hljs-comment">// 一堆静态属性和方法</span></span><br><span class="line"><span class="hljs-number">892</span>      &#125;);</span><br><span class="line"></span><br><span class="line"><span class="hljs-number">955</span>      <span class="hljs-keyword">return</span> jQuery;</span><br><span class="line"></span><br><span class="line"><span class="hljs-number">957</span>    &#125;)();</span><br><span class="line">        </span><br><span class="line">       <span class="hljs-comment">// 省略其他模块的代码</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-number">9246</span>   <span class="hljs-built_in">window</span>.jQuery = <span class="hljs-built_in">window</span>.$ = jQuery;</span><br><span class="line"></span><br><span class="line"><span class="hljs-number">9266</span> &#125;)(<span class="hljs-built_in">window</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> <span class="hljs-number">16</span>  (<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">window, undefined</span>) </span>&#123;</span><br><span class="line">       <span class="hljs-comment">// 构造 jQuery 对象</span></span><br><span class="line"> <span class="hljs-number">22</span>    <span class="hljs-keyword">var</span> jQuery = (<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line"> <span class="hljs-number">25</span>      <span class="hljs-keyword">var</span> jQuery = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"> selector, context </span>) </span>&#123;</span><br><span class="line"> <span class="hljs-number">27</span>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> jQuery.fn.init( selector, context, rootjQuery );</span><br><span class="line"> <span class="hljs-number">28</span>      &#125;,</span><br><span class="line"></span><br><span class="line">         <span class="hljs-comment">// 一堆局部变量声明</span></span><br><span class="line"> <span class="hljs-number">97</span>      jQuery.fn = jQuery.prototype = &#123;</span><br><span class="line"> <span class="hljs-number">98</span>        <span class="hljs-keyword">constructor</span>: jQuery,</span><br><span class="line"> 99        init: function( selector, context, rootjQuery ) &#123; ... &#125;,</span><br><span class="line">           <span class="hljs-comment">// 一堆原型属性和方法</span></span><br><span class="line"><span class="hljs-number">319</span>      &#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-number">322</span>      jQuery.fn.init.prototype = jQuery.fn;</span><br><span class="line"></span><br><span class="line"><span class="hljs-number">324</span>      jQuery.extend = jQuery.fn.extend = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123; ... &#125;;</span><br><span class="line"><span class="hljs-number">388</span>      jQuery.extend(&#123;</span><br><span class="line">           <span class="hljs-comment">// 一堆静态属性和方法</span></span><br><span class="line"><span class="hljs-number">892</span>      &#125;);</span><br><span class="line"></span><br><span class="line"><span class="hljs-number">955</span>      <span class="hljs-keyword">return</span> jQuery;</span><br><span class="line"></span><br><span class="line"><span class="hljs-number">957</span>    &#125;)();</span><br><span class="line">        </span><br><span class="line">       <span class="hljs-comment">// 省略其他模块的代码</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-number">9246</span>   <span class="hljs-built_in">window</span>.jQuery = <span class="hljs-built_in">window</span>.$ = jQuery;</span><br><span class="line"></span><br><span class="line"><span class="hljs-number">9266</span> &#125;)(<span class="hljs-built_in">window</span>);</span><br></pre></td></tr></table></figure>
 
 
         </div>
@@ -254,7 +252,7 @@
         
         <div class="level-end">
             <a class="level level-item has-link-grey  article-nav-next" href="/2017/06/21/jQuery/02/">
-                <span class="level-item">jQuery 中的 deferred 对象</span>
+                <span class="level-item">deferred 对象</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -372,32 +370,40 @@
                 目录
             </h3>
             <ul class="menu-list"><li>
-        <a class="is-flex" href="#jQuery-selector-context">
+        <a class="is-flex" href="#源码的总体架构">
         <span class="has-mr-6">1</span>
+        <span>源码的总体架构</span>
+        </a></li><li>
+        <a class="is-flex" href="#构造函数-jQuery">
+        <span class="has-mr-6">2</span>
+        <span>构造函数 jQuery()</span>
+        </a></li><li>
+        <a class="is-flex" href="#jQuery-selector-context">
+        <span class="has-mr-6">3</span>
         <span>jQuery(selector, context)</span>
         </a></li><li>
         <a class="is-flex" href="#jQuery-html-ownerDocument-和-jQuery-html-props">
-        <span class="has-mr-6">2</span>
+        <span class="has-mr-6">4</span>
         <span>jQuery(html, ownerDocument) 和 jQuery(html, props)</span>
         </a></li><li>
         <a class="is-flex" href="#jQuery-element-or-elementsArray">
-        <span class="has-mr-6">3</span>
+        <span class="has-mr-6">5</span>
         <span>jQuery(element or elementsArray)</span>
         </a></li><li>
         <a class="is-flex" href="#jQuery-object">
-        <span class="has-mr-6">4</span>
+        <span class="has-mr-6">6</span>
         <span>jQuery(object)</span>
         </a></li><li>
         <a class="is-flex" href="#jQuery-callback">
-        <span class="has-mr-6">5</span>
+        <span class="has-mr-6">7</span>
         <span>jQuery( callback )</span>
         </a></li><li>
         <a class="is-flex" href="#jQuery-jQuery-object">
-        <span class="has-mr-6">6</span>
+        <span class="has-mr-6">8</span>
         <span>jQuery(jQuery object)</span>
         </a></li><li>
         <a class="is-flex" href="#jQuery">
-        <span class="has-mr-6">7</span>
+        <span class="has-mr-6">9</span>
         <span>jQuery()</span>
         </a></li></ul>
         </div>
