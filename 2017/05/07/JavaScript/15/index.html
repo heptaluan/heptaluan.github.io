@@ -16,7 +16,7 @@
 <meta property="og:description" content="要想改变被调用函数的上下文，可以使用 call 或 apply 方法，但如果重复使用就会很不方便，因为每次都要把上下文对象作为参数传递，而且还会使代码变得不直观 针对这种情况，我们可以使用 bind 方法来永久地绑定函数的上下文，使其无论被谁调用，上下文都是固定的">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/15.jpg">
-<meta property="og:updated_time" content="2019-08-06T08:01:43.670Z">
+<meta property="og:updated_time" content="2019-08-07T06:15:34.283Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Function.prototype.bind()">
 <meta name="twitter:description" content="要想改变被调用函数的上下文，可以使用 call 或 apply 方法，但如果重复使用就会很不方便，因为每次都要把上下文对象作为参数传递，而且还会使代码变得不直观 针对这种情况，我们可以使用 bind 方法来永久地绑定函数的上下文，使其无论被谁调用，上下文都是固定的">
@@ -248,7 +248,7 @@
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Function</span>.prototype.bind = <span class="hljs-built_in">Function</span>.prototype.bind || <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">context</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 保存 this</span></span><br><span class="line">  <span class="hljs-keyword">const</span> self = <span class="hljs-keyword">this</span>;</span><br><span class="line">  <span class="hljs-comment">// 保存第一部分参数（拆分）</span></span><br><span class="line">  <span class="hljs-keyword">const</span> args = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">1</span>);</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// 合并参数（实现 currying 功能）</span></span><br><span class="line">    <span class="hljs-keyword">return</span> self.apply(context, args.concat(<span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>)));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>一个较为完善的实现</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Function</span>.prototype.myBind = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">oThis, ...args</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> thisFn = <span class="hljs-keyword">this</span></span><br><span class="line">  <span class="hljs-keyword">let</span> fToBind = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...params</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// 判断是否通过 new 调用，如果是 new 调用就绑定到 this 上，否则就绑定到传入的 oThis 上</span></span><br><span class="line">    <span class="hljs-keyword">const</span> context = <span class="hljs-keyword">this</span> <span class="hljs-keyword">instanceof</span> fToBind ? <span class="hljs-keyword">this</span> : <span class="hljs-built_in">Object</span>(oThis)</span><br><span class="line">    <span class="hljs-comment">// 老规矩，利用 apply 绑定 this 指向并且传递参数</span></span><br><span class="line">    <span class="hljs-keyword">return</span> thisFn.apply(context, ...args, ...params)</span><br><span class="line">  &#125;</span><br><span class="line">  fToBind.prototype = <span class="hljs-built_in">Object</span>.create(thisFn.prototype)</span><br><span class="line">  <span class="hljs-keyword">return</span> fToBind</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Function</span>.prototype.bind = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">oThis, ...args</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> context = <span class="hljs-keyword">this</span></span><br><span class="line">  <span class="hljs-keyword">let</span> fToBind = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...params</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// 判断是否通过 new 调用，如果是 new 调用就绑定到 this 上，否则就绑定到传入的 oThis 上</span></span><br><span class="line">    <span class="hljs-keyword">const</span> context = <span class="hljs-keyword">this</span> <span class="hljs-keyword">instanceof</span> fToBind ? <span class="hljs-keyword">this</span> : <span class="hljs-built_in">Object</span>(oThis)</span><br><span class="line">    <span class="hljs-comment">// 老规矩，利用 apply 绑定 this 指向并且传递参数</span></span><br><span class="line">    <span class="hljs-keyword">return</span> context.apply(context, ...args, ...params)</span><br><span class="line">  &#125;</span><br><span class="line">  fToBind.prototype = <span class="hljs-built_in">Object</span>.create(context.prototype)</span><br><span class="line">  <span class="hljs-keyword">return</span> fToBind</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>再来对比看一下完整的实现方式，摘选自 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function/bind#Compatibility" target="_blank" rel="noopener">MDN</a></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Function</span>.prototype.bind) &#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 传入的 oThis 就是 foo.bind(&#123;a: 1&#125;, 20) 中传入的对象 &#123;a: 1&#125;</span></span><br><span class="line">  <span class="hljs-built_in">Function</span>.prototype.bind = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">oThis</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span> !== <span class="hljs-string">"function"</span>) &#123;</span><br><span class="line">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">"Function.prototype.bind - what is trying to be bound is not callable"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 调用数组方法，剔除掉第一个参数，得到剩余参数</span></span><br><span class="line">    <span class="hljs-keyword">var</span> aArgs = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">1</span>),</span><br><span class="line"></span><br><span class="line">      <span class="hljs-comment">// 这里的 this 指向函数对象 foo</span></span><br><span class="line">      fToBind = <span class="hljs-keyword">this</span>,</span><br><span class="line"></span><br><span class="line">      fNOP = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;,</span><br><span class="line"></span><br><span class="line">      <span class="hljs-comment">// 最后返回的就是这个对象，其实就是 fToBind.apply(...)</span></span><br><span class="line">      <span class="hljs-comment">// 在不调用 func 的情况下，func 本质就是返回的 apply(..) 函数</span></span><br><span class="line">      fBound = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-comment">// 这里的 this 指的是调用 bind 后 func 的执行环境</span></span><br><span class="line">        <span class="hljs-comment">// 第一点，见最后</span></span><br><span class="line">        <span class="hljs-keyword">return</span> fToBind.apply(<span class="hljs-keyword">this</span> <span class="hljs-keyword">instanceof</span> fNOP</span><br><span class="line">          ? <span class="hljs-keyword">this</span></span><br><span class="line">          : oThis,</span><br><span class="line"></span><br><span class="line">          <span class="hljs-comment">// 这里的 arguments 和上面的不一样，这里是 func() 的执行环境</span></span><br><span class="line">          <span class="hljs-comment">// 比如 foo.bind(&#123;a: 1&#125;, 20) 中剩余的参数 20 和调用 func(b, c) 时的参数 b 和 c</span></span><br><span class="line">          <span class="hljs-comment">// 这里就利用 aArgs.concat() 连接了起来，实现了柯里化的功能</span></span><br><span class="line">          <span class="hljs-comment">// 单单执行 bind 的时候是空数组（类数组对象），因为 arguments 是指向 实参 对象的引用</span></span><br><span class="line">          <span class="hljs-comment">// 只有在函数调用的时候，传入了实参以后，才会有 arguments 对象</span></span><br><span class="line">          aArgs.concat(<span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>)));</span><br><span class="line">      &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 第二点，见最后</span></span><br><span class="line">    fNOP.prototype = <span class="hljs-keyword">this</span>.prototype;</span><br><span class="line">    fBound.prototype = <span class="hljs-keyword">new</span> fNOP();</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">return</span> fBound;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -507,7 +507,7 @@
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">11</span>
+                <span class="level-item tag">10</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -531,7 +531,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">56</span>
+                <span class="level-item tag">57</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -599,6 +599,25 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/08/02/JavaScript/57/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/57.jpg" alt="JavaScript 中一些常用方法的实现">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-01T16:00:00.000Z">2019-08-02</time></div>
+                    <a href="/2019/08/02/JavaScript/57/" class="has-link-black-ter is-size-6">JavaScript 中一些常用方法的实现</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -676,25 +695,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/07/05/Node/06/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/06.jpg" alt="libuv">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-04T16:00:00.000Z">2019-07-05</time></div>
-                    <a href="/2019/07/05/Node/06/" class="has-link-black-ter is-size-6">libuv</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -706,6 +706,17 @@
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2019/07/">
@@ -933,7 +944,7 @@
                     <span class="level-item">九月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -1071,7 +1082,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">11</span>
+                        <span class="tag is-grey">10</span>
                     </a>
                 </div>
                 
@@ -1092,7 +1103,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">56</span>
+                        <span class="tag is-grey">57</span>
                     </a>
                 </div>
                 

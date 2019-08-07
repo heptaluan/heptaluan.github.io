@@ -16,7 +16,7 @@
 <meta property="og:description" content="在页面加载解析时，文档结构表（HTML）一般会优于样式表（CSS）渲染 这时候渲染出来的是没有样式的页面，然后当浏览器解析到样式表的时候，又结合样式表重新渲染了一遍文档，这时候页面就添加了样式，而前后两次的页面变换会出现一瞬间的闪烁 这种现象称之为文档样式短暂失效（Flash of Unstyled Content），简称为 FOUC">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/44.jpg">
-<meta property="og:updated_time" content="2019-07-25T06:15:59.705Z">
+<meta property="og:updated_time" content="2019-08-07T07:46:01.241Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="什么是 FOUC">
 <meta name="twitter:description" content="在页面加载解析时，文档结构表（HTML）一般会优于样式表（CSS）渲染 这时候渲染出来的是没有样式的页面，然后当浏览器解析到样式表的时候，又结合样式表重新渲染了一遍文档，这时候页面就添加了样式，而前后两次的页面变换会出现一瞬间的闪烁 这种现象称之为文档样式短暂失效（Flash of Unstyled Content），简称为 FOUC">
@@ -166,7 +166,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    15 分钟 读完 (大约 2191 个字)
+                    15 分钟 读完 (大约 2187 个字)
                 </span>
                 
                 
@@ -202,8 +202,8 @@
 <h2 id="渲染机制"><a href="#渲染机制" class="headerlink" title="渲染机制"></a>渲染机制</h2><p>节选自 <a href="https://developers.google.com/web/fundamentals/performance/critical-rendering-path/?hl=en" target="_blank" rel="noopener">Critical Rendering Path</a></p>
 <p>想要理清楚为什么会这样，我们需要先来了解一下 <code>Web</code> 浏览器的渲染机制，简单来说有以下几个步骤</p>
 <p>1、解析 <code>HTML</code> 标签, 构建 <code>DOM</code> 树（<code>Document Object Model</code>，浏览器将 <code>HTML</code> 解析成树形的数据结构，简称 <code>DOM</code>）</p>
-<p>2、解析 <code>CSS</code> 标签, 构建 <code>CSSOM</code>（<code>CSS Object Model</code>，浏览器将 <code>CSS</code> 代码解析成树形的数据结构，见下方）树</p>
-<p><code>DOM</code> 和 <code>CSSOM</code> 都是以 <code>Bytes → characters → tokens → nodes → object model</code> 这样的方式生成最终的数据</p>
+<p>2、解析 <code>CSS</code> 标签, 构建 <code>CSSOM</code> 树（<code>CSS Object Model</code>，浏览器将 <code>CSS</code> 代码解析成树形的数据结构，见下方）</p>
+<p><code>DOM</code> 和 <code>CSSOM</code> 都是以 <code>Bytes ==&gt; characters ==&gt; tokens ==&gt; nodes ==&gt; object model</code> 这样的方式生成最终的数据</p>
 <p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/js/38.png" alt></p>
 <blockquote>
 <p><code>DOM</code> 树的构建过程是一个深度遍历过程：当前节点的所有子节点都构建好后才会去构建当前节点的下一个兄弟节点</p>
@@ -216,15 +216,15 @@
 <blockquote>
 <p><code>display: none</code> 的节点不会被加入 <code>Render Tree</code>，而 <code>visibility: hidden</code> 则会，所以如果某个节点最开始是不显示的，设为 <code>display: none</code> 是更优的</p>
 </blockquote>
-<h2 id="浏览器的渲染过程"><a href="#浏览器的渲染过程" class="headerlink" title="浏览器的渲染过程"></a>浏览器的渲染过程</h2><p>1、<code>Create/Update DOM And request css/image/js</code>：浏览器请求到 <code>HTML</code> 代码后，在生成 <code>DOM</code> 的最开始阶段（应该是 <code>Bytes → characters</code> 后），并行发起 <code>CSS</code>、图片、<code>js</code> 的请求，无论他们是否在 <code>HEAD</code> 里</p>
+<h2 id="浏览器的渲染过程"><a href="#浏览器的渲染过程" class="headerlink" title="浏览器的渲染过程"></a>浏览器的渲染过程</h2><p>1、<code>Create/Update DOM And request css/image/js</code>：浏览器请求到 <code>HTML</code> 代码后，在生成 <code>DOM</code> 的最开始阶段（应该是 <code>Bytes → characters</code> 后），并行发起 <code>CSS</code>、图片、<code>JavaScript</code> 的请求，无论他们是否在 <code>HEAD</code> 里</p>
 <blockquote>
-<p>注意：发起 <code>js</code> 文件的下载 <code>request</code> 并不需要 <code>DOM</code> 处理到那个 <code>script</code>节点</p>
+<p>注意：发起 <code>JavaScript</code> 文件的下载 <code>request</code> 并不需要 <code>DOM</code> 处理到那个 <code>script</code>节点</p>
 </blockquote>
 <p>2、<code>Create/Update Render CSSOM</code>：<code>CSS</code> 文件下载完成，开始构建 <code>CSSOM</code></p>
-<p>3、<code>Create/Update Render Tree</code>：所有 <code>CSS</code> 文件下载完成，<code>CSSOM</code> 构建结束后，和 <code>DOM</code> 一起生成 <code>Render Tree</code></p>
+<p>3、<code>Create/Update Render Tree</code>：所有 <code>CSS</code> 文件下载完成，<code>CSSOM</code> 构建结束后，和 <code>DOM</code> 一起生成 <code>Render Tree</code></p>
 <p>4、<code>Layout</code>：有了 <code>Render Tree</code>，浏览器已经能知道网页中有哪些节点、各个节点的 <code>CSS</code> 定义以及他们的从属关系，下一步操作称之为 <code>Layout</code>，顾名思义就是计算出每个节点在屏幕中的位置</p>
 <p>5、<code>Painting</code>：<code>Layout</code> 后，浏览器已经知道了哪些节点要显示（<code>which nodes are visible</code>）、每个节点的 <code>CSS</code> 属性是什么（<code>their computed styles</code>）、每个节点在屏幕中的位置是哪里（<code>geometry</code>），就进入了最后一步：<code>Painting</code>，按照算出来的规则，通过显卡，把内容画到屏幕上</p>
-<p>以上五个步骤前三个步骤之所有使用 <code>&#39;Create/Update&#39;</code> 是因为 <code>DOM</code>、<code>CSSOM</code>、<code>Render Tree</code> 都可能在第一次 <code>Painting</code> 后又被更新多次，比如 <code>JS</code> 修改了 <code>DOM</code> 或者 <code>CSS</code> 属性</p>
+<p>以上五个步骤前三个步骤之所有使用 <code>&#39;Create/Update&#39;</code> 是因为 <code>DOM</code>、<code>CSSOM</code>、<code>Render Tree</code> 都可能在第一次 <code>Painting</code> 后又被更新多次，比如 <code>JavaScript</code> 修改了 <code>DOM</code> 或者 <code>CSS</code> 属性</p>
 <p><code>Layout</code> 和 <code>Painting</code> 也会被重复执行，除了 <code>DOM</code>、<code>CSSOM</code> 更新的原因外，图片下载完成后也需要调用 <code>Layout</code> 和 <code>Painting</code> 来更新网页</p>
 <h2 id="关于-CSSOM"><a href="#关于-CSSOM" class="headerlink" title="关于 CSSOM"></a>关于 CSSOM</h2><p><code>CSSOM</code> 是 <code>CSS Object Model</code> 的缩写</p>
 <p>大体上来说，<code>CSSOM</code> 是一个建立在 <code>Web</code> 页面上的 <code>CSS</code> 样式的映射，它和 <code>DOM</code> 类似，但是只针对 <code>CSS</code> 而不是 <code>HTML</code>，浏览器将 <code>DOM</code> 和 <code>CSSOM</code> 结合来渲染 <code>Web</code> 页面</p>
@@ -480,7 +480,7 @@
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">11</span>
+                <span class="level-item tag">10</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -504,7 +504,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">56</span>
+                <span class="level-item tag">57</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -572,6 +572,25 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/08/02/JavaScript/57/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/57.jpg" alt="JavaScript 中一些常用方法的实现">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-01T16:00:00.000Z">2019-08-02</time></div>
+                    <a href="/2019/08/02/JavaScript/57/" class="has-link-black-ter is-size-6">JavaScript 中一些常用方法的实现</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -649,25 +668,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/07/05/Node/06/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/06.jpg" alt="libuv">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-04T16:00:00.000Z">2019-07-05</time></div>
-                    <a href="/2019/07/05/Node/06/" class="has-link-black-ter is-size-6">libuv</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -679,6 +679,17 @@
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2019/07/">
@@ -906,7 +917,7 @@
                     <span class="level-item">九月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -1044,7 +1055,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">11</span>
+                        <span class="tag is-grey">10</span>
                     </a>
                 </div>
                 
@@ -1065,7 +1076,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">56</span>
+                        <span class="tag is-grey">57</span>
                     </a>
                 </div>
                 

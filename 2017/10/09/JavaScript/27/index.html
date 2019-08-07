@@ -16,7 +16,7 @@
 <meta property="og:description" content="this 是 JavaScript 语言的一个关键字它代表函数运行时，自动生成的一个内部对象，只能在函数内部使用 随着函数使用场合的不同，this 的值会发生变化，但是有一个总的原则，那就是 this 指向的是，调用函数的那个对象">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/27.jpg">
-<meta property="og:updated_time" content="2019-07-10T03:25:09.313Z">
+<meta property="og:updated_time" content="2019-08-07T09:54:46.334Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的 this">
 <meta name="twitter:description" content="this 是 JavaScript 语言的一个关键字它代表函数运行时，自动生成的一个内部对象，只能在函数内部使用 随着函数使用场合的不同，this 的值会发生变化，但是有一个总的原则，那就是 this 指向的是，调用函数的那个对象">
@@ -166,7 +166,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    13 分钟 读完 (大约 1907 个字)
+                    13 分钟 读完 (大约 1952 个字)
                 </span>
                 
                 
@@ -204,12 +204,15 @@
 
 <p>对于内部函数，即声明在另外一个函数体内的函数，这种绑定到全局对象的方式会产生另外一个问题</p>
 <p>我们仍然以前面提到的 <code>point</code> 对象为例，这次我们希望在 <code>moveTo</code> 方法内定义两个函数，分别将 <code>x</code>，<code>y</code> 坐标进行平移</p>
-<p>结果可能出乎大家意料，不仅 <code>point</code> 对象没有移动，反而多出两个全局变量 <code>x</code>，<code>y</code></p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> point = &#123;</span><br><span class="line">  x: <span class="hljs-number">0</span>,</span><br><span class="line">  y: <span class="hljs-number">0</span>,</span><br><span class="line">  moveTo: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="hljs-comment">// 内部函数</span></span><br><span class="line">    <span class="hljs-keyword">var</span> moveX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.x = x;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 内部函数</span></span><br><span class="line">    <span class="hljs-keyword">var</span> moveY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">y</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.y = y;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    moveX(x);</span><br><span class="line">    moveY(y);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">point.moveTo(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>);</span><br><span class="line"></span><br><span class="line">point.x; <span class="hljs-comment">// ==&gt;0 </span></span><br><span class="line">point.y; <span class="hljs-comment">// ==&gt;0 </span></span><br><span class="line"></span><br><span class="line">x; <span class="hljs-comment">// ==&gt;1 </span></span><br><span class="line">y; <span class="hljs-comment">// ==&gt;1</span></span><br></pre></td></tr></table></figure>
+<p>结果可能出乎意料，不仅 <code>point</code> 对象没有移动，反而多出两个全局变量 <code>x</code>，<code>y</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> point = &#123;</span><br><span class="line">  x: <span class="hljs-number">0</span>,</span><br><span class="line">  y: <span class="hljs-number">0</span>,</span><br><span class="line">  moveTo: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// 内部函数</span></span><br><span class="line">    <span class="hljs-keyword">var</span> moveX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.x = x;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="hljs-comment">// 内部函数</span></span><br><span class="line">    <span class="hljs-keyword">var</span> moveY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">y</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.y = y;</span><br><span class="line">    &#125;;</span><br><span class="line">    moveX(x);</span><br><span class="line">    moveY(y);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">point.moveTo(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>);</span><br><span class="line"></span><br><span class="line">point.x; <span class="hljs-comment">// ==&gt; 0 </span></span><br><span class="line">point.y; <span class="hljs-comment">// ==&gt; 0 </span></span><br><span class="line"></span><br><span class="line">x; <span class="hljs-comment">// ==&gt; 1 </span></span><br><span class="line">y; <span class="hljs-comment">// ==&gt; 1</span></span><br></pre></td></tr></table></figure>
 
 <p>内部函数中的 <code>this</code> 成为全局的了，为了规避这一设计缺陷，一般使用变量替代的方法，该变量常被命名为 <code>that/_this/self</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> point = &#123;</span><br><span class="line">  x: <span class="hljs-number">0</span>,</span><br><span class="line">  y: <span class="hljs-number">0</span>,</span><br><span class="line">  moveTo: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;</span><br><span class="line">    <span class="hljs-comment">// 内部函数</span></span><br><span class="line">    <span class="hljs-keyword">var</span> moveX = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x</span>) </span>&#123;</span><br><span class="line">      that.x = x;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="hljs-comment">// 内部函数</span></span><br><span class="line">    <span class="hljs-keyword">var</span> moveY = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">y</span>) </span>&#123;</span><br><span class="line">      that.y = y;</span><br><span class="line">    &#125;</span><br><span class="line">    moveX(x);</span><br><span class="line">    moveY(y);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">point.moveTo(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>);</span><br><span class="line"></span><br><span class="line">point.x; <span class="hljs-comment">// ==&gt;1 </span></span><br><span class="line">point.y; <span class="hljs-comment">// ==&gt;1</span></span><br></pre></td></tr></table></figure>
 
+<blockquote>
+<p>一个简单的记忆方法，当函数当中嵌套函数就会形成闭包环境，这时的 <code>this</code> 指向就可能指向 <code>window</code> 了</p>
+</blockquote>
 <h2 id="作为构造函数调用"><a href="#作为构造函数调用" class="headerlink" title="作为构造函数调用"></a>作为构造函数调用</h2><p>所谓构造函数，就是通过这个函数生成一个新对象（<code>object</code>），实际上，它们甚至都不能说是一种特殊的函数类型，它们只是被 <code>new</code> 操作符调用的普通函数而已</p>
 <p>包括内置对象函数在内的所有函数都可以用 <code>new</code> 来调用，这种函数调用被称为构造函数调用，实际上并不存在所谓的构造函数，只有对于函数的构造调用</p>
 <p>使用 <code>new</code> 来调用函数，会自动执行以下操作</p>
@@ -239,9 +242,9 @@
 <ol>
 <li><p>由 <code>new</code> 调用绑定到新创建的对象</p>
 </li>
-<li><p>由 <code>call</code> 或者 <code>apply</code>（或者 <code>bind</code>）调用？绑定到指定的对象</p>
+<li><p>如果是由 <code>call</code> 或者 <code>apply</code>（或者 <code>bind</code>）调用则绑定到指定的对象</p>
 </li>
-<li><p>由上下文对象调用？绑定到那个上下文对象</p>
+<li><p>如果是由上下文对象调用则绑定到那个上下文对象</p>
 </li>
 <li><p>默认：在严格模式下绑定到 <code>undefined</code>，否则绑定到全局对象</p>
 </li>
@@ -253,7 +256,7 @@
 <p>对象 <code>p</code> 没有属于它自己的 <code>f</code> 属性，它的 <code>f</code> 属性继承自它的原型，但是这对于最终在 <code>o</code> 中找到 <code>f</code> 属性的查找过程来说没有关系</p>
 <p>查找过程首先从 <code>p.f</code> 的引用开始，所以函数中的 <code>this</code> 指向 <code>p</code>，也就是说，因为 <code>f</code> 是作为 <code>p</code> 的方法调用的，所以它的 <code>this</code> 指向了 <code>p</code></p>
 <h2 id="getter-与-setter-中的-this"><a href="#getter-与-setter-中的-this" class="headerlink" title="getter 与 setter 中的 this"></a>getter 与 setter 中的 this</h2><p>作为 <code>getter</code> 或 <code>setter</code> 函数都会绑定 <code>this</code> 到从设置属性或得到属性的那个对象</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">modulus</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.sqrt(<span class="hljs-keyword">this</span>.re * <span class="hljs-keyword">this</span>.re + <span class="hljs-keyword">this</span>.im * <span class="hljs-keyword">this</span>.im);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> o = &#123;</span><br><span class="line">  re: <span class="hljs-number">1</span>,</span><br><span class="line">  im: <span class="hljs-number">-1</span>,</span><br><span class="line">  <span class="hljs-keyword">get</span> phase() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.atan2(<span class="hljs-keyword">this</span>.im, <span class="hljs-keyword">this</span>.re);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.defineProperty(o, <span class="hljs-string">'modulus'</span>, &#123;</span><br><span class="line">  <span class="hljs-keyword">get</span>: modulus, enumerable: true, configurable: true</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">// -0.78... 1.4142...</span><br><span class="line">console.log(o.phase, o.modulus);</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">modulus</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.sqrt(<span class="hljs-keyword">this</span>.re * <span class="hljs-keyword">this</span>.re + <span class="hljs-keyword">this</span>.im * <span class="hljs-keyword">this</span>.im);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> o = &#123;</span><br><span class="line">  re: <span class="hljs-number">1</span>,</span><br><span class="line">  im: <span class="hljs-number">-1</span>,</span><br><span class="line">  <span class="hljs-keyword">get</span> phase() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.atan2(<span class="hljs-keyword">this</span>.im, <span class="hljs-keyword">this</span>.re);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.defineProperty(o, <span class="hljs-string">'modulus'</span>, &#123;</span><br><span class="line">  enumerable: <span class="hljs-literal">true</span>,</span><br><span class="line">  configurable: <span class="hljs-literal">true</span>,</span><br><span class="line">  <span class="hljs-keyword">get</span>: modulus</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">// -0.78... 1.4142...</span><br><span class="line">console.log(o.phase, o.modulus);</span><br></pre></td></tr></table></figure>
 
 <h2 id="DOM-事件处理函数中的-this"><a href="#DOM-事件处理函数中的-this" class="headerlink" title="DOM 事件处理函数中的 this"></a>DOM 事件处理函数中的 this</h2><p>当函数被用作事件处理函数时，它的 <code>this</code> 指向触发事件的元素</p>
 <p>需要注意，<code>IE</code> 的 <code>attachEvent()</code> 中的 <code>this</code> 指向 <code>window</code>（<code>IE11+</code> 已经支持 <code>addEventListener()</code>）</p>
@@ -482,7 +485,7 @@
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">11</span>
+                <span class="level-item tag">10</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -506,7 +509,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">56</span>
+                <span class="level-item tag">57</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -574,6 +577,25 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/08/02/JavaScript/57/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/57.jpg" alt="JavaScript 中一些常用方法的实现">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-01T16:00:00.000Z">2019-08-02</time></div>
+                    <a href="/2019/08/02/JavaScript/57/" class="has-link-black-ter is-size-6">JavaScript 中一些常用方法的实现</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -651,25 +673,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/07/05/Node/06/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/06.jpg" alt="libuv">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-04T16:00:00.000Z">2019-07-05</time></div>
-                    <a href="/2019/07/05/Node/06/" class="has-link-black-ter is-size-6">libuv</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -681,6 +684,17 @@
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2019/07/">
@@ -908,7 +922,7 @@
                     <span class="level-item">九月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -1046,7 +1060,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">11</span>
+                        <span class="tag is-grey">10</span>
                     </a>
                 </div>
                 
@@ -1067,7 +1081,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">56</span>
+                        <span class="tag is-grey">57</span>
                     </a>
                 </div>
                 
