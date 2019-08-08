@@ -2,24 +2,24 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-<title>Fetch - heptaluan&#39;s blog</title>
+<title>Vue 中一些容易忽视的知识点 - heptaluan&#39;s blog</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-    <meta name="description" content="首先我们先来看看 Fetch 与 jQuery 的 ajax() 方法的一些不同点">
+    <meta name="description" content="主要记录一些在使用 Vue 开发过程中容易忽视的知识点">
 <meta name="keywords" content="Vue">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Fetch">
+<meta property="og:title" content="Vue 中一些容易忽视的知识点">
 <meta property="og:url" content="http://yoursite.com/2018/04/11/Vue/01/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="首先我们先来看看 Fetch 与 jQuery 的 ajax() 方法的一些不同点">
+<meta property="og:description" content="主要记录一些在使用 Vue 开发过程中容易忽视的知识点">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/01.jpg">
-<meta property="og:updated_time" content="2019-07-13T04:13:48.552Z">
+<meta property="og:updated_time" content="2019-08-08T07:52:37.373Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Fetch">
-<meta name="twitter:description" content="首先我们先来看看 Fetch 与 jQuery 的 ajax() 方法的一些不同点">
+<meta name="twitter:title" content="Vue 中一些容易忽视的知识点">
+<meta name="twitter:description" content="主要记录一些在使用 Vue 开发过程中容易忽视的知识点">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/01.jpg">
 
 
@@ -94,7 +94,7 @@
         <!-- <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="Fetch" height="28">
+                <img src="/images/logo.svg" alt="Vue 中一些容易忽视的知识点" height="28">
             
             </a>
         </div> -->
@@ -147,7 +147,7 @@
     
     <div class="card-image">
         <span class="image is-7by1">
-            <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/01.jpg" alt="Fetch">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/01.jpg" alt="Vue 中一些容易忽视的知识点">
         </span>
     </div>
     
@@ -166,7 +166,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    6 分钟 读完 (大约 880 个字)
+                    5 分钟 读完 (大约 762 个字)
                 </span>
                 
                 
@@ -175,110 +175,65 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                Fetch
+                Vue 中一些容易忽视的知识点
             
         </h1>
         <div class="content">
-            <p>首先我们先来看看 <code>Fetch</code> 与 <code>jQuery</code> 的 <code>ajax()</code> 方法的一些不同点</p>
+            <p>主要记录一些在使用 <code>Vue</code> 开发过程中容易忽视的知识点</p>
 <a id="more"></a>
 
+<h2 id="用-key-管理可复用的元素"><a href="#用-key-管理可复用的元素" class="headerlink" title="用 key 管理可复用的元素"></a>用 key 管理可复用的元素</h2><p>比如</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;template v-<span class="hljs-keyword">if</span>=<span class="hljs-string">"loginType === 'username'"</span>&gt;</span><br><span class="line">  &lt;label&gt;Username&lt;<span class="hljs-regexp">/label&gt;</span></span><br><span class="line"><span class="hljs-regexp">  &lt;input placeholder="Enter your username"&gt;</span></span><br><span class="line"><span class="hljs-regexp">&lt;/</span>template&gt;</span><br><span class="line"></span><br><span class="line">&lt;template v-<span class="hljs-keyword">else</span>&gt;</span><br><span class="line">  &lt;label&gt;Email&lt;<span class="hljs-regexp">/label&gt;</span></span><br><span class="line"><span class="hljs-regexp">  &lt;input placeholder="Enter your email address"&gt;</span></span><br><span class="line"><span class="hljs-regexp">&lt;/</span>template&gt;</span><br></pre></td></tr></table></figure>
 
+<p>上面的代码中切换 <code>loginType</code> 将不会清除已经输入的内容</p>
+<p>因为两个模板使用了相同的元素，<code>input</code> 不会被替换掉——仅仅是替换了它的 <code>placeholder</code></p>
+<p>如果要解决这种问题，只需添加一个具有唯一值的 <code>key</code> 属性即可</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;template v-<span class="hljs-keyword">if</span>=<span class="hljs-string">"loginType === 'username'"</span>&gt;</span><br><span class="line">  &lt;label&gt;Username&lt;<span class="hljs-regexp">/label&gt;</span></span><br><span class="line"><span class="hljs-regexp">  &lt;input placeholder="Enter your username" key="username-input"&gt;</span></span><br><span class="line"><span class="hljs-regexp">&lt;/</span>template&gt;</span><br><span class="line"></span><br><span class="line">&lt;template v-<span class="hljs-keyword">else</span>&gt;</span><br><span class="line">  &lt;label&gt;Email&lt;<span class="hljs-regexp">/label&gt;</span></span><br><span class="line"><span class="hljs-regexp">  &lt;input placeholder="Enter your email address" key="email-input"&gt;</span></span><br><span class="line"><span class="hljs-regexp">&lt;/</span>template&gt;</span><br></pre></td></tr></table></figure>
+
+<h2 id="替换数组"><a href="#替换数组" class="headerlink" title="替换数组"></a>替换数组</h2><p>由于 <code>JavaScript</code> 的限制，<code>Vue</code> 不能检测以下变动的数组</p>
 <ul>
-<li><p>基于 <code>Promise</code> 设计</p>
+<li><p>当你利用索引直接设置一个项时，例如：<code>vm.items[indexOfItem] = newValue</code></p>
 </li>
-<li><p>当接收一个代表错误的 <code>HTTP</code> 状态码的时候，从 <code>fetch()</code> 返回的 <code>Promise</code> 不会被标记为 <code>reject</code>，即使该 <code>HTTP</code> 响应的状态码是 <code>404</code> 或 <code>500</code>，相反，它会将 <code>Promise</code> 状态标记为 <code>resolve</code>（但是会将 <code>resolve</code> 的返回值的 <code>ok</code> 属性设置为 <code>false</code>），仅当网络故障或请求被阻止时，才会标记为 <code>reject</code></p>
-</li>
-<li><p>默认情况下，<code>fetch</code> 不会从服务端发送或接收任何 <code>cookies</code>，如果站点依赖用户 <code>session</code>，则会导致未经认证的请求（要发送 <code>cookie</code>，必须设置 <code>credentials</code> 选项），<code>credentials</code> 是 <code>request</code> 接收的只读属性，用于表示用户代理是否应该在跨域请求的情况下从其他域发送 <code>cookies</code>（与 <code>XHR</code> 的 <code>withCredentials</code> 标志相似）</p>
+<li><p>当你修改数组的长度时，例如：<code>vm.items.length = newLength</code></p>
 </li>
 </ul>
-<h2 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fetch(url, options).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">response</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// handle HTTP response</span></span><br><span class="line">&#125;, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// handle network error</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>为了解决第一类问题，以下两种方式都可以实现和 <code>vm.items[indexOfItem] = newValue</code> 相同的效果，同时也将触发状态更新</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Vue.set(app.items, indexOfItem, newValue)</span><br></pre></td></tr></table></figure>
 
-<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 因为现在支持性不是很好，所以需要兼容</span></span><br><span class="line"><span class="hljs-built_in">require</span>(<span class="hljs-string">'babel-polyfill'</span>);</span><br><span class="line"><span class="hljs-built_in">require</span>(<span class="hljs-string">'es6-promise'</span>).polyfill()</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">import</span> <span class="hljs-string">'whatwg-fetch'</span></span><br><span class="line"></span><br><span class="line">fetch(url, &#123;</span><br><span class="line">  method: <span class="hljs-string">'POST'</span>,</span><br><span class="line">  body: <span class="hljs-built_in">JSON</span>.stringify(data),</span><br><span class="line">  headers: &#123;</span><br><span class="line">    <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'application/json'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  credentials: <span class="hljs-string">'same-origin'</span></span><br><span class="line">&#125;).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">response</span>) </span>&#123;</span><br><span class="line">  response.status      <span class="hljs-comment">// =&gt; number 100-599</span></span><br><span class="line">  response.statusText  <span class="hljs-comment">// =&gt; String</span></span><br><span class="line">  response.headers     <span class="hljs-comment">// =&gt; Headers</span></span><br><span class="line">  response.url         <span class="hljs-comment">// =&gt; String</span></span><br><span class="line"></span><br><span class="line">  response.text().then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">responseText</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// ...</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err</span>) </span>&#123;</span><br><span class="line">  err.message  <span class="hljs-comment">// =&gt; String</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.items.splice(indexOfItem, <span class="hljs-number">1</span>, newValue)</span><br></pre></td></tr></table></figure>
 
-<h2 id="相关参数"><a href="#相关参数" class="headerlink" title="相关参数"></a>相关参数</h2><h4 id="url"><a href="#url" class="headerlink" title="url"></a>url</h4><p>定义要获取的资源</p>
+<p>为了解决第二类问题，可以使用 <code>splice</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.items.splice(newLength)</span><br></pre></td></tr></table></figure>
+
+<h2 id="对象更改检测注意事项"><a href="#对象更改检测注意事项" class="headerlink" title="对象更改检测注意事项"></a>对象更改检测注意事项</h2><p>由于 <code>JavaScript</code> 的限制，<code>Vue</code> 不能检测对象属性的添加或删除</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> vm = <span class="hljs-keyword">new</span> Vue(&#123;</span><br><span class="line">  data: &#123;</span><br><span class="line">    <span class="hljs-comment">// vm.a 现在是响应的</span></span><br><span class="line">    a: <span class="hljs-number">1</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// vm.b 不是响应的</span></span><br><span class="line">vm.b = <span class="hljs-number">2</span>;</span><br></pre></td></tr></table></figure>
+
+<p>对于已经创建的实例，<code>Vue</code> 不能动态添加根级别的响应式属性，但是可以使用 <code>Vue.set(object, key, value)</code> 方法向嵌套对象添加响应式属性</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> vm = <span class="hljs-keyword">new</span> Vue(&#123;</span><br><span class="line">  data: &#123;</span><br><span class="line">    userProfile: &#123;</span><br><span class="line">      name: <span class="hljs-string">'zhangsan'</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 添加一个新的响应属性 age</span></span><br><span class="line">Vue.set(vm.userProfile, <span class="hljs-string">'age'</span>, <span class="hljs-number">22</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 也可以使用 vm.$set 实例方法</span></span><br><span class="line">vm.$<span class="hljs-keyword">set</span>(this.userProfile, 'age', 22)</span><br></pre></td></tr></table></figure>
+
+<p>有时可能需要为已有对象赋予多个新属性，比如使用 <code>Object.assign()</code> 或者 <code>_.extend()</code></p>
+<p>在这种情况下，应该用两个对象的属性创建一个新的对象</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 不要像这样</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.assign(<span class="hljs-keyword">this</span>.userProfile, &#123;</span><br><span class="line">  age: <span class="hljs-number">22</span>,</span><br><span class="line">  favoriteColor: <span class="hljs-string">'Vue Green'</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 而是像这样</span></span><br><span class="line"><span class="hljs-keyword">this</span>.userProfile = <span class="hljs-built_in">Object</span>.assign(&#123;&#125;, <span class="hljs-keyword">this</span>.userProfile, &#123;</span><br><span class="line">  age: <span class="hljs-number">22</span>,</span><br><span class="line">  favoriteColor: <span class="hljs-string">'Vue Green'</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="特殊的-is-特性"><a href="#特殊的-is-特性" class="headerlink" title="特殊的 is 特性"></a>特殊的 is 特性</h2><p>当使用 <code>DOM</code> 作为模板时（例如，使用 <code>el</code> 选项来把 <code>Vue</code> 实例挂载到一个已有内容的元素上），你会受到 <code>HTML</code> 本身的一些限制</p>
+<p>因为 <code>Vue</code> 只有在浏览器解析、规范化模板之后才能获取其内容</p>
+<p>尤其要注意，像 <code>ul</code>、<code>ol</code>、<code>table</code>、<code>select</code> 这样的元素里允许包含的元素有限制，而另一些像 <code>option</code> 这样的元素只能出现在某些特定元素的内部</p>
+<p>在自定义组件中使用这些受限制的元素时会导致一些问题，例如：</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;table&gt;</span><br><span class="line">  &lt;my-row&gt;...&lt;<span class="hljs-regexp">/my-row&gt;</span></span><br><span class="line"><span class="hljs-regexp">&lt;/</span>table&gt;</span><br></pre></td></tr></table></figure>
+
+<p>自定义组件 <code>my-row</code> 会被当作无效的内容，因此会导致错误的渲染结果，变通的方案是使用特殊的 <code>is</code> 特性</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;table&gt;</span><br><span class="line">  &lt;tr is=<span class="hljs-string">"my-row"</span>&gt;<span class="hljs-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span></span></span><br><span class="line">&lt;<span class="hljs-regexp">/table&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>应当注意，如果使用来自以下来源之一的字符串模板，则没有这些限制：</p>
 <ul>
-<li><p>一个 <code>USVString</code> 字符串，包含要获取资源的 <code>URL</code></p>
+<li><p><code>&lt;script type=&quot;text/x-template&quot;&gt;</code></p>
 </li>
-<li><p>一个 <code>Reauest</code> 对象</p>
+<li><p><code>JavaScript</code> 内联模板字符串</p>
 </li>
-</ul>
-<h4 id="options（可选）"><a href="#options（可选）" class="headerlink" title="options（可选）"></a>options（可选）</h4><p>一个配置项对象，包括所有对请求的设置，可选的参数有</p>
-<ul>
-<li><p><code>methods</code> - 请求方法，<code>GET</code>、<code>POST</code></p>
-</li>
-<li><p><code>headers</code> - 请求的头信息，形式为 <code>Headers</code> 对象或 <code>ByteString</code></p>
-</li>
-<li><p><code>body</code> - 请求的 <code>body</code> 信息，可能是 <code>bold</code>，<code>BufferSource</code>，<code>FormData</code>，<code>URLSearchParams</code> 或者 <code>USVString</code> 对象（<code>GET</code> 或 <code>HEAD</code> 方法的请求不包含 <code>body</code> 信息）</p>
-</li>
-<li><p><code>mode</code> - 请求的模式，如 <code>cors</code>，<code>no-cors</code>，<code>some-origin</code></p>
-</li>
-<li><p><code>credentials</code> - 请求的 <code>credentials</code>，如 <code>omit</code>，<code>same-origin</code>，<code>include</code></p>
-</li>
-<li><p><code>cache</code> - 请求的 <code>cache</code> 模式，如 <code>default</code>，<code>no-store</code>，<code>reload</code>，<code>no-cache</code>，<code>force-cache</code>，<code>only-if-cached</code></p>
+<li><p><code>.vue</code> 组件</p>
 </li>
 </ul>
-<h4 id="response"><a href="#response" class="headerlink" title="response"></a>response</h4><p>一个 <code>Promise</code>，<code>resolve</code> 时回传 <code>Response</code> 对象</p>
-<p>属性如下</p>
-<ul>
-<li><p><code>status (number) HTTP</code> - 请求结果参数 <code>100–599</code></p>
-</li>
-<li><p><code>statusText (String)</code> - 服务器返回的状态报告</p>
-</li>
-<li><p><code>ok (boolean)</code> - 如果返回 <code>200</code> 表示请求成功则为 <code>true</code></p>
-</li>
-<li><p><code>headers (Headers)</code> - 返回头部信息</p>
-</li>
-<li><p><code>url (String)</code> - 请求的地址</p>
-</li>
-</ul>
-<p>方法如下</p>
-<ul>
-<li><p><code>text()</code> - 以 <code>string</code> 的形式生成请求 <code>text</code></p>
-</li>
-<li><p><code>json()</code> - 生成 <code>JSON.parse(responseText)</code> 的结果</p>
-</li>
-<li><p><code>blob()</code> - 生成一个 <code>Blob</code></p>
-</li>
-<li><p><code>arrayBuffer()</code> - 生成一个 <code>ArrayBuffer</code></p>
-</li>
-<li><p><code>formData()</code> - 生成格式化的数据，可用于其他的请求</p>
-</li>
-</ul>
-<p>其他方法</p>
-<ul>
-<li><p><code>clone()</code></p>
-</li>
-<li><p><code>Response.error()</code></p>
-</li>
-<li><p><code>Response.redirect()</code></p>
-</li>
-</ul>
-<h4 id="response-headers"><a href="#response-headers" class="headerlink" title="response.headers"></a>response.headers</h4><ul>
-<li><p><code>has(name) (boolean)</code> - 判断是否存在该信息头</p>
-</li>
-<li><p><code>get(name) (String)</code> - 获取信息头的数据</p>
-</li>
-<li><p><code>getAll(name) (Array)</code> - 获取所有头部数据</p>
-</li>
-<li><p><code>set(name, value)</code> - 设置信息头的参数</p>
-</li>
-<li><p><code>append(name, value)</code> - 添加 header 的内容</p>
-</li>
-<li><p><code>delete(name)</code> - 删除 header 的信息</p>
-</li>
-<li><p><code>forEach(function(value, name){ ... }, [thisContext])</code> - 循环读取 <code>header</code> 的信息</p>
-</li>
-</ul>
-<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><h4 id="GET"><a href="#GET" class="headerlink" title="GET"></a>GET</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// HTML</span></span><br><span class="line">fetch(<span class="hljs-string">'./index.html'</span>).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">response</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> response.text()</span><br><span class="line">&#125;).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">body</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">document</span>.body.innerHTML = body</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// IMAGE</span></span><br><span class="line"><span class="hljs-keyword">var</span> img = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'img'</span>)</span><br><span class="line"></span><br><span class="line">fetch(<span class="hljs-string">'index.jpg'</span>).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">response</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> response.blob()</span><br><span class="line">&#125;).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">bold</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> objectURL = URL.createObjectURL(bold)</span><br><span class="line">  img.src = objectURL</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// JSON</span></span><br><span class="line">fetch(url)</span><br><span class="line">  .then(<span class="hljs-function"><span class="hljs-params">response</span> =&gt;</span> <span class="hljs-keyword">return</span> response.json())</span><br><span class="line">  .then(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(data))</span><br><span class="line">  .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err))</span><br></pre></td></tr></table></figure>
-
-<h4 id="POST"><a href="#POST" class="headerlink" title="POST"></a>POST</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">fetch(<span class="hljs-string">'/users'</span>, &#123;</span><br><span class="line">  methods: <span class="hljs-string">'POST'</span>,</span><br><span class="line">  headers: &#123;</span><br><span class="line">    <span class="hljs-string">'Accept'</span>: <span class="hljs-string">'application/json'</span>,</span><br><span class="line">    <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'application/json'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  body: <span class="hljs-built_in">JSON</span>.stringify(&#123;</span><br><span class="line">    name: <span class="hljs-string">'zhangsan'</span>,</span><br><span class="line">    login: <span class="hljs-string">'zhangsan'</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 检查请求状态</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkStatus</span>(<span class="hljs-params">response</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (response.status &gt;= <span class="hljs-number">200</span> &amp;&amp; response.status &lt; <span class="hljs-number">300</span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> response</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> err = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(response.statusText)</span><br><span class="line">    err.response = response</span><br><span class="line">    <span class="hljs-keyword">throw</span> err</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">parseJSON</span>(<span class="hljs-params">response</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> response.json()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fetch(<span class="hljs-string">'/users'</span>)</span><br><span class="line">  .then(checkStatus)</span><br><span class="line">  .then(parseJSON)</span><br><span class="line">  .then(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(data))</span><br><span class="line">  .catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(err))</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// File Upload</span></span><br><span class="line"><span class="hljs-keyword">let</span> input = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'input[type="file"]'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> data = <span class="hljs-keyword">new</span> FormData()</span><br><span class="line">data.append(<span class="hljs-string">'file'</span>, input.files[<span class="hljs-number">0</span>])</span><br><span class="line">data.append(<span class="hljs-string">'user'</span>, <span class="hljs-string">'zhangsan'</span>)</span><br><span class="line"></span><br><span class="line">fetch(<span class="hljs-string">'/upload'</span>, &#123;</span><br><span class="line">    method: <span class="hljs-string">'POST'</span>,</span><br><span class="line">    body: data</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
+<p>因此，请尽可能使用字符串模板</p>
 
         </div>
         
@@ -389,7 +344,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        143
+                        142
                     </p>
                 </div>
             </div>
@@ -431,46 +386,22 @@
                 目录
             </h3>
             <ul class="menu-list"><li>
-        <a class="is-flex" href="#基本语法">
+        <a class="is-flex" href="#用-key-管理可复用的元素">
         <span class="has-mr-6">1</span>
-        <span>基本语法</span>
+        <span>用 key 管理可复用的元素</span>
         </a></li><li>
-        <a class="is-flex" href="#示例">
+        <a class="is-flex" href="#替换数组">
         <span class="has-mr-6">2</span>
-        <span>示例</span>
+        <span>替换数组</span>
         </a></li><li>
-        <a class="is-flex" href="#相关参数">
+        <a class="is-flex" href="#对象更改检测注意事项">
         <span class="has-mr-6">3</span>
-        <span>相关参数</span>
-        </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#url">
-        <span class="has-mr-6">3.1</span>
-        <span>url</span>
+        <span>对象更改检测注意事项</span>
         </a></li><li>
-        <a class="is-flex" href="#options（可选）">
-        <span class="has-mr-6">3.2</span>
-        <span>options（可选）</span>
-        </a></li><li>
-        <a class="is-flex" href="#response">
-        <span class="has-mr-6">3.3</span>
-        <span>response</span>
-        </a></li><li>
-        <a class="is-flex" href="#response-headers">
-        <span class="has-mr-6">3.4</span>
-        <span>response.headers</span>
-        </a></li></ul></li><li>
-        <a class="is-flex" href="#实例">
+        <a class="is-flex" href="#特殊的-is-特性">
         <span class="has-mr-6">4</span>
-        <span>实例</span>
-        </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#GET">
-        <span class="has-mr-6">4.1</span>
-        <span>GET</span>
-        </a></li><li>
-        <a class="is-flex" href="#POST">
-        <span class="has-mr-6">4.2</span>
-        <span>POST</span>
-        </a></li></ul></li></ul>
+        <span>特殊的 is 特性</span>
+        </a></li></ul>
         </div>
     </div>
 </div>
@@ -558,7 +489,7 @@
                 <span class="level-item">Vue</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">15</span>
+                <span class="level-item tag">14</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/jQuery/">
@@ -580,7 +511,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 18.75px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 11.25px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.25px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 12.5px;">Node.js</a> <a href="/tags/React/" style="font-size: 16.25px;">React</a> <a href="/tags/Vue/" style="font-size: 17.5px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 13.75px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 18.57px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 11.43px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.43px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 12.86px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.14px;">React</a> <a href="/tags/Vue/" style="font-size: 17.14px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 14.29px;">jQuery</a>
     </div>
 </div>
 
@@ -873,7 +804,7 @@
                     <span class="level-item">四月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -1126,7 +1057,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
-                        <span class="tag is-grey">15</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 
@@ -1156,7 +1087,7 @@
             <div class="level-start has-text-centered-mobile">
                 <!-- <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="Fetch" height="28">
+                    <img src="/images/logo.svg" alt="Vue 中一些容易忽视的知识点" height="28">
                 
                 </a> -->
                 <p class="is-size-7">

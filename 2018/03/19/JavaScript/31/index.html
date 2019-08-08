@@ -16,7 +16,7 @@
 <meta property="og:description" content="首先，我们要知道为什么要使用 promise 来看下面这个示例，读取一个文件，在控制台输出这个文件内容">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/31.jpg">
-<meta property="og:updated_time" content="2019-07-14T09:16:28.509Z">
+<meta property="og:updated_time" content="2019-08-08T07:25:13.990Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="promise 和 setTimeout">
 <meta name="twitter:description" content="首先，我们要知道为什么要使用 promise 来看下面这个示例，读取一个文件，在控制台输出这个文件内容">
@@ -166,7 +166,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    12 分钟 读完 (大约 1783 个字)
+                    12 分钟 读完 (大约 1798 个字)
                 </span>
                 
                 
@@ -194,18 +194,18 @@
 <p>这就是传说中的 <code>callback hell</code></p>
 <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>首先它是一个对象，它和 <code>JavaScript</code> 普通的对象没什么区别，同时，它也是一种规范，跟异步操作约定了统一的接口</p>
 <p>表示一个异步操作的最终结果，以同步的方式来写代码，执行的操作是异步的，但又保证程序执行的顺序是同步的</p>
-<ol>
-<li><p><code>promise</code> 只有三种状态，未完成，完成 (<code>fulfilled</code>) 和失败 (<code>rejected</code>)</p>
+<ul>
+<li><p>只有三种状态，未完成，完成（<code>fulfilled</code>）和失败（<code>rejected</code>）</p>
 </li>
-<li><p><code>promise</code> 的状态可以由未完成转换成完成，或者未完成转换成失败</p>
+<li><p>状态可以由未完成转换成完成，或者未完成转换成失败</p>
 </li>
-<li><p><code>promise</code> 的状态转换只发生一次</p>
+<li><p>状态转换只发生一次</p>
 </li>
-<li><p><code>Promise</code> 状态转换完成后就是外部<strong>不可变</strong>的值，我们可以安全地把这个值传递给第三方，并确信它不会被有意无意的修改（特别是对于多方查看同一个 Promise 状态转换的情况）</p>
+<li><p>状态转换完成后就是外部<strong>不可变</strong>的值，我们可以安全地把这个值传递给第三方，并确信它不会被有意无意的修改（特别是对于多方查看同一个 <code>Promise</code> 状态转换的情况）</p>
 </li>
-</ol>
+</ul>
 <p><code>promise</code> 有一个 <code>then</code> 方法，<code>then</code> 方法可以接受 <code>3</code> 个函数作为参数</p>
-<p>前两个函数对应 <code>promise</code> 的两种状态 <code>fulfilled</code>, <code>rejected</code> 的回调函数，第三个函数用于处理进度信息（<code>.then()</code> 总是返回一个新的 <code>promise</code>）</p>
+<p>前两个函数对应 <code>promise</code> 的两种状态 <code>fulfilled</code>，<code>rejected</code> 的回调函数，第三个函数用于处理进度信息（<code>.then()</code> 总是返回一个新的 <code>promise</code>）</p>
 <p>一个简单的读取文件示例：</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>);</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">readFile</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">resolve, reject</span>) </span>&#123;</span><br><span class="line">    fs.readFile(<span class="hljs-string">'1.txt'</span>, <span class="hljs-string">'utf-8'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, data</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (err) &#123;</span><br><span class="line">        reject(err)</span><br><span class="line">      &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">        resolve(data)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">readFile().then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(data)</span><br><span class="line">&#125;).catch(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(err)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
@@ -244,9 +244,9 @@
 <ol>
 <li><p>最基本的，输出 <code>0 - 4</code></p>
 </li>
-<li><p><code>setTimeout</code> 会延迟执行，那么执行到 <code>console.log</code> 的时候，其实 <code>i</code> 已经变成 <code>5</code> 了，所以结果为 <code>5</code> 个 <code>5</code></p>
+<li><p><code>setTimeout</code> 会延迟执行，那么执行到 <code>console.log</code> 的时候，其实 <code>i</code> 已经变成 <code>5</code> 了，所以结果为 <code>5</code> 个 <code>5</code>（每一秒输出一个 <code>5</code>）</p>
 </li>
-<li><p>如果要输出 <code>0</code> 到 <code>4</code>，可以使用三和四两种方式</p>
+<li><p>将 <code>var</code> 变成了 <code>let</code>，结果同样是 <code>0</code> 到 <code>4</code>，可以使用三和四两种方式</p>
 </li>
 <li><p>去掉 <code>function()</code> 中的 <code>i</code>，内部就没有对 <code>i</code> 保持引用，结果还是 <code>5</code> 个 <code>5</code></p>
 </li>
@@ -265,11 +265,11 @@
 <p>更对详细见：<a href="https://promisesaplus.com/" target="_blank" rel="noopener">Promises/A+</a></p>
 <p><code>A</code> 与 <code>A+</code> 的不同点</p>
 <ul>
-<li><p><code>-A+</code> 规范通过术语 <code>thenable</code> 来区分 <code>promise</code> 对象</p>
+<li><p><code>A+</code> 规范通过术语 <code>thenable</code> 来区分 <code>promise</code> 对象</p>
 </li>
-<li><p><code>-A+</code> 定义 <code>onFulfilled/onRejectd</code> 必须是作为函数来调用，而且调用过程必须是异步的</p>
+<li><p><code>A+</code> 定义 <code>onFulfilled/onRejectd</code> 必须是作为函数来调用，而且调用过程必须是异步的</p>
 </li>
-<li><p><code>-A+</code> 严格定义了 <code>then</code> 方法链式调用时，<code>onFulfilled/onRejectd</code> 的调用顺序</p>
+<li><p><code>A+</code> 严格定义了 <code>then</code> 方法链式调用时，<code>onFulfilled/onRejectd</code> 的调用顺序</p>
 </li>
 </ul>
 
@@ -382,7 +382,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        143
+                        142
                     </p>
                 </div>
             </div>
@@ -531,7 +531,7 @@
                 <span class="level-item">Vue</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">15</span>
+                <span class="level-item tag">14</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/jQuery/">
@@ -553,7 +553,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 18.75px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 11.25px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.25px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 12.5px;">Node.js</a> <a href="/tags/React/" style="font-size: 16.25px;">React</a> <a href="/tags/Vue/" style="font-size: 17.5px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 13.75px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 18.57px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 11.43px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.43px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 12.86px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.14px;">React</a> <a href="/tags/Vue/" style="font-size: 17.14px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 14.29px;">jQuery</a>
     </div>
 </div>
 
@@ -846,7 +846,7 @@
                     <span class="level-item">四月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -1099,7 +1099,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
-                        <span class="tag is-grey">15</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 

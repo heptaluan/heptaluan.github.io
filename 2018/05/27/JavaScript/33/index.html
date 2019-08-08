@@ -16,7 +16,7 @@
 <meta property="og:description" content="先来看看下面这个示例">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/33.jpg">
-<meta property="og:updated_time" content="2019-08-07T14:12:43.719Z">
+<meta property="og:updated_time" content="2019-08-08T10:56:55.204Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="运算符优先级">
 <meta name="twitter:description" content="先来看看下面这个示例">
@@ -166,7 +166,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    7 分钟 读完 (大约 1033 个字)
+                    9 分钟 读完 (大约 1403 个字)
                 </span>
                 
                 
@@ -200,7 +200,7 @@
 
 <p>可以发现，参数 <code>arguments</code> 是可缺省的，那么就意味着，对于不含参数的构造函数而言，<code>new Person()</code> 和 <code>new Person</code> 是一样的</p>
 <p>那么又会涉及到一个问题，为什么执行的时候是执行的 <code>new Person()</code>，而不是 <code>(new Person)()</code> 呢，这里就涉及到操作符的执行顺序</p>
-<p>这里也只列举几个这里用到的运算符，更多详细的可以参考 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Operator_Precedence#Table" target="_blank" rel="noopener">运算符优先级 (JavaScript)</a></p>
+<p>这里也只列举几个这里用到的运算符，更多详细的可以参考 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Operator_Precedence#Table" target="_blank" rel="noopener">MDN - 运算符优先级</a></p>
 <table>
 <thead>
 <tr>
@@ -278,14 +278,35 @@
 
 <h4 id="Foo-getName"><a href="#Foo-getName" class="headerlink" title="Foo.getName();"></a>Foo.getName();</h4><p>函数 <code>Foo</code> 本身并没有执行，执行的是函数的属性 <code>getName</code>，输出的是 <code>2</code></p>
 <h4 id="getName"><a href="#getName" class="headerlink" title="getName();"></a>getName();</h4><p>这是在全局执行 <code>getName()</code>，根据我们上面的分析可知，输出的结果是 <code>4</code></p>
-<h4 id="Foo-getName-1"><a href="#Foo-getName-1" class="headerlink" title="Foo().getName();"></a>Foo().getName();</h4><p>因为 () 的优先级最高，所以首先运行 <code>Foo()</code>，全局的 <code>getName</code> 被覆盖成输出 <code>console.log(&#39;1&#39;)</code>，并且返回的 <code>this</code> 此时代表的是 <code>window</code></p>
+<h4 id="Foo-getName-1"><a href="#Foo-getName-1" class="headerlink" title="Foo().getName();"></a>Foo().getName();</h4><p>因为 <code>()</code> 的优先级最高，所以首先运行 <code>Foo()</code>，全局的 <code>getName</code> 被覆盖成输出 <code>console.log(&#39;1&#39;)</code>，并且返回的 <code>this</code> 此时代表的是 <code>window</code></p>
 <p>也就是相当于执行了 <code>window.getName()</code>，所以输出的结果为 <code>1</code></p>
 <h4 id="getName-1"><a href="#getName-1" class="headerlink" title="getName();"></a>getName();</h4><p>这个因为之前调用了 <code>Foo()</code>，所以输出的结果仍然是 <code>1</code></p>
 <h4 id="new-Foo-getName"><a href="#new-Foo-getName" class="headerlink" title="new Foo.getName();"></a>new Foo.getName();</h4><p>因为 <code>.</code> 操作符要比 <code>new</code> 优先级要高，所以执行的是 <code>new (Foo.getName)()</code>，所以输出为 <code>2</code></p>
 <h4 id="new-Foo-getName-1"><a href="#new-Foo-getName-1" class="headerlink" title="new Foo().getName();"></a>new Foo().getName();</h4><p>根据优先级可知，带参数的 <code>new</code> 操作符是优先级最高的，所以执行的就是 <code>(new Foo()).getName()</code></p>
-<p>而 <code>new Foo()</code> 生成的对象身上没有 <code>getName()</code> 的方法，那么就会去 <code>prototype</code> 当中寻找，所以输出的是 <code>3</code></p>
-<h4 id="new-new-Foo-getName"><a href="#new-new-Foo-getName" class="headerlink" title="new new Foo().getName();"></a>new new Foo().getName();</h4><p>老规矩，按照优先级添加括号，首先带参数的 <code>new</code> 操作符优先级最高，则为 <code>new (new Foo().getName())</code></p>
-<p>然后就会发现和上面是类似的，可以转换为 <code>new ((new Foo()).getName())</code>，所以输出的也为 <code>3</code></p>
+<p>而 <code>new Foo()</code> 又会生成一个实例对象，但是生成的对象身上没有 <code>getName()</code> 的方法，那么就会去 <code>prototype</code> 当中寻找，所以输出的是 <code>3</code></p>
+<h4 id="new-new-Foo-getName"><a href="#new-new-Foo-getName" class="headerlink" title="new new Foo().getName();"></a>new new Foo().getName();</h4><p>老规矩，按照优先级添加括号，首先带参数的 <code>new</code> 操作符优先级最高，则为 <code>new (new Foo()).getName()</code></p>
+<p>然后就会发现和上面是类似的，<code>.</code> 操作符要比 <code>new</code> 优先级要高，所以可以转换为 <code>new ((new Foo()).getName)()</code>，所以输出的也为 <code>3</code></p>
+<h2 id="升级版"><a href="#升级版" class="headerlink" title="升级版"></a>升级版</h2><p>另外还有一个<a href="https://github.com/Wscats/Good-text-Share/issues/85" target="_blank" rel="noopener">升级版本</a>，如下</p>
+<p>其实基本原理差不多，只需要理清两点即可</p>
+<ul>
+<li><p>一个是构造函数的返回值</p>
+</li>
+<li><p>另一个是构造函数公有方法和原型链方法的优先级</p>
+</li>
+</ul>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Foo</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.getName = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-number">3</span>)</span><br><span class="line">    <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">      getName: getName</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  getName = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-number">1</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Foo.getName = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">2</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Foo.prototype.getName = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">6</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> getName = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">4</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getName</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">5</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Foo.getName()                  <span class="hljs-comment">// 2</span></span><br><span class="line">getName()                      <span class="hljs-comment">// 4</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(Foo())             <span class="hljs-comment">// window</span></span><br><span class="line">Foo().getName()                <span class="hljs-comment">// 1</span></span><br><span class="line">getName()                      <span class="hljs-comment">// 1</span></span><br><span class="line"><span class="hljs-keyword">new</span> Foo.getName()              <span class="hljs-comment">// 2</span></span><br><span class="line"><span class="hljs-keyword">new</span> Foo().getName()            <span class="hljs-comment">// 3</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">new</span> Foo().getName().getName()  <span class="hljs-comment">// 3 1</span></span><br><span class="line"><span class="hljs-keyword">new</span> <span class="hljs-keyword">new</span> Foo().getName()        <span class="hljs-comment">// 3</span></span><br></pre></td></tr></table></figure>
+
+<p>关于最后两个结果</p>
+<h4 id="new-Foo-getName-getName"><a href="#new-Foo-getName-getName" class="headerlink" title="new Foo().getName().getName()"></a><code>new Foo().getName().getName()</code></h4><p>根据之前的结论，其实执行的是 <code>((new Foo()).getName)().getName()</code>，这里需要注意的是</p>
+<p><code>((new Foo()).getName)</code> 返回的结果是</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">3</span>)</span><br><span class="line">  <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">    getName: getName</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后在进行调用 <code>((new Foo()).getName)()</code>，所以会输出 <code>3</code>，但是又再次返回了函数内部的一个对象</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  getName: getName</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ==&gt;</span></span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  getName: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-number">1</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后再次调用这个对象的 <code>getName</code> 方法，所以会再次返回 <code>1</code></p>
+<h4 id="new-new-Foo-getName-1"><a href="#new-new-Foo-getName-1" class="headerlink" title="new new Foo().getName()"></a><code>new new Foo().getName()</code></h4><p>理清楚了上一步的操作，这里就很好理解了，其实调用的是 <code>new ((new Foo()).getName)()</code>，又因为 <code>(new Foo()).getName</code> 返回的是一个函数</p>
+<p>就相当于 <code>new</code> 了一个函数，所以输出结果是 <code>3</code>，但是还会返回一个 <code>getName</code> 的对象，跟之前是一样的</p>
 
         </div>
         
@@ -396,7 +417,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        143
+                        142
                     </p>
                 </div>
             </div>
@@ -477,6 +498,18 @@
         <a class="is-flex" href="#new-new-Foo-getName">
         <span class="has-mr-6">2.7</span>
         <span>new new Foo().getName();</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#升级版">
+        <span class="has-mr-6">3</span>
+        <span>升级版</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#new-Foo-getName-getName">
+        <span class="has-mr-6">3.1</span>
+        <span>new Foo().getName().getName()</span>
+        </a></li><li>
+        <a class="is-flex" href="#new-new-Foo-getName-1">
+        <span class="has-mr-6">3.2</span>
+        <span>new new Foo().getName()</span>
         </a></li></ul></li></ul>
         </div>
     </div>
@@ -565,7 +598,7 @@
                 <span class="level-item">Vue</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">15</span>
+                <span class="level-item tag">14</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/jQuery/">
@@ -587,7 +620,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 18.75px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 11.25px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.25px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 12.5px;">Node.js</a> <a href="/tags/React/" style="font-size: 16.25px;">React</a> <a href="/tags/Vue/" style="font-size: 17.5px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 13.75px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 18.57px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 11.43px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.43px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 12.86px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.14px;">React</a> <a href="/tags/Vue/" style="font-size: 17.14px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 14.29px;">jQuery</a>
     </div>
 </div>
 
@@ -880,7 +913,7 @@
                     <span class="level-item">四月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -1133,7 +1166,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
-                        <span class="tag is-grey">15</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 

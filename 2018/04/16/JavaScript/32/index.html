@@ -16,7 +16,7 @@
 <meta property="og:description" content="call() 和 apply() 方法主要是用来扩充函数的作用域和改变 this 的指向（改变被调用函数的上下文），都接收两个参数  apply() 方法 第一个参数是作用域，第二个是参数数组，其中第二个参数可以是数组实例，也可以是 arguments 对象  call() 方法 也接收两个参数，仅仅在于和 apply() 的传参方式不同，传递函数的参数必须逐个写入">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/32.jpg">
-<meta property="og:updated_time" content="2019-08-07T14:12:43.718Z">
+<meta property="og:updated_time" content="2019-08-08T08:08:15.921Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的 call 和 apply">
 <meta name="twitter:description" content="call() 和 apply() 方法主要是用来扩充函数的作用域和改变 this 的指向（改变被调用函数的上下文），都接收两个参数  apply() 方法 第一个参数是作用域，第二个是参数数组，其中第二个参数可以是数组实例，也可以是 arguments 对象  call() 方法 也接收两个参数，仅仅在于和 apply() 的传参方式不同，传递函数的参数必须逐个写入">
@@ -166,7 +166,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    33 分钟 读完 (大约 4924 个字)
+                    33 分钟 读完 (大约 4930 个字)
                 </span>
                 
                 
@@ -262,7 +262,7 @@
 
 <p>关于 <code>let result = context.fn(...args)</code> 的作用</p>
 <p>我们最终的目的是为了达到类似于 <code>context.fn(arg1, arg2, arg3 ...)</code> 这样的调用方式</p>
-<p>这里使用扩展运算符来达到参数传递的功能，如果不采用该方法，也可以使用字符串拼接的方式来实现</p>
+<p>这里使用扩展运算符来达到参数传递的功能，如果不采用该方法，也可以使用字符串拼接的方式在配合 <code>eval()</code> 方法来实现</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> args = [];</span><br><span class="line"><span class="hljs-comment">// 从第二位开始循环</span></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">1</span>; i &lt; <span class="hljs-built_in">arguments</span>.length; i++) &#123;</span><br><span class="line">  args.push(<span class="hljs-string">'arguments['</span> + i + <span class="hljs-string">']'</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-keyword">var</span> result = <span class="hljs-built_in">eval</span>(<span class="hljs-string">'context.fn('</span> + args + <span class="hljs-string">')'</span>);</span><br></pre></td></tr></table></figure>
 
 <p>如果为了追求完美，那么这里还存在一个小小的问题，即 <code>context.fn = this</code>，这里我们只是假设不存在名为 <code>fn</code> 的属性，所以这里我们需要保证 <code>fn</code> 的唯一性</p>
@@ -270,7 +270,7 @@
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> fn = <span class="hljs-built_in">Symbol</span>()</span><br><span class="line">context[fn] = <span class="hljs-keyword">this</span></span><br></pre></td></tr></table></figure>
 
 <p>如果不使用 <code>Symbol</code>，也可以来手动模拟一个，简单来说就是随机定义一个属性名称，然后在进行赋值的时候判断一下</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">symbol</span>(<span class="hljs-params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> unique_proper = <span class="hljs-string">'00'</span> + <span class="hljs-built_in">Math</span>.random();</span><br><span class="line">  <span class="hljs-keyword">if</span> (obj.hasOwnProperty(unique_proper)) &#123;</span><br><span class="line">    <span class="hljs-comment">// 如果已经存在这个属性，则递归调用，直到没有这个属性</span></span><br><span class="line">    <span class="hljs-built_in">arguments</span>.callee(obj)</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> unique_proper;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 使用</span></span><br><span class="line"><span class="hljs-keyword">var</span> fn = symbol(context);</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">symbol</span>(<span class="hljs-params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> unique_prop = <span class="hljs-string">'00'</span> + <span class="hljs-built_in">Math</span>.random();</span><br><span class="line">  <span class="hljs-keyword">if</span> (obj.hasOwnProperty(unique_prop)) &#123;</span><br><span class="line">    <span class="hljs-comment">// 如果已经存在这个属性，则递归调用，直到没有这个属性</span></span><br><span class="line">    <span class="hljs-built_in">arguments</span>.callee(obj)</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> unique_prop;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 使用</span></span><br><span class="line"><span class="hljs-keyword">var</span> fn = symbol(context);</span><br></pre></td></tr></table></figure>
 
 <p>完整代码如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Function</span>.prototype.call = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">context, ...args</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (context === <span class="hljs-literal">null</span> || context === <span class="hljs-literal">undefined</span>) &#123;</span><br><span class="line">    context = <span class="hljs-built_in">window</span></span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    context = <span class="hljs-built_in">Object</span>(context)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">let</span> fn = <span class="hljs-built_in">Symbol</span>()</span><br><span class="line">  context[fn] = <span class="hljs-keyword">this</span></span><br><span class="line">  <span class="hljs-keyword">let</span> result = context[fn](...args)</span><br><span class="line">  <span class="hljs-keyword">delete</span> context[fn]</span><br><span class="line">  <span class="hljs-keyword">return</span> result</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
@@ -535,7 +535,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        143
+                        142
                     </p>
                 </div>
             </div>
@@ -728,7 +728,7 @@
                 <span class="level-item">Vue</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">15</span>
+                <span class="level-item tag">14</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/jQuery/">
@@ -750,7 +750,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 18.75px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 11.25px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.25px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 12.5px;">Node.js</a> <a href="/tags/React/" style="font-size: 16.25px;">React</a> <a href="/tags/Vue/" style="font-size: 17.5px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 13.75px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 18.57px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 11.43px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.43px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 12.86px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.14px;">React</a> <a href="/tags/Vue/" style="font-size: 17.14px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 14.29px;">jQuery</a>
     </div>
 </div>
 
@@ -1043,7 +1043,7 @@
                     <span class="level-item">四月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -1296,7 +1296,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
-                        <span class="tag is-grey">15</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 

@@ -16,7 +16,7 @@
 <meta property="og:description" content="一般分为两种情况">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/05.jpg">
-<meta property="og:updated_time" content="2019-07-14T09:16:28.503Z">
+<meta property="og:updated_time" content="2019-08-08T09:29:48.553Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="axios 中跨域访问的问题">
 <meta name="twitter:description" content="一般分为两种情况">
@@ -166,7 +166,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    5 分钟 读完 (大约 783 个字)
+                    5 分钟 读完 (大约 803 个字)
                 </span>
                 
                 
@@ -183,8 +183,8 @@
 <a id="more"></a>
 
 
-<h2 id="服务端不支持跨域"><a href="#服务端不支持跨域" class="headerlink" title="服务端不支持跨域"></a>服务端不支持跨域</h2><p>比如</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">No <span class="hljs-string">'Access-Control-Allow-Origin'</span> header is present on the requested resource. </span><br><span class="line">Origin <span class="hljs-string">'http://xxx.com'</span> is therefore not allowed access.</span><br></pre></td></tr></table></figure>
+<h2 id="服务端不支持跨域"><a href="#服务端不支持跨域" class="headerlink" title="服务端不支持跨域"></a>服务端不支持跨域</h2><p>比如在开发过程中遇到下面这种情况</p>
+<figure class="highlight console hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">No 'Access-Control-Allow-Origin' header is present on the requested resource. </span><br><span class="line">Origin 'http://xxx.com' is therefore not allowed access.</span><br></pre></td></tr></table></figure>
 
 <p>这种情况可以在服务端修改相关配置支持跨域即可亦或是使用 <code>webpack</code> 提供的 <code>proxyTable</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 在 config/index.js 中的 proxyTable 中添加</span></span><br><span class="line">proxyTable: &#123;</span><br><span class="line">  <span class="hljs-string">'/WebService.asmx'</span>: &#123;</span><br><span class="line">    target: <span class="hljs-string">'http://localhost:8080/jsnf_service/'</span>,</span><br><span class="line">    logLevel: <span class="hljs-string">'debug'</span>,</span><br><span class="line">    changeOrigin: <span class="hljs-literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
@@ -197,25 +197,25 @@
 <p>这种情况一般说明 <code>Nginx</code> 不能响应 <code>OPTIONS</code> 请求，比如在控制台当中看到的以下信息</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">General</span><br><span class="line">  Request URL: http:<span class="hljs-comment">//...</span></span><br><span class="line">  Request Method: OPTIONS</span><br><span class="line">  Status Code: <span class="hljs-number">405</span> Not Allowed</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br></pre></td></tr></table></figure>
 
-<p>出现 <code>OPTIONS</code> 请求的原因 <a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS#" target="_blank" rel="noopener">HTTP访问控制(CORS)</a></p>
+<p>出现 <code>OPTIONS</code> 请求的原因 <a href="https://developer.mozilla.org/zh-CN/docs/Web/http/Access_control_CORS#" target="_blank" rel="noopener">http 访问控制（CORS）</a></p>
 <ul>
-<li><p>跨源资源共享标准通过新增一系列 <code>HTTP</code> 头，让服务器能声明哪些来源可以通过浏览器访问该服务器上的资源</p>
+<li><p>跨源资源共享标准通过新增一系列 <code>http</code> 头，让服务器能声明哪些来源可以通过浏览器访问该服务器上的资源</p>
 </li>
-<li><p>另外，对那些会对服务器数据造成破坏性影响的 <code>HTTP</code> 请求方法（特别是 <code>GET</code> 以外的 <code>HTTP</code> 方法，或者搭配某些MIME类型的 <code>POST</code> 请求）</p>
+<li><p>另外，对那些会对服务器数据造成破坏性影响的 <code>http</code> 请求方法（特别是 <code>GET</code> 以外的 <code>http</code> 方法，或者搭配某些 <code>MIME</code> 类型的 <code>POST</code> 请求）</p>
 </li>
-<li><p>标准强烈要求浏览器必须先以 <code>OPTIONS</code> 请求方式发送一个预请求（<code>preflight request</code>），从而获知服务器端对跨源请求所支持 <code>HTTP</code> 方法</p>
+<li><p>标准强烈要求浏览器必须先以 <code>OPTIONS</code> 请求方式发送一个预请求（<code>preflight request</code>），从而获知服务器端对跨源请求所支持 <code>http</code> 方法</p>
 </li>
-<li><p>在确认服务器允许该跨源请求的情况下，以实际的 <code>HTTP</code> 请求方法发送那个真正的请求</p>
+<li><p>在确认服务器允许该跨源请求的情况下，以实际的 <code>http</code> 请求方法发送那个真正的请求</p>
 </li>
-<li><p>服务器端也可以通知客户端，是不是需要随同请求一起发送信用信息（包括 <code>Cookies</code> 和 <code>HTTP</code> 认证相关数据）</p>
+<li><p>服务器端也可以通知客户端，是不是需要随同请求一起发送信用信息（包括 <code>Cookies</code> 和 <code>http</code> 认证相关数据）</p>
 </li>
 </ul>
 <p>解决方法：</p>
 <h4 id="如果服务端支持简单请求"><a href="#如果服务端支持简单请求" class="headerlink" title="如果服务端支持简单请求"></a>如果服务端支持简单请求</h4><p>所谓的简单请求：</p>
 <ul>
-<li><p>只使用 <code>GET</code>, <code>HEAD</code> 或者 <code>POST</code> 请求方法</p>
+<li><p>只使用 <code>GET</code>，<code>HEAD</code> 或者 <code>POST</code> 请求方法</p>
 </li>
-<li><p>如果使用 <code>POST</code> 向服务器端传送数据，则数据类型(<code>Content-Type</code>)只能是 <code>application/x-www-form-urlencoded</code>, <code>multipart/form-data</code> 或 <code>text/plain</code> 中的一种</p>
+<li><p>如果使用 <code>POST</code> 向服务器端传送数据，则数据类型（<code>Content-Type</code>）只能是 <code>application/x-www-form-urlencoded</code>，<code>multipart/form-data</code> 或 <code>text/plain</code> 中的一种</p>
 </li>
 <li><p>不会使用自定义请求头（类似于 <code>X-Modified</code> 这种）</p>
 </li>
@@ -338,7 +338,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        143
+                        142
                     </p>
                 </div>
             </div>
@@ -479,7 +479,7 @@
                 <span class="level-item">Vue</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">15</span>
+                <span class="level-item tag">14</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/jQuery/">
@@ -501,7 +501,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 18.75px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 11.25px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.25px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 12.5px;">Node.js</a> <a href="/tags/React/" style="font-size: 16.25px;">React</a> <a href="/tags/Vue/" style="font-size: 17.5px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 13.75px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 18.57px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 11.43px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.43px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 12.86px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.14px;">React</a> <a href="/tags/Vue/" style="font-size: 17.14px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 14.29px;">jQuery</a>
     </div>
 </div>
 
@@ -794,7 +794,7 @@
                     <span class="level-item">四月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -1047,7 +1047,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
-                        <span class="tag is-grey">15</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 
