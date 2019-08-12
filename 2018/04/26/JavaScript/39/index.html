@@ -16,7 +16,7 @@
 <meta property="og:description" content="一个域名的组成，比如 1http://www.abc.com:8080/script/index.js">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/39.jpg">
-<meta property="og:updated_time" content="2019-08-08T08:29:57.742Z">
+<meta property="og:updated_time" content="2019-08-12T15:10:12.843Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="跨域">
 <meta name="twitter:description" content="一个域名的组成，比如 1http://www.abc.com:8080/script/index.js">
@@ -205,16 +205,16 @@
 <p>在 <code>www.bbb.com</code> 的页面中，可以直接调用 <code>jsonp</code> 的方法，比如 <code>jsonp({&#39;name&#39;:&#39;zhangsan&#39;, &#39;age&#39;:200});</code></p>
 <p>也就是说 <code>a</code> 域名去声明，<code>b</code> 域名去调用，其实这样调用就和 <code>XHR</code> 对象没有太大关系</p>
 <p><strong>其是借助了 <code>script</code> 标签节点可以跨域去访问，去获取的一个特性</strong></p>
-<p><code>jQuery</code> 的 <code>ajax</code> 方法本身就支持 <code>jsonp</code> 的处理方式，使用的方式比较简单</p>
+<p><code>jQuery</code> 的 <code>Ajax</code> 方法本身就支持 <code>jsonp</code> 的处理方式，使用的方式比较简单</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//前端</span></span><br><span class="line">$.ajax(&#123;</span><br><span class="line">  type: <span class="hljs-string">'GET'</span>,</span><br><span class="line">  url: url,</span><br><span class="line">  dataType: <span class="hljs-string">'jsonp'</span>,</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 增加一个属性 jsonp，它的值可以任意写</span></span><br><span class="line">  jsonp: <span class="hljs-string">'callback'</span>,</span><br><span class="line">  success: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 后端，比如使用的 php</span></span><br><span class="line"><span class="hljs-comment">// 在请求中，获取到 callback（前端填写的名字，后端获取到）</span></span><br><span class="line">$jsonp = $_GET[<span class="hljs-string">"callback"</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 对返回值做一下改造 jsonp 这样的方式，我们的返回值（json 对象，或是数组都无所谓）需要用 '()' 包裹起来</span></span><br><span class="line"><span class="hljs-comment">// 然后在前面加上我们获取到的参数值（$jsonp）</span></span><br><span class="line"><span class="hljs-comment">// 备注 php 连接是用 '.' 连接的</span></span><br><span class="line">$result = $jsonp.<span class="hljs-string">'(&#123;'</span>name<span class="hljs-string">': '</span>zhangsan<span class="hljs-string">', '</span>age<span class="hljs-string">': 200&#125;)'</span></span><br></pre></td></tr></table></figure>
 
 <p>在过程中可以发现，我们实现跨域只对 <code>GET</code> 请求进行了改造，并没有去改造 <code>POST</code> 请求，这是因为 <code>jsonp</code> 的这种原理，只能对 <code>GET</code> 请求起到效果，即 <code>jsonp</code> 的方式是不支持 <code>POST</code> 请求的，这也是 <code>jsonp</code> 这种方式的局限性</p>
 <p>补充：</p>
 <p>1、 <code>Ajax</code> 直接请求普通文件存在跨域无权限访问的问题，不管你是静态页面、动态网页、<code>web</code> 服务、<code>WCF</code>，只要是跨域请求，一律不准</p>
 <p>2、 不过 <code>Web</code> 页面上调用 <code>JavaScript</code> 文件时则不受是否跨域的影响（不仅如此，我们还发现凡是拥有 <code>src</code> 这个属性的标签都拥有跨域的能力，比如 <code>script</code>、<code>img</code>、<code>iframe</code>）</p>
-<p>3、 <code>ajax</code> 和 <code>jsonp</code> 这两种技术在调用方式上虽然看起来很像，但是目的是一样的，都是请求一个 <code>url</code>，然后把服务器返回的数据进行处理，因此 <code>jQuery</code> 等框架都把 <code>jsonp</code> 作为 <code>ajax</code> 的一种形式进行了封装</p>
-<p>4、 但 <code>ajax</code> 和 <code>jsonp</code> 其实本质上是不同的东西，<code>ajax</code> 的核心是通过 <code>XmlHttpRequest</code> 获取非本页内容，而 <code>jsonp</code> 的核心则是动态添加 <code>script</code> 标签来调用服务器提供的 <code>JavaScript</code> 脚本</p>
-<p>5、 所以说，其实 <code>ajax</code> 与 <code>jsonp</code> 的区别不在于是否跨域，<code>ajax</code> 通过服务端代理一样可以实现跨域，<code>jsonp</code> 本身也不排斥同域的数据的获取</p>
+<p>3、 <code>Ajax</code> 和 <code>jsonp</code> 这两种技术在调用方式上虽然看起来很像，但是目的是一样的，都是请求一个 <code>url</code>，然后把服务器返回的数据进行处理，因此 <code>jQuery</code> 等框架都把 <code>jsonp</code> 作为 <code>Ajax</code> 的一种形式进行了封装</p>
+<p>4、 但 <code>Ajax</code> 和 <code>jsonp</code> 其实本质上是不同的东西，<code>Ajax</code> 的核心是通过 <code>XmlHttpRequest</code> 获取非本页内容，而 <code>jsonp</code> 的核心则是动态添加 <code>script</code> 标签来调用服务器提供的 <code>JavaScript</code> 脚本</p>
+<p>5、 所以说，其实 <code>Ajax</code> 与 <code>jsonp</code> 的区别不在于是否跨域，<code>Ajax</code> 通过服务端代理一样可以实现跨域，<code>jsonp</code> 本身也不排斥同域的数据的获取</p>
 <h4 id="XHR2"><a href="#XHR2" class="headerlink" title="XHR2"></a>XHR2</h4><p><code>HTML5</code> 提供的 <code>XMLHttpRequest Level2</code> 已经实现了跨域访问以及其他的一些新功能</p>
 <p><code>IE10</code> 以下的版本都不支持</p>
 <p>在服务器端做一些小小的改动即可：</p>

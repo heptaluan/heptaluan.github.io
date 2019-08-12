@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="很常见的一个问题，就是如何在 ajax 请求的回调当中将返回的结果拿到函数外部来进行使用">
+    <meta name="description" content="很常见的一个问题，就是如何在 Ajax 请求的回调当中将返回的结果拿到函数外部来进行使用">
 <meta name="keywords" content="JavaScript">
 <meta property="og:type" content="article">
 <meta property="og:title" content="从请求的异步回调函数中取值的解决办法">
 <meta property="og:url" content="http://yoursite.com/2017/09/17/JavaScript/51/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="很常见的一个问题，就是如何在 ajax 请求的回调当中将返回的结果拿到函数外部来进行使用">
+<meta property="og:description" content="很常见的一个问题，就是如何在 Ajax 请求的回调当中将返回的结果拿到函数外部来进行使用">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/51.jpg">
-<meta property="og:updated_time" content="2019-07-15T01:44:23.419Z">
+<meta property="og:updated_time" content="2019-08-12T15:10:12.876Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从请求的异步回调函数中取值的解决办法">
-<meta name="twitter:description" content="很常见的一个问题，就是如何在 ajax 请求的回调当中将返回的结果拿到函数外部来进行使用">
+<meta name="twitter:description" content="很常见的一个问题，就是如何在 Ajax 请求的回调当中将返回的结果拿到函数外部来进行使用">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/51.jpg">
 
 
@@ -179,7 +179,7 @@
             
         </h1>
         <div class="content">
-            <p>很常见的一个问题，就是如何在 <code>ajax</code> 请求的回调当中将返回的结果拿到函数外部来进行使用</p>
+            <p>很常见的一个问题，就是如何在 <code>Ajax</code> 请求的回调当中将返回的结果拿到函数外部来进行使用</p>
 <a id="more"></a>
 
 <p>代码如下</p>
@@ -189,7 +189,7 @@
 <p>还是上面这个例子，我们稍微改造一下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> obj = <span class="hljs-string">''</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">load_val</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  $.<span class="hljs-keyword">get</span>('url', function (data) &#123;</span><br><span class="line">    <span class="hljs-comment">// 在此处将 data 赋予全局变量</span></span><br><span class="line">    obj = data;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 调用函数获取数据</span></span><br><span class="line">load_val();</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">use_val</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  obj += <span class="hljs-number">1</span>;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(obj);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">use_val();</span><br></pre></td></tr></table></figure>
 
-<p>上面这个例子很好理解，我们想通过 <code>obj</code> 这个全局变量获取 <code>ajax</code> 异步过来的 <code>data</code> 数据，然后在 <code>use_val</code> 这个函数中使用 <code>obj</code> 这个变量</p>
+<p>上面这个例子很好理解，我们想通过 <code>obj</code> 这个全局变量获取 <code>Ajax</code> 异步过来的 <code>data</code> 数据，然后在 <code>use_val</code> 这个函数中使用 <code>obj</code> 这个变量</p>
 <p>看似没问题，实际上问题很严重</p>
 <p>在 <code>use_val()</code> 中的 <code>obj</code> 真的是 <code>data</code> 的值么？答案是否定的，而是 <code>&#39;&#39;</code></p>
 <p>因为就这段代码而言，<code>obj = data</code> 是在 <code>use_val()</code> 执行完才在异步回调函数内实现的，在此之前，<code>obj</code>一直是 <code>&#39;&#39;</code></p>
