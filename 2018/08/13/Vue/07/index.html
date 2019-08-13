@@ -16,7 +16,7 @@
 <meta property="og:description" content="流程图">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/07.jpg">
-<meta property="og:updated_time" content="2019-07-13T04:13:48.555Z">
+<meta property="og:updated_time" content="2019-08-13T02:39:17.323Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Vuex 框架核心流程">
 <meta name="twitter:description" content="流程图">
@@ -166,7 +166,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    5 分钟 读完 (大约 708 个字)
+                    5 分钟 读完 (大约 691 个字)
                 </span>
                 
                 
@@ -184,40 +184,106 @@
 
 
 <p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/vue/01.png" alt></p>
-<p><code>Vuex</code> 为 <code>Vue Components</code> 建立起了一个完整的生态圈，包括开发中的 <code>API</code> 调用一环，围绕这个生态圈，简要介绍一下各模块在核心流程中的主要功能：</p>
+<p><code>Vuex</code> 为 <code>Vue Components</code> 建立起了一个完整的生态圈，包括开发中的 <code>API</code> 调用一环，围绕这个生态圈，简要介绍一下各模块在核心流程中的主要功能</p>
 <ul>
-<li><p><code>Vue Components</code>：<code>Vue</code> 组件，<code>HTML</code> 页面上，负责接收用户操作等交互行为，执行 <code>dispatch</code> 方法触发对应 <code>action</code> 进行回应</p>
+<li><p><code>Vue Components</code></p>
+<ul>
+<li><p><code>Vue</code> 组件，<code>HTML</code> 页面上负责接收用户操作等交互行为</p>
 </li>
-<li><p><code>dispatch</code>：操作行为触发方法，是唯一能执行 <code>action</code> 的方法</p>
+<li><p>执行 <code>dispatch</code> 方法触发对应 <code>action</code> 进行回应</p>
 </li>
-<li><p><code>actions</code>：操作行为处理模块，负责处理 <code>Vue Components</code> 接收到的所有交互行为，包含 同步/异步 操作，支持多个同名方法，按照注册的顺序依次触发，向后台 <code>API</code> 请求的操作就在这个模块中进行，包括触发其他 <code>action</code> 以及提交 <code>mutation</code> 的操作，该模块提供了 <code>Promise</code> 的封装，以支持 <code>action</code> 的链式触发</p>
+</ul>
 </li>
-<li><p><code>commit</code>：状态改变提交操作方法，对 <code>mutation</code> 进行提交，是唯一能执行 <code>mutation</code> 的方法</p>
+<li><p><code>dispatch</code></p>
+<ul>
+<li>操作行为触发方法，是唯一能执行 <code>action</code> 的方法</li>
+</ul>
 </li>
-<li><p><code>mutations</code>：状态改变操作方法，是 <code>Vuex</code> 修改 <code>state</code> 的唯一推荐方法，其他修改方式在严格模式下将会报错，该方法只能进行同步操作，且方法名只能全局唯一，操作之中会有一些 <code>hook</code> 暴露出来，以进行 <code>state</code> 的监控等</p>
+<li><p><code>actions</code></p>
+<ul>
+<li><p>操作行为处理模块，负责处理 <code>Vue Components</code> 接收到的所有交互行为，包含同步或者异步的操作</p>
 </li>
-<li><p><code>state</code>：页面状态管理容器对象，集中存储 <code>Vue components</code> 中 <code>data</code> 对象的零散数据，全局唯一，以进行统一的状态管理，页面显示所需的数据从该对象中进行读取，利用 <code>Vue</code> 的细粒度数据响应机制来进行高效的状态更新</p>
+<li><p>支持多个同名方法，按照注册的顺序依次触发，向后台 <code>API</code> 请求的操作就在这个模块中进行，包括触发其他 <code>action</code> 以及提交 <code>mutation</code> 的操作</p>
 </li>
-<li><p><code>getters</code>：<code>state</code> 对象读取方法，图中没有单独列出该模块，应该被包含在了 <code>render</code> 中，<code>Vue Components</code> 通过该方法读取全局 <code>state</code> 对象</p>
+<li><p>该模块提供了 <code>promise</code> 的封装，以支持 <code>action</code> 的链式触发</p>
+</li>
+</ul>
+</li>
+<li><p><code>commit</code></p>
+<ul>
+<li><p>状态改变提交操作方法，对 <code>mutation</code> 进行提交</p>
+</li>
+<li><p>是唯一能执行 <code>mutation</code> 的方法</p>
+</li>
+</ul>
+</li>
+<li><p><code>mutations</code></p>
+<ul>
+<li><p>状态改变操作方法，是 <code>Vuex</code> 修改 <code>state</code> 的唯一推荐方法，其他修改方式在严格模式下将会报错</p>
+</li>
+<li><p>该方法只能进行同步操作，且方法名只能全局唯一，操作之中会有一些 <code>hook</code> 暴露出来，以进行 <code>state</code> 的监控等</p>
+</li>
+</ul>
+</li>
+<li><p><code>state</code></p>
+<ul>
+<li><p>页面状态管理容器对象，集中存储 <code>Vue components</code> 中 <code>data</code> 对象的零散数据</p>
+</li>
+<li><p>全局唯一，以进行统一的状态管理，页面显示所需的数据从该对象中进行读取，利用 <code>Vue</code> 的细粒度数据响应机制来进行高效的状态更新</p>
+</li>
+</ul>
+</li>
+<li><p><code>getters</code></p>
+<ul>
+<li><p><code>state</code> 对象读取方法，图中没有单独列出该模块，应该被包含在了 <code>render</code> 中</p>
+</li>
+<li><p><code>Vue Components</code> 通过该方法读取全局 <code>state</code> 对象</p>
+</li>
+</ul>
 </li>
 </ul>
 <p>总结如下：</p>
-<p><code>Vue</code> 组件接收交互行为，调用 <code>dispatch</code> 方法触发 <code>action</code> 相关处理，若页面状态需要改变，则调用 <code>commit</code> 方法提交 <code>mutation</code> 修改 <code>state</code>，通过 <code>getters</code> 获取到 <code>state</code> 新值，重新渲染 <code>Vue Components</code>，界面随之更新</p>
-<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/vue/02.png" alt></p>
 <ul>
-<li><p><code>module</code>：提供 <code>module</code> 对象与 <code>module</code> 对象树的创建功能</p>
+<li><p><code>Vue</code> 组件接收交互行为，调用 <code>dispatch</code> 方法触发 <code>action</code> 相关处理</p>
 </li>
-<li><p><code>plugins</code>：提供开发辅助插件，如 “时光穿梭” 功能，<code>state</code> 修改的日志记录功能等</p>
+<li><p>若页面状态需要改变，则调用 <code>commit</code> 方法提交 <code>mutation</code> 修改 <code>state</code></p>
 </li>
-<li><p><code>helpers.js</code>：提供 <code>action</code>、<code>mutations</code> 以及 getters 的查找 <code>API</code></p>
-</li>
-<li><p><code>index.js</code>：是源码主入口文件，提供 <code>store</code> 的各 <code>module</code> 构建安装</p>
-</li>
-<li><p><code>mixin.js</code>：提供了 <code>store</code> 在 Vue 实例上的装载注入</p>
-</li>
-<li><p><code>util.js</code>：提供了工具方法如 <code>find</code>、<code>deepCopy</code>、<code>forEachValue</code> 以及 <code>assert</code> 等方法</p>
+<li><p>通过 <code>getters</code> 获取到 <code>state</code> 新值，重新渲染 <code>Vue Components</code>，界面随之更新</p>
 </li>
 </ul>
+<h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/vue/02.png" alt></p>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th>介绍</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>module</code></td>
+<td>提供 <code>module</code> 对象与 <code>module</code> 对象树的创建功能</td>
+</tr>
+<tr>
+<td><code>plugins</code></td>
+<td>提供开发辅助插件，如时光穿梭功能，<code>state</code> 修改的日志记录功能等</td>
+</tr>
+<tr>
+<td><code>helpers.js</code></td>
+<td>提供 <code>action</code>、<code>mutations</code> 以及 getters 的查找 <code>API</code></td>
+</tr>
+<tr>
+<td><code>index.js</code></td>
+<td>是源码主入口文件，提供 <code>store</code> 的各 <code>module</code> 构建安装</td>
+</tr>
+<tr>
+<td><code>mixin.js</code></td>
+<td>提供了 <code>store</code> 在 <code>Vue</code> 实例上的装载注入</td>
+</tr>
+<tr>
+<td><code>util.js</code></td>
+<td>提供了工具方法如 <code>find</code>、<code>deepCopy</code>、<code>forEachValue</code> 以及 <code>assert</code> 等方法</td>
+</tr>
+</tbody></table>
 
         </div>
         

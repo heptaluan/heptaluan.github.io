@@ -16,7 +16,7 @@
 <meta property="og:description" content="MySQL 安装过程就略过了，推荐安装 5.6 版本，安装见 Windows 下的 MySQL 安装汇总 基于 Koa，相关源码可以见 koa-Sequelize">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/06.jpg">
-<meta property="og:updated_time" content="2019-08-12T14:59:28.771Z">
+<meta property="og:updated_time" content="2019-08-12T03:55:05.084Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Sequelize 与 MySQL">
 <meta name="twitter:description" content="MySQL 安装过程就略过了，推荐安装 5.6 版本，安装见 Windows 下的 MySQL 安装汇总 基于 Koa，相关源码可以见 koa-Sequelize">
@@ -200,7 +200,7 @@
 <p>对于 <code>node.js</code> 程序，访问 <code>mysql</code> 也是通过网络发送 <code>sql</code> 命令给 <code>mysql</code> 服务器（通常称为 <code>mysql</code> 驱动程序）</p>
 <h2 id="ORM"><a href="#ORM" class="headerlink" title="ORM"></a>ORM</h2><p>在使用 <code>node.js</code> 来处理关系型操作数据库时，为了方便，通常都会选择一个合适的 <code>ORM</code>（<code>Object Relationship Model</code>）框架，毕竟直接操作 <code>SQL</code> 比较繁琐，通过 <code>ORM</code> 框架，我们可以使用面向对象的方式来操作表，这里主要介绍 <code>Sequelize</code></p>
 <p>更多关于 <code>Sequelize</code> 内容可参考 <a href="https://github.com/heptaluan/full-stack/blob/master/Sequelize.MD" target="_blank" rel="noopener">Sequelize</a></p>
-<p>选择 <code>Sequelize</code> 的原因：只要 <code>API</code> 返回 <code>Promise</code>，就可以用 <code>await</code> 调用</p>
+<p>选择 <code>Sequelize</code> 的原因：只要 <code>API</code> 返回 <code>promise</code>，就可以用 <code>await</code> 调用</p>
 <h2 id="用-Sequelize-查询-pets-表"><a href="#用-Sequelize-查询-pets-表" class="headerlink" title="用 Sequelize 查询 pets 表"></a>用 Sequelize 查询 pets 表</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 因为 Sequelize 返回的对象是 Promise，所以我们可以用 then() 和 catch() 分别异步响应成功和失败</span></span><br><span class="line">Pet.findAll().then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">pets</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> pet <span class="hljs-keyword">in</span> pets) &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">$&#123;pet.id&#125;</span>: <span class="hljs-subst">$&#123;pet.name&#125;</span>`</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;).catch(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// err</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
 <p>可以改用 <code>ES7</code> 的 <code>await()</code> 来调用</p>
@@ -238,7 +238,7 @@
 <li><p>第三个参数是额外配置，我们传入 <code>{timestamps: false }</code> 是为了关闭 <code>Sequelize</code> 的自动添加 <code>timestamp</code> 功能（自动化）</p>
 </li>
 </ul>
-<p>然后添加数据，有两种方式，第一种是使用 <code>Promise</code>：</p>
+<p>然后添加数据，有两种方式，第一种是使用 <code>promise</code>：</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> now = <span class="hljs-built_in">Date</span>.now();</span><br><span class="line"></span><br><span class="line">Pet.create(&#123;</span><br><span class="line">  id: <span class="hljs-string">"g-"</span> + now,</span><br><span class="line">  name: <span class="hljs-string">"abc"</span>,</span><br><span class="line">  gander: <span class="hljs-literal">false</span>,</span><br><span class="line">  birth: <span class="hljs-string">"2002-02-02"</span>,</span><br><span class="line">  createdAt: now,</span><br><span class="line">  updatedAt: now,</span><br><span class="line">  version: <span class="hljs-number">0</span></span><br><span class="line">&#125;).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">p</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`created:`</span> + <span class="hljs-built_in">JSON</span>.stringify(p))</span><br><span class="line">&#125;).catch(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`err: `</span> + err)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
 <p>第二种方式是使用 <code>await</code>：</p>
