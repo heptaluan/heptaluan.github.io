@@ -16,7 +16,7 @@
 <meta property="og:description" content="简单来说，redux 就是 flux 思想在 react 当中的实现，所谓的 redux 可以简单的理解为一个可以预测状态的 JavaScript 的 app 容器">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/06.jpg">
-<meta property="og:updated_time" content="2019-07-31T06:31:43.639Z">
+<meta property="og:updated_time" content="2019-08-13T15:45:34.711Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redux">
 <meta name="twitter:description" content="简单来说，redux 就是 flux 思想在 react 当中的实现，所谓的 redux 可以简单的理解为一个可以预测状态的 JavaScript 的 app 容器">
@@ -166,7 +166,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    13 分钟 读完 (大约 1915 个字)
+                    13 分钟 读完 (大约 1929 个字)
                 </span>
                 
                 
@@ -187,15 +187,18 @@
 <p><code>app</code> 中的全部 <code>state</code> 都被存储在一个单独的 <code>store</code> 中，形式是 <code>object-tree</code>（<code>JSON</code>）</p>
 <p>唯一更改 <code>state</code> 的途径就是 <code>emit</code> 一个 <code>action</code>，这个 <code>action</code> 描述了发生了什么</p>
 <p>为了指定这些 <code>actions</code> 如何改变 <code>state tree</code>，必须书写简单的、纯净的 <code>reducers</code></p>
-<p>所谓的纯净的 <code>reducers</code> 就是类似下面这样伪代码，不继承任何东西</p>
+<p>所谓的纯净的 <code>reducers</code> 就是类似下面这样伪代码，不继承任何东西，并且无论何时返回的值都是固定的</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">reducers</span>(<span class="hljs-params">state, action</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 返回一个新的 state</span></span><br><span class="line">  <span class="hljs-keyword">return</span> newState;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>上面就是一个 <code>reducer</code>，是一个纯函数，接收 <code>state</code> 和 <code>action</code> 两个参数，返回新的 <code>state</code> 表达式</p>
 <p>如果使用过 <code>flux</code>，这里有一个重要的区别</p>
-<p><strong><code>redux</code> 中没有 <code>dispatcher</code> 的概念（<code>store</code> 自己负责 <code>dispatch</code> 某个 <code>action</code> 到自己身上），也不允许有多个 <code>store</code></strong></p>
-<p>所以一般来说，<code>redux</code> 比较适合用于有强的 ‘全局数据’ 概念的 <code>web</code> 应用（比如商城，购物车等）</p>
+<blockquote>
+<p><code>redux</code> 中没有 <code>dispatcher</code> 的概念（<code>store</code> 自己负责 <code>dispatch</code> 某个 <code>action</code> 到自己身上），也不允许有多个 <code>store</code></p>
+</blockquote>
+<p>所以一般来说，<code>redux</code> 比较适合用于有强的全局数据概念的 <code>web</code> 应用（比如商城，购物车等）</p>
 <p><code>redux</code> 中只有一个唯一的 <code>store</code>，使用唯一的 <code>reducing function</code></p>
-<p>随着项目增长的时候也不要去增加 <code>store</code>，而是应该切割当前的 <code>store</code> 为一个个小的 <code>store</code>（即 <code>store</code> 应该只有一个，类似于 <code>react</code> 当中只允许使用一个根节点，但是根节点是由众多的节点组成）</p>
+<p>随着项目增长的时候也不要去增加 <code>store</code>，而是应该切割当前的 <code>store</code> 为一个个小的 <code>store</code></p>
+<p>即 <code>store</code> 应该只有一个，类似于 <code>react</code> 当中只允许使用一个根节点，但是根节点是由众多的节点组成</p>
 <p>下面将会分别进行讨论</p>
 <h2 id="为什么要用-Redux"><a href="#为什么要用-Redux" class="headerlink" title="为什么要用 Redux"></a>为什么要用 Redux</h2><p>当然除了 <code>redux</code> 还有 <code>flux</code>、<code>reflux</code>、<code>mobx</code> 等状态管理库可供选择</p>
 <p>一个实际场景，比如在控制台上记录用户的每个动作</p>
@@ -297,7 +300,7 @@
 </li>
 </ul>
 <p>大致流程如下所示：</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Action Creator </span><br><span class="line"></span><br><span class="line">=&gt; </span><br><span class="line"></span><br><span class="line">action </span><br><span class="line"></span><br><span class="line">=&gt; </span><br><span class="line"></span><br><span class="line">store.dispatch(action) </span><br><span class="line"></span><br><span class="line">=&gt; </span><br><span class="line"></span><br><span class="line">reducer(state, action) </span><br><span class="line"></span><br><span class="line">=&gt; </span><br><span class="line"></span><br><span class="line">state(<span class="hljs-string">`原`</span>) </span><br><span class="line"></span><br><span class="line">=&gt; </span><br><span class="line"></span><br><span class="line">nextState(<span class="hljs-string">`新`</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Action Creator </span><br><span class="line"></span><br><span class="line">==&gt; </span><br><span class="line"></span><br><span class="line">action </span><br><span class="line"></span><br><span class="line">==&gt; </span><br><span class="line"></span><br><span class="line">store.dispatch(action) </span><br><span class="line"></span><br><span class="line">==&gt; </span><br><span class="line"></span><br><span class="line">reducer(state, action) </span><br><span class="line"></span><br><span class="line">==&gt; </span><br><span class="line"></span><br><span class="line">state(<span class="hljs-string">`原`</span>) </span><br><span class="line"></span><br><span class="line">==&gt; </span><br><span class="line"></span><br><span class="line">nextState(<span class="hljs-string">`新`</span>)</span><br></pre></td></tr></table></figure>
 
 
         </div>
