@@ -16,7 +16,7 @@
 <meta property="og:description" content="先来简单说一下 Web 缓存，所谓 Web 缓存，是一种保存 Web 资源副本并在下次请求时直接使用该副本的技术 Web 缓存可以分为这几种，浏览器缓存、CDN 缓存、服务器缓存、数据库数据缓存">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/04.jpg">
-<meta property="og:updated_time" content="2019-08-07T14:12:43.703Z">
+<meta property="og:updated_time" content="2019-08-14T03:57:08.415Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HTTP 缓存机制">
 <meta name="twitter:description" content="先来简单说一下 Web 缓存，所谓 Web 缓存，是一种保存 Web 资源副本并在下次请求时直接使用该副本的技术 Web 缓存可以分为这几种，浏览器缓存、CDN 缓存、服务器缓存、数据库数据缓存">
@@ -211,13 +211,13 @@
 </li>
 </ul>
 <p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/http/01.png" alt></p>
-<h2 id="强缓存和协商缓存"><a href="#强缓存和协商缓存" class="headerlink" title="强缓存和协商缓存"></a>强缓存和协商缓存</h2><p>浏览器 <code>HTTP</code> 缓存可以分为<strong>强缓存</strong>和<strong>协商缓存</strong>，强缓存和协商缓存最大也是最根本的区别是</p>
+<h2 id="强缓存和协商缓存"><a href="#强缓存和协商缓存" class="headerlink" title="强缓存和协商缓存"></a>强缓存和协商缓存</h2><p>浏览器 <code>http</code> 缓存可以分为<strong>强缓存</strong>和<strong>协商缓存</strong>，强缓存和协商缓存最大也是最根本的区别是</p>
 <p>强缓存命中的话不会发请求到服务器（比如 <code>chrome</code> 中的 <code>200 from memory cache</code>）</p>
 <p>协商缓存一定会发请求到服务器，通过资源的请求首部字段验证资源是否命中协商缓存，如果协商缓存命中，服务器会将这个请求返回</p>
 <p>但是不会返回这个资源的实体，而是通知客户端可以从缓存中加载这个资源（<code>304 not modified</code>）</p>
 <p>所以上图可以简单的调整为</p>
 <p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/http/02.png" alt></p>
-<p>而浏览器 <code>HTTP</code> 缓存由 <code>HTTP</code> 报文的首部字段决定</p>
+<p>而浏览器 <code>http</code> 缓存由 <code>http</code> 报文的首部字段决定</p>
 <p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/http/03.png" alt></p>
 <p>浏览器对于请求资源，拥有一系列成熟的缓存策略</p>
 <p>按照发生的时间顺序分别为存储策略，过期策略，协商策略，其中存储策略在收到响应后应用，过期策略和协商策略则在发送请求前应用</p>
@@ -340,8 +340,8 @@
 <p><code>Chrome</code> 硬性重新加载（<code>Command + shift + R</code>）会在请求的首部加上 <code>Pragma：no-cache</code> 和 <code>Cache-Control：no-cache</code></p>
 <h4 id="no-store"><a href="#no-store" class="headerlink" title="no-store"></a>no-store</h4><p>表示禁止浏览器以及所有中间缓存存储任何版本的返回响应，一定不会出现强缓存和协商缓存，适合个人隐私数据或者经济类数据</p>
 <h4 id="public"><a href="#public" class="headerlink" title="public"></a>public</h4><p>表明响应可以被浏览器、<code>CDN</code> 等等缓存</p>
-<h4 id="private"><a href="#private" class="headerlink" title="private"></a>private</h4><p>响应只作为私有的缓存，不能被 <code>CDN</code> 等缓存，如果要求 <code>HTTP</code> 认证，响应会自动设置为 <code>private</code></p>
-<h2 id="Expires"><a href="#Expires" class="headerlink" title="Expires"></a>Expires</h2><p><code>Expires</code> 是一个响应首部字段，它指定了一个日期/时间，在这个时间/日期之前，<code>HTTP</code> 缓存被认为是有效的</p>
+<h4 id="private"><a href="#private" class="headerlink" title="private"></a>private</h4><p>响应只作为私有的缓存，不能被 <code>CDN</code> 等缓存，如果要求 <code>http</code> 认证，响应会自动设置为 <code>private</code></p>
+<h2 id="Expires"><a href="#Expires" class="headerlink" title="Expires"></a>Expires</h2><p><code>Expires</code> 是一个响应首部字段，它指定了一个日期/时间，在这个时间/日期之前，<code>http</code> 缓存被认为是有效的</p>
 <p>无效的日期比如 <code>0</code>，表示这个资源已经过期了，如果同时设置了 <code>Cache-Control</code> 响应首部字段的 <code>max-age</code></p>
 <p>则 <code>Expires</code> 会被忽略，它也是 <code>HTTP/1.1</code> 之前版本遗留的通用首部字段，仅作为于 <code>HTTP/1.0</code> 的向后兼容而使用</p>
 <p>下面再来看看控制协商缓存的字段</p>
@@ -396,7 +396,7 @@
 </ul>
 </li>
 </ul>
-<p>针对于一般的项目，由于 <code>css</code> 和 <code>JavaScript</code> 在打包时加了 <code>md5</code> 值，建议直接使用强缓存，并且 <code>expires</code> 和 <code>cache-control</code> 同时使用，建议设置时长为 <code>7</code> 天较为妥当，图片文件由于没有加 <code>md5</code> 值，建议采用对比缓存，<code>html</code> 文件也建议采用对比缓存</p>
+<p>针对于一般的项目，由于 <code>CSS</code> 和 <code>JavaScript</code> 在打包时加了 <code>md5</code> 值，建议直接使用强缓存，并且 <code>expires</code> 和 <code>cache-control</code> 同时使用，建议设置时长为 <code>7</code> 天较为妥当，图片文件由于没有加 <code>md5</code> 值，建议采用对比缓存，<code>html</code> 文件也建议采用对比缓存</p>
 <h2 id="浏览器的不同表现"><a href="#浏览器的不同表现" class="headerlink" title="浏览器的不同表现"></a>浏览器的不同表现</h2><p>需要注意的是，当我们不设置 <code>cache-control</code>，只设置对比缓存，在不同浏览器下会有不同的表现</p>
 <p><code>chrome</code> 会直接从本地缓存获取，其他会请求服务器返回 <code>304</code>，这时候有两种方式让他们的响应一致</p>
 <ul>

@@ -16,7 +16,7 @@
 <meta property="og:description" content="对于操作系统来说，一个任务就是进程（Process），比如打开一个浏览器就是启动了一个浏览器进程，打开一个记事本就启动了一个记事本进程">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/54.jpg">
-<meta property="og:updated_time" content="2019-08-12T15:10:12.844Z">
+<meta property="og:updated_time" content="2019-08-14T02:45:21.885Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="进程与线程">
 <meta name="twitter:description" content="对于操作系统来说，一个任务就是进程（Process），比如打开一个浏览器就是启动了一个浏览器进程，打开一个记事本就启动了一个记事本进程">
@@ -166,7 +166,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    12 分钟 读完 (大约 1751 个字)
+                    12 分钟 读完 (大约 1747 个字)
                 </span>
                 
                 
@@ -182,7 +182,7 @@
             <p>对于操作系统来说，一个任务就是进程（<code>Process</code>），比如打开一个浏览器就是启动了一个浏览器进程，打开一个记事本就启动了一个记事本进程</p>
 <a id="more"></a>
 
-<p>有些进程还不止同时干一件事，比如 <code>Word</code>，它可以同时进行打字、拼写检查，打印等，在一个进程的内部，要同时干多件事，就需要同时运行多个 “子任务”，我们把进程内的这些 “子任务” 称为线程（<code>Thread</code>）</p>
+<p>有些进程还不止同时干一件事，比如 <code>word</code>，它可以同时进行打字、拼写检查，打印等，在一个进程的内部，要同时干多件事，就需要同时运行多个子任务，我们把进程内的这些子任务称为线程（<code>thread</code>）</p>
 <p>由于每个进程至少要干一件事，所以，一个进程至少有一个线程，当然也可以有多个，也可以多个线程同时执行</p>
 <blockquote>
 <p>简单来说就是，线程是最小的执行单元，而进程由至少一个线程组成</p>
@@ -222,41 +222,76 @@
 <li><p>多线程：多线程就是一个进程中只有多个线程，在进程内部进行线程间的切换，由于每个线程执行的时间片很短，所以在感觉上是并行的</p>
 </li>
 </ul>
-<h4 id="JavaScript-中的单线程执行机制-1"><a href="#JavaScript-中的单线程执行机制-1" class="headerlink" title="JavaScript 中的单线程执行机制"></a>JavaScript 中的单线程执行机制</h4><p><code>JavaScript</code> 的单线程本质上执行的是基于浏览器的一个事件队列，要执行的函数和触发事件的回调函数都被放在这个队列中，但是浏览器是<strong>事件驱动</strong>的、<strong>异步</strong>的、<strong>多线程</strong>的</p>
+<h4 id="JavaScript-中的单线程执行机制-1"><a href="#JavaScript-中的单线程执行机制-1" class="headerlink" title="JavaScript 中的单线程执行机制"></a>JavaScript 中的单线程执行机制</h4><p><code>JavaScript</code> 的单线程本质上执行的是基于浏览器的一个事件队列，要执行的函数和触发事件的回调函数都被放在这个队列中，但是浏览器是<strong>事件驱动的、异步的、多线程的</strong></p>
 <p>浏览器内部有一个事件轮询（<code>event loop</code>），是一个大的内部消息循环，会轮询大的消息队列，并执行，也就是 <code>JavaScript</code> 要处理的事件队列，是浏览器维护的</p>
-<p>浏览器至少有四个线程（不同浏览器会有差异）：<code>JavaScript</code> 引擎线程、界面渲染线程、浏览器事件触发线程、<code>http</code> 请求线程</p>
-<h4 id="setTimeout-和-ajax"><a href="#setTimeout-和-ajax" class="headerlink" title="setTimeout 和 ajax"></a>setTimeout 和 ajax</h4><ul>
+<p>浏览器至少有四个线程（不同浏览器会有差异）</p>
+<ul>
+<li><p><code>JavaScript</code> 引擎线程</p>
+</li>
+<li><p>界面渲染线程</p>
+</li>
+<li><p>浏览器事件触发线程</p>
+</li>
+<li><p><code>http</code> 请求线程</p>
+</li>
+</ul>
+<h4 id="setTimeout-和-Ajax"><a href="#setTimeout-和-Ajax" class="headerlink" title="setTimeout 和 Ajax"></a>setTimeout 和 Ajax</h4><ul>
 <li><p><code>setTimeout</code>：<code>JavaScript</code> 在执行到延时函数时，会触发浏览器的定时器，到设置时间，浏览器再将这个函数放入执行的函数队列，再由 <code>JavaScript</code> 引擎执行，都是在浏览器空闲了才会执行</p>
 </li>
 <li><p><code>Ajax</code>：是真正的异步，在调用 <code>Ajax</code> 的时候，浏览器会开辟一个新的线程，去处理这个请求，得到响应后，如果这个请求有回调，会将这个回调再放入事件队列中，再由 <code>JavaScript</code> 引擎执行</p>
 </li>
 </ul>
 <h2 id="JavaScript-中的阻塞"><a href="#JavaScript-中的阻塞" class="headerlink" title="JavaScript 中的阻塞"></a>JavaScript 中的阻塞</h2><p>浏览器虽然是多线程，但是由于 <code>JavaScript</code> 具有阻塞特性（比如 <code>alert</code>），无论外链还是内嵌脚本，在浏览器执行解释 <code>JavaScript</code> 脚本的时候，浏览器是不会去做别的事情的，比如渲染页面，而是直到 <code>JavaScript</code> 下载并执行完毕</p>
-<p>这样一来，<code>JavaScript</code> 脚本的下载、解释执行，会反使页面的继续绘制，给用户带来不良的体验，所以避免此类情况的话可以</p>
+<p>这样一来，<code>JavaScript</code> 脚本的下载、解释执行，会反使页面的继续绘制，给用户带来不良的体验</p>
+<p>所以避免此类情况的话可以采用下面一些方式</p>
 <ul>
-<li><p>将 <code>&lt;script&gt;</code> 内嵌和外链，在可以的情况下，放在 <code>&lt;body&gt;</code> 底部（对于 <code>css</code>，浏览器是并行下载）</p>
+<li><p>将 <code>&lt;script&gt;</code> 内嵌和外链，在可以的情况下放在 <code>&lt;body&gt;</code> 底部（对于 <code>CSS</code>，浏览器是并行下载的）</p>
 </li>
-<li><p>在页面 <code>onload</code> 后，加载 <code>JavaScript</code></p>
+<li><p>在页面 <code>onload</code> 后再加载 <code>JavaScript</code></p>
 </li>
-<li><p>可以使用 <code>html5</code> 的  <code>&lt;script&gt;</code>标签的<code>defer</code>属性，在页面加载完成后下载</p>
+<li><p>可以使用 <code>html5</code> 的  <code>&lt;script&gt;</code> 标签的 <code>defer</code> 属性，在页面加载完成后下载</p>
 </li>
-<li><p>使用创建 <code>&lt;script&gt;</code> 标签的方式，在页面加载完成后添加进去（createElement）</p>
+<li><p>使用动态创建 <code>&lt;script&gt;</code> 标签的方式，在页面加载完成后添加进去（<code>createElement</code>）</p>
 </li>
 </ul>
 <p>简单来说就是一句话，先让页面渲染完，再加载 <code>JavaScript</code></p>
 <blockquote>
-<p><code>Node.js</code> 的运行机制是基于事件轮询 （<code>event loop</code>）</p>
+<p><code>Node.js</code> 的运行机制也是基于事件轮询 （<code>event loop</code>）</p>
 </blockquote>
-<h2 id="关于线程同步"><a href="#关于线程同步" class="headerlink" title="关于线程同步"></a>关于线程同步</h2><p>线程同步是指多线程通过特定的东西（如互斥量）来控制线程之间的执行顺序（同步），也可以说是在线程之间通过同步建立起执行顺序的关系，如果没有同步那线程之间是各自运行各自的</p>
-<h4 id="方式和机制"><a href="#方式和机制" class="headerlink" title="方式和机制"></a>方式和机制</h4><p>主要有临界区（<code>Critical Section</code>）、互斥量（<code>Mutex</code>）、信号量（<code>Semaphore</code>）、事件（<code>Event</code>）四种方式，区别如下：</p>
+<h2 id="关于线程同步"><a href="#关于线程同步" class="headerlink" title="关于线程同步"></a>关于线程同步</h2><p>线程同步是指多线程通过特定的东西（如互斥量）来控制线程之间的执行顺序（同步）</p>
+<p>也可以说是在线程之间通过同步建立起执行顺序的关系，如果没有同步那线程之间是各自运行各自的</p>
+<h4 id="方式和机制"><a href="#方式和机制" class="headerlink" title="方式和机制"></a>方式和机制</h4><p>主要有临界区（<code>Critical Section</code>）、互斥量（<code>Mutex</code>）、信号量（<code>Semaphore</code>）、事件（<code>Event</code>）四种方式</p>
+<p>区别如下：</p>
 <ul>
-<li><p>临界区：通过对多线程的串行化来访问公共资源或一段代码，速度快，适合控制数据访问，在任意时刻只允许一个线程对共享资源进行访问，如果有多个线程试图访问公共资源，那么在有一个线程进入后，其他试图访问公共资源的线程将被挂起，并一直等到进入临界区的线程离开，临界区在被释放后，其他线程才可以抢占</p>
+<li><p>临界区</p>
+<ul>
+<li><p>通过对多线程的串行化来访问公共资源或一段代码，速度快，适合控制数据访问，在任意时刻只允许一个线程对共享资源进行访问</p>
 </li>
-<li><p>互斥量：采用互斥对象机制，只有拥有互斥对象的线程才有访问公共资源的权限，因为互斥对象只有一个，所以能保证公共资源不会同时被多个线程访问，互斥不仅能实现同一应用程序的公共资源安全共享，还能实现不同应用程序的公共资源安全共享</p>
+<li><p>如果有多个线程试图访问公共资源，那么在有一个线程进入后，其他试图访问公共资源的线程将被挂起，并一直等到进入临界区的线程离开</p>
 </li>
-<li><p>信号量：它允许多个线程在同一时刻访问同一资源，但是需要限制在同一时刻访问此资源的最大线程数目</p>
+<li><p>临界区在被释放后，其他线程才可以抢占</p>
 </li>
-<li><p>事件：通过通知操作的方式来保持线程的同步，还可以方便实现对多个线程的优先级比较的操作</p>
+</ul>
+</li>
+<li><p>互斥量</p>
+<ul>
+<li><p>采用互斥对象机制，只有拥有互斥对象的线程才有访问公共资源的权限</p>
+</li>
+<li><p>因为互斥对象只有一个，所以能保证公共资源不会同时被多个线程访问</p>
+</li>
+<li><p>互斥不仅能实现同一应用程序的公共资源安全共享，还能实现不同应用程序的公共资源安全共享</p>
+</li>
+</ul>
+</li>
+<li><p>信号量</p>
+<ul>
+<li>它允许多个线程在同一时刻访问同一资源，但是需要限制在同一时刻访问此资源的最大线程数目</li>
+</ul>
+</li>
+<li><p>事件</p>
+<ul>
+<li>通过通知操作的方式来保持线程的同步，还可以方便实现对多个线程的优先级比较的操作</li>
+</ul>
 </li>
 </ul>
 
@@ -431,9 +466,9 @@
         <span class="has-mr-6">3.2</span>
         <span>JavaScript 中的单线程执行机制</span>
         </a></li><li>
-        <a class="is-flex" href="#setTimeout-和-ajax">
+        <a class="is-flex" href="#setTimeout-和-Ajax">
         <span class="has-mr-6">3.3</span>
-        <span>setTimeout 和 ajax</span>
+        <span>setTimeout 和 Ajax</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#JavaScript-中的阻塞">
         <span class="has-mr-6">4</span>

@@ -16,7 +16,7 @@
 <meta property="og:description" content="首先要先说一下耳熟能详的「堆栈」，要区分数据结构和内存中各自「堆栈」的含义">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/55.jpg">
-<meta property="og:updated_time" content="2019-07-14T09:16:28.508Z">
+<meta property="og:updated_time" content="2019-08-14T03:04:17.672Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的栈和堆">
 <meta name="twitter:description" content="首先要先说一下耳熟能详的「堆栈」，要区分数据结构和内存中各自「堆栈」的含义">
@@ -166,7 +166,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    5 分钟 读完 (大约 821 个字)
+                    6 分钟 读完 (大约 920 个字)
                 </span>
                 
                 
@@ -183,7 +183,7 @@
 <a id="more"></a>
 
 <p>数据结构中的堆和栈是两种不同的、数据项按序排列的数据结构，这里主要介绍的是内存中的堆区与栈区</p>
-<h2 id="内存中的堆区与栈区"><a href="#内存中的堆区与栈区" class="headerlink" title="内存中的堆区与栈区"></a>内存中的堆区与栈区</h2><p>在 <code>C</code> 语言中，各个区的区别如下</p>
+<h2 id="内存中的堆区与栈区"><a href="#内存中的堆区与栈区" class="headerlink" title="内存中的堆区与栈区"></a>内存中的堆区与栈区</h2><p>在 <code>C</code> 语言中，各个区别如下</p>
 <ul>
 <li><p>栈区是分配局部变量的空间</p>
 </li>
@@ -195,17 +195,17 @@
 </li>
 </ul>
 <p>一个简单的例子</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">int a = 0;                  // 全局初始化区</span><br><span class="line">char *p1;                   // 全局未初始化区</span><br><span class="line"></span><br><span class="line">main() &#123;</span><br><span class="line">  int b;                    // 栈</span><br><span class="line">  char s[] = &quot;abc&quot;;         // 栈</span><br><span class="line">  char *p2;                 // 栈</span><br><span class="line">  char *p3 = &quot;123&quot;;         // 在常量区，p3 在栈上</span><br><span class="line">  static int c =0；         // 全局（静态）初始化区</span><br><span class="line">  p1 = (char *)malloc(10);  // 堆</span><br><span class="line">  p2 = (char *)malloc(20);  // 堆</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">int</span> a = <span class="hljs-number">0</span>;                  <span class="hljs-comment">// 全局初始化区</span></span><br><span class="line"><span class="hljs-keyword">char</span> *p1;                   <span class="hljs-comment">// 全局未初始化区</span></span><br><span class="line"></span><br><span class="line">main() &#123;</span><br><span class="line">  <span class="hljs-keyword">int</span> b;                    <span class="hljs-comment">// 栈</span></span><br><span class="line">  <span class="hljs-keyword">char</span> s[] = <span class="hljs-string">"abc"</span>;         <span class="hljs-comment">// 栈</span></span><br><span class="line">  <span class="hljs-keyword">char</span> *p2;                 <span class="hljs-comment">// 栈</span></span><br><span class="line">  <span class="hljs-keyword">char</span> *p3 = <span class="hljs-string">"123"</span>;         <span class="hljs-comment">// 在常量区，p3 在栈上</span></span><br><span class="line">  <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> c =<span class="hljs-number">0</span>；         <span class="hljs-comment">// 全局（静态）初始化区</span></span><br><span class="line">  p1 = (<span class="hljs-keyword">char</span> *)<span class="hljs-built_in">malloc</span>(<span class="hljs-number">10</span>);  <span class="hljs-comment">// 堆</span></span><br><span class="line">  p2 = (<span class="hljs-keyword">char</span> *)<span class="hljs-built_in">malloc</span>(<span class="hljs-number">20</span>);  <span class="hljs-comment">// 堆</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>而 <code>JavaScript</code> 是高级语言，底层依靠 <code>C/C++</code> 来编译实现，其变量划分为基本数据类型和引用数据类型</p>
-<p>基本数据类型包括 <code>Undefined</code>，<code>Null</code>，<code>Boolean</code>，<code>Number</code>、<code>String</code></p>
+<p>基本数据类型包括 <code>Undefined</code>，<code>Null</code>，<code>Boolean</code>，<code>Number</code>、<code>String</code>（<code>ES6</code> 当中新增了 <code>Symbol()</code> 基本数据类型）</p>
 <p>这些类型在内存中分别占有固定大小的空间，他们的值保存在栈空间，通过按值访问、拷贝和比较</p>
-<p>引用类型包括 <code>object</code>，<code>array</code>，<code>function</code>，<code>error</code>，<code>date</code></p>
+<p>引用类型包括 <code>Object</code>，<code>Array</code>，<code>Function</code>，<code>Error</code>，<code>Date</code></p>
 <p>这些类型大小不固定，栈内存中存放地址指向堆内存中的对象，是按引用访问的（和 <code>C</code> 语言的指针类似）</p>
 <p>对于引用类型的变量，栈内存中存放的只是该对象的访问地址，在堆内存中为该值分配空间，由于这种值的大小不固定，因此不能把他们保存在栈内存中</p>
 <p>但是内存地址大小是固定的，因此可以将堆内存地址保存到栈内存中</p>
 <p>这样一来，当查询引用类型的变量的时候，就会先从栈中读取堆内存地址，然后在根据地址取出对应的值</p>
-<p>显而易见的是，<code>JavaScript</code> 中所有引用类型创建实例的时候，都是显示或者隐式的 <code>new</code> 出对应类型的实例，实际上就是对应 <code>C</code> 语言的 <code>malloc</code> 分配内存函数</p>
+<p>显而易见的是，<code>JavaScript</code> 中所有引用类型创建实例的时候，都是显式或者隐式的 <code>new</code> 出对应类型的实例，实际上就是对应 <code>C</code> 语言的 <code>malloc</code> 分配内存函数</p>
 <h2 id="栈和队列的区别"><a href="#栈和队列的区别" class="headerlink" title="栈和队列的区别"></a>栈和队列的区别</h2><ul>
 <li><p>栈的插入和删除操作都是在一端进行的，而队列的操作却是在两端进行的</p>
 </li>
@@ -213,14 +213,21 @@
 </li>
 </ul>
 <p>栈只允许在表尾一端进行插入和删除，而队列只允许在表尾一端进行插入，在表头一端进行删除</p>
+<p>有一个比较好的记忆方式</p>
+<ul>
+<li><p>队列相当我们去银行柜台排队，大家依次鱼贯而行，先进去排队的最先出来</p>
+</li>
+<li><p>栈比较像我们在家中洗碗，最后洗好的碗叠在最上面的，而下次拿的时候是最先拿到最后叠上去的碗</p>
+</li>
+</ul>
 <h2 id="栈和堆的区别"><a href="#栈和堆的区别" class="headerlink" title="栈和堆的区别"></a>栈和堆的区别</h2><ul>
 <li><p>栈区（<code>stack</code>） – 由编译器自动分配释放，存放函数的参数值，局部变量的值等</p>
 </li>
 <li><p>堆区（<code>heap</code>） – 一般由程序员分配释放，若程序员不释放，程序结束时可能由 <code>OS</code> 回收</p>
 </li>
-<li><p>堆（数据结构）：堆可以被看成是一棵树，如：堆排序</p>
+<li><p>堆（数据结构） – 堆可以被看成是一棵树，如：堆排序</p>
 </li>
-<li><p>栈（数据结构）：一种先进后出的数据结构</p>
+<li><p>栈（数据结构） – 一种先进后出的数据结构</p>
 </li>
 </ul>
 
@@ -250,7 +257,7 @@
         <div class="level-start">
             <a class="level level-item has-link-grey  article-nav-prev" href="/2019/05/12/Angular/08/">
                 <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">动态加载已经声明的组件</span>
+                <span class="level-item">Angular 中的动态加载</span>
             </a>
         </div>
         

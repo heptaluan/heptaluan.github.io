@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="rxjs 是一种针对异步数据流编程工具，或者叫响应式扩展程序，rxjs 的目标就是异步编程 Angular 引入 rxjs 为了就是让异步可控，更为简单">
+    <meta name="description" content="rxjs 是一种针对异步数据流编程工具，或者叫响应式扩展程序，rxjs 的目标就是异步编程，Angular 引入 rxjs 为了就是让异步可控，更为简单">
 <meta name="keywords" content="Angular">
 <meta property="og:type" content="article">
 <meta property="og:title" content="rxjs">
 <meta property="og:url" content="http://yoursite.com/2019/06/04/Angular/11/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="rxjs 是一种针对异步数据流编程工具，或者叫响应式扩展程序，rxjs 的目标就是异步编程 Angular 引入 rxjs 为了就是让异步可控，更为简单">
+<meta property="og:description" content="rxjs 是一种针对异步数据流编程工具，或者叫响应式扩展程序，rxjs 的目标就是异步编程，Angular 引入 rxjs 为了就是让异步可控，更为简单">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/11.jpg">
-<meta property="og:updated_time" content="2019-08-13T15:02:14.580Z">
+<meta property="og:updated_time" content="2019-08-14T10:40:38.531Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="rxjs">
-<meta name="twitter:description" content="rxjs 是一种针对异步数据流编程工具，或者叫响应式扩展程序，rxjs 的目标就是异步编程 Angular 引入 rxjs 为了就是让异步可控，更为简单">
+<meta name="twitter:description" content="rxjs 是一种针对异步数据流编程工具，或者叫响应式扩展程序，rxjs 的目标就是异步编程，Angular 引入 rxjs 为了就是让异步可控，更为简单">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/11.jpg">
 
 
@@ -166,7 +166,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    22 分钟 读完 (大约 3354 个字)
+                    22 分钟 读完 (大约 3369 个字)
                 </span>
                 
                 
@@ -179,8 +179,7 @@
             
         </h1>
         <div class="content">
-            <p><code>rxjs</code> 是一种针对异步数据流编程工具，或者叫响应式扩展程序，<code>rxjs</code> 的目标就是异步编程</p>
-<p><code>Angular</code> 引入 <code>rxjs</code> 为了就是让异步可控，更为简单</p>
+            <p><code>rxjs</code> 是一种针对异步数据流编程工具，或者叫响应式扩展程序，<code>rxjs</code> 的目标就是异步编程，<code>Angular</code> 引入 <code>rxjs</code> 为了就是让异步可控，更为简单</p>
 <a id="more"></a>
 
 <p>大部分 <code>rxjs</code> 操作符都不包括在 <code>Angular</code> 的 <code>Observable</code> 基本实现中，基本实现只包括 <code>Angular</code> 本身所需的功能</p>
@@ -232,27 +231,29 @@
 </li>
 <li><p>当 <code>Observable</code> 对象产生新值的时候，我们可以通过调用 <code>next()</code> 方法来通知对应的观察者</p>
 </li>
-<li><p>若出现异常，则会调用观察者的 <code>error()</code> 方法。当我们订阅 <code>Observable</code> 对象后，只要有新的值，都会通知对应的观察者</p>
+<li><p>若出现异常，则会调用观察者的 <code>error()</code> 方法，当我们订阅 <code>Observable</code> 对象后，只要有新的值，都会通知对应的观察者</p>
 </li>
 <li><p>在下面两种情况中，新的值不会再通知对应的观察者</p>
-</li>
+<ul>
 <li><p>已调用 <code>observer</code> 对象的 <code>complete()</code> 方法</p>
 </li>
 <li><p>执行取消订阅操作</p>
 </li>
 </ul>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">interface Observer&lt;T&gt; &#123;</span><br><span class="line">  closed?: boolean;           <span class="hljs-comment">// 标识是否已经取消对Observable对象的订阅</span></span><br><span class="line">  next: <span class="hljs-function">(<span class="hljs-params">value: T</span>) =&gt;</span> <span class="hljs-keyword">void</span>;   <span class="hljs-comment">// 每当 Observable 发送新值的时候，next 方法会被调用</span></span><br><span class="line">  error: <span class="hljs-function">(<span class="hljs-params">err: any</span>) =&gt;</span> <span class="hljs-keyword">void</span>;  <span class="hljs-comment">// 当 Observable 内发生错误时，error 方法就会被调用</span></span><br><span class="line">  complete: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">void</span>;       <span class="hljs-comment">// 当 Observable 数据终止后，complete 方法会被调用</span></span><br><span class="line">                              <span class="hljs-comment">// 需要注意：在调用 complete 方法之后，next 方法不会再被调用</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">interface Observer&lt;T&gt; &#123;</span><br><span class="line">  closed?: boolean;           <span class="hljs-comment">// 标识是否已经取消对 Observable 对象的订阅</span></span><br><span class="line">  next: <span class="hljs-function">(<span class="hljs-params">value: T</span>) =&gt;</span> <span class="hljs-keyword">void</span>;   <span class="hljs-comment">// 每当 Observable 发送新值的时候，next 方法会被调用</span></span><br><span class="line">  error: <span class="hljs-function">(<span class="hljs-params">err: any</span>) =&gt;</span> <span class="hljs-keyword">void</span>;  <span class="hljs-comment">// 当 Observable 内发生错误时，error 方法就会被调用</span></span><br><span class="line">  complete: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">void</span>;       <span class="hljs-comment">// 当 Observable 数据终止后，complete 方法会被调用</span></span><br><span class="line">                              <span class="hljs-comment">// 需要注意：在调用 complete 方法之后，next 方法不会再被调用</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>下面是一些 <code>rxjs</code> 常用的操作符</p>
-<p>创建类操作符 <code>from</code>, <code>fromEvent</code>, <code>fromEventPattern</code>, <code>Interval</code>, <code>Timer</code></p>
+<p>创建类操作符 <code>from</code>，<code>fromEvent</code>，<code>fromEventPattern</code>，<code>Interval</code>，<code>Timer</code></p>
 <p>工具类操作符 <code>do</code> </p>
 <p>变换类操作符 <code>scan</code></p>
 <p>数学类操作符 <code>reduce</code></p>
-<p>过滤类操作符 <code>filter</code>, <code>take</code>, <code>first</code>, <code>last</code>, <code>skip</code></p>
-<p>过滤类操作符 <code>debounce</code>, <code>debounceTime</code></p>
-<p>过滤类操作符 <code>distinct</code>, <code>distinctUntilChanged</code></p>
-<p>合并类操作符 <code>merge</code>, <code>concat</code>, <code>startWith</code></p>
-<p>合并类操作符 <code>combineLatest</code>, <code>withLatestFrom</code>, <code>zip</code></p>
+<p>过滤类操作符 <code>filter</code>，<code>take</code>，<code>first</code>，<code>last</code>，<code>skip</code></p>
+<p>过滤类操作符 <code>debounce</code>，<code>debounceTime</code></p>
+<p>过滤类操作符 <code>distinct</code>，<code>distinctUntilChanged</code></p>
+<p>合并类操作符 <code>merge</code>，<code>concat</code>，<code>startWith</code></p>
+<p>合并类操作符 <code>combineLatest</code>，<code>withLatestFrom</code>，<code>zip</code></p>
 <h2 id="from"><a href="#from" class="headerlink" title="from"></a>from</h2><p><code>from</code> 可以支持从数组、类似数组的对象、<code>promise</code>、<code>iterable</code> 对象或类似 <code>Observable</code> 的对象（<code>ES5</code> 当中的 <code>Observable</code>）来创建一个 <code>Observable</code></p>
 <p>它几乎可以把任何对象转换成 <code>Observable</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> array = [<span class="hljs-number">10</span>, <span class="hljs-number">20</span>, <span class="hljs-number">30</span>];</span><br><span class="line"><span class="hljs-keyword">var</span> result$ = Rx.Observable.from(array);</span><br><span class="line"></span><br><span class="line">result$.subscribe(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(x));</span><br></pre></td></tr></table></figure>
@@ -261,7 +262,7 @@
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> click$ = Rx.Observable.fromEvent(<span class="hljs-built_in">document</span>, <span class="hljs-string">'click'</span>);</span><br><span class="line">click$.subscribe(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(x));</span><br></pre></td></tr></table></figure>
 
 <h2 id="fromEventPattern"><a href="#fromEventPattern" class="headerlink" title="fromEventPattern"></a>fromEventPattern</h2><p>我们经常会遇到一些已有的代码，这些代码和类库往往不受我们的控制，无法重构或代价太大</p>
-<p>在 <code>Rx</code> 中也提供了对应的方法可以转换</p>
+<p>在 <code>rxjs</code> 中也提供了对应的方法可以转换</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addClickHandler</span>(<span class="hljs-params">handler</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">document</span>.addEventListener(<span class="hljs-string">'click'</span>, handler);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">removeClickHandler</span>(<span class="hljs-params">handler</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">document</span>.removeEventListener(<span class="hljs-string">'click'</span>, handler);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> click$ = Rx.Observable.fromEventPattern(</span><br><span class="line">  addClickHandler,</span><br><span class="line">  removeClickHandler</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">click$.subscribe(<span class="hljs-function"><span class="hljs-params">x</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(x));</span><br></pre></td></tr></table></figure>
 
 <h2 id="Interval"><a href="#Interval" class="headerlink" title="Interval"></a>Interval</h2><p><code>Rx</code> 提供内建的可以创建和计时器相关的 <code>Observable</code> 方法，第一个是 <code>Interval</code>，它可以在指定时间间隔发送整数的自增长序列</p>
