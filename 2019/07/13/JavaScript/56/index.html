@@ -16,7 +16,7 @@
 <meta property="og:description" content="对集合中每个元素进行处理是很常见的操作，比如数组遍历、对象的属性遍历，以往这些操作是通过 for 循环、.forEach、.map 等方式进行 借由迭代器机制为 Map、Array、String 等对象提供了统一的遍历语法，以及更方便的相互转换">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/56.jpg">
-<meta property="og:updated_time" content="2019-07-16T14:42:30.640Z">
+<meta property="og:updated_time" content="2019-08-15T03:12:50.892Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="迭代协议与生成器">
 <meta name="twitter:description" content="对集合中每个元素进行处理是很常见的操作，比如数组遍历、对象的属性遍历，以往这些操作是通过 for 循环、.forEach、.map 等方式进行 借由迭代器机制为 Map、Array、String 等对象提供了统一的遍历语法，以及更方便的相互转换">
@@ -166,7 +166,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    20 分钟 读完 (大约 2940 个字)
+                    20 分钟 读完 (大约 2948 个字)
                 </span>
                 
                 
@@ -185,13 +185,14 @@
 
 <p>为方便编写迭代器还提供了生成器（<code>Generator</code>）语法，迭代器和生成器将迭代的概念直接带入核心语言，并提供了一种机制来自定义 <code>for...of</code> 循环的行为</p>
 <p>我们先来看看可迭代协议和迭代器协议</p>
-<h2 id="可迭代协议"><a href="#可迭代协议" class="headerlink" title="可迭代协议"></a>可迭代协议</h2><p>可迭代协议允许 <code>JavaScript</code> 对象去定义或定制它们的迭代行为, 例如在一个 <code>for..of</code> 结构中什么值可以被循环</p>
-<p>一些内置类型都是内置的可迭代类型并且有默认的迭代行为, 比如 <code>Array</code> 或者 <code>Map</code>, 另一些类型则不是（比如 <code>Object</code>）</p>
+<h2 id="可迭代协议"><a href="#可迭代协议" class="headerlink" title="可迭代协议"></a>可迭代协议</h2><p>可迭代协议允许 <code>JavaScript</code> 对象去定义或定制它们的迭代行为，例如在一个 <code>for..of</code> 结构中什么值可以被循环</p>
+<p>一些内置类型都是内置的可迭代类型并且有默认的迭代行为，比如 <code>Array</code> 或者 <code>Map</code>，另一些类型则不是（比如 <code>Object</code>）</p>
 <p>为了变成可迭代对象，一个对象必须实现 <code>@@iterator</code> 方法，意思是这个对象（或者它原型链上的某个对象）必须有一个名字为 <code>Symbol.iterator</code> 的属性</p>
 <p>简单来说， 将 <code>[Symbol.iterator]</code> 属性定义为一个迭代器对象即可实现该协议</p>
 <p>而 <code>Iterator</code> 接口的目的，就是为所有数据结构，提供了一种统一的访问机制，即 <code>for...of</code> 循环</p>
 <p>当使用 <code>for...of</code> 循环遍历某种数据结构时，该循环会自动去寻找 <code>Iterator</code> 接口，调用 <code>Symbol.iterator</code> 方法，返回该对象的默认遍历器</p>
-<p><code>ES6</code> 规定，默认的 <code>Iterator</code> 接口部署在数据结构的 <code>Symbol.iterator</code> 属性，或者说，一个数据结构只要具有 <code>Symbol.iterator</code> 属性，就可以认为是<strong>可迭代的</strong>（iterable）</p>
+<p><code>ES6</code> 规定，默认的 <code>Iterator</code> 接口部署在数据结构的 <code>Symbol.iterator</code> 属性</p>
+<p>或者说，一个数据结构只要具有 <code>Symbol.iterator</code> 属性，就可以认为是<strong>可迭代的</strong>（<code>iterable</code>）</p>
 <p><code>Symbol.iterator</code> 属性本身是一个函数，就是当前数据结构默认的遍历器生成函数，执行这个函数，就会返回一个遍历器</p>
 <h2 id="迭代器协议"><a href="#迭代器协议" class="headerlink" title="迭代器协议"></a>迭代器协议</h2><p>又称生成器协议，该协议定义了什么是迭代器对象，迭代器协议定义了一种标准的方式来产生一个有限或无限序列的值</p>
 <p>并且当所有的值都已经被迭代后，就会有一个默认的返回值</p>
@@ -224,7 +225,7 @@
 <p>我们也可以通过自己的 <code>@@iterator</code> 方法重新定义迭代行为</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> str = <span class="hljs-keyword">new</span> <span class="hljs-built_in">String</span>(<span class="hljs-string">'hi'</span>)</span><br><span class="line"></span><br><span class="line">str[<span class="hljs-built_in">Symbol</span>.iterator] = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">    next: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._first) &#123;</span><br><span class="line">        <span class="hljs-keyword">this</span>._first = <span class="hljs-literal">false</span></span><br><span class="line">        <span class="hljs-keyword">return</span> &#123; <span class="hljs-attr">value</span>: <span class="hljs-string">'hello'</span>, <span class="hljs-attr">done</span>: <span class="hljs-literal">false</span> &#125;</span><br><span class="line">      &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> &#123; <span class="hljs-attr">done</span>: <span class="hljs-literal">true</span> &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    _first: <span class="hljs-literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i <span class="hljs-keyword">of</span> str) &#123;</span><br><span class="line">  <span class="hljs-comment">// hello</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="在对象上实现-Iterator-接口"><a href="#在对象上实现-Iterator-接口" class="headerlink" title="在对象上实现 Iterator 接口"></a>在对象上实现 Iterator 接口</h2><p><code>String</code>, <code>Array</code>, <code>TypedArray</code>, <code>Map</code> 和 <code>Set</code> 是所有内置可迭代对象，因为它们的原型对象都有一个 <code>@@iterator</code> 方法</p>
+<h2 id="在对象上实现-Iterator-接口"><a href="#在对象上实现-Iterator-接口" class="headerlink" title="在对象上实现 Iterator 接口"></a>在对象上实现 Iterator 接口</h2><p><code>String</code>，<code>Array</code>，<code>TypedArray</code>，<code>Map</code> 和 <code>Set</code> 是所有内置可迭代对象，因为它们的原型对象都有一个 <code>@@iterator</code> 方法</p>
 <p>那么这里存在一个问题，为什么对象（<code>Object</code>）没有部署 <code>Iterator</code> 接口呢？</p>
 <p>有两个原因</p>
 <ul>
@@ -233,8 +234,8 @@
 <li><p>二是对对象部署 <code>Iterator</code> 接口并不是很必要，因为 <code>Map</code> 弥补了它的缺陷，又正好有 <code>Iteraotr</code> 接口</p>
 </li>
 </ul>
-<p>但是我们可以手动的为对象添加一个 <code>Iterator</code> 接口，不过需要注意的就是，如果一个对象要具备可被 <code>for...of</code> 循环调用的 <code>Iterator</code> 接口</p>
-<p>就必须在 <code>Symbol.iterator</code> 的属性上部署遍历器生成方法，比如一个实现 <code>50</code> 以内的斐波那契数列的示例</p>
+<p>但是我们可以手动的为对象添加一个 <code>Iterator</code> 接口，不过需要注意的就是</p>
+<p>如果一个对象要具备可被 <code>for...of</code> 循环调用的 <code>Iterator</code> 接口，就必须在 <code>Symbol.iterator</code> 的属性上部署遍历器生成方法，比如一个实现 <code>50</code> 以内的斐波那契数列的示例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> obj = &#123;</span><br><span class="line">  [<span class="hljs-built_in">Symbol</span>.iterator]: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> a = <span class="hljs-number">0</span>, b = <span class="hljs-number">0</span></span><br><span class="line">    <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">      next: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">let</span> value = <span class="hljs-number">0</span></span><br><span class="line">        <span class="hljs-keyword">if</span> (!a) &#123;</span><br><span class="line">          value = a = <span class="hljs-number">1</span></span><br><span class="line">        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!b) &#123;</span><br><span class="line">          value = b = <span class="hljs-number">1</span></span><br><span class="line">        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (b &lt; <span class="hljs-number">50</span>) &#123;</span><br><span class="line">          value = a + b</span><br><span class="line">          a = b</span><br><span class="line">          b = value</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-keyword">return</span> &#123; <span class="hljs-attr">done</span>: value === <span class="hljs-number">0</span>, value &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i <span class="hljs-keyword">of</span> obj) &#123;</span><br><span class="line">  <span class="hljs-comment">// 1 1 2 3 5 8 13 21 34 55</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="生成器对象"><a href="#生成器对象" class="headerlink" title="生成器对象"></a>生成器对象</h2><p>生成器对象是由一个 <code>Generator</code> 函数（<code>function*</code>）返回的，并且它符合可迭代协议和迭代器协议</p>
@@ -268,7 +269,7 @@
 
 <h2 id="生成器也可以接收参数"><a href="#生成器也可以接收参数" class="headerlink" title="生成器也可以接收参数"></a>生成器也可以接收参数</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">g</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> index = <span class="hljs-built_in">arguments</span>[<span class="hljs-number">0</span>] || <span class="hljs-number">0</span>;</span><br><span class="line">  <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>)</span><br><span class="line">    <span class="hljs-keyword">yield</span> index++;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> gen = g(<span class="hljs-number">5</span>);</span><br><span class="line"></span><br><span class="line">gen.next().value  <span class="hljs-comment">// 5</span></span><br><span class="line">gen.next().value  <span class="hljs-comment">// 6</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="Map-Set-String-Array-互相转换"><a href="#Map-Set-String-Array-互相转换" class="headerlink" title="Map, Set, String, Array 互相转换"></a>Map, Set, String, Array 互相转换</h2><p>可迭代协议给出了统一的迭代协议，使得不同类型的集合间转换更加方便，以下是一些很方便的转换技巧</p>
+<h2 id="Map，Set，String，Array-互相转换"><a href="#Map，Set，String，Array-互相转换" class="headerlink" title="Map，Set，String，Array 互相转换"></a>Map，Set，String，Array 互相转换</h2><p>可迭代协议给出了统一的迭代协议，使得不同类型的集合间转换更加方便，以下是一些很方便的转换技巧</p>
 <p>从 <code>Array</code> 生成 <code>Set</code>，可用于数组去重</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>([<span class="hljs-string">'1'</span>, <span class="hljs-string">'2'</span>, <span class="hljs-string">'3'</span>])</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 等价于（但不是 ===）</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>([<span class="hljs-string">'1'</span>, <span class="hljs-string">'2'</span>, <span class="hljs-string">'3'</span>][<span class="hljs-built_in">Symbol</span>.iterator]())</span><br></pre></td></tr></table></figure>
 
@@ -426,7 +427,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        142
+                        143
                     </p>
                 </div>
             </div>
@@ -496,9 +497,9 @@
         <span class="has-mr-6">7</span>
         <span>生成器也可以接收参数</span>
         </a></li><li>
-        <a class="is-flex" href="#Map-Set-String-Array-互相转换">
+        <a class="is-flex" href="#Map，Set，String，Array-互相转换">
         <span class="has-mr-6">8</span>
-        <span>Map, Set, String, Array 互相转换</span>
+        <span>Map，Set，String，Array 互相转换</span>
         </a></li><li>
         <a class="is-flex" href="#生成器对象到底是一个迭代器还是一个可迭代对象">
         <span class="has-mr-6">9</span>
@@ -539,7 +540,7 @@
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">10</span>
+                <span class="level-item tag">11</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -634,6 +635,25 @@
         
         <article class="media">
             
+            <a href="/2019/08/04/CSS/11/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/11.jpg" alt="px，em，rem，vw 和 vh">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-03T16:00:00.000Z">2019-08-04</time></div>
+                    <a href="/2019/08/04/CSS/11/" class="has-link-black-ter is-size-6">px，em，rem，vw 和 vh</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CSS/">CSS</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2019/08/02/JavaScript/57/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/57.jpg" alt="JavaScript 中一些常用方法的实现">
@@ -708,25 +728,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/07/07/JavaScript/44/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/44.jpg" alt="什么是 FOUC">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-06T16:00:00.000Z">2019-07-07</time></div>
-                    <a href="/2019/07/07/JavaScript/44/" class="has-link-black-ter is-size-6">什么是 FOUC</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -745,7 +746,7 @@
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1114,7 +1115,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">10</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 

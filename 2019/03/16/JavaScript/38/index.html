@@ -2,21 +2,24 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-<title>暂时删除 - heptaluan&#39;s blog</title>
+<title>为什么 Object.keys 的返回值会自动排序 - heptaluan&#39;s blog</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-    <meta name="keywords" content="JavaScript">
+    <meta name="description" content="我们先来看一个实例，如下所示">
+<meta name="keywords" content="JavaScript">
 <meta property="og:type" content="article">
-<meta property="og:title" content="暂时删除">
+<meta property="og:title" content="为什么 Object.keys 的返回值会自动排序">
 <meta property="og:url" content="http://yoursite.com/2019/03/16/JavaScript/38/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
+<meta property="og:description" content="我们先来看一个实例，如下所示">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/38.jpg">
-<meta property="og:updated_time" content="2019-08-13T15:58:16.367Z">
+<meta property="og:updated_time" content="2019-08-15T04:01:05.494Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="暂时删除">
+<meta name="twitter:title" content="为什么 Object.keys 的返回值会自动排序">
+<meta name="twitter:description" content="我们先来看一个实例，如下所示">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/38.jpg">
 
 
@@ -91,7 +94,7 @@
         <!-- <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="暂时删除" height="28">
+                <img src="/images/logo.svg" alt="为什么 Object.keys 的返回值会自动排序" height="28">
             
             </a>
         </div> -->
@@ -144,7 +147,7 @@
     
     <div class="card-image">
         <span class="image is-7by1">
-            <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/38.jpg" alt="暂时删除">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/38.jpg" alt="为什么 Object.keys 的返回值会自动排序">
         </span>
     </div>
     
@@ -163,7 +166,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    几秒 读完 (大约 0 个字)
+                    5 分钟 读完 (大约 711 个字)
                 </span>
                 
                 
@@ -172,11 +175,111 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                暂时删除
+                为什么 Object.keys 的返回值会自动排序
             
         </h1>
         <div class="content">
-            
+            <p>我们先来看一个实例，如下所示</p>
+<a id="more"></a>
+
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> arr = [<span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'c'</span>];</span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">Object</span>.keys(arr));     <span class="hljs-comment">// ['0', '1', '2']</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// -------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> an_obj = &#123; <span class="hljs-number">100</span>: <span class="hljs-string">'a'</span>, <span class="hljs-number">2</span>: <span class="hljs-string">'b'</span>, <span class="hljs-number">7</span>: <span class="hljs-string">'c'</span> &#125;;</span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">Object</span>.keys(an_obj));  <span class="hljs-comment">// ['2', '7', '100']</span></span><br></pre></td></tr></table></figure>
+
+<p>至于为什么会发生这样的情况，我们需要来看看在 <code>Object.keys()</code> 的调用过程中到底发生了些什么</p>
+<p>查看 <a href="http://zhoushengfe.com/es6/es6-ch.html#sec-object.keys" target="_blank" rel="noopener">规范</a> 可知，总共有三步流程</p>
+<ul>
+<li><p>调用 <code>ToObject(O)</code> 将结果赋值给变量 <code>obj</code></p>
+</li>
+<li><p>调用 <code>EnumerableOwnPropertyNames(obj, &#39;key&#39;)</code> 将结果赋值给变量 <code>nameList</code></p>
+</li>
+<li><p>调用 <code>CreateArrayFromList(nameList)</code> 得到最终的结果</p>
+</li>
+</ul>
+<h2 id="ToObject-O"><a href="#ToObject-O" class="headerlink" title="ToObject(O)"></a>ToObject(O)</h2><p>首先第一步是将参数转换成 <code>Object()</code>，根据参数的不同结果有所不同，如下所示</p>
+<table>
+<thead>
+<tr>
+<th>参数类型</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Undefined</code></td>
+<td>抛出 <code>TypeError</code></td>
+</tr>
+<tr>
+<td><code>Null</code></td>
+<td>抛出 <code>TypeError</code></td>
+</tr>
+<tr>
+<td><code>Boolean</code></td>
+<td>返回一个新的 <code>Boolean</code> 对象</td>
+</tr>
+<tr>
+<td><code>Number</code></td>
+<td>返回一个新的 <code>Number</code> 对象</td>
+</tr>
+<tr>
+<td><code>String</code></td>
+<td>返回一个新的 <code>String</code> 对象</td>
+</tr>
+<tr>
+<td><code>Symbol</code></td>
+<td>返回一个新的 <code>Symbol</code> 对象</td>
+</tr>
+<tr>
+<td><code>Object</code></td>
+<td>直接将 <code>Object</code> 返回</td>
+</tr>
+</tbody></table>
+<p>几个示例</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Object</span>.keys(<span class="hljs-literal">null</span>)   <span class="hljs-comment">// TypeError</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.keys(<span class="hljs-literal">true</span>)   <span class="hljs-comment">// []</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.keys(<span class="hljs-string">'abc'</span>)  <span class="hljs-comment">// ['0', '1', '2']</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="EnumerableOwnPropertyNames-obj-‘key’"><a href="#EnumerableOwnPropertyNames-obj-‘key’" class="headerlink" title="EnumerableOwnPropertyNames(obj, ‘key’)"></a>EnumerableOwnPropertyNames(obj, ‘key’)</h2><p>接下来就是获得属性列表</p>
+<p>过程有很多，比较重要的一个是调用对象的内部方法 <code>OwnPropertyKeys</code> 获得对象的 <code>ownKeys</code>，也正是该方法决定了属性的顺序</p>
+<ul>
+<li><p>声明变量 <code>keys</code> 值为一个空列表（<code>List</code> 类型）</p>
+</li>
+<li><p>把每个 <code>Number</code> 类型的属性，按数值大小升序排序，并依次添加到 <code>keys</code> 中</p>
+</li>
+<li><p>把每个 <code>String</code> 类型的属性，按创建时间升序排序，并依次添加到 <code>keys</code> 中</p>
+</li>
+<li><p>把每个 <code>Symbol</code> 类型的属性，按创建时间升序排序，并依次添加到 <code>keys</code> 中</p>
+</li>
+<li><p>将 <code>keys</code> 返回（<code>return keys</code>）</p>
+</li>
+</ul>
+<p>除此之外，还有一点需要补充，如果对象的属性类型是数字，字符与 <code>Symbol</code> 混合的，那么返回顺序永远是数字在前，然后是字符串，最后是 <code>Symbol</code></p>
+<p>不过虽然规定了 <code>Symbol</code>，最终会将 <code>Symbol</code> 类型的属性过滤出去</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> s = <span class="hljs-built_in">Symbol</span>()</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> obj = &#123;</span><br><span class="line">  [s]: <span class="hljs-string">'d'</span>,</span><br><span class="line">  <span class="hljs-number">7</span>: <span class="hljs-string">'a'</span>,</span><br><span class="line">  a: <span class="hljs-string">'7'</span>,</span><br><span class="line">  <span class="hljs-number">10</span>: <span class="hljs-string">'b'</span>,</span><br><span class="line">  b: <span class="hljs-string">'10'</span>,</span><br><span class="line">  <span class="hljs-number">44</span>: <span class="hljs-string">'c'</span>,</span><br><span class="line">  c: <span class="hljs-string">'44'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.keys(obj)  <span class="hljs-comment">// ['7', '10', '44', 'a', 'b', 'c']</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="CreateArrayFromList-nameList"><a href="#CreateArrayFromList-nameList" class="headerlink" title="CreateArrayFromList(nameList)"></a>CreateArrayFromList(nameList)</h2><p>最后一步就是调用 <code>CreateArrayFromList(nameList)</code> 来得到最终的结果</p>
+<p>现在已经得到了一个对象的属性列表，最后一步是将 <code>List</code> 类型的属性列表转换成 <code>Array</code> 类型</p>
+<ul>
+<li><p>先声明一个变量 <code>array</code>，值是一个空数组</p>
+</li>
+<li><p>循环属性列表，将每个元素添加到 <code>array</code> 中</p>
+</li>
+<li><p>将 <code>array</code> 返回</p>
+</li>
+</ul>
+<h2 id="一些其他的-API"><a href="#一些其他的-API" class="headerlink" title="一些其他的 API"></a>一些其他的 API</h2><p>上面介绍的排序规则同样适用于下列 <code>API</code></p>
+<ul>
+<li><p><code>Object.entries</code></p>
+</li>
+<li><p><code>Object.values</code></p>
+</li>
+<li><p><code>for...in</code></p>
+</li>
+<li><p><code>Object.getOwnPropertyNames</code></p>
+</li>
+<li><p><code>Reflect.ownKeys</code></p>
+</li>
+</ul>
+<blockquote>
+<p>不过需要注意的是，以上 <code>API</code> 除了 <code>Reflect.ownKeys</code> 之外，其他 <code>API</code> 均会将 <code>Symbol</code> 类型的属性过滤掉</p>
+<p>如果想要保证对象遍历的输出顺序，可以将对象转换为数组来进行操作</p>
+</blockquote>
+
         </div>
         
         <div class="level is-size-7 is-uppercase">
@@ -286,7 +389,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        142
+                        143
                     </p>
                 </div>
             </div>
@@ -327,7 +430,23 @@
             <h3 class="menu-label">
                 目录
             </h3>
-            
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#ToObject-O">
+        <span class="has-mr-6">1</span>
+        <span>ToObject(O)</span>
+        </a></li><li>
+        <a class="is-flex" href="#EnumerableOwnPropertyNames-obj-‘key’">
+        <span class="has-mr-6">2</span>
+        <span>EnumerableOwnPropertyNames(obj, ‘key’)</span>
+        </a></li><li>
+        <a class="is-flex" href="#CreateArrayFromList-nameList">
+        <span class="has-mr-6">3</span>
+        <span>CreateArrayFromList(nameList)</span>
+        </a></li><li>
+        <a class="is-flex" href="#一些其他的-API">
+        <span class="has-mr-6">4</span>
+        <span>一些其他的 API</span>
+        </a></li></ul>
         </div>
     </div>
 </div>
@@ -359,7 +478,7 @@
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">10</span>
+                <span class="level-item tag">11</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -454,6 +573,25 @@
         
         <article class="media">
             
+            <a href="/2019/08/04/CSS/11/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/11.jpg" alt="px，em，rem，vw 和 vh">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-03T16:00:00.000Z">2019-08-04</time></div>
+                    <a href="/2019/08/04/CSS/11/" class="has-link-black-ter is-size-6">px，em，rem，vw 和 vh</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CSS/">CSS</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2019/08/02/JavaScript/57/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/57.jpg" alt="JavaScript 中一些常用方法的实现">
@@ -528,25 +666,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/07/07/JavaScript/44/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/44.jpg" alt="什么是 FOUC">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-06T16:00:00.000Z">2019-07-07</time></div>
-                    <a href="/2019/07/07/JavaScript/44/" class="has-link-black-ter is-size-6">什么是 FOUC</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -565,7 +684,7 @@
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -934,7 +1053,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">10</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
@@ -1013,7 +1132,7 @@
             <div class="level-start has-text-centered-mobile">
                 <!-- <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="暂时删除" height="28">
+                    <img src="/images/logo.svg" alt="为什么 Object.keys 的返回值会自动排序" height="28">
                 
                 </a> -->
                 <p class="is-size-7">

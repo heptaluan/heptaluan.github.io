@@ -2,24 +2,24 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-<title>libuv - heptaluan&#39;s blog</title>
+<title>Node.js 中的 libuv - heptaluan&#39;s blog</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-    <meta name="description" content="这里只是简单的介绍一下 libuv 的官方文档在阐述其架构的时候有这么一张图">
+    <meta name="description" content="libuv 是一个高性能的，事件驱动的 I/O 库，并且提供了跨平台（如 windows, linux）的 API，在这里只是简单的介绍一下 详细可见 An Introduction to libuv libuv 的官方文档在阐述其架构的时候有这么一张图">
 <meta name="keywords" content="Node.js">
 <meta property="og:type" content="article">
-<meta property="og:title" content="libuv">
+<meta property="og:title" content="Node.js 中的 libuv">
 <meta property="og:url" content="http://yoursite.com/2019/07/05/Node/06/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="这里只是简单的介绍一下 libuv 的官方文档在阐述其架构的时候有这么一张图">
+<meta property="og:description" content="libuv 是一个高性能的，事件驱动的 I/O 库，并且提供了跨平台（如 windows, linux）的 API，在这里只是简单的介绍一下 详细可见 An Introduction to libuv libuv 的官方文档在阐述其架构的时候有这么一张图">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/06.jpg">
-<meta property="og:updated_time" content="2019-07-14T09:16:28.504Z">
+<meta property="og:updated_time" content="2019-08-15T02:10:47.138Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="libuv">
-<meta name="twitter:description" content="这里只是简单的介绍一下 libuv 的官方文档在阐述其架构的时候有这么一张图">
+<meta name="twitter:title" content="Node.js 中的 libuv">
+<meta name="twitter:description" content="libuv 是一个高性能的，事件驱动的 I/O 库，并且提供了跨平台（如 windows, linux）的 API，在这里只是简单的介绍一下 详细可见 An Introduction to libuv libuv 的官方文档在阐述其架构的时候有这么一张图">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/06.jpg">
 
 
@@ -94,7 +94,7 @@
         <!-- <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="libuv" height="28">
+                <img src="/images/logo.svg" alt="Node.js 中的 libuv" height="28">
             
             </a>
         </div> -->
@@ -147,7 +147,7 @@
     
     <div class="card-image">
         <span class="image is-7by1">
-            <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/06.jpg" alt="libuv">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/06.jpg" alt="Node.js 中的 libuv">
         </span>
     </div>
     
@@ -166,7 +166,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    7 分钟 读完 (大约 1064 个字)
+                    7 分钟 读完 (大约 1112 个字)
                 </span>
                 
                 
@@ -175,11 +175,12 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                libuv
+                Node.js 中的 libuv
             
         </h1>
         <div class="content">
-            <p>这里只是简单的介绍一下</p>
+            <p><code>libuv</code> 是一个高性能的，事件驱动的 <code>I/O</code> 库，并且提供了跨平台（如 <code>windows</code>, <code>linux</code>）的 <code>API</code>，在这里只是简单的介绍一下</p>
+<p>详细可见 <a href="https://github.com/nikhilm/uvbook" target="_blank" rel="noopener">An Introduction to libuv</a></p>
 <p><code>libuv</code> 的<a href="http://docs.libuv.org/en/v1.x/design.html" target="_blank" rel="noopener">官方文档</a>在阐述其架构的时候有这么一张图</p>
 <a id="more"></a>
 
@@ -216,7 +217,7 @@
 <p>第一类事件轮询线程是单线程，另外一类称其为文件 <code>IO</code> 处理线程多少有些不准确，因为他不仅能处理文件 <code>IO</code>，还能处理 <code>DNS</code> 解析，也能处理用户自己编写的 <code>node</code> 扩展中的逻辑</p>
 <p>它是一个线程池，如果你想自己编写一个 <code>C++</code> 扩展来处理耗时业务的话，也会用上它</p>
 <p>我们这里拿文件 <code>IO</code> 处理来作为示例，来描述这两类线程之前是怎么通信的</p>
-<p><code>libuv</code> 在处理完一个文件 <code>IO</code> 操作后，会把处理后的结果发送到 <code>pending</code> 队列中；事件轮询线程读取 <code>pending</code> 队列，执行回调函数</p>
+<p><code>libuv</code> 在处理完一个文件 <code>IO</code> 操作后，会把处理后的结果发送到 <code>pending</code> 队列中，事件轮询线程读取 <code>pending</code> 队列，执行回调函数</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>);</span><br><span class="line"></span><br><span class="line">fs.exists(__filename, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">exists</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(exists);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
 <blockquote>
@@ -341,7 +342,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        142
+                        143
                     </p>
                 </div>
             </div>
@@ -426,7 +427,7 @@
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">10</span>
+                <span class="level-item tag">11</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -521,6 +522,25 @@
         
         <article class="media">
             
+            <a href="/2019/08/04/CSS/11/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/11.jpg" alt="px，em，rem，vw 和 vh">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-03T16:00:00.000Z">2019-08-04</time></div>
+                    <a href="/2019/08/04/CSS/11/" class="has-link-black-ter is-size-6">px，em，rem，vw 和 vh</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CSS/">CSS</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2019/08/02/JavaScript/57/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/57.jpg" alt="JavaScript 中一些常用方法的实现">
@@ -595,25 +615,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/07/07/JavaScript/44/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/44.jpg" alt="什么是 FOUC">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-06T16:00:00.000Z">2019-07-07</time></div>
-                    <a href="/2019/07/07/JavaScript/44/" class="has-link-black-ter is-size-6">什么是 FOUC</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -632,7 +633,7 @@
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1001,7 +1002,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">10</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
@@ -1080,7 +1081,7 @@
             <div class="level-start has-text-centered-mobile">
                 <!-- <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="libuv" height="28">
+                    <img src="/images/logo.svg" alt="Node.js 中的 libuv" height="28">
                 
                 </a> -->
                 <p class="is-size-7">
