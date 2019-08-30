@@ -16,7 +16,7 @@
 <meta property="og:description" content="关于数据双向绑定，绑定的基础就是监听属性的变化事件（propertyChange），现在主流的框架当中的解决方法一般有以下几种  Knockout / Backbone（发布/订阅模式），简单来说就是另外开发一套 API，但使用起来却不得不使用这套 API 来操作 viewModel，导致上手复杂、代码繁琐">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/34.jpg">
-<meta property="og:updated_time" content="2019-08-09T07:08:29.464Z">
+<meta property="og:updated_time" content="2019-08-27T07:29:36.259Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的数据双向绑定">
 <meta name="twitter:description" content="关于数据双向绑定，绑定的基础就是监听属性的变化事件（propertyChange），现在主流的框架当中的解决方法一般有以下几种  Knockout / Backbone（发布/订阅模式），简单来说就是另外开发一套 API，但使用起来却不得不使用这套 API 来操作 viewModel，导致上手复杂、代码繁琐">
@@ -112,6 +112,8 @@
                 
                 <a class="navbar-item" href="/about">About</a>
                 
+                <a class="navbar-item" href="https://heptaluan.github.io/demos/">Demos</a>
+                
             </div>
             
             <div class="navbar-end">
@@ -166,7 +168,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    20 分钟 读完 (大约 3033 个字)
+                    23 分钟 读完 (大约 3416 个字)
                 </span>
                 
                 
@@ -221,7 +223,26 @@
 <p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/js/15.png" alt></p>
 <h4 id="基于-Object-defineProperty-双向绑定"><a href="#基于-Object-defineProperty-双向绑定" class="headerlink" title="基于 Object.defineProperty 双向绑定"></a>基于 Object.defineProperty 双向绑定</h4><p>完整的实现可以见 <a href="https://segmentfault.com/a/1190000006599500" target="_blank" rel="noopener">剖析 Vue 原理 &amp;&amp; 实现双向绑定 MVVM</a>，比如上面的示例，就是一个简单的实现</p>
 <p>但是很快就会发现，里面存在着一堆问题，比如我们只监听了一个属性，一个对象不可能只有一个属性，我们需要对对象的每个属性进行监听等等</p>
-<p>我们可以参考 <code>Vue</code> 的实现方式，<code>Vue</code> 的操作就是加入了发布订阅模式，结合 <code>Object.defineProperty</code> 的劫持能力，实现了可用性很高的双向绑定</p>
+<p>我们可以参考 <code>Vue</code> 的实现方式，<code>Vue</code> 是采用数据劫持结合发布者订阅者模式的方式，通过 <code>Object.defineProperty()</code> 来劫持各个属性的 <code>setter</code>，<code>getter</code>，在数据变动时发布消息给订阅者，触发相应的监听回调</p>
+<p>简单来说，主要有下面几个步骤</p>
+<ol>
+<li><p>需要 <code>observe</code> 的数据对象进行递归遍历，包括子属性对象的属性，都加上 <code>setter</code> 和 <code>getter</code> 这样的话，给这个对象的某个值赋值，就会触发 <code>setter</code>，那么就能监听到了数据变化</p>
+</li>
+<li><p><code>compile</code> 解析模板指令，将模板中的变量替换成数据，然后初始化渲染页面视图，并将每个指令对应的节点绑定更新函数，添加监听数据的订阅者，一旦数据有变动，收到通知，更新视图</p>
+</li>
+<li><p><code>Watcher</code> 订阅者是 <code>Observer</code> 和 <code>Compile</code> 之间通信的桥梁，主要做的事情是:</p>
+<ul>
+<li><p>在自身实例化时往属性订阅器（<code>dep</code>）里面添加自己</p>
+</li>
+<li><p>自身必须有一个 <code>update()</code> 方法</p>
+</li>
+<li><p>待属性变动 <code>dep.notice()</code> 通知时，能调用自身的 <code>update()</code> 方法，并触发 <code>Compile</code> 中绑定的回调，则功成身退</p>
+</li>
+</ul>
+</li>
+<li><p><code>MVVM</code> 作为数据绑定的入口，整合 <code>Observer</code>、<code>Compile</code> 和 <code>Watcher</code> 三者，通过 <code>Observer</code> 来监听自己的 <code>model</code> 数据变化，通过 <code>Compile</code> 来解析编译模板指令，最终利用 <code>Watcher</code> 搭起 <code>Observer</code> 和 <code>Compile</code> 之间的通信桥梁，所以最终便可以达到达到 <code>数据变化 ==&gt; 视图更新</code> 和 <code>视图交互变化（input） ==&gt; 数据 model 变更</code> 的双向绑定效果</p>
+</li>
+</ol>
 <p>下面是一个完成的例子</p>
 <figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">main</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>请输入:<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"input"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"p"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">main</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
@@ -360,7 +381,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        143
+                        145
                     </p>
                 </div>
             </div>
@@ -370,7 +391,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        11
                     </p>
                 </div>
             </div>
@@ -380,7 +401,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        11
                     </p>
                 </div>
             </div>
@@ -473,7 +494,7 @@
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">3</span>
+                <span class="level-item tag">4</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTTP/">
@@ -524,6 +545,14 @@
                 <span class="level-item tag">14</span>
             </span>
         </a></li><li>
+        <a class="level is-marginless" href="/categories/http/">
+            <span class="level-start">
+                <span class="level-item">http</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
         <a class="level is-marginless" href="/categories/jQuery/">
             <span class="level-start">
                 <span class="level-item">jQuery</span>
@@ -543,7 +572,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 18.57px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 11.43px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.43px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 12.86px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.14px;">React</a> <a href="/tags/Vue/" style="font-size: 17.14px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 14.29px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 18.75px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16.25px;">CSS</a> <a href="/tags/Essay/" style="font-size: 11.25px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 12.5px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 12.5px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 13.75px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.5px;">React</a> <a href="/tags/Vue/" style="font-size: 17.5px;">Vue</a> <a href="/tags/http/" style="font-size: 10px;">http</a> <a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a>
     </div>
 </div>
 
@@ -557,6 +586,44 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/08/18/Essay/04/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/04.jpg" alt="前端字体优化">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-17T16:00:00.000Z">2019-08-18</time></div>
+                    <a href="/2019/08/18/Essay/04/" class="has-link-black-ter is-size-6">前端字体优化</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/08/17/HTTP/07/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/07.jpg" alt="http 报文头">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-16T16:00:00.000Z">2019-08-17</time></div>
+                    <a href="/2019/08/17/HTTP/07/" class="has-link-black-ter is-size-6">http 报文头</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/http/">http</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -615,44 +682,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/07/13/JavaScript/56/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/56.jpg" alt="迭代协议与生成器">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-12T16:00:00.000Z">2019-07-13</time></div>
-                    <a href="/2019/07/13/JavaScript/56/" class="has-link-black-ter is-size-6">迭代协议与生成器</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/07/11/Angular/13/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/13.jpg" alt="Angular 中路由传递参数的几种方式">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-10T16:00:00.000Z">2019-07-11</time></div>
-                    <a href="/2019/07/11/Angular/13/" class="has-link-black-ter is-size-6">Angular 中路由传递参数的几种方式</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -671,7 +700,7 @@
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1047,7 +1076,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">3</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 
@@ -1090,6 +1119,13 @@
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
                         <span class="tag is-grey">14</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/http/">
+                        <span class="tag">http</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 

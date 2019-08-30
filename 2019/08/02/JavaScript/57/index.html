@@ -16,7 +16,7 @@
 <meta property="og:description" content="一些常用方法的实现，常见算法的汇总，在这里做下记录，方便以后可以快速查询（可以直接参考左边目录）">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/57.jpg">
-<meta property="og:updated_time" content="2019-08-15T10:14:36.197Z">
+<meta property="og:updated_time" content="2019-08-28T09:04:57.261Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中一些常用方法的实现">
 <meta name="twitter:description" content="一些常用方法的实现，常见算法的汇总，在这里做下记录，方便以后可以快速查询（可以直接参考左边目录）">
@@ -112,6 +112,8 @@
                 
                 <a class="navbar-item" href="/about">About</a>
                 
+                <a class="navbar-item" href="https://heptaluan.github.io/demos/">Demos</a>
+                
             </div>
             
             <div class="navbar-end">
@@ -166,7 +168,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    22 分钟 读完 (大约 3343 个字)
+                    24 分钟 读完 (大约 3612 个字)
                 </span>
                 
                 
@@ -226,6 +228,8 @@
 
 <h2 id="拖拽"><a href="#拖拽" class="headerlink" title="拖拽"></a>拖拽</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> div = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'div'</span>);</span><br><span class="line"></span><br><span class="line">div.onmousedown = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> e = e || event;</span><br><span class="line">  <span class="hljs-keyword">var</span> disX = e.clientX - div.offsetLeft;</span><br><span class="line">  <span class="hljs-keyword">var</span> disY = e.clientY - div.offsetTop;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-built_in">document</span>.onmousemove = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> e = e || event;</span><br><span class="line">    div.style.left = e.clientX - disX + <span class="hljs-string">'px'</span>;</span><br><span class="line">    div.style.top = e.clientY - disY + <span class="hljs-string">'px'</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-built_in">document</span>.onmouseup = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">document</span>.onmousemove = <span class="hljs-literal">null</span>;</span><br><span class="line">    <span class="hljs-built_in">document</span>.onmouseup = <span class="hljs-literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h2 id="base64-格式-转为-blob-格式"><a href="#base64-格式-转为-blob-格式" class="headerlink" title="base64 格式 转为 blob 格式"></a>base64 格式 转为 blob 格式</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">dataURItoBlob</span>(<span class="hljs-params">base64Data</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> byteString;</span><br><span class="line">  <span class="hljs-keyword">if</span> (base64Data.split(<span class="hljs-string">','</span>)[<span class="hljs-number">0</span>].indexOf(<span class="hljs-string">'base64'</span>) &gt;= <span class="hljs-number">0</span>) &#123;</span><br><span class="line">    byteString = atob(base64Data.split(<span class="hljs-string">','</span>)[<span class="hljs-number">1</span>]);</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    byteString = <span class="hljs-built_in">unescape</span>(base64Data.split(<span class="hljs-string">','</span>)[<span class="hljs-number">1</span>]);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">var</span> mimeString = base64Data.split(<span class="hljs-string">','</span>)[<span class="hljs-number">0</span>].split(<span class="hljs-string">':'</span>)[<span class="hljs-number">1</span>].split(<span class="hljs-string">';'</span>)[<span class="hljs-number">0</span>];</span><br><span class="line">  <span class="hljs-keyword">var</span> ia = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Uint8Array</span>(byteString.length);</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; byteString.length; i++) &#123;</span><br><span class="line">    ia[i] = byteString.charCodeAt(i);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Blob([ia], &#123; <span class="hljs-attr">type</span>: mimeString &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h2 id="Ajax"><a href="#Ajax" class="headerlink" title="Ajax"></a>Ajax</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> xhr = <span class="hljs-keyword">new</span> xhrRequest();</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">if</span> (xhr) &#123;</span><br><span class="line">  xhr.open(<span class="hljs-string">'GET'</span>, url);</span><br><span class="line">  xhr.onreadystatechange = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (xhr.readyState == <span class="hljs-number">4</span> &amp;&amp; xhr.status == <span class="hljs-number">200</span>) &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(xhr.responseText);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">  xhr.send();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ---------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 如果需要使用 POST 请求发送表单数据，使用 setRequestHeader() 来添加 HTTP 头</span></span><br><span class="line"><span class="hljs-comment">// 然后在 send() 方法中添加需要发送的数据</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 在 Form 元素的语法中，EncType 表明提交数据的格式，用 Enctype 属性指定将数据回发到服务器时浏览器使用的编码类型</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 下面是三种常用的设置方式</span></span><br><span class="line"><span class="hljs-comment">// application/x-www-form-urlencoded   窗体数据被编码为 名称/值 对，这是标准的编码格式</span></span><br><span class="line"><span class="hljs-comment">// multipart/form-data                 窗体数据被编码为一条消息，页上的每个控件对应消息中的一个部分</span></span><br><span class="line"><span class="hljs-comment">// text/plain                          窗体数据以纯文本形式进行编码，其中不含任何控件或格式字符 </span></span><br><span class="line"></span><br><span class="line">xhr.open(<span class="hljs-string">'POST'</span>, url, <span class="hljs-literal">true</span>);</span><br><span class="line">xhr.setRequestHeader(<span class="hljs-string">'Content-type'</span>, <span class="hljs-string">'application/x-www-form-urlencoded'</span>);</span><br><span class="line">xhr.send(data);</span><br></pre></td></tr></table></figure>
 
 <h2 id="Promise-版本-Ajax"><a href="#Promise-版本-Ajax" class="headerlink" title="Promise 版本 Ajax"></a>Promise 版本 Ajax</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getJSON</span>(<span class="hljs-params">url</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> xhr = <span class="hljs-keyword">new</span> XMLHttpRequest()</span><br><span class="line">    xhr.open(<span class="hljs-string">'GET'</span>, url, <span class="hljs-literal">true</span>)</span><br><span class="line">    xhr.onreadystatechange = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.readyState === <span class="hljs-number">4</span>) &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.status === <span class="hljs-number">200</span>) &#123;</span><br><span class="line">          resolve(<span class="hljs-keyword">this</span>.responseText, <span class="hljs-keyword">this</span>)</span><br><span class="line">        &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">          <span class="hljs-keyword">var</span> resJson = &#123; <span class="hljs-attr">code</span>: <span class="hljs-keyword">this</span>.status, <span class="hljs-attr">response</span>: <span class="hljs-keyword">this</span>.response &#125;</span><br><span class="line">          reject(resJson, <span class="hljs-keyword">this</span>)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    xhr.send()</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 使用</span></span><br><span class="line">getJSON(url).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(data)</span><br><span class="line">&#125;).catch(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">status</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Error: <span class="hljs-subst">$&#123;status&#125;</span>`</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
@@ -243,7 +247,9 @@
 
 <h2 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// ES6 之前</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Person</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.sayName = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'zhangsan'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.sayAge = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">20</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">PersonProxy</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.person = <span class="hljs-keyword">new</span> Person();</span><br><span class="line">  <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>;</span><br><span class="line">  <span class="hljs-keyword">this</span>.callMethod = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">functionName</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'before proxy:'</span>, functionName);</span><br><span class="line">    <span class="hljs-comment">// 代理</span></span><br><span class="line">    that.person[functionName]();</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'after proxy:'</span>, functionName);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> p = <span class="hljs-keyword">new</span> PersonProxy();</span><br><span class="line"></span><br><span class="line">p.callMethod(<span class="hljs-string">'sayName'</span>);  <span class="hljs-comment">// 代理调用 Person 的方法 sayName()</span></span><br><span class="line">p.callMethod(<span class="hljs-string">'sayAge'</span>);   <span class="hljs-comment">// 代理调用 Person 的方法 sayAge()</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES6 之后</span></span><br><span class="line"><span class="hljs-keyword">let</span> obj = &#123;</span><br><span class="line">  a: <span class="hljs-number">1</span>,</span><br><span class="line">  b: <span class="hljs-number">2</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> p = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Proxy</span>(obj, &#123;</span><br><span class="line">  <span class="hljs-keyword">get</span>(target, key, value) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (key === <span class="hljs-string">'c'</span>) &#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-string">'我是自定义的一个结果'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> target[key];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">set</span>(target, key, value) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (value === <span class="hljs-number">4</span>) &#123;</span><br><span class="line">      target[key] = <span class="hljs-string">'我是自定义的一个结果'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      target[key] = value;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(obj.a) <span class="hljs-comment">// 1</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(obj.c) <span class="hljs-comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(p.a)   <span class="hljs-comment">// 1</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(p.c)   <span class="hljs-comment">// 我是自定义的一个结果</span></span><br><span class="line"></span><br><span class="line">obj.name = <span class="hljs-string">'zhangsan'</span>;</span><br><span class="line"><span class="hljs-built_in">console</span>.log(obj.name); <span class="hljs-comment">// zhangsan</span></span><br><span class="line"></span><br><span class="line">obj.age = <span class="hljs-number">4</span>;</span><br><span class="line"><span class="hljs-built_in">console</span>.log(obj.age);  <span class="hljs-comment">// 4</span></span><br><span class="line"></span><br><span class="line">p.name = <span class="hljs-string">'zhangsan'</span>;</span><br><span class="line"><span class="hljs-built_in">console</span>.log(p.name);   <span class="hljs-comment">// zhangsan</span></span><br><span class="line"></span><br><span class="line">p.age = <span class="hljs-number">4</span>;</span><br><span class="line"><span class="hljs-built_in">console</span>.log(p.age);    <span class="hljs-comment">// 我是自定义的一个结果</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Publisher</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.listeners = [];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 发布者</span></span><br><span class="line">Publisher.prototype = &#123;</span><br><span class="line">  addListener: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">listener</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.listeners.push(listener);</span><br><span class="line">  &#125;,</span><br><span class="line">  removeListener: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">listener</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">delete</span> <span class="hljs-keyword">this</span>.listeners[listener];</span><br><span class="line">  &#125;,</span><br><span class="line">  notify: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">obj</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.listeners.length; i++) &#123;</span><br><span class="line">      <span class="hljs-keyword">var</span> listener = <span class="hljs-keyword">this</span>.listeners[i];</span><br><span class="line">      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> listener !== <span class="hljs-string">'undefined'</span>) &#123;</span><br><span class="line">        listener.process(obj);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Subscriber</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 订阅者</span></span><br><span class="line">Subscriber.prototype = &#123;</span><br><span class="line">  process: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">obj</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(obj);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> publisher = <span class="hljs-keyword">new</span> Publisher();</span><br><span class="line"></span><br><span class="line">publisher.addListener(<span class="hljs-keyword">new</span> Subscriber());</span><br><span class="line">publisher.addListener(<span class="hljs-keyword">new</span> Subscriber());</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 发布一个对象到所有订阅者</span></span><br><span class="line">publisher.notify(&#123; <span class="hljs-attr">name</span>: <span class="hljs-string">'zhangsan'</span>, <span class="hljs-attr">ageo</span>: <span class="hljs-number">30</span> &#125;);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 发布一个字符串到所有订阅者</span></span><br><span class="line">publisher.notify(<span class="hljs-string">'2 subscribers will both perform process'</span>);</span><br></pre></td></tr></table></figure>
+<h2 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 被观察者</span></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Subject</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.list = []</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  addListener(target) &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.list.push(target)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  notify() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.list.forEach(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> &#123;</span><br><span class="line">      el.say()</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 观察者</span></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Observer</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(name) &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.name = name</span><br><span class="line">  &#125;</span><br><span class="line">  say() &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.name)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> target = <span class="hljs-keyword">new</span> Subject()</span><br><span class="line"><span class="hljs-keyword">const</span> person1 = <span class="hljs-keyword">new</span> Observer(<span class="hljs-string">'zhangsan'</span>)</span><br><span class="line"><span class="hljs-keyword">const</span> person2 = <span class="hljs-keyword">new</span> Observer(<span class="hljs-string">'lisi'</span>)</span><br><span class="line"></span><br><span class="line">target.addListener(person1)</span><br><span class="line">target.addListener(person2)</span><br><span class="line"></span><br><span class="line">target.notify()</span><br></pre></td></tr></table></figure>
+
+<h2 id="发布订阅模式"><a href="#发布订阅模式" class="headerlink" title="发布订阅模式"></a>发布订阅模式</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Target</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.list = &#123;&#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 订阅</span></span><br><span class="line">  lister(type, fn) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.list[type]) &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.list[type].push(fn)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">this</span>.list[type] = [fn]</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 发布</span></span><br><span class="line">  trigger(type, ...args) &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.list[type].forEach(<span class="hljs-function"><span class="hljs-params">list</span> =&gt;</span> &#123;</span><br><span class="line">      list(...args)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 删除</span></span><br><span class="line">  remove(type, fn) &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> fns = <span class="hljs-keyword">this</span>.list[type]</span><br><span class="line">    <span class="hljs-keyword">if</span> (!fns) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</span><br><span class="line">    <span class="hljs-keyword">if</span> (fn) &#123;</span><br><span class="line">      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; fns.length; i++) &#123;</span><br><span class="line">        <span class="hljs-keyword">let</span> _fn = fns[i]</span><br><span class="line">        <span class="hljs-keyword">if</span> (_fn === fn) &#123;</span><br><span class="line">          fns.splice(i, <span class="hljs-number">1</span>)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> target = <span class="hljs-keyword">new</span> Target()</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> clickHandle = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">e</span>) </span>&#123; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`click, <span class="hljs-subst">$&#123;e&#125;</span>`</span>) &#125;</span><br><span class="line"><span class="hljs-keyword">const</span> dbClickHandle = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">e</span>) </span>&#123; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`dbClick, <span class="hljs-subst">$&#123;e&#125;</span>`</span>) &#125;</span><br><span class="line"></span><br><span class="line">target.lister(<span class="hljs-string">'click'</span>, clickHandle)</span><br><span class="line">target.lister(<span class="hljs-string">'dbclick'</span>, dbClickHandle)</span><br><span class="line">target.remove(<span class="hljs-string">'click'</span>, clickHandle)</span><br><span class="line"></span><br><span class="line">target.trigger(<span class="hljs-string">'click'</span>, <span class="hljs-string">'zhangsan'</span>)</span><br><span class="line">target.trigger(<span class="hljs-string">'click'</span>, <span class="hljs-string">'lisi'</span>)</span><br><span class="line">target.trigger(<span class="hljs-string">'dbclick'</span>, <span class="hljs-string">'wangwu'</span>)</span><br></pre></td></tr></table></figure>
 
 <hr>
 <hr>
@@ -267,6 +273,8 @@
 
 <h2 id="寻找字符串中出现次数最少的、并且首次出现位置最前的字符"><a href="#寻找字符串中出现次数最少的、并且首次出现位置最前的字符" class="headerlink" title="寻找字符串中出现次数最少的、并且首次出现位置最前的字符"></a>寻找字符串中出现次数最少的、并且首次出现位置最前的字符</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> str = <span class="hljs-string">'cbaacfdeaebb'</span>;</span><br><span class="line"></span><br><span class="line">[...new <span class="hljs-built_in">Set</span>(str)].map(<span class="hljs-function"><span class="hljs-params">el</span> =&gt;</span> (&#123; el, <span class="hljs-attr">len</span>: str.split(el).length &#125;))</span><br><span class="line">  .reduce(<span class="hljs-function">(<span class="hljs-params">a, e</span>) =&gt;</span> (a.len &gt; e.len ? e : a)).el;</span><br></pre></td></tr></table></figure>
 
+<h2 id="生成指定长度数组（-0-1-2-3-…-N-1-）"><a href="#生成指定长度数组（-0-1-2-3-…-N-1-）" class="headerlink" title="生成指定长度数组（[0, 1, 2, 3 … N - 1]）"></a>生成指定长度数组（[0, 1, 2, 3 … N - 1]）</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 方法一，ES5</span></span><br><span class="line"><span class="hljs-built_in">Array</span>.apply(<span class="hljs-literal">null</span>, &#123; <span class="hljs-attr">length</span>: N &#125;).map(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value, index</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> index</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 方法二，ES6</span></span><br><span class="line"><span class="hljs-built_in">Array</span>.from(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>(N), (v, i) =&gt; i)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 方法三</span></span><br><span class="line"><span class="hljs-built_in">Array</span>.from(<span class="hljs-built_in">Array</span>(N).keys())</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 方法四</span></span><br><span class="line">[...Array(N).keys()]</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 方法五</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.keys(<span class="hljs-built_in">Array</span>(N).join().split(<span class="hljs-string">','</span>)).map(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> <span class="hljs-built_in">Number</span>(v))</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 方法六</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.keys(<span class="hljs-built_in">Array</span>(N).fill()).map(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> <span class="hljs-built_in">Number</span>(v))</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 方法七</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.keys(<span class="hljs-built_in">Array</span>.apply(<span class="hljs-literal">null</span>, &#123; <span class="hljs-attr">length</span>: <span class="hljs-number">100</span> &#125;)).map(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> <span class="hljs-built_in">Number</span>(v))</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 方法八</span></span><br><span class="line"><span class="hljs-built_in">Array</span>(N).fill().map(<span class="hljs-function">(<span class="hljs-params">v, i</span>) =&gt;</span> i)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 方法九</span></span><br><span class="line"><span class="hljs-built_in">Array</span>.prototype.recursion = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">length</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.length === length) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">this</span>.push(<span class="hljs-keyword">this</span>.length);</span><br><span class="line">  <span class="hljs-keyword">this</span>.recursion(length);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">arr = []</span><br><span class="line">arr.recursion(<span class="hljs-number">100</span>)</span><br></pre></td></tr></table></figure>
+
 <hr>
 <hr>
 <hr>
@@ -282,7 +290,9 @@
 
 <h2 id="去除所有的-html"><a href="#去除所有的-html" class="headerlink" title="去除所有的 html"></a>去除所有的 html</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> con = content.replace(<span class="hljs-regexp">/&lt;[^&gt;]+&gt;/g</span>,<span class="hljs-string">''</span>);</span><br></pre></td></tr></table></figure>
 
-<h2 id="取括号中的数值"><a href="#取括号中的数值" class="headerlink" title="取括号中的数值"></a>取括号中的数值</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/\(([^()]+)\)/g.exec(<span class="hljs-string">'add(18)'</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="提取括号中的数值"><a href="#提取括号中的数值" class="headerlink" title="提取括号中的数值"></a>提取括号中的数值</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/\(([^()]+)\)/g.exec(<span class="hljs-string">'add(18)'</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="匹配空行"><a href="#匹配空行" class="headerlink" title="匹配空行"></a>匹配空行</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^[\s]*\n</span><br></pre></td></tr></table></figure>
 
 
         </div>
@@ -394,7 +404,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        143
+                        145
                     </p>
                 </div>
             </div>
@@ -404,7 +414,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        11
                     </p>
                 </div>
             </div>
@@ -414,7 +424,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        11
                     </p>
                 </div>
             </div>
@@ -520,97 +530,113 @@
         <span class="has-mr-6">21</span>
         <span>拖拽</span>
         </a></li><li>
-        <a class="is-flex" href="#Ajax">
+        <a class="is-flex" href="#base64-格式-转为-blob-格式">
         <span class="has-mr-6">22</span>
+        <span>base64 格式 转为 blob 格式</span>
+        </a></li><li>
+        <a class="is-flex" href="#Ajax">
+        <span class="has-mr-6">23</span>
         <span>Ajax</span>
         </a></li><li>
         <a class="is-flex" href="#Promise-版本-Ajax">
-        <span class="has-mr-6">23</span>
+        <span class="has-mr-6">24</span>
         <span>Promise 版本 Ajax</span>
         </a></li><li>
         <a class="is-flex" href="#getElementsByClassName">
-        <span class="has-mr-6">24</span>
+        <span class="has-mr-6">25</span>
         <span>getElementsByClassName()</span>
         </a></li><li>
         <a class="is-flex" href="#斐波纳契数列（fibonacci）">
-        <span class="has-mr-6">25</span>
+        <span class="has-mr-6">26</span>
         <span>斐波纳契数列（fibonacci）</span>
         </a></li><li>
         <a class="is-flex" href="#单例模式">
-        <span class="has-mr-6">26</span>
+        <span class="has-mr-6">27</span>
         <span>单例模式</span>
         </a></li><li>
         <a class="is-flex" href="#工厂模式">
-        <span class="has-mr-6">27</span>
+        <span class="has-mr-6">28</span>
         <span>工厂模式</span>
         </a></li><li>
         <a class="is-flex" href="#代理模式">
-        <span class="has-mr-6">28</span>
+        <span class="has-mr-6">29</span>
         <span>代理模式</span>
         </a></li><li>
         <a class="is-flex" href="#观察者模式">
-        <span class="has-mr-6">29</span>
+        <span class="has-mr-6">30</span>
         <span>观察者模式</span>
         </a></li><li>
+        <a class="is-flex" href="#发布订阅模式">
+        <span class="has-mr-6">31</span>
+        <span>发布订阅模式</span>
+        </a></li><li>
         <a class="is-flex" href="#冒泡排序">
-        <span class="has-mr-6">30</span>
+        <span class="has-mr-6">32</span>
         <span>冒泡排序</span>
         </a></li><li>
         <a class="is-flex" href="#快速排序">
-        <span class="has-mr-6">31</span>
+        <span class="has-mr-6">33</span>
         <span>快速排序</span>
         </a></li><li>
         <a class="is-flex" href="#插入排序">
-        <span class="has-mr-6">32</span>
+        <span class="has-mr-6">34</span>
         <span>插入排序</span>
         </a></li><li>
         <a class="is-flex" href="#数组去重">
-        <span class="has-mr-6">33</span>
+        <span class="has-mr-6">35</span>
         <span>数组去重</span>
         </a></li><li>
         <a class="is-flex" href="#字符串去重">
-        <span class="has-mr-6">34</span>
+        <span class="has-mr-6">36</span>
         <span>字符串去重</span>
         </a></li><li>
         <a class="is-flex" href="#生成区间随机数，并排序">
-        <span class="has-mr-6">35</span>
+        <span class="has-mr-6">37</span>
         <span>生成区间随机数，并排序</span>
         </a></li><li>
         <a class="is-flex" href="#取数组差集">
-        <span class="has-mr-6">36</span>
+        <span class="has-mr-6">38</span>
         <span>取数组差集</span>
         </a></li><li>
         <a class="is-flex" href="#寻找字符串中出现次数最少的、并且首次出现位置最前的字符">
-        <span class="has-mr-6">37</span>
+        <span class="has-mr-6">39</span>
         <span>寻找字符串中出现次数最少的、并且首次出现位置最前的字符</span>
         </a></li><li>
+        <a class="is-flex" href="#生成指定长度数组（-0-1-2-3-…-N-1-）">
+        <span class="has-mr-6">40</span>
+        <span>生成指定长度数组（[0, 1, 2, 3 … N - 1]）</span>
+        </a></li><li>
         <a class="is-flex" href="#短横变驼峰">
-        <span class="has-mr-6">38</span>
+        <span class="has-mr-6">41</span>
         <span>短横变驼峰</span>
         </a></li><li>
         <a class="is-flex" href="#千位分隔符">
-        <span class="has-mr-6">39</span>
+        <span class="has-mr-6">42</span>
         <span>千位分隔符</span>
         </a></li><li>
         <a class="is-flex" href="#解析-url">
-        <span class="has-mr-6">40</span>
+        <span class="has-mr-6">43</span>
         <span>解析 url</span>
         </a></li><li>
         <a class="is-flex" href="#字符串大小写切换">
-        <span class="has-mr-6">41</span>
+        <span class="has-mr-6">44</span>
         <span>字符串大小写切换</span>
         </a></li><li>
         <a class="is-flex" href="#去空格">
-        <span class="has-mr-6">42</span>
+        <span class="has-mr-6">45</span>
         <span>去空格</span>
         </a></li><li>
         <a class="is-flex" href="#去除所有的-html">
-        <span class="has-mr-6">43</span>
+        <span class="has-mr-6">46</span>
         <span>去除所有的 html</span>
         </a></li><li>
-        <a class="is-flex" href="#取括号中的数值">
-        <span class="has-mr-6">44</span>
-        <span>取括号中的数值</span>
+        <a class="is-flex" href="#提取括号中的数值">
+        <span class="has-mr-6">47</span>
+        <span>提取括号中的数值</span>
+        </a></li><li>
+        <a class="is-flex" href="#匹配空行">
+        <span class="has-mr-6">48</span>
+        <span>匹配空行</span>
         </a></li></ul>
         </div>
     </div>
@@ -651,7 +677,7 @@
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">3</span>
+                <span class="level-item tag">4</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTTP/">
@@ -702,6 +728,14 @@
                 <span class="level-item tag">14</span>
             </span>
         </a></li><li>
+        <a class="level is-marginless" href="/categories/http/">
+            <span class="level-start">
+                <span class="level-item">http</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
         <a class="level is-marginless" href="/categories/jQuery/">
             <span class="level-start">
                 <span class="level-item">jQuery</span>
@@ -721,7 +755,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 18.57px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 11.43px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.43px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 12.86px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.14px;">React</a> <a href="/tags/Vue/" style="font-size: 17.14px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 14.29px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 18.75px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16.25px;">CSS</a> <a href="/tags/Essay/" style="font-size: 11.25px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 12.5px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 12.5px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 13.75px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.5px;">React</a> <a href="/tags/Vue/" style="font-size: 17.5px;">Vue</a> <a href="/tags/http/" style="font-size: 10px;">http</a> <a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a>
     </div>
 </div>
 
@@ -735,6 +769,44 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/08/18/Essay/04/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/04.jpg" alt="前端字体优化">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-17T16:00:00.000Z">2019-08-18</time></div>
+                    <a href="/2019/08/18/Essay/04/" class="has-link-black-ter is-size-6">前端字体优化</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/08/17/HTTP/07/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/07.jpg" alt="http 报文头">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-16T16:00:00.000Z">2019-08-17</time></div>
+                    <a href="/2019/08/17/HTTP/07/" class="has-link-black-ter is-size-6">http 报文头</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/http/">http</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -793,44 +865,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/07/13/JavaScript/56/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/56.jpg" alt="迭代协议与生成器">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-12T16:00:00.000Z">2019-07-13</time></div>
-                    <a href="/2019/07/13/JavaScript/56/" class="has-link-black-ter is-size-6">迭代协议与生成器</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/07/11/Angular/13/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/13.jpg" alt="Angular 中路由传递参数的几种方式">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-10T16:00:00.000Z">2019-07-11</time></div>
-                    <a href="/2019/07/11/Angular/13/" class="has-link-black-ter is-size-6">Angular 中路由传递参数的几种方式</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -849,7 +883,7 @@
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1225,7 +1259,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">3</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 
@@ -1268,6 +1302,13 @@
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
                         <span class="tag is-grey">14</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/http/">
+                        <span class="tag">http</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 

@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+<title>http 报文头 - heptaluan&#39;s blog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="一般来说，报文头分为请求报文和响应报文，下面我们就一个一个来看 http 协议是以 ASCII 码传输，建立在 TCP/IP 协议之上的应用层规范，规范把 http 请求分为三个部分，如下图所示">
+<meta name="keywords" content="http">
+<meta property="og:type" content="article">
+<meta property="og:title" content="http 报文头">
+<meta property="og:url" content="http://yoursite.com/2019/08/17/HTTP/07/index.html">
+<meta property="og:site_name" content="heptaluan&#39;s blog">
+<meta property="og:description" content="一般来说，报文头分为请求报文和响应报文，下面我们就一个一个来看 http 协议是以 ASCII 码传输，建立在 TCP/IP 协议之上的应用层规范，规范把 http 请求分为三个部分，如下图所示">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/07.jpg">
+<meta property="og:updated_time" content="2019-08-23T06:34:48.951Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="http 报文头">
+<meta name="twitter:description" content="一般来说，报文头分为请求报文和响应报文，下面我们就一个一个来看 http 协议是以 ASCII 码传输，建立在 TCP/IP 协议之上的应用层规范，规范把 http 请求分为三个部分，如下图所示">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/07.jpg">
+
+
+
+
+
+
+
+<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/favicon.ico">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-2-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <!-- <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="http 报文头" height="28">
+            
+            </a>
+        </div> -->
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+                <a class="navbar-item" href="https://heptaluan.github.io/demos/">Demos</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/heptaluan">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-image">
+        <span class="image is-7by1">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/07.jpg" alt="http 报文头">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <div class="level-item has-text-grey">2019-08-17</div>
+                <!-- <time class="level-item has-text-grey" datetime="2019-08-16T16:00:00.000Z">2019-08-17</time> -->
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/http/">http</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    20 分钟 读完 (大约 2969 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                http 报文头
+            
+        </h1>
+        <div class="content">
+            <p>一般来说，报文头分为<strong>请求报文</strong>和<strong>响应报文</strong>，下面我们就一个一个来看</p>
+<p><code>http</code> 协议是以 <code>ASCII</code> 码传输，建立在 <code>TCP/IP</code> 协议之上的应用层规范，规范把 <code>http</code> 请求分为三个部分，如下图所示</p>
+<a id="more"></a>
+
+<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/http/19.png" alt></p>
+<p>每条报文都包含一条来客户端的请求，或者一条来自客户端的响应，它们由三个部分组成</p>
+<p>对报文进行描述的<strong>请求行</strong>（<code>start line</code>）、包含属性的<strong>请求头</strong>（<code>header</code>），以及可选的包含数据的<strong>请求体</strong>（<code>body</code>）</p>
+<p>请求行与请求头就是由行分隔的 <code>ASCII</code> 文本，每行都以一个由两个字符组成的行终止序列作为结束，其中包括一个<strong>回车符</strong>和一个<strong>换行符</strong>，这个行终止符可以写作 <code>CRLF</code>（空行）</p>
+<blockquote>
+<p>注意，尽管 <code>http</code> 规范中说明应该用 <code>CRLF</code> 来表示行终止，但稳健的做法也应该接受单个换行符作为行的终止</p>
+</blockquote>
+<h2 id="请求报文"><a href="#请求报文" class="headerlink" title="请求报文"></a>请求报文</h2><p>下面是一个实际的请求报文</p>
+<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/http/20.png" alt></p>
+<p>可能一眼看上去比较复杂，我们可以简化一下，如下</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">method</span>&gt;</span> <span class="hljs-tag">&lt;<span class="hljs-name">request-URL</span>&gt;</span> <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">header</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">entity-body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>下面我们就来看看其中每一项的含义</p>
+<h4 id="请求方法（method）"><a href="#请求方法（method）" class="headerlink" title="请求方法（method）"></a>请求方法（method）</h4><p>客户端希望服务器对资源执行的动作，<a href="https://www.ietf.org/rfc/rfc2616.txt" target="_blank" rel="noopener">http/1.1 协议</a> 规定的 <code>http</code> 请求方法有 <code>OPTIONS</code>、<code>GET</code>、<code>HEAD</code>、<code>POST</code>、<code>PUT</code>、<code>DELETE</code> 等</p>
+<p>一般比较常用的是 <code>GET</code> 和 <code>POST</code> 这两个方法，但是关于 <code>POST</code> 请求，并没有规定数据必须使用什么编码方式</p>
+<p>我们可以采取默认值，也可以手动进行指定，关于这一点可以参考页面底部的 <code>POST</code> 提交数据方式</p>
+<h4 id="请求-URL（request-URL）"><a href="#请求-URL（request-URL）" class="headerlink" title="请求 URL（request-URL）"></a>请求 URL（request-URL）</h4><p>用来命名资料的完整 <code>URL</code>，或者 <code>URL</code> 的路径部分，如果直接与服务器进行对话，只要 <code>URL</code> 的路径部分是资源的绝对路径，通常就不会有什么问题</p>
+<h4 id="协议及版本（version）"><a href="#协议及版本（version）" class="headerlink" title="协议及版本（version）"></a>协议及版本（version）</h4><p>报文所使用的 <code>http</code> 版本，其格式看起来是下面这样的</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http/<span class="hljs-tag">&lt;<span class="hljs-name">major</span>&gt;</span>.<span class="hljs-tag">&lt;<span class="hljs-name">minor</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>其中主版本号（<code>major</code>）与次版本号（<code>minor</code>）都是整数</p>
+<h4 id="报文头（header）"><a href="#报文头（header）" class="headerlink" title="报文头（header）"></a>报文头（header）</h4><p>报文头包含若干个属性，格式为 <code>key: value</code> 形式的键值对，服务端据此获取客户端的信息</p>
+<p>可以有零个或多个报文头，每个报文头都包含一个名字，后面跟着一个英文冒号（<code>:</code>），然后是一个可选的空格，接着是一个值，最后是一个 <code>CRLF</code></p>
+<p>报文头是由一个空行（<code>CRLF</code>）结束的，表示了报文头列表的结束和实体主体部分的开始，有些 <code>http</code> 版本，比如 <code>http/1.1</code>，要求有效的请求或响应报文中必须包含特定的报文头</p>
+<p>详细的介绍可见下方的请求报文头属性小节</p>
+<h4 id="报文体（entity-body）"><a href="#报文体（entity-body）" class="headerlink" title="报文体（entity-body）"></a>报文体（entity-body）</h4><p>它将一个页面表单中的组件值通过 <code>param1=value1&amp;param2=value2</code> 的键值对形式编码成一个格式化串，它承载多个请求参数的数据</p>
+<p>报文体可以传递请求参数，请求 <code>URL</code> 也可以通过类似于 <code>/index.html?param1=value1&amp;param2=value2</code> 的方式传递请求参数</p>
+<p>对照上面的请求报文，我们把它进一步分解，你可以看到一幅更详细的结构图</p>
+<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/http/21.png" alt></p>
+<h2 id="请求报文头属性"><a href="#请求报文头属性" class="headerlink" title="请求报文头属性"></a>请求报文头属性</h2><p>这里只介绍几个比较常见的属性，详细的报文头属性可以见 <a href="https://zh.wikipedia.org/wiki/http%E5%A4%B4%E5%AD%97%E6%AE%B5" target="_blank" rel="noopener">http header fields</a></p>
+<h4 id="Accept"><a href="#Accept" class="headerlink" title="Accept"></a>Accept</h4><p>请求报文可通过一个 <code>Accept</code> 报文头属性告诉服务端 客户端接受什么类型的响应</p>
+<p><code>Accept</code> 属性的值可以为一个或多个 <code>MIME</code> 类型的值，关于 <code>MIME</code> 类型可以见 <a href="https://zh.wikipedia.org/wiki/%E5%A4%9A%E7%94%A8%E9%80%94%E4%BA%92%E8%81%AF%E7%B6%B2%E9%83%B5%E4%BB%B6%E6%93%B4%E5%B1%95#%E5%86%85%E5%AE%B9%E7%B1%BB%E5%9E%8B" target="_blank" rel="noopener">内容类型</a></p>
+<h4 id="Cookie"><a href="#Cookie" class="headerlink" title="Cookie"></a>Cookie</h4><p>主要用来保存用户信息，客户端的 <code>Cookie</code> 通过报文头的 <code>Cookie</code> 属性来传给服务端</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cookie: _ver=<span class="hljs-number">1</span>;sessionId=C3F7854881F43B9B3A4F178CE3ED2A8D</span><br></pre></td></tr></table></figure>
+
+<p>如上，服务端就是通过 <code>http</code> 请求报文头的 <code>Cookie</code> 属性的 <code>sessionId</code> 的值把用户关联起来的</p>
+<h4 id="Referer"><a href="#Referer" class="headerlink" title="Referer"></a>Referer</h4><p>表示这个请求是从哪个 <code>URL</code> 过来的，比如广告商就可以得知某个用户是哪一个源头过来的</p>
+<h4 id="Cache-Control"><a href="#Cache-Control" class="headerlink" title="Cache-Control"></a>Cache-Control</h4><p>对缓存进行控制，如一个请求希望响应返回的内容在客户端要被缓存一年，或不希望被缓存就可以通过这个报文头达到目的 </p>
+<p>如以下设置，相当于让服务端将对应请求返回的响应内容不要在客户端缓存</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cache-Control: no-cache</span><br></pre></td></tr></table></figure>
+
+<h2 id="响应报文"><a href="#响应报文" class="headerlink" title="响应报文"></a>响应报文</h2><p><code>http</code> 的响应报文也由三部分组成（响应行，响应头和响应体），如下图所示</p>
+<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/http/22.png" alt></p>
+<p>响应报文也可以进行简化，如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;version&gt;&lt;status&gt;&lt;reason-phrase&gt;</span><br><span class="line">&lt;headers&gt;</span><br><span class="line"> </span><br><span class="line">&lt;entity-body&gt;</span><br></pre></td></tr></table></figure>
+
+<p>因为有部分格式是一致的，这里只介绍有所区别的部分</p>
+<h4 id="状态码（status-code）"><a href="#状态码（status-code）" class="headerlink" title="状态码（status-code）"></a>状态码（status-code）</h4><p>格式是三位数字，其描述了请求过程中所发生的情况，每个状态码的第一位数字用于描述状态的一般类别，一般是由以下 <code>5</code> 段组成</p>
+<ul>
+<li><p><code>1xx</code> – 处理中，一般是告诉客户端，请求已经收到了，正在处理</p>
+</li>
+<li><p><code>2xx</code> – 处理成功，一般表示请求已受理、已经处理完成等信息</p>
+</li>
+<li><p><code>3xx</code> – 重定向到其它地方，它让客户端再发起一个请求以完成整个处理</p>
+</li>
+<li><p><code>4xx</code> – 处理发生错误，错误发生在<strong>客户端</strong>，如客户端的请求一个不存在的资源，客户端未被授权，禁止访问等</p>
+</li>
+<li><p><code>5xx</code> – 处理发生错误，错误发生在<strong>服务端</strong>，如服务端抛出异常，路由出错，<code>http</code> 版本不支持等</p>
+</li>
+</ul>
+<h4 id="原因短语（reason-phrase）"><a href="#原因短语（reason-phrase）" class="headerlink" title="原因短语（reason-phrase）"></a>原因短语（reason-phrase）</h4><p>数字状态码的可读版本，包含行终止序列之前的所有文本，原因短语只对人类有意义</p>
+<p>比如说，尽管响应行 <code>http/1.0 200 NOT OK</code> 和 <code>http/1.0 200 OK</code> 中原因短语的含义不同，但同样都会被当作成功的标志</p>
+<p>下面是一个假想的请求报文与响应报文</p>
+<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/http/23.png" alt></p>
+<p>不过需要注意的是，一组 <code>http</code> 报文头总是应该以一个空行（仅有 <code>CRLF</code>）结束，甚至即使没有报文头和实体的主体部分也应该如此</p>
+<p>但由于历史原因，很多客户端和服务器都在没有实体的主体部分时，（错误的）省略了最后的 <code>CRLF</code></p>
+<p>为了与这些流行但不符合规则的实现兼容，客户端和服务器都应该接受那些没有最后那个 <code>CRLF</code> 的报文</p>
+<h2 id="POST-提交数据方式"><a href="#POST-提交数据方式" class="headerlink" title="POST 提交数据方式"></a>POST 提交数据方式</h2><p>之前提到过，请求分为请求行、请求头和请求主体，类似于下面这样：</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;method&gt; &lt;request-URL&gt; &lt;version&gt;</span><br><span class="line">&lt;headers&gt;</span><br><span class="line"></span><br><span class="line">&lt;entity-body&gt;</span><br></pre></td></tr></table></figure>
+
+<p>协议规定 <code>POST</code> 提交的数据必须放在消息主体（<code>entity-body</code>）中，但协议并没有规定数据必须使用什么编码方式</p>
+<p>实际上，开发者完全可以自己决定消息主体的格式，只要最后发送的 <code>http</code> 请求满足上面的格式就可以</p>
+<p>服务端通常是根据请求头（<code>headers</code>）中的 <code>Content-Type</code> 字段来获知请求中的消息主体是用何种方式编码，再对主体进行解析</p>
+<p>所以说到 <code>POST</code> 提交数据方案，包含了 <code>Content-Type</code> 和消息主体编码方式两部分</p>
+<h4 id="application-x-www-form-urlencoded"><a href="#application-x-www-form-urlencoded" class="headerlink" title="application/x-www-form-urlencoded"></a>application/x-www-form-urlencoded</h4><p>这个也就是所谓的表单提交方式了，浏览器的原生 <code>&lt;form&gt;</code> 表单，如果不设置 <code>enctype</code> 属性，那么最终就会以 <code>application/x-www-form-urlencoded</code> 方式提交数据</p>
+<p>请求类似于下面这样</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">POST / HTTP/<span class="hljs-number">1.1</span></span><br><span class="line">Host: foo.com</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: <span class="hljs-number">13</span></span><br><span class="line"></span><br><span class="line">say=Hi&amp;to=Mom</span><br></pre></td></tr></table></figure>
+
+<p>可以发现 <code>Content-Type</code> 被指定为 <code>application/x-www-form-urlencoded</code></p>
+<p>传递的是对应的 <code>key</code> 和 <code>val</code></p>
+<h4 id="multipart-form-data"><a href="#multipart-form-data" class="headerlink" title="multipart/form-data"></a>multipart/form-data</h4><p>这种方式一般用来上传文件，也是一种常见的 <code>POST</code> 数据提交的方式</p>
+<p>在我们使用表单上传文件时，必须让 <code>&lt;form&gt;</code> 表单的 <code>enctype</code> 等于 <code>multipart/form-data</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">POST /test.html HTTP/<span class="hljs-number">1.1</span> </span><br><span class="line">Host: example.org </span><br><span class="line">Content-Type: multipart/form-data;boundary=<span class="hljs-string">"boundary"</span> </span><br><span class="line"></span><br><span class="line">--boundary </span><br><span class="line">Content-Disposition: form-data; name=<span class="hljs-string">"field1"</span> </span><br><span class="line"></span><br><span class="line">value1 </span><br><span class="line">--boundary </span><br><span class="line">Content-Disposition: form-data; name=<span class="hljs-string">"field2"</span>; filename=<span class="hljs-string">"example.txt"</span> </span><br><span class="line"></span><br><span class="line">value2</span><br></pre></td></tr></table></figure>
+
+<p>首先生成了一个 <code>boundary</code> 用于分割不同的字段，为了避免与正文内容重复，<code>boundary</code> 很长很复杂</p>
+<p>然后 <code>Content-Type</code> 里指明了数据是以 <code>multipart/form-data</code> 来编码，指明本次请求的 <code>boundary</code> 是什么内容</p>
+<p>消息主体里按照字段个数又分为多个结构类似的部分，每部分都是以 <code>--boundary</code> 开始，紧接着是内容描述信息，然后是回车，最后是字段具体内容（文本或二进制）</p>
+<p>如果传输的是文件，还要包含文件名和文件类型信息，消息主体最后以 <code>--boundary--</code> 标示结束</p>
+<p>上面提到的这两种 <code>POST</code> 数据的方式，都是浏览器原生支持的，而且现阶段标准中原生 <code>&lt;form&gt;</code> 表单<a href="https://www.w3.org/TR/html401/interact/forms.html#h-17.13.4" target="_blank" rel="noopener">也只支持</a>这两种方式</p>
+<p>通过 <code>&lt;form&gt;</code> 元素的 <code>enctype</code> 属性指定，默认为 <code>application/x-www-form-urlencoded</code>，其实 <code>enctype</code> 还支持 <code>text/plain</code>，不过用得比较少</p>
+<h4 id="application-json"><a href="#application-json" class="headerlink" title="application/json"></a>application/json</h4><p><code>application/json</code> 这个 <code>Content-Type</code> 一般用来告诉服务端消息主体是序列化后的 <code>JSON</code> 字符串</p>
+<p><code>JSON</code> 格式支持比键值对复杂得多的结构化数据，<code>AngularJS</code> 中的 <code>Ajax</code> 功能，默认就是提交 <code>JSON</code> 字符串</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> data = &#123; <span class="hljs-string">'title'</span>: <span class="hljs-string">'test'</span>, <span class="hljs-string">'sub'</span>: [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>] &#125;;</span><br><span class="line">$http.post(url, data).success(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">result</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>最终发送的请求是</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">POST http:<span class="hljs-comment">//www.example.com http/1.1 </span></span><br><span class="line">Content-Type: application/json;charset=utf<span class="hljs-number">-8</span></span><br><span class="line"></span><br><span class="line">&#123;<span class="hljs-string">"title"</span>:<span class="hljs-string">"test"</span>,<span class="hljs-string">"sub"</span>:[<span class="hljs-number">1</span>,<span class="hljs-number">2</span>,<span class="hljs-number">3</span>]&#125;.</span><br></pre></td></tr></table></figure>
+
+<p>这种方案，可以方便的提交复杂的结构化数据，特别适合 <code>RESTful</code> 的接口</p>
+<h4 id="text-xml"><a href="#text-xml" class="headerlink" title="text/xml"></a>text/xml</h4><p>这种方案现在一般使用较少，<code>XML</code> 作为编码方式的远程调用规范，典型的 <code>XML-RPC</code> 请求是这样的</p>
+<figure class="highlight xml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">POST http://www.example.com http/1.1 </span><br><span class="line">Content-Type: text/xml</span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">&lt;?xml version="1.0"?&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">methodCall</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">methodName</span>&gt;</span>examples.getStateName<span class="hljs-tag">&lt;/<span class="hljs-name">methodName</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">params</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">param</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">value</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">i4</span>&gt;</span>41<span class="hljs-tag">&lt;/<span class="hljs-name">i4</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">value</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">param</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">params</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">methodCall</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>XML-RPC</code> 协议简单、功能够用，各种语言的实现都有</p>
+<p><code>JavaScript</code> 中，也有类似 <a href="https://plugins.jquery.com/xmlrpc/" target="_blank" rel="noopener">XML-RPC over AJAX</a> 这样的库来支持以这种方式进行数据交互，能很好的支持已有的 <code>XML-RPC</code> 服务</p>
+<p>不过，<code>XML</code> 结构过于臃肿，一般场景用 <code>JSON</code> 会更灵活方便</p>
+<p>参考</p>
+<p><a href="https://zh.wikipedia.org/wiki/http%E6%8A%A5%E6%96%87%E4%B8%BB%E4%BD%93" target="_blank" rel="noopener">http 报文主体</a></p>
+<p><a href="https://www.ietf.org/rfc/rfc2616.txt" target="_blank" rel="noopener">http/1.1 协议</a></p>
+<p><a href="https://www.w3.org/TR/html401/interact/forms.html#h-17.13.4" target="_blank" rel="noopener">multipart/form-data</a></p>
+<p><a href="https://www.ietf.org/rfc/rfc1867.txt" target="_blank" rel="noopener">rfc1867</a></p>
+<p><a href="https://zh.wikipedia.org/wiki/http%E5%A4%B4%E5%AD%97%E6%AE%B5" target="_blank" rel="noopener">http 头字段</a></p>
+<p><a href="https://zh.wikipedia.org/wiki/%E5%A4%9A%E7%94%A8%E9%80%94%E4%BA%92%E8%81%AF%E7%B6%B2%E9%83%B5%E4%BB%B6%E6%93%B4%E5%B1%95#%E5%86%85%E5%AE%B9%E7%B1%BB%E5%9E%8B" target="_blank" rel="noopener">内容类型（Content-Type）</a></p>
+<p><a href="https://plugins.jquery.com/xmlrpc/" target="_blank" rel="noopener">XML-RPC over AJAX</a></p>
+<p><a href="https://imququ.com/post/four-ways-to-post-data-in-http.html" target="_blank" rel="noopener">四种常见的 POST 提交数据方式</a></p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/http/">http</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/08/18/Essay/04/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">前端字体优化</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/08/04/CSS/11/">
+                <span class="level-item">px，em，rem，vw 和 vh</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="comment-container"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: '584b59de0d23cd48fbdd',
+        clientSecret: '5554c9aab0a640015867806f438bd2e10f297e5a',
+        id: 'da1e3c7922b305c07f8f44b3a83499ca',
+        repo: 'gitalk',
+        owner: 'heptaluan',
+        admin: "heptaluan"
+    })
+    gitalk.render('comment-container')
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <figure class="image is-128x128 has-mb-6">
+                            <img class="is-rounded" src="https://avatars2.githubusercontent.com/u/18285736?s=460&amp;v=4" alt="heptaluan">
+                        </figure>
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        heptaluan
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        GALLOWS BELL.
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>WuHan China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <!-- <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        145
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        11
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        11
+                    </p>
+                </div>
+            </div>
+        </nav> -->
+        <!-- <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/ppoffice" target="_blank">
+                关注我</a>
+        </div> -->
+        
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#请求报文">
+        <span class="has-mr-6">1</span>
+        <span>请求报文</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#请求方法（method）">
+        <span class="has-mr-6">1.1</span>
+        <span>请求方法（method）</span>
+        </a></li><li>
+        <a class="is-flex" href="#请求-URL（request-URL）">
+        <span class="has-mr-6">1.2</span>
+        <span>请求 URL（request-URL）</span>
+        </a></li><li>
+        <a class="is-flex" href="#协议及版本（version）">
+        <span class="has-mr-6">1.3</span>
+        <span>协议及版本（version）</span>
+        </a></li><li>
+        <a class="is-flex" href="#报文头（header）">
+        <span class="has-mr-6">1.4</span>
+        <span>报文头（header）</span>
+        </a></li><li>
+        <a class="is-flex" href="#报文体（entity-body）">
+        <span class="has-mr-6">1.5</span>
+        <span>报文体（entity-body）</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#请求报文头属性">
+        <span class="has-mr-6">2</span>
+        <span>请求报文头属性</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#Accept">
+        <span class="has-mr-6">2.1</span>
+        <span>Accept</span>
+        </a></li><li>
+        <a class="is-flex" href="#Cookie">
+        <span class="has-mr-6">2.2</span>
+        <span>Cookie</span>
+        </a></li><li>
+        <a class="is-flex" href="#Referer">
+        <span class="has-mr-6">2.3</span>
+        <span>Referer</span>
+        </a></li><li>
+        <a class="is-flex" href="#Cache-Control">
+        <span class="has-mr-6">2.4</span>
+        <span>Cache-Control</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#响应报文">
+        <span class="has-mr-6">3</span>
+        <span>响应报文</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#状态码（status-code）">
+        <span class="has-mr-6">3.1</span>
+        <span>状态码（status-code）</span>
+        </a></li><li>
+        <a class="is-flex" href="#原因短语（reason-phrase）">
+        <span class="has-mr-6">3.2</span>
+        <span>原因短语（reason-phrase）</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#POST-提交数据方式">
+        <span class="has-mr-6">4</span>
+        <span>POST 提交数据方式</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#application-x-www-form-urlencoded">
+        <span class="has-mr-6">4.1</span>
+        <span>application/x-www-form-urlencoded</span>
+        </a></li><li>
+        <a class="is-flex" href="#multipart-form-data">
+        <span class="has-mr-6">4.2</span>
+        <span>multipart/form-data</span>
+        </a></li><li>
+        <a class="is-flex" href="#application-json">
+        <span class="has-mr-6">4.3</span>
+        <span>application/json</span>
+        </a></li><li>
+        <a class="is-flex" href="#text-xml">
+        <span class="has-mr-6">4.4</span>
+        <span>text/xml</span>
+        </a></li></ul></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+        
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Angular/">
+            <span class="level-start">
+                <span class="level-item">Angular</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">16</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/CSS/">
+            <span class="level-start">
+                <span class="level-item">CSS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">11</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Essay/">
+            <span class="level-start">
+                <span class="level-item">Essay</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/HTTP/">
+            <span class="level-start">
+                <span class="level-item">HTTP</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/JavaScript/">
+            <span class="level-start">
+                <span class="level-item">JavaScript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">57</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/MySQL/">
+            <span class="level-start">
+                <span class="level-item">MySQL</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Node-js/">
+            <span class="level-start">
+                <span class="level-item">Node.js</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">7</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/React/">
+            <span class="level-start">
+                <span class="level-item">React</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">14</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Vue/">
+            <span class="level-start">
+                <span class="level-item">Vue</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">14</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/http/">
+            <span class="level-start">
+                <span class="level-item">http</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/jQuery/">
+            <span class="level-start">
+                <span class="level-item">jQuery</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">9</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Angular/" style="font-size: 18.75px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16.25px;">CSS</a> <a href="/tags/Essay/" style="font-size: 11.25px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 12.5px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 12.5px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 13.75px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.5px;">React</a> <a href="/tags/Vue/" style="font-size: 17.5px;">Vue</a> <a href="/tags/http/" style="font-size: 10px;">http</a> <a href="/tags/jQuery/" style="font-size: 15px;">jQuery</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow  ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/08/18/Essay/04/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/04.jpg" alt="前端字体优化">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-17T16:00:00.000Z">2019-08-18</time></div>
+                    <a href="/2019/08/18/Essay/04/" class="has-link-black-ter is-size-6">前端字体优化</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/08/17/HTTP/07/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/07.jpg" alt="http 报文头">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-16T16:00:00.000Z">2019-08-17</time></div>
+                    <a href="/2019/08/17/HTTP/07/" class="has-link-black-ter is-size-6">http 报文头</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/http/">http</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/08/04/CSS/11/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/11.jpg" alt="px，em，rem，vw 和 vh">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-03T16:00:00.000Z">2019-08-04</time></div>
+                    <a href="/2019/08/04/CSS/11/" class="has-link-black-ter is-size-6">px，em，rem，vw 和 vh</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CSS/">CSS</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/08/02/JavaScript/57/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/57.jpg" alt="JavaScript 中一些常用方法的实现">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-01T16:00:00.000Z">2019-08-02</time></div>
+                    <a href="/2019/08/02/JavaScript/57/" class="has-link-black-ter is-size-6">JavaScript 中一些常用方法的实现</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/07/22/Angular/16/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/16.jpg" alt="Angular 中的变化检测机制">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-21T16:00:00.000Z">2019-07-22</time></div>
+                    <a href="/2019/07/22/Angular/16/" class="has-link-black-ter is-size-6">Angular 中的变化检测机制</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Angular/">Angular</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Angular/">
+                        <span class="tag">Angular</span>
+                        <span class="tag is-grey">16</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/CSS/">
+                        <span class="tag">CSS</span>
+                        <span class="tag is-grey">11</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Essay/">
+                        <span class="tag">Essay</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/HTTP/">
+                        <span class="tag">HTTP</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/JavaScript/">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag is-grey">57</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/MySQL/">
+                        <span class="tag">MySQL</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Node-js/">
+                        <span class="tag">Node.js</span>
+                        <span class="tag is-grey">7</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/React/">
+                        <span class="tag">React</span>
+                        <span class="tag is-grey">14</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Vue/">
+                        <span class="tag">Vue</span>
+                        <span class="tag is-grey">14</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/http/">
+                        <span class="tag">http</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/jQuery/">
+                        <span class="tag">jQuery</span>
+                        <span class="tag is-grey">9</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <!-- <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="http 报文头" height="28">
+                
+                </a> -->
+                <p class="is-size-7">
+                &copy; 2016 - 2019
+                Made with ✿  heptaluan&nbsp;
+                
+                </p>
+            </div>
+            <!-- <div class="level-end">
+            
+            </div> -->
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
