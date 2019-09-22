@@ -48,7 +48,4 @@
         $mask.on('click', toggleToc);
         $('.navbar-main .catalogue').on('click', toggleToc);
     }
-
-    // 导航添加新开
-    $('.navbar-start .navbar-item').last().attr('target', '_blank')
 })(jQuery);

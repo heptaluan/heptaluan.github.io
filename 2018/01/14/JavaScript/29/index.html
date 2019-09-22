@@ -16,7 +16,7 @@
 <meta property="og:description" content="在 JavaScript 中，变量的赋值分为 「传值」 与 「传址」 给变量赋予基本数据类型的值，也就是「传值」，而给变量赋予引用数据类型的值，实际上是「传址」 基本数据类型变量的赋值、比较，只是值的赋值与比较，即栈内存中的数据的拷贝和比较">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/29.jpg">
-<meta property="og:updated_time" content="2019-08-08T01:51:52.228Z">
+<meta property="og:updated_time" content="2019-09-18T15:26:38.628Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="变量的赋值与深浅拷贝">
 <meta name="twitter:description" content="在 JavaScript 中，变量的赋值分为 「传值」 与 「传址」 给变量赋予基本数据类型的值，也就是「传值」，而给变量赋予引用数据类型的值，实际上是「传址」 基本数据类型变量的赋值、比较，只是值的赋值与比较，即栈内存中的数据的拷贝和比较">
@@ -101,7 +101,7 @@
 
         <!-- fork me on github -->
         <a id="forkMe" href="https://github.com/heptaluan" target="_blank">
-            <img style="position: fixed; top: 0; right: 0; border: 0; z-index: 2000;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_white_ffffff.png?resize=149%2C149" alt="Fork me on GitHub">
+            <img style="position: fixed; top: -10px; right: -10px; border: 0; z-index: 2000;" src="https://github.blog/wp-content/uploads/2008/12/forkme_right_white_ffffff.png?resize=149%2C149" alt="Fork me on GitHub">
         </a>
         <div class="navbar-menu">
             
@@ -164,7 +164,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    13 分钟 读完 (大约 2010 个字)
+                    14 分钟 读完 (大约 2080 个字)
                 </span>
                 
                 
@@ -192,7 +192,11 @@
 <h2 id="浅拷贝"><a href="#浅拷贝" class="headerlink" title="浅拷贝"></a>浅拷贝</h2><p>浅拷贝只会将对象的各个属性进行依次复制，并不会进行递归复制，也就是说只会赋值目标对象的第一层属性</p>
 <p>对于目标对象第一层为基本类型的数据，就是直接赋值，即「传值」</p>
 <p>而对于目标对象第一层为引用数据类型的数据，就是直接赋与内存中的堆内存地址，即「传址」</p>
-<p>一个简单的浅复制实现</p>
+<p>有一种比较简单的对象复制的方法，就是使用 <code>JSON.stringify()</code> 方法，如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> newObject = <span class="hljs-built_in">JSON</span>.parse(<span class="hljs-built_in">JSON</span>.stringify(oldObject))</span><br></pre></td></tr></table></figure>
+
+<p>但是这种写法会存在一些问题，详细可见 <a href="https://heptaluan.github.io/2017/07/06/JavaScript/23/" target="_blank" rel="noopener">JSON.parse() &amp;&amp; JSON.stringify()</a></p>
+<p>下面是一个比较通用的简单浅复制的实现</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> obj = &#123; <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">arr</span>: [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>] &#125;;</span><br><span class="line"><span class="hljs-keyword">var</span> shallowObj = shallowCopy(obj);</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">shallowCopy</span>(<span class="hljs-params">src</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> dst = &#123;&#125;;</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> prop <span class="hljs-keyword">in</span> src) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (src.hasOwnProperty(prop)) &#123;</span><br><span class="line">      dst[prop] = src[prop];</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> dst;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>因为浅复制只会将对象的各个属性进行依次复制，并不会进行递归复制，而 <code>JavaScript</code> 存储对象都是存地址的</p>
@@ -353,7 +357,7 @@
                     
                     
                     <p class="is-size-6 is-block">
-                        GALLOWS BELL.
+                        GALLOWS BELL@kiyonof9
                     </p>
                     
                     
@@ -372,7 +376,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        146
+                        147
                     </p>
                 </div>
             </div>
@@ -461,7 +465,7 @@
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">11</span>
+                <span class="level-item tag">12</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -564,6 +568,25 @@
         
         <article class="media">
             
+            <a href="/2019/09/12/CSS/12/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/12.jpg" alt="CSS 常见布局方式">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-09-11T16:00:00.000Z">2019-09-12</time></div>
+                    <a href="/2019/09/12/CSS/12/" class="has-link-black-ter is-size-6">CSS 常见布局方式</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CSS/">CSS</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2019/09/01/Node/08/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/08.jpg" alt="什么是 Node.js">
@@ -638,25 +661,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/08/04/CSS/11/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/11.jpg" alt="px，em，rem，vw 和 vh">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-03T16:00:00.000Z">2019-08-04</time></div>
-                    <a href="/2019/08/04/CSS/11/" class="has-link-black-ter is-size-6">px，em，rem，vw 和 vh</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/CSS/">CSS</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -675,7 +679,7 @@
                     <span class="level-item">九月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1055,7 +1059,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">11</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
