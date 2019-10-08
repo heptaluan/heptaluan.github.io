@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="待补">
+    <meta name="description" content="在 Node.js 当中许多对象都会分发事件，比如一个 net.Server 对象会在每次有新连接时触发一个事件，一个 fs.readStream 对象会在文件被打开的时候触发一个事件，然而所有这些产生事件的对象都是 events.EventEmitter 的实例">
 <meta name="keywords" content="Node.js">
 <meta property="og:type" content="article">
 <meta property="og:title" content="EventEmitter">
 <meta property="og:url" content="http://yoursite.com/2019/10/01/Node/09/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="待补">
+<meta property="og:description" content="在 Node.js 当中许多对象都会分发事件，比如一个 net.Server 对象会在每次有新连接时触发一个事件，一个 fs.readStream 对象会在文件被打开的时候触发一个事件，然而所有这些产生事件的对象都是 events.EventEmitter 的实例">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/09.jpg">
-<meta property="og:updated_time" content="2019-10-03T15:23:38.391Z">
+<meta property="og:updated_time" content="2019-10-08T15:14:04.809Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="EventEmitter">
-<meta name="twitter:description" content="待补">
+<meta name="twitter:description" content="在 Node.js 当中许多对象都会分发事件，比如一个 net.Server 对象会在每次有新连接时触发一个事件，一个 fs.readStream 对象会在文件被打开的时候触发一个事件，然而所有这些产生事件的对象都是 events.EventEmitter 的实例">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/09.jpg">
 
 
@@ -164,7 +164,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    19 分钟 读完 (大约 2896 个字)
+                    19 分钟 读完 (大约 2914 个字)
                 </span>
                 
                 
@@ -177,101 +177,198 @@
             
         </h1>
         <div class="content">
-            <p>待补</p>
-<!-- 
-在 `Node.js` 当中许多对象都会分发事件，比如一个 [net.Server](http://nodejs.cn/api/net.html#net_class_net_server) 对象会在每次有新连接时触发一个事件，一个 [fs.readStream](http://nodejs.cn/api/fs.html#fs_class_fs_readstream) 对象会在文件被打开的时候触发一个事件，然而所有这些产生事件的对象都是 `events.EventEmitter` 的实例 -->
-
+            <p>在 <code>Node.js</code> 当中许多对象都会分发事件，比如一个 <a href="http://nodejs.cn/api/net.html#net_class_net_server" target="_blank" rel="noopener">net.Server</a> 对象会在每次有新连接时触发一个事件，一个 <a href="http://nodejs.cn/api/fs.html#fs_class_fs_readstream" target="_blank" rel="noopener">fs.readStream</a> 对象会在文件被打开的时候触发一个事件，然而所有这些产生事件的对象都是 <code>events.EventEmitter</code> 的实例</p>
 <a id="more"></a>
-<!-- 
-## EventEmitter 类
 
-`events` 模块只提供了一个对象：`events.EventEmitter`，`EventEmitter` 的核心就是事件触发与事件监听器功能的封装
+<h2 id="EventEmitter-类"><a href="#EventEmitter-类" class="headerlink" title="EventEmitter 类"></a>EventEmitter 类</h2><p><code>events</code> 模块只提供了一个对象：<code>events.EventEmitter</code>，<code>EventEmitter</code> 的核心就是事件触发与事件监听器功能的封装</p>
+<p>你可以通过 <code>require(&#39;events&#39;)</code> 来访问该模块，如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 引入 events 模块</span></span><br><span class="line"><span class="hljs-keyword">var</span> events = <span class="hljs-built_in">require</span>(<span class="hljs-string">'events'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 创建 eventEmitter 对象</span></span><br><span class="line"><span class="hljs-keyword">var</span> eventEmitter = <span class="hljs-keyword">new</span> events.EventEmitter()</span><br></pre></td></tr></table></figure>
 
-你可以通过 `require('events')` 来访问该模块，如下
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 引入 events 模块</span></span><br><span class="line"><span class="keyword">var</span> events = <span class="built_in">require</span>(<span class="string">'events'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建 eventEmitter 对象</span></span><br><span class="line"><span class="keyword">var</span> eventEmitter = <span class="keyword">new</span> events.EventEmitter()</span><br></pre></td></tr></table></figure>
-
-<p><code>EventEmitter</code> 对象如果在实例化时发生错误，会触发 <code>error</code> 事件，关于 EventEmitter 里面的 error 事件有一点需要注意的地方</p>
-<p>EventEmitter 即使绑定了 error 事件，也是不会输出的。而是会在控制台打印该异常的堆栈信息，并结束进程。 获取异常只能通过 try catch，如下</p>
-<p>eventEmitter.on(‘error’,function(err){<br>    console.error(‘Error:’,err);<br>});</p>
-<p>经过测试可以发现，绑定 error 事件。只能自己触发，eventEmitter.emit(‘error’); 当没有错误时，会在控制台打印 Error：undefined。有错误时，不会打印，直接打印该异常的堆栈信息，并结束进程</p>
-<p>当添加新的监听器时，<code>newListener</code> 事件会触发，当监听器被移除时，removeListener 事件被触发</p>
-<p>以上就是 EventEmitter 的简单使用方式，本文的主要构成主要分为两部分，首先先简单的过一遍源码，然后在自己动手来实现一个简单的EventEmitter模块</p>
-<p>但是在深入展开之前，我们先来了解一些前置知识</p>
-<h2 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h2><p>主要参考 <a href="https://github.com/semlinker/node-deep/blob/master/event/%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0%20Node.js%20EventEmitter.md">深入 EventEmitter</a></p>
+<p><code>EventEmitter</code> 对象如果在实例化时发生错误，会触发 <code>error</code> 事件，关于 <code>EventEmitter</code> 里面的 <code>error</code> 事件有一点需要注意的地方</p>
 <blockquote>
-<p>观察者模式是<a href="https://zh.wikipedia.org/wiki/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F_(%E8%AE%A1%E7%AE%97%E6%9C%BA)">软件设计模式</a>的一种。在此种模式中，一个目标对象管理所有相依于它的观察者对象，并且在它本身的状态改变时主动发出通知。这通常透过呼叫各观察者所提供的方法来实现。此种模式通常被用来实时事件处理系统 —— <a href="https://zh.wikipedia.org/wiki/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F">维基百科</a></p>
+<p><code>EventEmitter</code> 即使绑定了 <code>error</code> 事件也是不会输出的，而是会在控制台打印该异常的堆栈信息，并结束进程，获取异常只能通过 try catch，如下</p>
 </blockquote>
-<p>EventEmitter本质上是一个观察者模式的实现，所谓观察者模式</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">eventEmitter.on(<span class="hljs-string">'error'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.error(<span class="hljs-string">'Error:'</span>, err);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>经过测试可以发现，绑定 <code>error</code> 事件只能自己触发，比如使用 <code>eventEmitter.emit(&#39;error&#39;)</code></p>
+<p>当没有错误时，会在控制台打印 <code>Error：undefined</code>，而当有错误时不会打印而是直接打印该异常的堆栈信息，并结束进程</p>
+<p>当添加新的监听器时，<code>newListener</code> 事件会触发，当监听器被移除时，<code>removeListener</code> 事件被触发</p>
+<p>以上就是 <code>EventEmitter</code> 的简单使用方式，本文的主要构成主要分为两部分，首先先简单的过一遍源码，然后在自己动手来实现一个简单的 <code>EventEmitter</code> 模块</p>
+<p>但是在深入展开之前，我们先来了解一些前置知识</p>
+<h2 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h2><p>本章主要参考 <a href="https://github.com/semlinker/node-deep/blob/master/event/%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0%20Node.js%20EventEmitter.md" target="_blank" rel="noopener">深入 EventEmitter</a></p>
+<blockquote>
+<p>观察者模式是<a href="https://zh.wikipedia.org/wiki/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F_(%E8%AE%A1%E7%AE%97%E6%9C%BA)" target="_blank" rel="noopener">软件设计模式</a>的一种，在此种模式中，一个目标对象管理所有相依于它的观察者对象，并且在它本身的状态改变时主动发出通知，这通常透过呼叫各观察者所提供的方法来实现，此种模式通常被用来实时事件处理系统 —— <a href="https://zh.wikipedia.org/wiki/%E8%A7%82%E5%AF%9F%E8%80%85%E6%A8%A1%E5%BC%8F" target="_blank" rel="noopener">维基百科</a></p>
+</blockquote>
+<p><code>EventEmitter</code> 本质上是一个观察者模式的实现，所谓观察者模式</p>
 <p>它定义了一种一对多的关系，让多个观察者对象同时监听某一个主题对象，这个主题对象的状态发生变化时就会通知所有的观察者对象，使得它们能够自动更新自己</p>
-<p>我们可以使用日常生活中，期刊订阅的例子来形象地解释一下上面的概念。期刊订阅包含两个主要的角色：期刊出版方和订阅者，它们之间的关系如下：</p>
-<p>期刊出版方 - 负责期刊的出版和发行工作。<br>订阅者 - 只需执行订阅操作，新版的期刊发布后，就会主动收到通知，如果取消订阅，以后就不会再收到通知。</p>
-<p>在观察者模式中也有两个主要角色：主题和观察者，分别对应期刊订阅例子中的期刊出版方和订阅者，它们之间的关系图如下</p>
-<p><a href="https://raw.githubusercontent.com/semlinker/node-deep/master/event/observer-pattern.png">https://raw.githubusercontent.com/semlinker/node-deep/master/event/observer-pattern.png</a></p>
-<h4 id="观察者模式优缺点"><a href="#观察者模式优缺点" class="headerlink" title="观察者模式优缺点"></a>观察者模式优缺点</h4><p>观察者模式的优点：</p>
-<p>支持简单的广播通信，自动通知所有已经订阅过的对象<br>目标对象与观察者之间的抽象耦合关系能够单独扩展以及重用</p>
-<p>观察者模式的缺点：</p>
-<p>如果一个被观察者对象有很多的直接和间接的观察者的话，将所有的观察者都通知到会花费很多时间<br>如果在观察者和观察目标之间有循环依赖的话，观察目标会触发它们之间进行循环调用，可能导致系统崩溃</p>
-<h4 id="观察者模式的应用"><a href="#观察者模式的应用" class="headerlink" title="观察者模式的应用"></a>观察者模式的应用</h4><p>最常见的例子就是为 DOM 对象添加事件监听</p>
-<p><button id="btn">确认</button></p>
-<p>function clickHandler(event) {<br>    console.log(‘用户已点击确认按钮!’);<br>}<br>document.getElementById(“btn”).addEventListener(‘click’, clickHandler);</p>
-<h2 id="发布-订阅模式"><a href="#发布-订阅模式" class="headerlink" title="发布/订阅模式"></a>发布/订阅模式</h2><blockquote>
-<p>在<a href="https://zh.wikipedia.org/wiki/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84">软件架构</a>中，<strong>发布-订阅</strong>是一种<a href="https://zh.wikipedia.org/wiki/%E6%B6%88%E6%81%AF">消息</a><a href="https://zh.wikipedia.org/wiki/%E8%8C%83%E5%BC%8F">范式</a>，消息的发送者（称为发布者）不会将消息直接发送给特定的接收者（称为订阅者）。而是将发布的消息分为不同的类别，无需了解哪些订阅者（如果有的话）可能存在。同样的，订阅者可以表达对一个或多个类别的兴趣，只接收感兴趣的消息，无需了解哪些发布者（如果有的话）存在。—— <a href="https://zh.wikipedia.org/wiki/%E5%8F%91%E5%B8%83/%E8%AE%A2%E9%98%85">维基百科</a></p>
-</blockquote>
-<p>发布/订阅模式与观察者模式非常类似，它们最大的区别是：发布者和订阅者不知道对方的存在。它们之间需要一个第三方组件，叫做信息中介，它将订阅者和发布者串联起来，它过滤和分配所有输入的消息。换句话说，发布/订阅模式用来处理不同系统组件的信息交流，即使这些组件不知道对方的存在。</p>
-<p>那么信息中介是如何过滤消息呢？在发布/订阅模型中，订阅者通常接收所有发布的消息的一个子集。选择接受和处理的消息的过程被称作过滤。有两种常用的过滤形式：基于主题的和基于内容的。</p>
+<p>我们可以使用日常生活中，期刊订阅的例子来形象地解释一下上面的概念，期刊订阅包含两个主要的角色：期刊出版方和订阅者，它们之间的关系如下</p>
 <ul>
-<li>在<strong>基于主题</strong>的系统中，消息被发布到主题或命名通道上。订阅者将收到其订阅的主题上的所有消息，并且所有订阅同一主题的订阅者将接收到同样的消息。发布者负责定义订阅者所订阅的消息类别。</li>
-<li>在<strong>基于内容</strong>的系统中，订阅者定义其感兴趣的消息的条件，只有当消息的属性或内容满足订阅者定义的条件时，消息才会被投递到该订阅者。订阅者需要负责对消息进行分类。</li>
+<li><p>期刊出版方 - 负责期刊的出版和发行工作</p>
+</li>
+<li><p>订阅者 - 只需执行订阅操作，新版的期刊发布后，就会主动收到通知，如果取消订阅，以后就不会再收到通知</p>
+</li>
 </ul>
-<p>一些系统支持两者的混合：发布者发布消息到主题上，而订阅者将基于内容的订阅注册到一个或多个主题上。基于主题的通信基础结构图如下：</p>
-<p><img src="https://raw.githubusercontent.com/semlinker/node-deep/master/event/pubsub-pattern.png" alt="pub-sub"></p>
-<p>最后我们再来总结一下观察者模式与发布/订阅模式之间的区别。</p>
+<p>在观察者模式中也有两个主要角色：主题和观察者，分别对应期刊订阅例子中的期刊出版方和订阅者，它们之间的关系图如下</p>
+<p><img src="https://raw.githubusercontent.com/semlinker/node-deep/master/event/observer-pattern.png" alt></p>
+<h4 id="观察者模式优缺点"><a href="#观察者模式优缺点" class="headerlink" title="观察者模式优缺点"></a>观察者模式优缺点</h4><p>观察者模式的优点：</p>
+<ul>
+<li><p>支持简单的广播通信，自动通知所有已经订阅过的对象</p>
+</li>
+<li><p>目标对象与观察者之间的抽象耦合关系能够单独扩展以及重用</p>
+</li>
+</ul>
+<p>观察者模式的缺点：</p>
+<ul>
+<li><p>如果一个被观察者对象有很多的直接和间接的观察者的话，将所有的观察者都通知到会花费很多时间</p>
+</li>
+<li><p>如果在观察者和观察目标之间有循环依赖的话，观察目标会触发它们之间进行循环调用，可能导致系统崩溃</p>
+</li>
+</ul>
+<h4 id="观察者模式的应用"><a href="#观察者模式的应用" class="headerlink" title="观察者模式的应用"></a>观察者模式的应用</h4><p>最常见的例子就是为 <code>DOM</code> 对象添加事件监听</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"btn"</span>&gt;</span>确认<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">clickHandler</span>(<span class="hljs-params">event</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'用户已点击确认按钮!'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'btn'</span>).addEventListener(<span class="hljs-string">'click'</span>, clickHandler);</span><br></pre></td></tr></table></figure>
+
+<p>当按钮在点击当同时会触发我们事先绑定好的事件 <code>clickHandler</code></p>
+<h2 id="发布-订阅模式"><a href="#发布-订阅模式" class="headerlink" title="发布/订阅模式"></a>发布/订阅模式</h2><blockquote>
+<p>在<a href="https://zh.wikipedia.org/wiki/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84" target="_blank" rel="noopener">软件架构</a>中，<strong>发布-订阅</strong>是一种<a href="https://zh.wikipedia.org/wiki/%E6%B6%88%E6%81%AF" target="_blank" rel="noopener">消息</a><a href="https://zh.wikipedia.org/wiki/%E8%8C%83%E5%BC%8F" target="_blank" rel="noopener">范式</a>，消息的发送者（称为发布者）不会将消息直接发送给特定的接收者（称为订阅者），而是将发布的消息分为不同的类别，无需了解哪些订阅者（如果有的话）可能存在，同样的，订阅者可以表达对一个或多个类别的兴趣，只接收感兴趣的消息，无需了解哪些发布者（如果有的话）存在，—— <a href="https://zh.wikipedia.org/wiki/%E5%8F%91%E5%B8%83/%E8%AE%A2%E9%98%85" target="_blank" rel="noopener">维基百科</a></p>
+</blockquote>
+<p>发布/订阅模式与观察者模式非常类似，它们最大的区别是：</p>
+<ul>
+<li><p>发布者和订阅者不知道对方的存在</p>
+</li>
+<li><p>它们之间需要一个第三方组件，叫做信息中介，它将订阅者和发布者串联起来，它过滤和分配所有输入的消息</p>
+</li>
+<li><p>发布/订阅模式用来处理不同系统组件的信息交流，即使这些组件不知道对方的存在</p>
+</li>
+</ul>
+<p>那么信息中介是如何过滤消息呢？在发布/订阅模型中，订阅者通常接收所有发布的消息的一个子集，选择接受和处理的消息的过程被称作过滤，有两种常用的过滤形式：基于主题的和基于内容的</p>
+<ul>
+<li>在<strong>基于主题</strong>的系统中，消息被发布到主题或命名通道上，订阅者将收到其订阅的主题上的所有消息，并且所有订阅同一主题的订阅者将接收到同样的消息，发布者负责定义订阅者所订阅的消息类别，</li>
+<li>在<strong>基于内容</strong>的系统中，订阅者定义其感兴趣的消息的条件，只有当消息的属性或内容满足订阅者定义的条件时，消息才会被投递到该订阅者，订阅者需要负责对消息进行分类，</li>
+</ul>
+<p>一些系统支持两者的混合：发布者发布消息到主题上，而订阅者将基于内容的订阅注册到一个或多个主题上，基于主题的通信基础结构图如下：</p>
+<p><img src="https://raw.githubusercontent.com/semlinker/node-deep/master/event/pubsub-pattern.png" alt></p>
+<p>最后我们再来总结一下观察者模式与发布/订阅模式之间的区别</p>
 <h2 id="观察者模式-vs-发布-订阅模式"><a href="#观察者模式-vs-发布-订阅模式" class="headerlink" title="观察者模式 vs 发布/订阅模式"></a>观察者模式 vs 发布/订阅模式</h2><p><img src="https://raw.githubusercontent.com/semlinker/node-deep/master/event/observer-vs-pubsub.jpg" alt="observer-vs-pubsub"></p>
-<p>（图片来源 - <a href="http://developers-club.com/posts/270339/">developers-club</a>）</p>
 <p>观察者模式与发布/订阅模式之间的区别：</p>
 <ul>
-<li>在观察者模式中，观察者知道 Subject 的存在，Subject 一直保持对观察者进行记录。然而，在发布/订阅模式中，发布者和订阅者不知道对方的存在，它们只有通过信息中介进行通信。</li>
-<li>在发布订阅模式中，组件是松散耦合的，正好和观察者模式相反。</li>
-<li>观察者模式大多数时候是同步的，比如当事件触发，Subject 就会去调用观察者的方法。而发布/订阅模式大多数时候是异步的（使用消息队列）。</li>
+<li><p>在观察者模式中，观察者知道 <code>Subject</code> 的存在，<code>Subject</code> 一直保持对观察者进行记录，然而，在发布/订阅模式中，发布者和订阅者不知道对方的存在，它们只有通过信息中介进行通信</p>
+</li>
+<li><p>在发布订阅模式中，组件是松散耦合的，正好和观察者模式相反</p>
+</li>
+<li><p>观察者模式大多数时候是同步的，比如当事件触发 <code>Subject</code> 就会去调用观察者的方法，而发布/订阅模式大多数时候是异步的（使用消息队列）</p>
+</li>
 </ul>
-<h2 id="EventEmitter"><a href="#EventEmitter" class="headerlink" title="EventEmitter"></a>EventEmitter</h2><p>在 node.js 当中，大多数的核心 API 都采用惯用的异步事件驱动架构，所有能触发事件的对象都是 EventEmitter 类的实例</p>
-<p>这些对象开放了一个 eventEmitter.on() 函数，允许将一个或多个函数绑定到会被对象触发的命名事件上</p>
-<p>当 EventEmitter 对象触发一个事件时，所有绑定在该事件上的函数都被同步地调用。 监听器的返回值会被丢弃</p>
+<p>下面我们就来正式的看一看 <code>Node.js</code> 当中的 <code>EventEmitter</code> 模块</p>
+<h2 id="EventEmitter"><a href="#EventEmitter" class="headerlink" title="EventEmitter"></a>EventEmitter</h2><p>在 <code>Node.js</code> 当中，大多数的核心 <code>API</code> 都采用惯用的异步事件驱动架构，所有能触发事件的对象都是 <code>EventEmitter</code> 类的实例</p>
+<p>这些对象开放了一个 <code>eventEmitter.on()</code> 函数，允许将一个或多个函数绑定到会被对象触发的命名事件上</p>
+<p>当 <code>EventEmitter</code> 对象触发一个事件时，所有绑定在该事件上的函数都被同步地调用， 监听器的返回值会被丢弃</p>
 <p>本文主要介绍以下几个核心方法</p>
 <ul>
-<li><p>on(event, listener)<br>为指定事件添加一个监听器到监听器数组的尾部（还有一个 addListener 方法，本质与 on 是一致的，见下方）</p>
-</li>
-<li><p>once(event, listener)<br>为指定事件注册一个单次监听器，即 监听器最多只会触发一次，触发后立刻解除该监听器</p>
-</li>
-<li><p>removeListener(event, listener)<br>移除指定事件的某个监听器，监听器必须是该事件已经注册过的监听器。</p>
-</li>
-</ul>
-<p>它接受两个参数，第一个是事件名称，第二个是回调函数名称</p>
+<li><p><code>on(event, listener)</code></p>
 <ul>
-<li>emit(event, [arg1], [arg2], […])<br>按监听器的顺序执行执行每个监听器，如果事件有注册监听返回 true，否则返回 false。</li>
+<li>为指定事件添加一个监听器到监听器数组的尾部（还有一个 <code>addListener</code> 方法，本质与 <code>on</code> 是一致的，见下方）</li>
+</ul>
+</li>
+<li><p><code>once(event, listener)</code></p>
+<ul>
+<li>为指定事件注册一个单次监听器，即监听器最多只会触发一次，触发后立刻解除该监听器</li>
+</ul>
+</li>
+<li><p><code>removeListener(event, listener)</code></p>
+<ul>
+<li>移除指定事件的某个监听器，监听器必须是该事件已经注册过的监听器，它接受两个参数，第一个是事件名称，第二个是回调函数名称</li>
+</ul>
+</li>
+<li><p><code>emit(event, [arg1], [arg2], [...])</code></p>
+<ul>
+<li>按监听器的顺序执行执行每个监听器，如果事件有注册监听返回 <code>true</code>，否则返回 <code>false</code></li>
+</ul>
+</li>
 </ul>
 <p>下面我们就一个一个来看</p>
-<h2 id="EventEmitter-基本使用"><a href="#EventEmitter-基本使用" class="headerlink" title="EventEmitter 基本使用"></a>EventEmitter 基本使用</h2><p>我们首先先来看一个最基本的EventEmitter功能，包含了一个观察者和一个被监听的对象，对应的实现就是EventEmitter中的on和emit</p>
-<p>const EventEmitter = require(‘events’);</p>
-<p>class MyEmitter extends EventEmitter {}</p>
-<p>const myEmitter = new MyEmitter();<br>myEmitter.on(‘event’, () =&gt; {<br>  console.log(‘触发了一个事件！’);<br>});</p>
-<p>myEmitter.emit(‘event’);</p>
-<p>我们自定义 MyEmitter 类，该类继承于 EventEmitter 类，接着我们通过使用 new 关键字创建了 myEmitter 实例，然后使用 on() 方法监听 event 事件，最后利用 emit() 方法触发 event 事件</p>
-<h2 id="EventEmitter-构造函数"><a href="#EventEmitter-构造函数" class="headerlink" title="EventEmitter 构造函数"></a>EventEmitter 构造函数</h2><p>如下</p>
-<p>function EventEmitter() {<br>  EventEmitter.init.call(this);<br>}</p>
-<p>EventEmitter.usingDomains = false;</p>
-<p>EventEmitter.prototype._events = undefined;<br>EventEmitter.prototype._eventsCount = 0; // 事件数<br>EventEmitter.prototype._maxListeners = undefined; // 最大的监听器数</p>
-<p>在 EventEmitter 构造函数内部，会调用 EventEmitter.init 方法执行初始化操作，EventEmitter.init 的具体实现如下</p>
-<p>EventEmitter.init = function() {<br>  if (this._events === undefined ||<br>      this._events === Object.getPrototypeOf(this)._events) {<br>    this._events = Object.create(null);<br>    this._eventsCount = 0;<br>  }<br>  this._maxListeners = this._maxListeners || undefined;<br>};</p>
-<p>在 EventEmitter.init 内部，会根据条件执行初始化操作，这里有一个比较重要的操作 this._events = Object.create(null)</p>
-<p>那么问题来了，为什么要使用 Object.create(null) 来初始化一个新对象而不用更简洁的 {} 呢？</p>
-<p>简单来说，两者的区别如下</p>
-<p>18.png</p>
-<p>对比可以发现，使用create创建的对象，没有任何属性，可以把它当作一个非常纯净的map来使用，可以自己定义hasOwnProperty、toString方法而不必担心会将原型链上的同名方法覆盖掉</p>
-<p>下面我们再来看看 on 方法</p>
-<h2 id="EventEmitter-on-方法"><a href="#EventEmitter-on-方法" class="headerlink" title="EventEmitter on() 方法"></a>EventEmitter on() 方法</h2><p> –&gt;</p>
+<!-- ## EventEmitter 基本使用
+
+我们首先先来看一个最基本的 `EventEmitter` 功能，包含了一个观察者和一个被监听的对象，对应的实现就是 `EventEmitter` 中的 `on` 和 `emit`
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> EventEmitter = <span class="built_in">require</span>(<span class="string">'events'</span>);</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyEmitter</span> <span class="keyword">extends</span> <span class="title">EventEmitter</span> </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> myEmitter = <span class="keyword">new</span> MyEmitter();</span><br><span class="line"></span><br><span class="line">myEmitter.on(<span class="string">'event'</span>, () =&gt; &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'触发了一个事件！'</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">myEmitter.emit(<span class="string">'event'</span>);</span><br></pre></td></tr></table></figure>
+
+<p>我们自定义 <code>MyEmitter</code> 类，该类继承于 <code>EventEmitter</code> 类，接着我们通过使用 <code>new</code> 关键字创建了 <code>myEmitter</code> 实例，然后使用 <code>on()</code> 方法监听 <code>event</code> 事件，最后利用 <code>emit()</code> 方法触发 <code>event</code> 事件 –&gt;</p>
 <!-- 
+## EventEmitter 构造函数
+
+如下
+
+function EventEmitter() {
+  EventEmitter.init.call(this);
+}
+
+EventEmitter.usingDomains = false;
+
+EventEmitter.prototype._events = undefined;
+EventEmitter.prototype._eventsCount = 0; // 事件数
+EventEmitter.prototype._maxListeners = undefined; // 最大的监听器数
+
+在 EventEmitter 构造函数内部，会调用 EventEmitter.init 方法执行初始化操作，EventEmitter.init 的具体实现如下
+
+EventEmitter.init = function() {
+  if (this._events === undefined ||
+      this._events === Object.getPrototypeOf(this)._events) {
+    this._events = Object.create(null);
+    this._eventsCount = 0;
+  }
+  this._maxListeners = this._maxListeners || undefined;
+};
+
+在 EventEmitter.init 内部，会根据条件执行初始化操作，这里有一个比较重要的操作 this._events = Object.create(null)
+
+那么问题来了，为什么要使用 Object.create(null) 来初始化一个新对象而不用更简洁的 {} 呢？
+
+简单来说，两者的区别如下
+
+18.png
+
+对比可以发现，使用create创建的对象，没有任何属性，可以把它当作一个非常纯净的map来使用，可以自己定义hasOwnProperty、toString方法而不必担心会将原型链上的同名方法覆盖掉
+
+下面我们再来看看 on 方法
+
+## EventEmitter on() 方法
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## ES6 中的使用方式
 
@@ -288,12 +385,12 @@ const stream = new MyStream();
 stream.on('data', (data) => {
   console.log(`Received data: "${data}"`);
 });
-stream.write('With ES6'); -->
+stream.write('With ES6');
 
 
 
 
-<!-- 参考
+参考
 
 [深入 EventEmitter](https://github.com/semlinker/node-deep/blob/master/event/%E6%B7%B1%E5%85%A5%E5%AD%A6%E4%B9%A0%20Node.js%20EventEmitter.md) -->
         </div>
@@ -439,7 +536,35 @@ stream.write('With ES6'); -->
             <h3 class="menu-label">
                 目录
             </h3>
-            
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#EventEmitter-类">
+        <span class="has-mr-6">1</span>
+        <span>EventEmitter 类</span>
+        </a></li><li>
+        <a class="is-flex" href="#观察者模式">
+        <span class="has-mr-6">2</span>
+        <span>观察者模式</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#观察者模式优缺点">
+        <span class="has-mr-6">2.1</span>
+        <span>观察者模式优缺点</span>
+        </a></li><li>
+        <a class="is-flex" href="#观察者模式的应用">
+        <span class="has-mr-6">2.2</span>
+        <span>观察者模式的应用</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#发布-订阅模式">
+        <span class="has-mr-6">3</span>
+        <span>发布/订阅模式</span>
+        </a></li><li>
+        <a class="is-flex" href="#观察者模式-vs-发布-订阅模式">
+        <span class="has-mr-6">4</span>
+        <span>观察者模式 vs 发布/订阅模式</span>
+        </a></li><li>
+        <a class="is-flex" href="#EventEmitter">
+        <span class="has-mr-6">5</span>
+        <span>EventEmitter</span>
+        </a></li></ul>
         </div>
     </div>
 </div>
