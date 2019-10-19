@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="libuv 是一个高性能的，事件驱动的 I/O 库，并且提供了跨平台（如 windows, linux）的 API，在这里只是简单的介绍一下 详细可见 An Introduction to libuv libuv 的官方文档在阐述其架构的时候有这么一张图">
+    <meta name="description" content="libuv 是一个高性能的，事件驱动的 I/O 库，并且提供了跨平台（如 windows, linux）的 API，在这里只是简单的介绍一下 详细可见 An Introduction to libuv，中文教程可以参考 Libuv 的中文教程">
 <meta name="keywords" content="Node.js">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Node.js 中的 libuv">
 <meta property="og:url" content="http://yoursite.com/2019/07/05/Node/06/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="libuv 是一个高性能的，事件驱动的 I/O 库，并且提供了跨平台（如 windows, linux）的 API，在这里只是简单的介绍一下 详细可见 An Introduction to libuv libuv 的官方文档在阐述其架构的时候有这么一张图">
+<meta property="og:description" content="libuv 是一个高性能的，事件驱动的 I/O 库，并且提供了跨平台（如 windows, linux）的 API，在这里只是简单的介绍一下 详细可见 An Introduction to libuv，中文教程可以参考 Libuv 的中文教程">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/06.jpg">
-<meta property="og:updated_time" content="2019-10-09T09:44:35.908Z">
+<meta property="og:updated_time" content="2019-10-19T15:29:00.629Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Node.js 中的 libuv">
-<meta name="twitter:description" content="libuv 是一个高性能的，事件驱动的 I/O 库，并且提供了跨平台（如 windows, linux）的 API，在这里只是简单的介绍一下 详细可见 An Introduction to libuv libuv 的官方文档在阐述其架构的时候有这么一张图">
+<meta name="twitter:description" content="libuv 是一个高性能的，事件驱动的 I/O 库，并且提供了跨平台（如 windows, linux）的 API，在这里只是简单的介绍一下 详细可见 An Introduction to libuv，中文教程可以参考 Libuv 的中文教程">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/06.jpg">
 
 
@@ -89,7 +89,12 @@
 <link rel="stylesheet" href="/css/style.css">
 </head>
 <body class="is-2-column">
-    <nav class="navbar navbar-main">
+    <!-- fork me on github -->
+<a id="forkMe" href="https://github.com/heptaluan" target="_blank">
+    <svg viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg>
+</a>
+
+<nav class="navbar navbar-main">
     <div class="container">
         <!-- <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
@@ -99,10 +104,6 @@
             </a>
         </div> -->
 
-        <!-- fork me on github -->
-        <a id="forkMe" href="https://github.com/heptaluan" target="_blank">
-            <svg viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg>
-        </a>
         <div class="navbar-menu">
             
             <div class="navbar-start">
@@ -162,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    7 分钟 读完 (大约 1117 个字)
+                    15 分钟 读完 (大约 2253 个字)
                 </span>
                 
                 
@@ -176,11 +177,11 @@
         </h1>
         <div class="content">
             <p><code>libuv</code> 是一个高性能的，事件驱动的 <code>I/O</code> 库，并且提供了跨平台（如 <code>windows</code>, <code>linux</code>）的 <code>API</code>，在这里只是简单的介绍一下</p>
-<p>详细可见 <a href="https://github.com/nikhilm/uvbook" target="_blank" rel="noopener">An Introduction to libuv</a></p>
-<p><code>libuv</code> 的<a href="http://docs.libuv.org/en/v1.x/design.html" target="_blank" rel="noopener">官方文档</a>在阐述其架构的时候有这么一张图</p>
+<p>详细可见 <a href="https://github.com/nikhilm/uvbook" target="_blank" rel="noopener">An Introduction to libuv</a>，中文教程可以参考 <a href="https://github.com/luohaha/Chinese-uvbook" target="_blank" rel="noopener">Libuv 的中文教程</a></p>
 <a id="more"></a>
 
-<h2 id="libuv"><a href="#libuv" class="headerlink" title="libuv"></a>libuv</h2><p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/node/04.png" alt></p>
+<h2 id="libuv"><a href="#libuv" class="headerlink" title="libuv"></a>libuv</h2><p><code>libuv</code> 的<a href="http://docs.libuv.org/en/v1.x/design.html" target="_blank" rel="noopener">官方文档</a>在阐述其架构的时候有这么一张图</p>
+<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/node/04.png" alt></p>
 <p>仅仅凭着这么一张图并不能让我们对其内部机制理解得透彻</p>
 <p>简单来说，在 <code>Node.js</code> 里面 <code>V8</code> 充当的角色更多的是语法解析层面，另外它还充当了 <code>JavaScript</code> 和 <code>C/C++</code> 的桥梁</p>
 <p>但是我们都知道 <code>Node.js</code> 中一切皆可异步，但这并不是通过 <code>V8</code> 来实现的，充当这个角色的是 <code>libuv</code></p>
@@ -188,26 +189,59 @@
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'timeout 0'</span>); &#125;, <span class="hljs-number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'outter'</span>);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// outter</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// timeout 0</span></span><br></pre></td></tr></table></figure>
 
 <p>想要深挖为什么会出现这样的结果，要首先来研究一下 <code>libuv</code> 的事件轮询机制</p>
-<h2 id="事件轮询机制"><a href="#事件轮询机制" class="headerlink" title="事件轮询机制"></a>事件轮询机制</h2><p>在 <code>libuv</code> 中，有一个句柄（<code>handle</code>）的概念，每个句柄中存储数据和回调函数之类的信息，句柄在使用前要添加到对应的队列（<code>queue</code>）或者堆（<code>heap</code>）中</p>
+<h2 id="事件轮询机制（注意与浏览器中的-event-loop-区分开来）"><a href="#事件轮询机制（注意与浏览器中的-event-loop-区分开来）" class="headerlink" title="事件轮询机制（注意与浏览器中的 event loop 区分开来）"></a>事件轮询机制（注意与浏览器中的 event loop 区分开来）</h2><p><code>event loop</code> 是一个执行模型，在不同的地方有不同的实现，浏览器和 <code>Node.js</code> 基于不同的技术实现了各自的 <code>event loop</code>，但是不要混淆 <code>Node.js</code> 和浏览器中的 <code>event loop</code></p>
+<p>再次强调，<strong>Node.js 和浏览器的 event loop 是两个有明确区分的事物，不能混为一谈</strong></p>
+<p>简单来讲</p>
+<p><code>Node.js</code> 的 <code>event</code> 是基于 <code>libuv</code>，而浏览器的 <code>event loop</code> 则在 <a href="https://html.spec.whatwg.org/multipage/webappapis.html#event-loops" target="_blank" rel="noopener">HTML 5</a> 的规范中明确定义</p>
+<p><code>libuv</code> 已经对 <code>event loop</code> 作出了实现，而 <code>HTML 5</code> 规范中只是定义了浏览器中 <code>event loop</code> 的模型，具体实现留给了浏览器厂商</p>
+<p>在 <code>libuv</code> 中，有一个句柄（<code>handle</code>）的概念，每个句柄中存储数据和回调函数之类的信息，句柄在使用前要添加到对应的队列（<code>queue</code>）或者堆（<code>heap</code>）中</p>
 <p>其实只有定时器句柄使用了<a href="https://zh.wikipedia.org/wiki/%E6%9C%80%E5%A4%A7%E2%80%94%E6%9C%80%E5%B0%8F%E5%A0%86" target="_blank" rel="noopener">最小堆</a>的数据结构，其他句柄使用队列的数据结构进行存储</p>
 <p><code>libuv</code> 在进行每一次事件轮询的时候都会从每个类型的句柄中，取出关联的队列或者堆结构进行处理</p>
 <p>流程图如下所示</p>
 <p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/node/05.png" alt></p>
-<p>如上图所示，从第二步开始处理事件轮询中的各种类型的堆和队列结构，其中</p>
+<p><code>Node.js</code> 的 <code>event loop</code> 分为 <code>6</code> 个阶段，每个阶段的作用如下</p>
 <ul>
-<li><p>定时回调，处理 <code>setTimeout</code> 和 <code>setInterval</code> 的回调</p>
+<li><p><code>timers</code> – 执行 <code>setTimeout()</code> 和 <code>setInterval()</code> 中到期的 <code>callback</code></p>
 </li>
-<li><p><code>pending</code> 回调，处理各种 <code>IO</code> 事件完成的回调函数，不过不包括关闭事件</p>
+<li><p><code>I/O callbacks</code> – 上一轮循环中有少数的 <code>I/Ocallback</code> 会被延迟到这一轮的这一阶段执行</p>
 </li>
-<li><p><code>idle</code> 和 <code>prepare</code> 回调，仅仅在内部使用</p>
+<li><p><code>idle, prepare</code> – 仅内部使用</p>
 </li>
-<li><p><code>IO</code> 事件查询</p>
+<li><p><code>poll</code> – 最为重要的阶段，执行 <code>I/O callback</code>，在适当的条件下会阻塞在这个阶段</p>
 </li>
-<li><p><code>check</code> 回调，在 <code>Node.js</code> 中被用作运行 <code>setImmediate</code> 回调</p>
+<li><p><code>check</code> – 执行 <code>setImmediate</code> 的 <code>callback</code></p>
 </li>
-<li><p>句柄关闭回调，用来运行一些类似于 <code>socket</code> 句柄关闭的回调函数</p>
+<li><p><code>close callbacks</code> – 执行 <code>close</code> 事件的 <code>callback</code>，例如 <code>socket.on(&#39;close&#39;,func)</code></p>
 </li>
 </ul>
+<p>如果想要具体了解其内部执行流程，可以参考这篇文章中的 <a href="https://cnodejs.org/topic/5a9108d78d6e16e56bb80882" target="_blank" rel="noopener">源码解析部分</a></p>
+<p>上面的图片可以简化成下面的流程</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">   ┌───────────────────────┐</span><br><span class="line">┌─&gt;│        timers       │</span><br><span class="line">│  └──────────┬────────────┘</span><br><span class="line">│  ┌──────────┴────────────┐</span><br><span class="line">│  │     I/O callbacks   │</span><br><span class="line">│  └──────────┬────────────┘</span><br><span class="line">│  ┌──────────┴────────────┐</span><br><span class="line">│  │     idle, prepare   │</span><br><span class="line">│  └──────────┬────────────┘      ┌────────────────┐</span><br><span class="line">│  ┌──────────┴────────────┐      │   incoming:   │</span><br><span class="line">│  │         poll        │&lt;──────┤  connections, │</span><br><span class="line">│  └──────────┬────────────┘      │   data, etc.  │</span><br><span class="line">│  ┌──────────┴────────────┐      └────────────────┘</span><br><span class="line">│  │        check        │</span><br><span class="line">│  └──────────┬────────────┘</span><br><span class="line">│  ┌──────────┴────────────┐</span><br><span class="line">└──┤    close callbacks  │</span><br><span class="line">   └───────────────────────┘</span><br></pre></td></tr></table></figure>
+
+<p><code>event loop</code> 的每一次循环都需要依次经过上述的阶段，每个阶段都有自己的 <code>callback</code> 队列</p>
+<p>每当进入某个阶段，都会从所属的队列中取出 <code>callback</code> 来执行，当队列为空或者被执行 <code>callback</code> 的数量达到系统的最大数量时，进入下一阶段</p>
+<p>这六个阶段都执行完毕称为一轮循环，下面我们来分类查看</p>
+<h4 id="timers-阶段"><a href="#timers-阶段" class="headerlink" title="timers 阶段"></a>timers 阶段</h4><p>在 <code>timer</code> 阶段其实使用一个最小堆而不是队列来保存所有元素（其实也可以理解，因为 <code>timeout</code> 的 <code>callback</code> 是按照超时时间的顺序来调用的，并不是先进先出的队列逻辑）</p>
+<p>然后循环取出所有到期的 <code>callback</code> 执行</p>
+<h4 id="I-O-callbacks-阶段"><a href="#I-O-callbacks-阶段" class="headerlink" title="I/O callbacks 阶段"></a>I/O callbacks 阶段</h4><p>根据 <code>libuv</code> 的文档，一些应该在上轮循环 <code>poll</code> 阶段执行的 <code>callback</code>，因为某些原因不能执行，就会被延迟到这一轮的循环的 <code>I/O callbacks</code> 阶段执行</p>
+<p>换句话说这个阶段执行的 <code>callbacks</code> 是上轮残留的</p>
+<h4 id="idle-和-prepare-阶段"><a href="#idle-和-prepare-阶段" class="headerlink" title="idle 和 prepare 阶段"></a>idle 和 prepare 阶段</h4><p><code>idle</code> 和 <code>prepare</code> 回调，仅仅在内部使用</p>
+<h4 id="poll-阶段"><a href="#poll-阶段" class="headerlink" title="poll 阶段"></a>poll 阶段</h4><p><code>poll</code> 阶段的任务就是阻塞等待监听的事件来临，然后执行对应的 <code>callback</code>，其中阻塞是带有超时时间的，以下几种情况都会使得超时时间为 <code>0</code></p>
+<ul>
+<li><p><code>uv_run</code> 处于 <code>UV_RUN_NOWAIT</code> 模式下</p>
+</li>
+<li><p><code>uv_stop()</code> 被调用</p>
+</li>
+<li><p>没有活跃的 <code>handles</code> 和 <code>request</code></p>
+</li>
+<li><p>有活跃的 <code>idle handles</code></p>
+</li>
+<li><p>有等待关闭的 <code>handles</code></p>
+</li>
+</ul>
+<p>如果上述都不符合，则超时时间为距离现在最近的 <code>timer</code>，如果没有 <code>timer</code> 则 <code>poll</code> 阶段会一直阻塞下去</p>
+<h4 id="check-阶段"><a href="#check-阶段" class="headerlink" title="check 阶段"></a>check 阶段</h4><p><code>check</code> 回调，在 <code>Node.js</code> 中被用作运行 <code>setImmediate</code> 回调</p>
+<h4 id="close-阶段"><a href="#close-阶段" class="headerlink" title="close 阶段"></a>close 阶段</h4><p>循环关闭所有的 <code>closing handles</code></p>
 <h2 id="线程模型"><a href="#线程模型" class="headerlink" title="线程模型"></a>线程模型</h2><p>接下来我们可以了解一下 <code>libuv</code> 的线程模型，因为要想实现一个无堵塞的事件轮询必须依靠线程</p>
 <p><code>libuv</code> 中大体上可以把线程分为两类，一类是事件轮询线程，一类是文件 <code>IO</code> 处理线程</p>
 <p>第一类事件轮询线程是单线程，另外一类称其为文件 <code>IO</code> 处理线程多少有些不准确，因为他不仅能处理文件 <code>IO</code>，还能处理 <code>DNS</code> 解析，也能处理用户自己编写的 <code>Node.js</code> 扩展中的逻辑</p>
@@ -228,6 +262,7 @@
 <p><a href="http://blog.lucode.net/linux/linux-io-overview.html" target="_blank" rel="noopener">Linux IO 概览</a></p>
 <p><a href="https://zhuanlan.zhihu.com/p/35039878" target="_blank" rel="noopener">Libuv 源码阅读</a></p>
 <p><a href="https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/" target="_blank" rel="noopener">The Node.js Event Loop, Timers, and process.nextTick()</a></p>
+<p><a href="https://cnodejs.org/topic/5a9108d78d6e16e56bb80882" target="_blank" rel="noopener">不要混淆nodejs和浏览器中的 event loop</a></p>
 
         </div>
         
@@ -338,7 +373,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        153
+                        156
                     </p>
                 </div>
             </div>
@@ -384,10 +419,34 @@
         <span class="has-mr-6">1</span>
         <span>libuv</span>
         </a></li><li>
-        <a class="is-flex" href="#事件轮询机制">
+        <a class="is-flex" href="#事件轮询机制（注意与浏览器中的-event-loop-区分开来）">
         <span class="has-mr-6">2</span>
-        <span>事件轮询机制</span>
+        <span>事件轮询机制（注意与浏览器中的 event loop 区分开来）</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#timers-阶段">
+        <span class="has-mr-6">2.1</span>
+        <span>timers 阶段</span>
         </a></li><li>
+        <a class="is-flex" href="#I-O-callbacks-阶段">
+        <span class="has-mr-6">2.2</span>
+        <span>I/O callbacks 阶段</span>
+        </a></li><li>
+        <a class="is-flex" href="#idle-和-prepare-阶段">
+        <span class="has-mr-6">2.3</span>
+        <span>idle 和 prepare 阶段</span>
+        </a></li><li>
+        <a class="is-flex" href="#poll-阶段">
+        <span class="has-mr-6">2.4</span>
+        <span>poll 阶段</span>
+        </a></li><li>
+        <a class="is-flex" href="#check-阶段">
+        <span class="has-mr-6">2.5</span>
+        <span>check 阶段</span>
+        </a></li><li>
+        <a class="is-flex" href="#close-阶段">
+        <span class="has-mr-6">2.6</span>
+        <span>close 阶段</span>
+        </a></li></ul></li><li>
         <a class="is-flex" href="#线程模型">
         <span class="has-mr-6">3</span>
         <span>线程模型</span>
@@ -447,7 +506,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">58</span>
+                <span class="level-item tag">59</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -463,7 +522,7 @@
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">12</span>
+                <span class="level-item tag">14</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -501,7 +560,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 18.75px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16.25px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/Http/" style="font-size: 12.5px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.25px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 15px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.5px;">React</a> <a href="/tags/Vue/" style="font-size: 17.5px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 13.75px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 18.57px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/Http/" style="font-size: 12.86px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.43px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.14px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.14px;">React</a> <a href="/tags/Vue/" style="font-size: 17.14px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 14.29px;">jQuery</a>
     </div>
 </div>
 
@@ -518,6 +577,82 @@
         
         <article class="media">
             
+            <a href="/2019/10/17/JavaScript/59/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/59.jpg" alt="正则表达式">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-16T16:00:00.000Z">2019-10-17</time></div>
+                    <a href="/2019/10/17/JavaScript/59/" class="has-link-black-ter is-size-6">正则表达式</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/10/16/Node/14/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/14.jpg" alt="深入 Node.js">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-15T16:00:00.000Z">2019-10-16</time></div>
+                    <a href="/2019/10/16/Node/14/" class="has-link-black-ter is-size-6">深入 Node.js</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/10/15/Node/13/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/13.jpg" alt="背压">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-14T16:00:00.000Z">2019-10-15</time></div>
+                    <a href="/2019/10/15/Node/13/" class="has-link-black-ter is-size-6">背压</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/10/14/Node/01/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/01.jpg" alt="Stream（流）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-13T16:00:00.000Z">2019-10-14</time></div>
+                    <a href="/2019/10/14/Node/01/" class="has-link-black-ter is-size-6">Stream（流）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2019/10/13/Node/12/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/12.jpg" alt="Http 模块">
@@ -530,82 +665,6 @@
                     <a href="/2019/10/13/Node/12/" class="has-link-black-ter is-size-6">Http 模块</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/10/12/Node/11/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/11.jpg" alt="Node.js 的模块机制">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-11T16:00:00.000Z">2019-10-12</time></div>
-                    <a href="/2019/10/12/Node/11/" class="has-link-black-ter is-size-6">Node.js 的模块机制</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/10/09/Node/10/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/10.jpg" alt="Buffer">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-08T16:00:00.000Z">2019-10-09</time></div>
-                    <a href="/2019/10/09/Node/10/" class="has-link-black-ter is-size-6">Buffer</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/10/01/Node/09/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/09.jpg" alt="EventEmitter">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-09-30T16:00:00.000Z">2019-10-01</time></div>
-                    <a href="/2019/10/01/Node/09/" class="has-link-black-ter is-size-6">EventEmitter</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/09/27/CSS/13/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/13.jpg" alt="CSS 中一些小技巧汇总">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-09-26T16:00:00.000Z">2019-09-27</time></div>
-                    <a href="/2019/09/27/CSS/13/" class="has-link-black-ter is-size-6">CSS 中一些小技巧汇总</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/CSS/">CSS</a>
                     </p>
                 </div>
             </div>
@@ -629,7 +688,7 @@
                     <span class="level-item">十月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">8</span>
                 </span>
             </a>
         </li>
@@ -783,7 +842,7 @@
                     <span class="level-item">七月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1041,7 +1100,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">58</span>
+                        <span class="tag is-grey">59</span>
                     </a>
                 </div>
                 
@@ -1055,7 +1114,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">12</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 

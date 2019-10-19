@@ -16,7 +16,7 @@
 <meta property="og:description" content="对集合中每个元素进行处理是很常见的操作，比如数组遍历、对象的属性遍历，以往这些操作是通过 for 循环、.forEach、.map 等方式进行 借由迭代器机制为 Map、Array、String 等对象提供了统一的遍历语法，以及更方便的相互转换">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/56.jpg">
-<meta property="og:updated_time" content="2019-09-29T06:50:22.393Z">
+<meta property="og:updated_time" content="2019-10-19T15:29:00.627Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="迭代协议与生成器">
 <meta name="twitter:description" content="对集合中每个元素进行处理是很常见的操作，比如数组遍历、对象的属性遍历，以往这些操作是通过 for 循环、.forEach、.map 等方式进行 借由迭代器机制为 Map、Array、String 等对象提供了统一的遍历语法，以及更方便的相互转换">
@@ -89,7 +89,12 @@
 <link rel="stylesheet" href="/css/style.css">
 </head>
 <body class="is-2-column">
-    <nav class="navbar navbar-main">
+    <!-- fork me on github -->
+<a id="forkMe" href="https://github.com/heptaluan" target="_blank">
+    <svg viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg>
+</a>
+
+<nav class="navbar navbar-main">
     <div class="container">
         <!-- <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
@@ -99,10 +104,6 @@
             </a>
         </div> -->
 
-        <!-- fork me on github -->
-        <a id="forkMe" href="https://github.com/heptaluan" target="_blank">
-            <svg viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg>
-        </a>
         <div class="navbar-menu">
             
             <div class="navbar-start">
@@ -162,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    20 分钟 读完 (大约 2948 个字)
+                    21 分钟 读完 (大约 3117 个字)
                 </span>
                 
                 
@@ -186,10 +187,13 @@
 <p>为了变成可迭代对象，一个对象必须实现 <code>@@iterator</code> 方法，意思是这个对象（或者它原型链上的某个对象）必须有一个名字为 <code>Symbol.iterator</code> 的属性</p>
 <p>简单来说， 将 <code>[Symbol.iterator]</code> 属性定义为一个迭代器对象即可实现该协议</p>
 <p>而 <code>Iterator</code> 接口的目的，就是为所有数据结构，提供了一种统一的访问机制，即 <code>for...of</code> 循环</p>
-<p>当使用 <code>for...of</code> 循环遍历某种数据结构时，该循环会自动去寻找 <code>Iterator</code> 接口，调用 <code>Symbol.iterator</code> 方法，返回该对象的默认遍历器</p>
+<p>当使用 <code>for...of</code> 循环遍历某种数据结构时，它会首先调用被遍历集合对象的 <code>Symbol.iterator()</code> 方法，该方法返回一个迭代器对象</p>
+<p>迭代器对象可以是拥有 <code>.next()</code> 方法的任何对象，然后在 <code>for...of</code> 的每次循环中，都将调用该迭代器对象上的 <code>.next()</code> 方法</p>
 <p><code>ES6</code> 规定，默认的 <code>Iterator</code> 接口部署在数据结构的 <code>Symbol.iterator</code> 属性</p>
 <p>或者说，一个数据结构只要具有 <code>Symbol.iterator</code> 属性，就可以认为是<strong>可迭代的</strong>（<code>iterable</code>）</p>
 <p><code>Symbol.iterator</code> 属性本身是一个函数，就是当前数据结构默认的遍历器生成函数，执行这个函数，就会返回一个遍历器</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 数组直接调用 Symbol.iterator 这个接口，这个接口是数组内部已经帮我们实现了的，我们直接调用即可</span></span><br><span class="line"><span class="hljs-keyword">let</span> arr = [<span class="hljs-string">'hello'</span>, <span class="hljs-string">'world'</span>];</span><br><span class="line"><span class="hljs-keyword">let</span> map = arr[<span class="hljs-built_in">Symbol</span>.iterator]();</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(map.next());</span><br><span class="line"><span class="hljs-built_in">console</span>.log(map.next());</span><br><span class="line"><span class="hljs-built_in">console</span>.log(map.next());</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// Object &#123;value: 'hello', done: false&#125;</span></span><br><span class="line"><span class="hljs-comment">// Object &#123;value: 'world', done: false&#125;</span></span><br><span class="line"><span class="hljs-comment">// Object &#123;value: undefined, done: true&#125;</span></span><br></pre></td></tr></table></figure>
+
 <h2 id="迭代器协议"><a href="#迭代器协议" class="headerlink" title="迭代器协议"></a>迭代器协议</h2><p>又称生成器协议，该协议定义了什么是迭代器对象，迭代器协议定义了一种标准的方式来产生一个有限或无限序列的值</p>
 <p>并且当所有的值都已经被迭代后，就会有一个默认的返回值</p>
 <p>迭代器（<code>Iterator</code>）就是这样一种机制，它是一种接口，为各种不同的数据结构提供统一的访问机制，任何数据结构只要部署 <code>Iterator</code> 接口，就可以完成遍历操作</p>
@@ -290,16 +294,22 @@
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
 <li><p><code>Iterator</code> 接口的目的就是为所有数据结构提供一种统一访问的机制，用 <code>for...of</code> 实现</p>
 </li>
-<li><p>一个数据结构只要有 <code>Symbol.iterator</code> 属性，就可以认为是”可遍历的”</p>
+<li><p>一个数据结构只要有 <code>Symbol.iterator</code> 属性，就可以认为是<strong>可遍历的</strong></p>
 </li>
 <li><p>实现了可迭代协议的对象称为可迭代对象（<code>Iterables</code>），这种对象可以用 <code>for...of</code> 来遍历，<code>Map</code>，<code>Set</code>，<code>Array</code>，<code>String</code> 都属于可迭代对象，自定义的对象也可以使用这一机制，成为可迭代对象</p>
 <ul>
-<li>可迭代协议：需要实现一个 <code>@@iterator</code> 方法，即在键 <code>[Symbol.iterator]</code> 上提供一个方法，对象被 <code>for...of</code> 调用时，这个方法会被调用，方法应该返回一个迭代器对象（<code>Iterator</code>）用来迭代</li>
+<li><p>可迭代协议：需要实现一个 <code>@@iterator</code> 方法，即在键 <code>[Symbol.iterator]</code> 上提供一个方法，对象被 <code>for...of</code> 调用时，这个方法会被调用，方法应该返回一个迭代器对象（<code>Iterator</code>）用来迭代</p>
+</li>
+<li><p>简单来说，<strong>一个数据结构只要具有 <code>Symbol.iterator</code> 属性，就可以认为是可迭代的（<code>iterable</code>）</strong></p>
+</li>
 </ul>
 </li>
 <li><p>实现了迭代器协议的对象称为迭代器对象（<code>Iterator</code>），也就是我们说的迭代器对象</p>
 <ul>
-<li>迭代器协议：又称 <code>Iteration Protocol</code>，需要实现一个 <code>next()</code> 方法，每次调用会返回一个包含 <code>value</code>（当前指向的值）和 <code>done</code>（是否已经迭代完成）的对象</li>
+<li><p>迭代器协议：又称 <code>Iteration Protocol</code>，需要实现一个 <code>next()</code> 方法，每次调用会返回一个包含 <code>value</code>（当前指向的值）和 <code>done</code>（是否已经迭代完成）的对象</p>
+</li>
+<li><p>简单来说，<strong>只需要实现 <code>.next()</code> 方法</strong></p>
+</li>
 </ul>
 </li>
 </ul>
@@ -423,7 +433,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        153
+                        156
                     </p>
                 </div>
             </div>
@@ -560,7 +570,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">58</span>
+                <span class="level-item tag">59</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -576,7 +586,7 @@
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">12</span>
+                <span class="level-item tag">14</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -614,7 +624,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 18.75px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16.25px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/Http/" style="font-size: 12.5px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.25px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 15px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.5px;">React</a> <a href="/tags/Vue/" style="font-size: 17.5px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 13.75px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 18.57px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/Http/" style="font-size: 12.86px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.43px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.14px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.14px;">React</a> <a href="/tags/Vue/" style="font-size: 17.14px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 14.29px;">jQuery</a>
     </div>
 </div>
 
@@ -631,6 +641,82 @@
         
         <article class="media">
             
+            <a href="/2019/10/17/JavaScript/59/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/59.jpg" alt="正则表达式">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-16T16:00:00.000Z">2019-10-17</time></div>
+                    <a href="/2019/10/17/JavaScript/59/" class="has-link-black-ter is-size-6">正则表达式</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/10/16/Node/14/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/14.jpg" alt="深入 Node.js">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-15T16:00:00.000Z">2019-10-16</time></div>
+                    <a href="/2019/10/16/Node/14/" class="has-link-black-ter is-size-6">深入 Node.js</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/10/15/Node/13/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/13.jpg" alt="背压">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-14T16:00:00.000Z">2019-10-15</time></div>
+                    <a href="/2019/10/15/Node/13/" class="has-link-black-ter is-size-6">背压</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/10/14/Node/01/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/01.jpg" alt="Stream（流）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-13T16:00:00.000Z">2019-10-14</time></div>
+                    <a href="/2019/10/14/Node/01/" class="has-link-black-ter is-size-6">Stream（流）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2019/10/13/Node/12/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/12.jpg" alt="Http 模块">
@@ -643,82 +729,6 @@
                     <a href="/2019/10/13/Node/12/" class="has-link-black-ter is-size-6">Http 模块</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/10/12/Node/11/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/11.jpg" alt="Node.js 的模块机制">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-11T16:00:00.000Z">2019-10-12</time></div>
-                    <a href="/2019/10/12/Node/11/" class="has-link-black-ter is-size-6">Node.js 的模块机制</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/10/09/Node/10/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/10.jpg" alt="Buffer">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-08T16:00:00.000Z">2019-10-09</time></div>
-                    <a href="/2019/10/09/Node/10/" class="has-link-black-ter is-size-6">Buffer</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/10/01/Node/09/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/09.jpg" alt="EventEmitter">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-09-30T16:00:00.000Z">2019-10-01</time></div>
-                    <a href="/2019/10/01/Node/09/" class="has-link-black-ter is-size-6">EventEmitter</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/09/27/CSS/13/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/13.jpg" alt="CSS 中一些小技巧汇总">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-09-26T16:00:00.000Z">2019-09-27</time></div>
-                    <a href="/2019/09/27/CSS/13/" class="has-link-black-ter is-size-6">CSS 中一些小技巧汇总</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/CSS/">CSS</a>
                     </p>
                 </div>
             </div>
@@ -742,7 +752,7 @@
                     <span class="level-item">十月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">8</span>
                 </span>
             </a>
         </li>
@@ -896,7 +906,7 @@
                     <span class="level-item">七月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1154,7 +1164,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">58</span>
+                        <span class="tag is-grey">59</span>
                     </a>
                 </div>
                 
@@ -1168,7 +1178,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">12</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 

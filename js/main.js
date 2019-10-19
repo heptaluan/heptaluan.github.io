@@ -28,12 +28,6 @@
         } else {
             $('.navbar-main .navbar-menu').removeClass('is-flex-start');
         }
-
-        if ($(document).outerWidth() > 700) {
-            $('#forkMe').show()
-        } else {
-            $('#forkMe').hide()
-        }
     }
     adjustNavbar();
     $(window).resize(adjustNavbar);
@@ -54,8 +48,4 @@
         $mask.on('click', toggleToc);
         $('.navbar-main .catalogue').on('click', toggleToc);
     }
-
-    // 导航添加新开
-    $('.navbar-start .navbar-item').last().attr('target', '_blank')
-
 })(jQuery);
