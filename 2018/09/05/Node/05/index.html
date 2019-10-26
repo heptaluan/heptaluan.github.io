@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="使用 Node.js 来操作 mysql 一般有两种方式，一种是直接连接，还一种就是使用连接池">
+    <meta name="description" content="首先需要安装 Node.js 的 mysql 模块 1$ npm install --save mysql  mysql 模块是 Node.js 操作 mysql 的引擎，可以在 Node.js 环境下对 mysql 数据库进行建表，增、删、改、查等操作">
 <meta name="keywords" content="Node.js">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用 Node.js 操作 MySQL">
 <meta property="og:url" content="http://yoursite.com/2018/09/05/Node/05/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="使用 Node.js 来操作 mysql 一般有两种方式，一种是直接连接，还一种就是使用连接池">
+<meta property="og:description" content="首先需要安装 Node.js 的 mysql 模块 1$ npm install --save mysql  mysql 模块是 Node.js 操作 mysql 的引擎，可以在 Node.js 环境下对 mysql 数据库进行建表，增、删、改、查等操作">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/05.jpg">
-<meta property="og:updated_time" content="2019-10-19T15:29:00.629Z">
+<meta property="og:updated_time" content="2019-10-26T15:09:36.036Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用 Node.js 操作 MySQL">
-<meta name="twitter:description" content="使用 Node.js 来操作 mysql 一般有两种方式，一种是直接连接，还一种就是使用连接池">
+<meta name="twitter:description" content="首先需要安装 Node.js 的 mysql 模块 1$ npm install --save mysql  mysql 模块是 Node.js 操作 mysql 的引擎，可以在 Node.js 环境下对 mysql 数据库进行建表，增、删、改、查等操作">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/05.jpg">
 
 
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    7 分钟 读完 (大约 992 个字)
+                    9 分钟 读完 (大约 1354 个字)
                 </span>
                 
                 
@@ -176,12 +176,16 @@
             
         </h1>
         <div class="content">
-            <p>使用 <code>Node.js</code> 来操作 <code>mysql</code> 一般有两种方式，一种是直接连接，还一种就是使用连接池</p>
+            <p>首先需要安装 <code>Node.js</code> 的 <code>mysql</code> 模块</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install --save mysql</span><br></pre></td></tr></table></figure>
+
+<p><code>mysql</code> 模块是 <code>Node.js</code> 操作 <code>mysql</code> 的引擎，可以在 <code>Node.js</code> 环境下对 <code>mysql</code> 数据库进行建表，增、删、改、查等操作</p>
 <a id="more"></a>
 
+<p>使用 <code>Node.js</code> 来操作 <code>mysql</code> 一般有两种方式，一种是直接连接，还一种就是使用连接池</p>
 <p>我们先来看看直接连接</p>
-<h2 id="直接连接-mysql"><a href="#直接连接-mysql" class="headerlink" title="直接连接 mysql"></a>直接连接 mysql</h2><p>首先先创建一个数据库，然后建立一张表，用于后面 <code>Node.js</code> 来使用</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">create table user(</span><br><span class="line">    uid int not <span class="hljs-literal">null</span> primary key auto_increment,</span><br><span class="line">    uname varchar(<span class="hljs-number">100</span>) not <span class="hljs-literal">null</span>,</span><br><span class="line">    pwd varchar(<span class="hljs-number">100</span>) not <span class="hljs-literal">null</span></span><br><span class="line">)engine=myisam <span class="hljs-keyword">default</span> charset=utf8;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 结果如下 ===&gt;</span></span><br><span class="line"></span><br><span class="line">+---------------------+</span><br><span class="line">| Tables_in_nodemysql |</span><br><span class="line">+---------------------+</span><br><span class="line">| user                |</span><br><span class="line">+---------------------+</span><br><span class="line"></span><br><span class="line">+-------+--------------+------+-----+---------+----------------+</span><br><span class="line">| Field | Type         | Null | Key | Default | Extra          |</span><br><span class="line">+-------+--------------+------+-----+---------+----------------+</span><br><span class="line">| uid   | int(<span class="hljs-number">11</span>)      | NO   | PRI | NULL    | auto_increment |</span><br><span class="line">| uname | varchar(<span class="hljs-number">100</span>) | NO   |     | NULL    |                |</span><br><span class="line">| pwd   | varchar(<span class="hljs-number">100</span>) | NO   |     | NULL    |                |</span><br><span class="line">+-------+--------------+------+-----+---------+----------------+</span><br></pre></td></tr></table></figure>
+<h2 id="直接连接-mysql"><a href="#直接连接-mysql" class="headerlink" title="直接连接 mysql"></a>直接连接 mysql</h2><p>首先先创建一个数据库，然后建立一张表，方便我们后面使用 <code>Node.js</code> 来进行操作</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">create table user(</span><br><span class="line">  uid int not <span class="hljs-literal">null</span> primary key auto_increment,</span><br><span class="line">  uname varchar(<span class="hljs-number">100</span>) not <span class="hljs-literal">null</span>,</span><br><span class="line">  pwd varchar(<span class="hljs-number">100</span>) not <span class="hljs-literal">null</span></span><br><span class="line">)engine=myisam <span class="hljs-keyword">default</span> charset=utf8;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 结果如下 ===&gt;</span></span><br><span class="line"></span><br><span class="line">+---------------------+</span><br><span class="line">| Tables_in_nodemysql |</span><br><span class="line">+---------------------+</span><br><span class="line">| user                |</span><br><span class="line">+---------------------+</span><br><span class="line"></span><br><span class="line">+-------+--------------+------+-----+---------+----------------+</span><br><span class="line">| Field | Type         | Null | Key | Default | Extra          |</span><br><span class="line">+-------+--------------+------+-----+---------+----------------+</span><br><span class="line">| uid   | int(<span class="hljs-number">11</span>)      | NO   | PRI | NULL    | auto_increment |</span><br><span class="line">| uname | varchar(<span class="hljs-number">100</span>) | NO   |     | NULL    |                |</span><br><span class="line">| pwd   | varchar(<span class="hljs-number">100</span>) | NO   |     | NULL    |                |</span><br><span class="line">+-------+--------------+------+-----+---------+----------------+</span><br></pre></td></tr></table></figure>
 
 <p>然后就可以来写我们的 <code>Node.js</code> 程序了，新建一个 <code>app.js</code>：</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 首先调用 mysql 模块</span></span><br><span class="line"><span class="hljs-keyword">var</span> mysql = <span class="hljs-built_in">require</span>(<span class="hljs-string">'mysql'</span>);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 创建一个 connection 对象</span></span><br><span class="line"><span class="hljs-keyword">var</span> connection = mysql.createConnection(&#123;</span><br><span class="line">  host: <span class="hljs-string">'localhost'</span>,      <span class="hljs-comment">// 主机</span></span><br><span class="line">  user: <span class="hljs-string">'root'</span>,           <span class="hljs-comment">// mysql 用户名</span></span><br><span class="line">  password: <span class="hljs-string">'root'</span>,       <span class="hljs-comment">// mysql 密码</span></span><br><span class="line">  database: <span class="hljs-string">'nodemysql'</span>,  <span class="hljs-comment">// 使用哪个数据库</span></span><br><span class="line">  port: <span class="hljs-string">'3306'</span>            <span class="hljs-comment">// 端口号，mysql 默认为 3306</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 创建一个连接</span></span><br><span class="line">connection.connect(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (err) &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(err);</span><br><span class="line">    <span class="hljs-keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`connection connect success!`</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
@@ -195,9 +199,13 @@
 <p>如果以上操作都成功的话，就可以在数据库中看到我们插入的数据了</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+-----+-------+------+</span><br><span class="line">| uid | uname | pwd  |</span><br><span class="line">+-----+-------+------+</span><br><span class="line">|   <span class="hljs-number">1</span> | 张三  | pwd1 |</span><br><span class="line">+-----+-------+------+</span><br></pre></td></tr></table></figure>
 
-<p>以上就是直接连接 <code>mysql</code> 的方法了，这种直接连接的方式一般使用的较少，用的最多的就是连接池方式</p>
-<p>使用连接池连接的话比直连要效率很多，下面来看看具体怎么实现</p>
-<h2 id="连接池连接-mysql"><a href="#连接池连接-mysql" class="headerlink" title="连接池连接 mysql"></a>连接池连接 mysql</h2><p>首先需要安装 <code>mysql</code> 支持，然后需要安装 <code>mysqlpool</code> 模块</p>
+<p>以上就是直接连接 <code>mysql</code> 的方法了，在使用这种方式的时候，有一个地方需要注意</p>
+<blockquote>
+<p>一个事件就有一个从开始到结束的过程，数据库会话操作执行完后，就需要关闭掉，以免占用连接资源</p>
+</blockquote>
+<p>不过一般情况下，这种使用直接连接的方式比较少见，用的最多的就是连接池的方式，使用连接池连接的话比直连要效率很多，下面来看看具体怎么实现</p>
+<h2 id="连接池连接-mysql"><a href="#连接池连接-mysql" class="headerlink" title="连接池连接 mysql"></a>连接池连接 mysql</h2><p>操作数据库是很复杂的读写过程，不只是一个会话，如果直接用会话操作，就需要每次会话都要配置连接参数，所以这时候就需要连接池管理会话</p>
+<p>首先需要安装 <code>mysql</code> 支持，然后需要安装 <code>mysqlpool</code> 模块</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 安装 mysql 支持</span></span><br><span class="line">$ npm install mysql --save</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 安装 mysqlpool 模块</span></span><br><span class="line">$ npm install node-mysql --save</span><br></pre></td></tr></table></figure>
 
 <p>我们可以新建一个 <code>pool.js</code> 把我们连接数据库的操作独立成一个单独的模块</p>
@@ -212,6 +220,12 @@
 <p>需要注意一点：在上述操作的最后一步有一个放回连接池的操作</p>
 <p>如果之前已经调用过，即在插入操作中调用过，然后在查询的过程中又再一次的调用，那么就会直接报错</p>
 <p>这是因为连接已经被放回连接池了，不能在操作了，为了确保不报错，在拿到连接池之后（<code>pool.getConnection</code>），直到最后一步操作的时候再使用 <code>conn.release()</code> 来放回连接池</p>
+<h2 id="async-await-封装"><a href="#async-await-封装" class="headerlink" title="async/await 封装"></a>async/await 封装</h2><p>由于 <code>mysql</code> 模块的操作都是异步操作，每次操作的结果都是在回调函数中执行，现在有了 <code>async/await</code>，就可以用同步的写法去操作数据库，如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> mysql = <span class="hljs-built_in">require</span>(<span class="hljs-string">'mysql'</span>);</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> pool = mysql.createPool(&#123;</span><br><span class="line">  host: <span class="hljs-string">'localhost'</span>,</span><br><span class="line">  user: <span class="hljs-string">'root'</span>,</span><br><span class="line">  password: <span class="hljs-string">'root'</span>,</span><br><span class="line">  database: <span class="hljs-string">'my-database'</span>,</span><br><span class="line">  port: <span class="hljs-string">'3306'</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> query = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">sql, values</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    pool.getConnection(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, connection</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (err) &#123;</span><br><span class="line">        reject(err)</span><br><span class="line">      &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">        connection.query(sql, values, (err, rows) =&gt; &#123;</span><br><span class="line">          <span class="hljs-keyword">if</span> (err) &#123;</span><br><span class="line">            reject(err)</span><br><span class="line">          &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">            resolve(rows)</span><br><span class="line">          &#125;</span><br><span class="line">          connection.release()</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">module</span>.exports = &#123; query &#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用也很简单，如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> &#123; query &#125; = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./query'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">selectAllData</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> sql = <span class="hljs-string">'SELECT * FROM my-table'</span></span><br><span class="line">  <span class="hljs-keyword">let</span> dataList = <span class="hljs-keyword">await</span> query(sql)</span><br><span class="line">  <span class="hljs-keyword">return</span> dataList</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getData</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> dataList = <span class="hljs-keyword">await</span> selectAllData()</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(dataList)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">getData()</span><br></pre></td></tr></table></figure>
+
 
         </div>
         
@@ -322,7 +336,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        156
+                        157
                     </p>
                 </div>
             </div>
@@ -371,6 +385,10 @@
         <a class="is-flex" href="#连接池连接-mysql">
         <span class="has-mr-6">2</span>
         <span>连接池连接 mysql</span>
+        </a></li><li>
+        <a class="is-flex" href="#async-await-封装">
+        <span class="has-mr-6">3</span>
+        <span>async/await 封装</span>
         </a></li></ul>
         </div>
     </div>
@@ -443,7 +461,7 @@
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">14</span>
+                <span class="level-item tag">16</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -451,7 +469,7 @@
                 <span class="level-item">React</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">14</span>
+                <span class="level-item tag">13</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Vue/">
@@ -481,7 +499,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 18.57px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/Http/" style="font-size: 12.86px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.43px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.14px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.14px;">React</a> <a href="/tags/Vue/" style="font-size: 17.14px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 14.29px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 18.57px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/Http/" style="font-size: 12.86px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.43px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 18.57px;">Node.js</a> <a href="/tags/React/" style="font-size: 15.71px;">React</a> <a href="/tags/Vue/" style="font-size: 17.14px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 14.29px;">jQuery</a>
     </div>
 </div>
 
@@ -498,6 +516,44 @@
         
         <article class="media">
             
+            <a href="/2019/10/26/Node/16/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/16.jpg" alt="常用中间件的实现">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-25T16:00:00.000Z">2019-10-26</time></div>
+                    <a href="/2019/10/26/Node/16/" class="has-link-black-ter is-size-6">常用中间件的实现</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/10/19/Node/15/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/15.jpg" alt="中间件">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-18T16:00:00.000Z">2019-10-19</time></div>
+                    <a href="/2019/10/19/Node/15/" class="has-link-black-ter is-size-6">中间件</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2019/10/17/JavaScript/59/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/59.jpg" alt="正则表达式">
@@ -510,44 +566,6 @@
                     <a href="/2019/10/17/JavaScript/59/" class="has-link-black-ter is-size-6">正则表达式</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/10/16/Node/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/14.jpg" alt="深入 Node.js">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-15T16:00:00.000Z">2019-10-16</time></div>
-                    <a href="/2019/10/16/Node/14/" class="has-link-black-ter is-size-6">深入 Node.js</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/10/15/Node/13/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/13.jpg" alt="背压">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-14T16:00:00.000Z">2019-10-15</time></div>
-                    <a href="/2019/10/15/Node/13/" class="has-link-black-ter is-size-6">背压</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
                     </p>
                 </div>
             </div>
@@ -574,16 +592,16 @@
         
         <article class="media">
             
-            <a href="/2019/10/13/Node/12/" class="media-left">
+            <a href="/2019/10/12/Node/14/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/12.jpg" alt="Http 模块">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/14.jpg" alt="深入 Node.js">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-12T16:00:00.000Z">2019-10-13</time></div>
-                    <a href="/2019/10/13/Node/12/" class="has-link-black-ter is-size-6">Http 模块</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-11T16:00:00.000Z">2019-10-12</time></div>
+                    <a href="/2019/10/12/Node/14/" class="has-link-black-ter is-size-6">深入 Node.js</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
                     </p>
@@ -609,7 +627,7 @@
                     <span class="level-item">十月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">8</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -620,7 +638,7 @@
                     <span class="level-item">九月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -653,7 +671,7 @@
                     <span class="level-item">六月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">8</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -1035,14 +1053,14 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">14</span>
+                        <span class="tag is-grey">16</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/React/">
                         <span class="tag">React</span>
-                        <span class="tag is-grey">14</span>
+                        <span class="tag is-grey">13</span>
                     </a>
                 </div>
                 
