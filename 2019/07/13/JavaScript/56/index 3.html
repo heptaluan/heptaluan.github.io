@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+<title>迭代协议与生成器 - heptaluan&#39;s blog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="对集合中每个元素进行处理是很常见的操作，比如数组遍历、对象的属性遍历，以往这些操作是通过 for 循环、.forEach、.map 等方式进行 借由迭代器机制为 Map、Array、String 等对象提供了统一的遍历语法，以及更方便的相互转换">
+<meta name="keywords" content="JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="迭代协议与生成器">
+<meta property="og:url" content="http://yoursite.com/2019/07/13/JavaScript/56/index.html">
+<meta property="og:site_name" content="heptaluan&#39;s blog">
+<meta property="og:description" content="对集合中每个元素进行处理是很常见的操作，比如数组遍历、对象的属性遍历，以往这些操作是通过 for 循环、.forEach、.map 等方式进行 借由迭代器机制为 Map、Array、String 等对象提供了统一的遍历语法，以及更方便的相互转换">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/56.jpg">
+<meta property="og:updated_time" content="2019-10-19T15:29:00.627Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="迭代协议与生成器">
+<meta name="twitter:description" content="对集合中每个元素进行处理是很常见的操作，比如数组遍历、对象的属性遍历，以往这些操作是通过 for 循环、.forEach、.map 等方式进行 借由迭代器机制为 Map、Array、String 等对象提供了统一的遍历语法，以及更方便的相互转换">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/56.jpg">
+
+
+
+
+
+
+
+<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/favicon.ico">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-2-column">
+    <!-- fork me on github -->
+<a id="forkMe" style="position: fixed;top: 0;right: 0;z-index: 31" href="https://github.com/heptaluan" target="_blank">
+    <svg style="color: #fff;fill: #a0a1a7;height: 80px;width: 80px;" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg>
+</a>
+
+<nav class="navbar navbar-main">
+    <div class="container">
+        <!-- <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="迭代协议与生成器" height="28">
+            
+            </a>
+        </div> -->
+
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/about">About</a>
+                
+                <a class="navbar-item" href="https://heptaluan.github.io/demos/">Demos</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-image">
+        <span class="image is-7by1">
+            <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/56.jpg" alt="迭代协议与生成器">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <div class="level-item has-text-grey">2019-07-13</div>
+                <!-- <time class="level-item has-text-grey" datetime="2019-07-12T16:00:00.000Z">2019-07-13</time> -->
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    21 分钟 读完 (大约 3117 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                迭代协议与生成器
+            
+        </h1>
+        <div class="content">
+            <p>对集合中每个元素进行处理是很常见的操作，比如数组遍历、对象的属性遍历，以往这些操作是通过 <code>for</code> 循环、<code>.forEach</code>、<code>.map</code> 等方式进行</p>
+<p>借由迭代器机制为 <code>Map</code>、<code>Array</code>、<code>String</code> 等对象提供了统一的遍历语法，以及更方便的相互转换</p>
+<a id="more"></a>
+
+<p>为方便编写迭代器还提供了生成器（<code>Generator</code>）语法，迭代器和生成器将迭代的概念直接带入核心语言，并提供了一种机制来自定义 <code>for...of</code> 循环的行为</p>
+<p>我们先来看看可迭代协议和迭代器协议</p>
+<h2 id="可迭代协议"><a href="#可迭代协议" class="headerlink" title="可迭代协议"></a>可迭代协议</h2><p>可迭代协议允许 <code>JavaScript</code> 对象去定义或定制它们的迭代行为，例如在一个 <code>for..of</code> 结构中什么值可以被循环</p>
+<p>一些内置类型都是内置的可迭代类型并且有默认的迭代行为，比如 <code>Array</code> 或者 <code>Map</code>，另一些类型则不是（比如 <code>Object</code>）</p>
+<p>为了变成可迭代对象，一个对象必须实现 <code>@@iterator</code> 方法，意思是这个对象（或者它原型链上的某个对象）必须有一个名字为 <code>Symbol.iterator</code> 的属性</p>
+<p>简单来说， 将 <code>[Symbol.iterator]</code> 属性定义为一个迭代器对象即可实现该协议</p>
+<p>而 <code>Iterator</code> 接口的目的，就是为所有数据结构，提供了一种统一的访问机制，即 <code>for...of</code> 循环</p>
+<p>当使用 <code>for...of</code> 循环遍历某种数据结构时，它会首先调用被遍历集合对象的 <code>Symbol.iterator()</code> 方法，该方法返回一个迭代器对象</p>
+<p>迭代器对象可以是拥有 <code>.next()</code> 方法的任何对象，然后在 <code>for...of</code> 的每次循环中，都将调用该迭代器对象上的 <code>.next()</code> 方法</p>
+<p><code>ES6</code> 规定，默认的 <code>Iterator</code> 接口部署在数据结构的 <code>Symbol.iterator</code> 属性</p>
+<p>或者说，一个数据结构只要具有 <code>Symbol.iterator</code> 属性，就可以认为是<strong>可迭代的</strong>（<code>iterable</code>）</p>
+<p><code>Symbol.iterator</code> 属性本身是一个函数，就是当前数据结构默认的遍历器生成函数，执行这个函数，就会返回一个遍历器</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 数组直接调用 Symbol.iterator 这个接口，这个接口是数组内部已经帮我们实现了的，我们直接调用即可</span></span><br><span class="line"><span class="hljs-keyword">let</span> arr = [<span class="hljs-string">'hello'</span>, <span class="hljs-string">'world'</span>];</span><br><span class="line"><span class="hljs-keyword">let</span> map = arr[<span class="hljs-built_in">Symbol</span>.iterator]();</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(map.next());</span><br><span class="line"><span class="hljs-built_in">console</span>.log(map.next());</span><br><span class="line"><span class="hljs-built_in">console</span>.log(map.next());</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// Object &#123;value: 'hello', done: false&#125;</span></span><br><span class="line"><span class="hljs-comment">// Object &#123;value: 'world', done: false&#125;</span></span><br><span class="line"><span class="hljs-comment">// Object &#123;value: undefined, done: true&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="迭代器协议"><a href="#迭代器协议" class="headerlink" title="迭代器协议"></a>迭代器协议</h2><p>又称生成器协议，该协议定义了什么是迭代器对象，迭代器协议定义了一种标准的方式来产生一个有限或无限序列的值</p>
+<p>并且当所有的值都已经被迭代后，就会有一个默认的返回值</p>
+<p>迭代器（<code>Iterator</code>）就是这样一种机制，它是一种接口，为各种不同的数据结构提供统一的访问机制，任何数据结构只要部署 <code>Iterator</code> 接口，就可以完成遍历操作</p>
+<p><code>Iterator</code> 的作用有三个</p>
+<ol>
+<li><p>为各种数据结构，提供一个统一的、简便的访问接口</p>
+</li>
+<li><p>使得数据结构的成员能够按某种次序排列</p>
+</li>
+<li><p><code>ES6</code> 创造了一种新的遍历命令 <code>for...of</code> 循环，<code>Iterator</code> 接口主要供 <code>for...of</code> 消费</p>
+</li>
+</ol>
+<p>简单来说，只需要实现 <code>.next()</code> 方法，该方法必须要返回一个<strong>对象</strong>，被返回对象拥有两个属性（如果返回一个非对象值，则需要抛出一个错误）</p>
+<ul>
+<li><p><code>done</code> - 布尔值，如果为 <code>true</code>，则表示迭代器已经超过了可迭代次数，在这种情况下 <code>value</code> 的值可以被省略，如果迭代器可以产生序列中的下一个值，则为 <code>false</code></p>
+</li>
+<li><p><code>value</code> - 迭代器可以返回的任何 <code>JavaScript</code> 值，在 <code>done</code> 为 <code>true</code> 的时候可省略</p>
+</li>
+</ul>
+<p>基本语法为</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> myIterator = &#123;</span><br><span class="line">  next: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// ...</span></span><br><span class="line">  &#125;,</span><br><span class="line">  [<span class="hljs-built_in">Symbol</span>.iterator]: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用迭代协议的实例"><a href="#使用迭代协议的实例" class="headerlink" title="使用迭代协议的实例"></a>使用迭代协议的实例</h2><p>比如 <code>String</code>，就是一个内置的可迭代对象</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> str = <span class="hljs-string">'hi'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">typeof</span> str[<span class="hljs-built_in">Symbol</span>.iterator]  <span class="hljs-comment">// 'function'</span></span><br></pre></td></tr></table></figure>
+
+<p><code>String</code> 的默认迭代器会一个接一个返回该字符串的字符</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> str = <span class="hljs-string">'hi'</span></span><br><span class="line"><span class="hljs-keyword">const</span> iterator = str[<span class="hljs-built_in">Symbol</span>.iterator]();</span><br><span class="line"></span><br><span class="line">iterator.next()  <span class="hljs-comment">// &#123;value: 'h', done: false&#125;</span></span><br><span class="line">iterator.next()  <span class="hljs-comment">// &#123;value: 'i', done: false&#125;</span></span><br><span class="line">iterator.next()  <span class="hljs-comment">// &#123;value: undefined, done: true&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们也可以通过自己的 <code>@@iterator</code> 方法重新定义迭代行为</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> str = <span class="hljs-keyword">new</span> <span class="hljs-built_in">String</span>(<span class="hljs-string">'hi'</span>)</span><br><span class="line"></span><br><span class="line">str[<span class="hljs-built_in">Symbol</span>.iterator] = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">    next: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._first) &#123;</span><br><span class="line">        <span class="hljs-keyword">this</span>._first = <span class="hljs-literal">false</span></span><br><span class="line">        <span class="hljs-keyword">return</span> &#123; <span class="hljs-attr">value</span>: <span class="hljs-string">'hello'</span>, <span class="hljs-attr">done</span>: <span class="hljs-literal">false</span> &#125;</span><br><span class="line">      &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> &#123; <span class="hljs-attr">done</span>: <span class="hljs-literal">true</span> &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    _first: <span class="hljs-literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i <span class="hljs-keyword">of</span> str) &#123;</span><br><span class="line">  <span class="hljs-comment">// hello</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="在对象上实现-Iterator-接口"><a href="#在对象上实现-Iterator-接口" class="headerlink" title="在对象上实现 Iterator 接口"></a>在对象上实现 Iterator 接口</h2><p><code>String</code>，<code>Array</code>，<code>TypedArray</code>，<code>Map</code> 和 <code>Set</code> 是所有内置可迭代对象，因为它们的原型对象都有一个 <code>@@iterator</code> 方法</p>
+<p>那么这里存在一个问题，为什么对象（<code>Object</code>）没有部署 <code>Iterator</code> 接口呢？</p>
+<p>有两个原因</p>
+<ul>
+<li><p>一是因为对象的哪个属性先遍历，哪个属性后遍历是不确定的，需要开发者手动指定，然而遍历遍历器是一种线性处理，对于非线性的数据结构，部署遍历器接口，就等于要部署一种线性转换</p>
+</li>
+<li><p>二是对对象部署 <code>Iterator</code> 接口并不是很必要，因为 <code>Map</code> 弥补了它的缺陷，又正好有 <code>Iteraotr</code> 接口</p>
+</li>
+</ul>
+<p>但是我们可以手动的为对象添加一个 <code>Iterator</code> 接口，不过需要注意的就是</p>
+<p>如果一个对象要具备可被 <code>for...of</code> 循环调用的 <code>Iterator</code> 接口，就必须在 <code>Symbol.iterator</code> 的属性上部署遍历器生成方法，比如一个实现 <code>50</code> 以内的斐波那契数列的示例</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> obj = &#123;</span><br><span class="line">  [<span class="hljs-built_in">Symbol</span>.iterator]: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> a = <span class="hljs-number">0</span>, b = <span class="hljs-number">0</span></span><br><span class="line">    <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">      next: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">let</span> value = <span class="hljs-number">0</span></span><br><span class="line">        <span class="hljs-keyword">if</span> (!a) &#123;</span><br><span class="line">          value = a = <span class="hljs-number">1</span></span><br><span class="line">        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!b) &#123;</span><br><span class="line">          value = b = <span class="hljs-number">1</span></span><br><span class="line">        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (b &lt; <span class="hljs-number">50</span>) &#123;</span><br><span class="line">          value = a + b</span><br><span class="line">          a = b</span><br><span class="line">          b = value</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-keyword">return</span> &#123; <span class="hljs-attr">done</span>: value === <span class="hljs-number">0</span>, value &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i <span class="hljs-keyword">of</span> obj) &#123;</span><br><span class="line">  <span class="hljs-comment">// 1 1 2 3 5 8 13 21 34 55</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="生成器对象"><a href="#生成器对象" class="headerlink" title="生成器对象"></a>生成器对象</h2><p>生成器对象是由一个 <code>Generator</code> 函数（<code>function*</code>）返回的，并且它符合可迭代协议和迭代器协议</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">g</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>;</span><br><span class="line">  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> iterator = g();</span><br><span class="line"></span><br><span class="line">iterator.next();  <span class="hljs-comment">// &#123; value: 1, done: false &#125;</span></span><br><span class="line">iterator.next();  <span class="hljs-comment">// &#123; value: 2, done: false &#125;</span></span><br><span class="line">iterator.next();  <span class="hljs-comment">// &#123; value: undefined, done: true &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>生成器函数在执行时能暂停，后面又能从暂停处继续执行</p>
+<p>调用一个生成器函数并不会马上执行它里面的语句，而是返回一个这个生成器的迭代器（<code>iterator</code>）对象</p>
+<p>当这个迭代器的 <code>next()</code> 方法被首次调用时，其内的语句会执行到第一个出现 <code>yield</code> 的位置为止，<code>yield</code> 后紧跟迭代器要返回的值，或者如果用的是 <code>yield*</code>（有星号）</p>
+<p>则表示将执行权移交给另一个生成器函数（当前生成器暂停执行）</p>
+<p><code>next()</code> 方法返回一个对象，这个对象包含两个属性 <code>value</code> 和 <code>done</code></p>
+<ul>
+<li><p><code>value</code> 属性表示本次 <code>yield</code> 表达式的返回值</p>
+</li>
+<li><p><code>done</code> 属性为布尔类型，表示生成器后续是否还有 <code>yield</code> 语句，即生成器函数是否已经执行完毕并返回</p>
+</li>
+</ul>
+<p>这里有一个需要注意的地方，如果在生成器函数当中使用了 <code>return</code> ，会立即结束执行，<code>done</code> 会立即变为 <code>true</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">g</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-number">2</span>;</span><br><span class="line">  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> iterator = g();</span><br><span class="line"></span><br><span class="line">iterator.next();  <span class="hljs-comment">// &#123; value: 1, done: false &#125;</span></span><br><span class="line">iterator.next();  <span class="hljs-comment">// &#123; value: 2, done: true &#125;</span></span><br><span class="line">iterator.next();  <span class="hljs-comment">// &#123; value: undefined, done: true &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>在调用 <code>next()</code> 方法的时候，如果传入了参数，那么这个参数会作为上一条执行的 <code>yield</code> 语句的返回值</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">g</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> first = <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>;</span><br><span class="line">  <span class="hljs-keyword">let</span> second = <span class="hljs-keyword">yield</span> first + <span class="hljs-number">2</span>;  <span class="hljs-comment">// 10 + 2，first 的值是由 next(10) 传递的</span></span><br><span class="line">  <span class="hljs-keyword">yield</span> second + <span class="hljs-number">3</span>;              <span class="hljs-comment">// 5 + 3，需要注意的是，如果在调用的时候不传递参数，则会返回</span></span><br><span class="line">                                 <span class="hljs-comment">// &#123; value: NaN, done: false &#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> iterator = g();</span><br><span class="line"></span><br><span class="line">iterator.next()     <span class="hljs-comment">// &#123; value: 1, done: false &#125;</span></span><br><span class="line">iterator.next(<span class="hljs-number">10</span>)   <span class="hljs-comment">// &#123; value: 12, done: false &#125;</span></span><br><span class="line">iterator.next(<span class="hljs-number">5</span>)    <span class="hljs-comment">// &#123; value: 8, done: false &#125;</span></span><br><span class="line">iterator.next()     <span class="hljs-comment">// &#123; value: undefined, done: true &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>现在可以使用生成器方法重新实现之前的的斐波那契数列示例</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> obj = &#123;</span><br><span class="line">  [<span class="hljs-built_in">Symbol</span>.iterator]: <span class="hljs-function"><span class="hljs-keyword">function</span>* (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> a = <span class="hljs-number">1</span>, b = <span class="hljs-number">1</span></span><br><span class="line">    <span class="hljs-keyword">yield</span> a</span><br><span class="line">    <span class="hljs-keyword">yield</span> b</span><br><span class="line">    <span class="hljs-keyword">while</span> (b &lt; <span class="hljs-number">50</span>) &#123;</span><br><span class="line">      <span class="hljs-keyword">yield</span> b = a + b</span><br><span class="line">      a = b - a</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i <span class="hljs-keyword">of</span> obj) &#123;</span><br><span class="line">  <span class="hljs-comment">// 1 1 2 3 5 8 13 21 34 55</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="yield"><a href="#yield" class="headerlink" title="yield*"></a>yield*</h2><p><code>yield*</code> 表达式用于委托给另一个 <code>Generator</code> 或可迭代对象，下面是一个基本的示例</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">g1</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">g2</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>;</span><br><span class="line">  <span class="hljs-keyword">yield</span>* g1();</span><br><span class="line">  <span class="hljs-keyword">yield</span> <span class="hljs-number">3</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> iterator = g2();</span><br><span class="line"></span><br><span class="line">iterator.next()  <span class="hljs-comment">// &#123; value: 1, done: false &#125;</span></span><br><span class="line">iterator.next()  <span class="hljs-comment">// &#123; value: 2, done: false &#125;</span></span><br><span class="line">iterator.next()  <span class="hljs-comment">// &#123; value: 3, done: false &#125;</span></span><br><span class="line">iterator.next()  <span class="hljs-comment">// &#123; value: undefined, done: true &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>除了生成器对象这一种可迭代对象，<code>yield*</code> 还可以 <code>yield</code> 其它任意的可迭代对象，比如说数组、字符串、<code>arguments</code> 对象等等</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">g3</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">yield</span>* [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>];</span><br><span class="line">  <span class="hljs-keyword">yield</span>* <span class="hljs-string">'34'</span>;</span><br><span class="line">  <span class="hljs-keyword">yield</span>* <span class="hljs-built_in">arguments</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> iterator = g3(<span class="hljs-number">5</span>, <span class="hljs-number">6</span>);</span><br><span class="line"></span><br><span class="line">iterator.next()  <span class="hljs-comment">// &#123; value: 1, done: false &#125;</span></span><br><span class="line">iterator.next()  <span class="hljs-comment">// &#123; value: 2, done: false &#125;</span></span><br><span class="line">iterator.next()  <span class="hljs-comment">// &#123; value: '3', done: false &#125;</span></span><br><span class="line">iterator.next()  <span class="hljs-comment">// &#123; value: '4', done: false &#125;</span></span><br><span class="line">iterator.next()  <span class="hljs-comment">// &#123; value: 5, done: false &#125;</span></span><br><span class="line">iterator.next()  <span class="hljs-comment">// &#123; value: 6, done: false &#125;</span></span><br><span class="line">iterator.next()  <span class="hljs-comment">// &#123; value: undefined, done: true &#125;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="生成器也可以接收参数"><a href="#生成器也可以接收参数" class="headerlink" title="生成器也可以接收参数"></a>生成器也可以接收参数</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">g</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> index = <span class="hljs-built_in">arguments</span>[<span class="hljs-number">0</span>] || <span class="hljs-number">0</span>;</span><br><span class="line">  <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>)</span><br><span class="line">    <span class="hljs-keyword">yield</span> index++;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> gen = g(<span class="hljs-number">5</span>);</span><br><span class="line"></span><br><span class="line">gen.next().value  <span class="hljs-comment">// 5</span></span><br><span class="line">gen.next().value  <span class="hljs-comment">// 6</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Map，Set，String，Array-互相转换"><a href="#Map，Set，String，Array-互相转换" class="headerlink" title="Map，Set，String，Array 互相转换"></a>Map，Set，String，Array 互相转换</h2><p>可迭代协议给出了统一的迭代协议，使得不同类型的集合间转换更加方便，以下是一些很方便的转换技巧</p>
+<p>从 <code>Array</code> 生成 <code>Set</code>，可用于数组去重</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>([<span class="hljs-string">'1'</span>, <span class="hljs-string">'2'</span>, <span class="hljs-string">'3'</span>])</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 等价于（但不是 ===）</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>([<span class="hljs-string">'1'</span>, <span class="hljs-string">'2'</span>, <span class="hljs-string">'3'</span>][<span class="hljs-built_in">Symbol</span>.iterator]())</span><br></pre></td></tr></table></figure>
+
+<p>从 <code>Set</code> 得到 <code>Array</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Array</span>.from(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>([<span class="hljs-string">'1'</span>, <span class="hljs-string">'2'</span>, <span class="hljs-string">'3'</span>]))  <span class="hljs-comment">// ['1', '2', '3']</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 等价于</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Array</span>.from([<span class="hljs-string">'1'</span>, <span class="hljs-string">'2'</span>, <span class="hljs-string">'3'</span>][<span class="hljs-built_in">Symbol</span>.iterator]())</span><br></pre></td></tr></table></figure>
+
+<p>除了 <code>for...of</code> 外，扩展运算符（<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Spread_syntax" target="_blank" rel="noopener">Spread Syntax</a>）也支持迭代器（<code>Iterables</code>）</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[...new <span class="hljs-built_in">Set</span>([<span class="hljs-string">'1'</span>, <span class="hljs-string">'2'</span>, <span class="hljs-string">'3'</span>])]</span><br></pre></td></tr></table></figure>
+
+<p>从 <code>String</code> 到 <code>Set</code>，得到字符串中包含的字符</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> str = <span class="hljs-string">'abcdefghijklmnopqrstuvwxyz'</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// Set(26) &#123;'a', 'b', 'c', ...&#125;</span></span><br><span class="line"><span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>(str)  </span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 等价于</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>(str[<span class="hljs-built_in">Symbol</span>.iterator]())</span><br></pre></td></tr></table></figure>
+
+<p>从 <code>Object</code> 到 <code>Map</code>，也就是把传统的 <code>JavaScript</code> 映射转换为 <code>Map</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> mapping = &#123;</span><br><span class="line">  <span class="hljs-string">'foo'</span>: <span class="hljs-string">'bar'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// &#123;'foo' =&gt; 'bar'&#125;</span></span><br><span class="line"><span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>(<span class="hljs-built_in">Object</span>.entries(mapping))</span><br></pre></td></tr></table></figure>
+
+<p>类似地，<code>Object</code> 的键的集合可以这样获取</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> mapping = &#123;</span><br><span class="line">  <span class="hljs-string">'foo'</span>: <span class="hljs-string">'bar'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// &#123;'foo'&#125;</span></span><br><span class="line"><span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>(<span class="hljs-built_in">Object</span>.keys(mapping))</span><br></pre></td></tr></table></figure>
+
+<h2 id="生成器对象到底是一个迭代器还是一个可迭代对象"><a href="#生成器对象到底是一个迭代器还是一个可迭代对象" class="headerlink" title="生成器对象到底是一个迭代器还是一个可迭代对象"></a>生成器对象到底是一个迭代器还是一个可迭代对象</h2><p>生成器对象既是迭代器也是可迭代对象，一个良好的迭代即实现了迭代器协议，又实现了可迭代协议，方式就是可迭代协议返回的是自身</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> g = <span class="hljs-function"><span class="hljs-keyword">function</span>* (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>;</span><br><span class="line">  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>;</span><br><span class="line">  <span class="hljs-keyword">yield</span> <span class="hljs-number">3</span>;</span><br><span class="line">&#125;();</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 'function'，因为有 next() 方法，所以是一个迭代器</span></span><br><span class="line"><span class="hljs-keyword">typeof</span> g.next;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 'function'，因为有 @@iterator 方法，所以是一个迭代器</span></span><br><span class="line"><span class="hljs-keyword">typeof</span> g[<span class="hljs-built_in">Symbol</span>.iterator];</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// true，因为 @@iterator 方法返回它自身（也是一个迭代器）</span></span><br><span class="line">g[<span class="hljs-built_in">Symbol</span>.iterator]() === g;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// [1, 2, 3]</span></span><br><span class="line">[...g];</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li><p><code>Iterator</code> 接口的目的就是为所有数据结构提供一种统一访问的机制，用 <code>for...of</code> 实现</p>
+</li>
+<li><p>一个数据结构只要有 <code>Symbol.iterator</code> 属性，就可以认为是<strong>可遍历的</strong></p>
+</li>
+<li><p>实现了可迭代协议的对象称为可迭代对象（<code>Iterables</code>），这种对象可以用 <code>for...of</code> 来遍历，<code>Map</code>，<code>Set</code>，<code>Array</code>，<code>String</code> 都属于可迭代对象，自定义的对象也可以使用这一机制，成为可迭代对象</p>
+<ul>
+<li><p>可迭代协议：需要实现一个 <code>@@iterator</code> 方法，即在键 <code>[Symbol.iterator]</code> 上提供一个方法，对象被 <code>for...of</code> 调用时，这个方法会被调用，方法应该返回一个迭代器对象（<code>Iterator</code>）用来迭代</p>
+</li>
+<li><p>简单来说，<strong>一个数据结构只要具有 <code>Symbol.iterator</code> 属性，就可以认为是可迭代的（<code>iterable</code>）</strong></p>
+</li>
+</ul>
+</li>
+<li><p>实现了迭代器协议的对象称为迭代器对象（<code>Iterator</code>），也就是我们说的迭代器对象</p>
+<ul>
+<li><p>迭代器协议：又称 <code>Iteration Protocol</code>，需要实现一个 <code>next()</code> 方法，每次调用会返回一个包含 <code>value</code>（当前指向的值）和 <code>done</code>（是否已经迭代完成）的对象</p>
+</li>
+<li><p>简单来说，<strong>只需要实现 <code>.next()</code> 方法</strong></p>
+</li>
+</ul>
+</li>
+</ul>
+<p>参考</p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Iteration_protocols" target="_blank" rel="noopener">迭代协议</a></p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Iterators_and_Generators" target="_blank" rel="noopener">迭代器和生成器</a></p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Generator" target="_blank" rel="noopener">Generator</a></p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/GeneratorFunction" target="_blank" rel="noopener">GeneratorFunction</a></p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/function*" target="_blank" rel="noopener">function*</a></p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/yield" target="_blank" rel="noopener">yield</a></p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/yield*" target="_blank" rel="noopener">yield*</a></p>
+<p><a href="https://harttle.land/2016/08/02/es6-generator.html" target="_blank" rel="noopener">ES6生成器：可迭代协议与迭代器协议</a></p>
+<p><a href="https://blog.csdn.net/u012194956/article/details/79722634" target="_blank" rel="noopener">给对象部署Iterator接口</a></p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/JavaScript/">JavaScript</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/07/22/Angular/16/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Angular 中的变化检测机制</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/07/11/Angular/13/">
+                <span class="level-item">Angular 中传递参数的几种方式</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="comment-container"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: '584b59de0d23cd48fbdd',
+        clientSecret: '5554c9aab0a640015867806f438bd2e10f297e5a',
+        id: 'cfffb2265978473814cc240bc46dc889',
+        repo: 'gitalk',
+        owner: 'heptaluan',
+        admin: "heptaluan"
+    })
+    gitalk.render('comment-container')
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <figure class="avatar image is-128x128 has-mb-6">
+                            <img class="is-rounded" src="https://avatars2.githubusercontent.com/u/18285736?s=460&amp;v=4" alt="heptaluan">
+                        </figure>
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        heptaluan
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Torches@Aimer
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>WuHan China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <!-- <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        156
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        10
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        10
+                    </p>
+                </div>
+            </div>
+        </nav> -->
+        <!-- <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/ppoffice" target="_blank">
+                关注我</a>
+        </div> -->
+        
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#可迭代协议">
+        <span class="has-mr-6">1</span>
+        <span>可迭代协议</span>
+        </a></li><li>
+        <a class="is-flex" href="#迭代器协议">
+        <span class="has-mr-6">2</span>
+        <span>迭代器协议</span>
+        </a></li><li>
+        <a class="is-flex" href="#使用迭代协议的实例">
+        <span class="has-mr-6">3</span>
+        <span>使用迭代协议的实例</span>
+        </a></li><li>
+        <a class="is-flex" href="#在对象上实现-Iterator-接口">
+        <span class="has-mr-6">4</span>
+        <span>在对象上实现 Iterator 接口</span>
+        </a></li><li>
+        <a class="is-flex" href="#生成器对象">
+        <span class="has-mr-6">5</span>
+        <span>生成器对象</span>
+        </a></li><li>
+        <a class="is-flex" href="#yield">
+        <span class="has-mr-6">6</span>
+        <span>yield*</span>
+        </a></li><li>
+        <a class="is-flex" href="#生成器也可以接收参数">
+        <span class="has-mr-6">7</span>
+        <span>生成器也可以接收参数</span>
+        </a></li><li>
+        <a class="is-flex" href="#Map，Set，String，Array-互相转换">
+        <span class="has-mr-6">8</span>
+        <span>Map，Set，String，Array 互相转换</span>
+        </a></li><li>
+        <a class="is-flex" href="#生成器对象到底是一个迭代器还是一个可迭代对象">
+        <span class="has-mr-6">9</span>
+        <span>生成器对象到底是一个迭代器还是一个可迭代对象</span>
+        </a></li><li>
+        <a class="is-flex" href="#总结">
+        <span class="has-mr-6">10</span>
+        <span>总结</span>
+        </a></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+        
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Angular/">
+            <span class="level-start">
+                <span class="level-item">Angular</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">16</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/CSS/">
+            <span class="level-start">
+                <span class="level-item">CSS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">13</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Essay/">
+            <span class="level-start">
+                <span class="level-item">Essay</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Http/">
+            <span class="level-start">
+                <span class="level-item">Http</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">7</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/JavaScript/">
+            <span class="level-start">
+                <span class="level-item">JavaScript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">59</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/MySQL/">
+            <span class="level-start">
+                <span class="level-item">MySQL</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">6</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Node-js/">
+            <span class="level-start">
+                <span class="level-item">Node.js</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">14</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/React/">
+            <span class="level-start">
+                <span class="level-item">React</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">14</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Vue/">
+            <span class="level-start">
+                <span class="level-item">Vue</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">14</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/jQuery/">
+            <span class="level-start">
+                <span class="level-item">jQuery</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">9</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Angular/" style="font-size: 18.57px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/Http/" style="font-size: 12.86px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.43px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.14px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.14px;">React</a> <a href="/tags/Vue/" style="font-size: 17.14px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 14.29px;">jQuery</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow  ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/10/17/JavaScript/59/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/59.jpg" alt="正则表达式">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-16T16:00:00.000Z">2019-10-17</time></div>
+                    <a href="/2019/10/17/JavaScript/59/" class="has-link-black-ter is-size-6">正则表达式</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/10/16/Node/14/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/14.jpg" alt="深入 Node.js">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-15T16:00:00.000Z">2019-10-16</time></div>
+                    <a href="/2019/10/16/Node/14/" class="has-link-black-ter is-size-6">深入 Node.js</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/10/15/Node/13/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/13.jpg" alt="背压">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-14T16:00:00.000Z">2019-10-15</time></div>
+                    <a href="/2019/10/15/Node/13/" class="has-link-black-ter is-size-6">背压</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/10/14/Node/01/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/01.jpg" alt="Stream（流）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-13T16:00:00.000Z">2019-10-14</time></div>
+                    <a href="/2019/10/14/Node/01/" class="has-link-black-ter is-size-6">Stream（流）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/10/13/Node/12/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/12.jpg" alt="Http 模块">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-12T16:00:00.000Z">2019-10-13</time></div>
+                    <a href="/2019/10/13/Node/12/" class="has-link-black-ter is-size-6">Http 模块</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">8</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Angular/">
+                        <span class="tag">Angular</span>
+                        <span class="tag is-grey">16</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/CSS/">
+                        <span class="tag">CSS</span>
+                        <span class="tag is-grey">13</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Essay/">
+                        <span class="tag">Essay</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Http/">
+                        <span class="tag">Http</span>
+                        <span class="tag is-grey">7</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/JavaScript/">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag is-grey">59</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/MySQL/">
+                        <span class="tag">MySQL</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Node-js/">
+                        <span class="tag">Node.js</span>
+                        <span class="tag is-grey">14</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/React/">
+                        <span class="tag">React</span>
+                        <span class="tag is-grey">14</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Vue/">
+                        <span class="tag">Vue</span>
+                        <span class="tag is-grey">14</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/jQuery/">
+                        <span class="tag">jQuery</span>
+                        <span class="tag is-grey">9</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <!-- <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="迭代协议与生成器" height="28">
+                
+                </a> -->
+                <p class="is-size-7">
+                &copy; 2016 - 2019
+                Made with ✿  heptaluan&nbsp;
+                
+                </p>
+            </div>
+            <!-- <div class="level-end">
+            
+            </div> -->
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
