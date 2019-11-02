@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="在使用 Koa.js 的过程当中，经常会接触到中间件这个概念，之前在学习 Redux 的过程当中，里面也有一个中间件（Middleware）的概念 所以就打算抽点时间，整理一下中间件的相关概念，应该会整理成一个系列文章，方向是比较偏向于 Koa.js，但是本质上原理都是类似的">
+    <meta name="description" content="在使用 koa.js 的过程当中，经常会接触到中间件这个概念，之前在学习 Redux 的过程当中，里面也有一个中间件（Middleware）的概念 所以就打算抽点时间，整理一下中间件的相关概念，应该会整理成一个系列文章，方向是比较偏向于 koa.js，但是本质上原理都是类似的">
 <meta name="keywords" content="Node.js">
 <meta property="og:type" content="article">
 <meta property="og:title" content="中间件">
 <meta property="og:url" content="http://yoursite.com/2019/10/19/Node/15/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="在使用 Koa.js 的过程当中，经常会接触到中间件这个概念，之前在学习 Redux 的过程当中，里面也有一个中间件（Middleware）的概念 所以就打算抽点时间，整理一下中间件的相关概念，应该会整理成一个系列文章，方向是比较偏向于 Koa.js，但是本质上原理都是类似的">
+<meta property="og:description" content="在使用 koa.js 的过程当中，经常会接触到中间件这个概念，之前在学习 Redux 的过程当中，里面也有一个中间件（Middleware）的概念 所以就打算抽点时间，整理一下中间件的相关概念，应该会整理成一个系列文章，方向是比较偏向于 koa.js，但是本质上原理都是类似的">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/15.jpg">
-<meta property="og:updated_time" content="2019-10-26T15:09:36.041Z">
+<meta property="og:updated_time" content="2019-11-02T13:00:41.763Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="中间件">
-<meta name="twitter:description" content="在使用 Koa.js 的过程当中，经常会接触到中间件这个概念，之前在学习 Redux 的过程当中，里面也有一个中间件（Middleware）的概念 所以就打算抽点时间，整理一下中间件的相关概念，应该会整理成一个系列文章，方向是比较偏向于 Koa.js，但是本质上原理都是类似的">
+<meta name="twitter:description" content="在使用 koa.js 的过程当中，经常会接触到中间件这个概念，之前在学习 Redux 的过程当中，里面也有一个中间件（Middleware）的概念 所以就打算抽点时间，整理一下中间件的相关概念，应该会整理成一个系列文章，方向是比较偏向于 koa.js，但是本质上原理都是类似的">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/15.jpg">
 
 
@@ -176,8 +176,8 @@
             
         </h1>
         <div class="content">
-            <p>在使用 <code>Koa.js</code> 的过程当中，经常会接触到中间件这个概念，之前在学习 <code>Redux</code> 的过程当中，里面也有一个中间件（<code>Middleware</code>）的概念</p>
-<p>所以就打算抽点时间，整理一下中间件的相关概念，应该会整理成一个系列文章，方向是比较偏向于 <code>Koa.js</code>，但是本质上原理都是类似的</p>
+            <p>在使用 <code>koa.js</code> 的过程当中，经常会接触到中间件这个概念，之前在学习 <code>Redux</code> 的过程当中，里面也有一个中间件（<code>Middleware</code>）的概念</p>
+<p>所以就打算抽点时间，整理一下中间件的相关概念，应该会整理成一个系列文章，方向是比较偏向于 <code>koa.js</code>，但是本质上原理都是类似的</p>
 <a id="more"></a>
 
 
@@ -199,17 +199,17 @@
 <p>运行结果的示意图如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">            --------------------------------------</span><br><span class="line">            |            middleware1              |</span><br><span class="line">            |    ----------------------------     |</span><br><span class="line">            |    |       middleware2         |    |</span><br><span class="line">            |    |    -------------------    |    |</span><br><span class="line">            |    |    |  middleware3    |    |    |</span><br><span class="line">            |    |    |                 |    |    |</span><br><span class="line">          next next next  ———————————   |    |    |</span><br><span class="line">dispatch  —————————————&gt; |  reducer  | — 收尾工作-&gt;|</span><br><span class="line">nextState &lt;————————————— |     G     |  |    |    |</span><br><span class="line">            | A  | C  | E ——————————— F |  D |  B |</span><br><span class="line">            |    |    |                 |    |    |</span><br><span class="line">            |    |    -------------------    |    |</span><br><span class="line">            |    ----------------------------     |</span><br><span class="line">            --------------------------------------</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">顺序 A -&gt; C -&gt; E -&gt; G -&gt; F -&gt; D -&gt; B</span><br><span class="line">    \---------------<span class="hljs-regexp">/   \----------/</span></span><br><span class="line">            ↓                ↓</span><br><span class="line">     更新 state 完毕       收尾工作</span><br></pre></td></tr></table></figure>
 
-<p>当然，在 <code>Koa.js</code> 当中也是一样的</p>
+<p>当然，在 <code>koa.js</code> 当中也是一样的</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">'koa'</span>);</span><br><span class="line"><span class="hljs-keyword">let</span> app = <span class="hljs-keyword">new</span> Koa();</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> middleware1 = <span class="hljs-keyword">async</span> (ctx, next) =&gt; &#123; </span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'A middleware1 开始'</span>); </span><br><span class="line">  <span class="hljs-keyword">await</span> next();  </span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'B middleware1 结束'</span>) </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> middleware2 = <span class="hljs-keyword">async</span> (ctx, next) =&gt; &#123; </span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'C middleware2 开始'</span>)</span><br><span class="line">  <span class="hljs-keyword">await</span> next();  </span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'D middleware2 结束'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> middleware3 = <span class="hljs-keyword">async</span> (ctx, next) =&gt; &#123; </span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'E middleware3 开始'</span>)</span><br><span class="line">  <span class="hljs-keyword">await</span> next();  </span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'F middleware3 结束'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">app.use(middleware1);</span><br><span class="line">app.use(middleware2);</span><br><span class="line">app.use(middleware3);</span><br><span class="line"></span><br><span class="line">app.use(<span class="hljs-keyword">async</span>(ctx, next) =&gt; &#123;</span><br><span class="line">  ctx.body = <span class="hljs-string">'hello world'</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'======= G ======='</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.listen(<span class="hljs-number">3000</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// A middleware1 开始</span></span><br><span class="line"><span class="hljs-comment">// C middleware2 开始</span></span><br><span class="line"><span class="hljs-comment">// E middleware3 开始</span></span><br><span class="line"><span class="hljs-comment">// ======= G =======</span></span><br><span class="line"><span class="hljs-comment">// F middleware3 结束</span></span><br><span class="line"><span class="hljs-comment">// D middleware2 结束</span></span><br><span class="line"><span class="hljs-comment">// B middleware1 结束</span></span><br></pre></td></tr></table></figure>
 
 <p>可以发现，结果是一致的，至于为什么会出现以上的结果，这也就是本篇文章需要说到的地方</p>
-<p>这个主要是 <code>Koa.js</code> 的一个中间件引擎 <code>koa-compose</code> 模块来实现的，也就是 <code>Koa.js</code> 实现洋葱模型的核心引擎</p>
-<h2 id="Koa-js-的切面"><a href="#Koa-js-的切面" class="headerlink" title="Koa.js 的切面"></a>Koa.js 的切面</h2><p><code>Koa.js</code> 的切面是由中间件机制实现的，一个中间件一般有两个切面</p>
+<p>这个主要是 <code>koa.js</code> 的一个中间件引擎 <code>koa-compose</code> 模块来实现的，也就是 <code>koa.js</code> 实现洋葱模型的核心引擎</p>
+<h2 id="Koa-js-的切面"><a href="#Koa-js-的切面" class="headerlink" title="Koa.js 的切面"></a>Koa.js 的切面</h2><p><code>koa.js</code> 的切面是由中间件机制实现的，一个中间件一般有两个切面</p>
 <p>遵循先进后出的切面执行顺序，类似入栈出栈的顺序，可以参考下图</p>
 <p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/node/30.png" alt></p>
 <h2 id="中间件原理"><a href="#中间件原理" class="headerlink" title="中间件原理"></a>中间件原理</h2><p>通过之前的洋葱模型可以看出，中间件的在 <code>await next()</code> 前后的操作，很像数据结构的一种场景，就是先进后出的<strong>栈</strong>，同时又有统一上下文管理操作数据</p>
-<p>在 <code>Koa.js</code> 当中最为人所知的便是基于<strong>洋葱模型</strong>的 <code>http</code> 中间件处理流程</p>
-<p><code>Koa.js</code> 当中的洋葱模式可以拆解成以下几个元素</p>
+<p>在 <code>koa.js</code> 当中最为人所知的便是基于<strong>洋葱模型</strong>的 <code>http</code> 中间件处理流程</p>
+<p><code>koa.js</code> 当中的洋葱模式可以拆解成以下几个元素</p>
 <ul>
 <li><p>生命周期</p>
 </li>
@@ -320,7 +320,7 @@
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/10/26/Node/16/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/10/25/Node/16/">
                 <i class="level-item fas fa-chevron-left"></i>
                 <span class="level-item">常用中间件的实现</span>
             </a>
@@ -405,7 +405,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        157
+                        158
                     </p>
                 </div>
             </div>
@@ -538,7 +538,7 @@
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">17</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -576,7 +576,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 18.57px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/Http/" style="font-size: 12.86px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.43px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 18.57px;">Node.js</a> <a href="/tags/React/" style="font-size: 15.71px;">React</a> <a href="/tags/Vue/" style="font-size: 17.14px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 14.29px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 17.5px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/Http/" style="font-size: 12.5px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.25px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 18.75px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 16.25px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 13.75px;">jQuery</a>
     </div>
 </div>
 
@@ -593,7 +593,26 @@
         
         <article class="media">
             
-            <a href="/2019/10/26/Node/16/" class="media-left">
+            <a href="/2019/10/30/Node/17/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/17.jpg" alt="koa.js 源码解析">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-29T16:00:00.000Z">2019-10-30</time></div>
+                    <a href="/2019/10/30/Node/17/" class="has-link-black-ter is-size-6">koa.js 源码解析</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/10/25/Node/16/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/16.jpg" alt="常用中间件的实现">
                 </p>
@@ -601,8 +620,8 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-25T16:00:00.000Z">2019-10-26</time></div>
-                    <a href="/2019/10/26/Node/16/" class="has-link-black-ter is-size-6">常用中间件的实现</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-24T16:00:00.000Z">2019-10-25</time></div>
+                    <a href="/2019/10/25/Node/16/" class="has-link-black-ter is-size-6">常用中间件的实现</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
                     </p>
@@ -667,25 +686,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/10/12/Node/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/14.jpg" alt="深入 Node.js">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-11T16:00:00.000Z">2019-10-12</time></div>
-                    <a href="/2019/10/12/Node/14/" class="has-link-black-ter is-size-6">深入 Node.js</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -704,7 +704,7 @@
                     <span class="level-item">十月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">8</span>
                 </span>
             </a>
         </li>
@@ -1130,7 +1130,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">17</span>
                     </a>
                 </div>
                 

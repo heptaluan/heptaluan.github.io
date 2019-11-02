@@ -16,7 +16,7 @@
 <meta property="og:description" content="JavaScript 由于各种各样的原因，在判断一个变量的数据类型方面一直存在着一些问题，其中最典型的问题恐怕就是 typeof null 会返回 object 因此在这里简单的总结一下判断数据类型时常见的陷阱，以及正确的处理姿势">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/30.jpg">
-<meta property="og:updated_time" content="2019-08-12T14:59:28.763Z">
+<meta property="og:updated_time" content="2019-11-02T13:00:41.761Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的类型判断">
 <meta name="twitter:description" content="JavaScript 由于各种各样的原因，在判断一个变量的数据类型方面一直存在着一些问题，其中最典型的问题恐怕就是 typeof null 会返回 object 因此在这里简单的总结一下判断数据类型时常见的陷阱，以及正确的处理姿势">
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    27 分钟 读完 (大约 4011 个字)
+                    29 分钟 读完 (大约 4419 个字)
                 </span>
                 
                 
@@ -234,15 +234,19 @@
 
 <p>因为每个 <code>frame</code> 内都有用 <code>Person</code> 的一份 <code>copy</code>，它被认为是该 <code>frame</code> 中的 <code>Person</code> 拷贝的实例，尽管两个定义可能完全不一样</p>
 <p>这个问题不仅出现在自定义类型身上，其他两个非常重要的内置类型也有这个问题：函数和数组，对于这两个类型来说，一般不使用 <code>instanceof</code></p>
+<p>另外还有有个比较取巧的方式，如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Object</span>.prototype.toString.call(&#123;&#125;)            <span class="hljs-comment">// '[object Object]'</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.prototype.toString.call([])            <span class="hljs-comment">// '[object Array]'</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.prototype.toString.call(<span class="hljs-literal">null</span>)          <span class="hljs-comment">// '[object Null]'</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.prototype.toString.call(&#123; <span class="hljs-attr">a</span>: <span class="hljs-string">'123'</span> &#125;)  <span class="hljs-comment">// '[object Object]'</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.prototype.toString.call(<span class="hljs-regexp">/\s/g</span>)         <span class="hljs-comment">// '[object RegExp]'</span></span><br></pre></td></tr></table></figure>
+
 <h2 id="空对象检测"><a href="#空对象检测" class="headerlink" title="空对象检测"></a>空对象检测</h2><p>一般有下面这几种方式</p>
-<ol>
-<li>最常见的思路，<code>for...in</code> 遍历属性，为真则为非空数组，否则为空数组</li>
-</ol>
+<p>但是有一点需要注意，<code>for...in</code>，<code>JSON.stringify()</code>，<code>Object.keys()</code>，<code>isEmptyObject()</code> 无法检测非枚举属性</p>
+<h4 id="for…in"><a href="#for…in" class="headerlink" title="for…in"></a>for…in</h4><p>返回所有可枚举属性，包括原型中的属性，不含 <code>Symbol</code> 属性</p>
+<p>最常见的思路，<code>for...in</code> 遍历属性，为真则为非空数组，否则为空数组</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 如果不为空，则会执行到这一步，返回 true</span></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> obj) &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 如果为空，返回 false</span></span><br><span class="line"><span class="hljs-keyword">return</span> <span class="hljs-literal">false</span></span><br></pre></td></tr></table></figure>
 
-<ol start="2">
-<li>通过 <code>JSON</code> 自带的 <code>stringify()</code> 方法来判断</li>
-</ol>
+<blockquote>
+<p>另外有一个可以混淆的 <code>for...of</code> 方法，不过需要注意的是，对象没有部署可迭代接口，所以不适用</p>
+</blockquote>
+<h4 id="JSON-stringify"><a href="#JSON-stringify" class="headerlink" title="JSON.stringify()"></a>JSON.stringify()</h4><p>通过 <code>JSON</code> 自带的 <code>stringify()</code> 方法来判断</p>
 <p><code>JSON.stringify()</code> 方法用于将 <code>JavaScript</code> 值转换为 <code>JSON</code> 字符串</p>
 <p>这里需要注意一点：<code>undefined</code>、任意的函数以及 <code>symbol</code> 值，如果出现在非数组对象的属性值中时，在序列化过程中会被忽略，如果出现在数组中时将被转换成 <code>null</code></p>
 <p>即</p>
@@ -254,31 +258,37 @@
 <p>这里需要注意为什么不用 <code>toString()</code>，因为它返回的不是我们需要的</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = &#123;&#125;</span><br><span class="line">a.toString() <span class="hljs-comment">// "[object Object]"</span></span><br></pre></td></tr></table></figure>
 
-<ol start="3">
-<li><code>ES6</code> 新增的方法 <code>Object.keys()</code></li>
-</ol>
-<p><code>Object.keys()</code> 方法会返回一个由一个给定对象的自身可枚举属性组成的数组</p>
+<h4 id="Object-keys"><a href="#Object-keys" class="headerlink" title="Object.keys()"></a>Object.keys()</h4><p><code>ES6</code> 新增的 <code>Object.keys()</code> 方法会返回所有可枚举属性，不包括原型中属性，不含 <code>Symbol</code> 属性</p>
 <p>如果我们的对象为空，他会返回一个空数组，如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = &#123;&#125;</span><br><span class="line"><span class="hljs-built_in">Object</span>.keys(a) <span class="hljs-comment">// []</span></span><br></pre></td></tr></table></figure>
 
 <p>我们可以依靠 <code>Object.keys()</code> 这个方法通过判断它的长度来知道它是否为空</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(object).length === <span class="hljs-number">0</span>) &#123;</span><br><span class="line">  <span class="hljs-comment">// 如果为空，返回 false</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 如果不为空，则会执行到这一步，返回 true</span></span><br><span class="line"><span class="hljs-keyword">return</span> <span class="hljs-literal">true</span></span><br></pre></td></tr></table></figure>
 
-<ol start="4">
-<li><code>jQuery</code> 当中提供了 <code>isEmptyObjec()</code> 方法用来判断空对象</li>
-</ol>
+<h4 id="isEmptyObject"><a href="#isEmptyObject" class="headerlink" title="isEmptyObject()"></a>isEmptyObject()</h4><p><code>jQuery</code> 当中提供了 <code>isEmptyObject()</code> 方法用来判断空对象</p>
 <p>但是其本质也是通过 <code>for...in</code> 循环来进行判断的，源码如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">isEmptyObject: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> name;</span><br><span class="line">  <span class="hljs-keyword">for</span> (name <span class="hljs-keyword">in</span> obj) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>下面是一些使用示例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$.isEmptyObject(&#123; &#125;)             <span class="hljs-comment">// true</span></span><br><span class="line">$.isEmptyObject(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Object</span>())    <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line">$.isEmptyObject([<span class="hljs-number">0</span>])                          <span class="hljs-comment">// false</span></span><br><span class="line">$.isEmptyObject(&#123; <span class="hljs-attr">name</span>: <span class="hljs-string">'zhangsan'</span> &#125;)         <span class="hljs-comment">// false</span></span><br><span class="line">$.isEmptyObject(&#123; <span class="hljs-attr">sayHi</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125; &#125;)   <span class="hljs-comment">// false</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 自定义的原型对象上的属性也是可枚举的</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Foo</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">Foo.prototype.word = <span class="hljs-string">'hello'</span>;</span><br><span class="line">$.isEmptyObject(User())          <span class="hljs-comment">// false</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 尽管在没有为空数组、Function、Number 等内置对象添加自定义属性的情况下，它们也是不可枚举的，但是不推荐这么做</span></span><br><span class="line"><span class="hljs-comment">// 因为 isEmptyObject() 的参数应该始终是一个纯粹的 Object，比如如下示例，数组中没有元素，也无法通过 for...in 迭代出属性</span></span><br><span class="line">$.isEmptyObject([])              <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// Function、Number、String 等内置对象也无法通过 for...in 迭代出属性</span></span><br><span class="line">$.isEmptyObject(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; alert(<span class="hljs-string">'xxx'</span>) &#125;)  <span class="hljs-comment">// false</span></span><br></pre></td></tr></table></figure>
 
-<ol start="5">
-<li><code>Object.getOwnPropertyNames()</code></li>
-</ol>
-<p>该方法会返回一个由指定对象的所有自身属性的属性名（包括不可枚举属性但不包括 <code>Symbol</code> 值作为名称的属性）组成的数组</p>
-<p>需要注意的是，该方法不支持 <code>IE8</code> 及以下，并且在 ES5 版本当中，如果参数不是一个原始对象类型会抛出一个错误</p>
+<blockquote>
+<p>这里有个需要注意的地方，上面这几个方法均不能检测出非枚举属性，即严格意义上的不完美方法，比如如下示例</p>
+</blockquote>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> obj = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.defineProperty(obj, <span class="hljs-string">'key'</span>, &#123;</span><br><span class="line">  enumerable: <span class="hljs-literal">false</span>,</span><br><span class="line">  configurable: <span class="hljs-literal">false</span>,</span><br><span class="line">  writable: <span class="hljs-literal">false</span>,</span><br><span class="line">  value: <span class="hljs-string">'123'</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> obj) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(i)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">JSON</span>.stringify(obj) === <span class="hljs-string">'&#123;&#125;'</span>  <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.keys(obj)              <span class="hljs-comment">// []</span></span><br><span class="line"></span><br><span class="line">$.isEmptyObject(obj)          <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Object-getOwnPropertyNames"><a href="#Object-getOwnPropertyNames" class="headerlink" title="Object.getOwnPropertyNames()"></a>Object.getOwnPropertyNames()</h4><p>该方法会返回一个由指定对象的所有自身属性的属性名（包括不可枚举属性但不包括 <code>Symbol</code> 值作为名称的属性）组成的数组</p>
+<p>需要注意的是，该方法不支持 <code>IE8</code> 及以下，并且在 <code>ES5</code> 版本当中，如果参数不是一个原始对象类型会抛出一个错误</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 判断空对象</span></span><br><span class="line"><span class="hljs-keyword">let</span> obj = &#123;&#125;</span><br><span class="line"><span class="hljs-built_in">Object</span>.getOwnPropertyNames(obj)     <span class="hljs-comment">// []</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES5 版本当中参数不是原始对象类型会引起错误</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.getOwnPropertyNames(<span class="hljs-string">'foo'</span>);  <span class="hljs-comment">// TypeError: 'foo' is not an object</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES6 版本当中非对象参数会被强制转换为对象</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.getOwnPropertyNames(<span class="hljs-string">'foo'</span>);  <span class="hljs-comment">// ['length', '0', '1', '2']</span></span><br></pre></td></tr></table></figure>
+
+<p>利用这个方法可以检测出非枚举属性</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> obj = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.defineProperty(obj, <span class="hljs-string">'key'</span>, &#123;</span><br><span class="line">  enumerable: <span class="hljs-literal">false</span>,</span><br><span class="line">  configurable: <span class="hljs-literal">false</span>,</span><br><span class="line">  writable: <span class="hljs-literal">false</span>,</span><br><span class="line">  value: <span class="hljs-string">'123'</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.getOwnPropertyNames(obj)  <span class="hljs-comment">// ['key']</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Reflect-ownKeys-obj"><a href="#Reflect-ownKeys-obj" class="headerlink" title="Reflect.ownKeys(obj)"></a>Reflect.ownKeys(obj)</h4><p>这个是个无敌的方法，返回所有的自身属性，不管是否可枚举，不管是不是 <code>Symbol</code>，一律返回</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> test = <span class="hljs-built_in">Symbol</span>()</span><br><span class="line"><span class="hljs-keyword">var</span> obj = &#123;</span><br><span class="line">  [test]: <span class="hljs-number">123</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.defineProperty(obj, <span class="hljs-string">'key'</span>, &#123;</span><br><span class="line">  enumerable: <span class="hljs-literal">false</span>,</span><br><span class="line">  configurable: <span class="hljs-literal">false</span>,</span><br><span class="line">  writable: <span class="hljs-literal">false</span>,</span><br><span class="line">  value: <span class="hljs-string">'123'</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.getOwnPropertyNames(obj)  <span class="hljs-comment">// ['key']</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.keys(obj)                 <span class="hljs-comment">// []</span></span><br><span class="line"><span class="hljs-built_in">Reflect</span>.ownKeys(obj)             <span class="hljs-comment">// ['key', Symbol()]</span></span><br></pre></td></tr></table></figure>
+
+<p>所以简单的总结一下，判断一个变量是不是空对象的比较完善的方法</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">obj !== <span class="hljs-literal">null</span></span><br><span class="line">&amp;&amp; <span class="hljs-keyword">typeof</span> obj === <span class="hljs-string">'object'</span></span><br><span class="line">&amp;&amp; !<span class="hljs-built_in">Array</span>.isArray(obj)</span><br><span class="line">&amp;&amp; (<span class="hljs-built_in">Object</span>.getOwnPropertyNames(obj).length === <span class="hljs-number">0</span>)</span><br><span class="line">&amp;&amp; (<span class="hljs-built_in">Object</span>.getOwnPropertySymbols(obj).length === <span class="hljs-number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// or</span></span><br><span class="line">(<span class="hljs-built_in">Object</span>.prototype.toString.call(obj) === <span class="hljs-string">'[object Object]'</span>)</span><br><span class="line">&amp;&amp; (<span class="hljs-built_in">Object</span>.getOwnPropertyNames(obj).length === <span class="hljs-number">0</span>)</span><br><span class="line">&amp;&amp; (<span class="hljs-built_in">Object</span>.getOwnPropertySymbols(obj).length === <span class="hljs-number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// or</span></span><br><span class="line">(<span class="hljs-built_in">String</span>(obj) === <span class="hljs-string">'[object Object]'</span>) &amp;&amp; (<span class="hljs-built_in">Reflect</span>.ownKeys(obj).length === <span class="hljs-number">0</span>)</span><br></pre></td></tr></table></figure>
 
 <h2 id="函数检测"><a href="#函数检测" class="headerlink" title="函数检测"></a>函数检测</h2><p>从技术上讲，<code>JavaScript</code> 中的函数是引用类型，同样存在 <code>Function</code> 构造函数，每个函数都是其实例，比如：</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">myFunc</span> (<span class="hljs-params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 不推荐</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log( myFunc <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Function</span> );    <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
@@ -467,7 +477,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        157
+                        158
                     </p>
                 </div>
             </div>
@@ -520,7 +530,31 @@
         <a class="is-flex" href="#空对象检测">
         <span class="has-mr-6">3</span>
         <span>空对象检测</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#for…in">
+        <span class="has-mr-6">3.1</span>
+        <span>for…in</span>
         </a></li><li>
+        <a class="is-flex" href="#JSON-stringify">
+        <span class="has-mr-6">3.2</span>
+        <span>JSON.stringify()</span>
+        </a></li><li>
+        <a class="is-flex" href="#Object-keys">
+        <span class="has-mr-6">3.3</span>
+        <span>Object.keys()</span>
+        </a></li><li>
+        <a class="is-flex" href="#isEmptyObject">
+        <span class="has-mr-6">3.4</span>
+        <span>isEmptyObject()</span>
+        </a></li><li>
+        <a class="is-flex" href="#Object-getOwnPropertyNames">
+        <span class="has-mr-6">3.5</span>
+        <span>Object.getOwnPropertyNames()</span>
+        </a></li><li>
+        <a class="is-flex" href="#Reflect-ownKeys-obj">
+        <span class="has-mr-6">3.6</span>
+        <span>Reflect.ownKeys(obj)</span>
+        </a></li></ul></li><li>
         <a class="is-flex" href="#函数检测">
         <span class="has-mr-6">4</span>
         <span>函数检测</span>
@@ -620,7 +654,7 @@
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">17</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -658,7 +692,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 18.57px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/Http/" style="font-size: 12.86px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.43px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 18.57px;">Node.js</a> <a href="/tags/React/" style="font-size: 15.71px;">React</a> <a href="/tags/Vue/" style="font-size: 17.14px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 14.29px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 17.5px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/Http/" style="font-size: 12.5px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.25px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 18.75px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 16.25px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 13.75px;">jQuery</a>
     </div>
 </div>
 
@@ -675,7 +709,26 @@
         
         <article class="media">
             
-            <a href="/2019/10/26/Node/16/" class="media-left">
+            <a href="/2019/10/30/Node/17/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/17.jpg" alt="koa.js 源码解析">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-29T16:00:00.000Z">2019-10-30</time></div>
+                    <a href="/2019/10/30/Node/17/" class="has-link-black-ter is-size-6">koa.js 源码解析</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/10/25/Node/16/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/16.jpg" alt="常用中间件的实现">
                 </p>
@@ -683,8 +736,8 @@
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-25T16:00:00.000Z">2019-10-26</time></div>
-                    <a href="/2019/10/26/Node/16/" class="has-link-black-ter is-size-6">常用中间件的实现</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-24T16:00:00.000Z">2019-10-25</time></div>
+                    <a href="/2019/10/25/Node/16/" class="has-link-black-ter is-size-6">常用中间件的实现</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
                     </p>
@@ -749,25 +802,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/10/12/Node/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/14.jpg" alt="深入 Node.js">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-11T16:00:00.000Z">2019-10-12</time></div>
-                    <a href="/2019/10/12/Node/14/" class="has-link-black-ter is-size-6">深入 Node.js</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -786,7 +820,7 @@
                     <span class="level-item">十月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">8</span>
                 </span>
             </a>
         </li>
@@ -1212,7 +1246,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">17</span>
                     </a>
                 </div>
                 
