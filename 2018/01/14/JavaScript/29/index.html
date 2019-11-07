@@ -15,12 +15,12 @@
 <meta property="og:site_name" content="heptaluan&#39;s blog">
 <meta property="og:description" content="在 JavaScript 中，变量的赋值分为 「传值」 与 「传址」 给变量赋予基本数据类型的值，也就是「传值」，而给变量赋予引用数据类型的值，实际上是「传址」 基本数据类型变量的赋值、比较，只是值的赋值与比较，即栈内存中的数据的拷贝和比较">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/29.jpg">
-<meta property="og:updated_time" content="2019-10-19T15:29:00.624Z">
+<meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/29.jpg">
+<meta property="og:updated_time" content="2019-11-06T02:35:34.139Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="变量的赋值与深浅拷贝">
 <meta name="twitter:description" content="在 JavaScript 中，变量的赋值分为 「传值」 与 「传址」 给变量赋予基本数据类型的值，也就是「传值」，而给变量赋予引用数据类型的值，实际上是「传址」 基本数据类型变量的赋值、比较，只是值的赋值与比较，即栈内存中的数据的拷贝和比较">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/29.jpg">
+<meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/29.jpg">
 
 
 
@@ -28,7 +28,7 @@
 
 
 
-<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/favicon.ico">
+<link rel="icon" href="https://gitee.com/heptaluan/backups/raw/master/cdn/favicon.ico">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -144,7 +144,7 @@
     
     <div class="card-image">
         <span class="image is-7by1">
-            <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/29.jpg" alt="变量的赋值与深浅拷贝">
+            <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/29.jpg" alt="变量的赋值与深浅拷贝">
         </span>
     </div>
     
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    16 分钟 读完 (大约 2331 个字)
+                    16 分钟 读完 (大约 2329 个字)
                 </span>
                 
                 
@@ -209,7 +209,7 @@
 
 <p>因为浅复制只会将对象的各个属性进行依次复制，并不会进行递归复制，而 <code>JavaScript</code> 存储对象都是存地址的</p>
 <p>所以浅复制会导致 <code>obj.arr</code> 和 <code>shallowObj.arr</code> 指向<strong>同一块内存地址</strong></p>
-<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/js/16.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/16.png" alt></p>
 <p>所以</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">shallowObj.arr[<span class="hljs-number">1</span>] = <span class="hljs-number">5</span>;</span><br><span class="line"></span><br><span class="line">obj.arr[<span class="hljs-number">1</span>]   <span class="hljs-comment">// = 5</span></span><br></pre></td></tr></table></figure>
 
@@ -219,7 +219,7 @@
 <p>不过这个方法存在一个问题，就是 <code>JavaScript</code> 中存在着神奇的原型机制，并且这个原型会在遍历的时候出现，然后需要考虑原型应不应该被赋予给新对象</p>
 <p>一般在使用过程中，我们通常会使用 <code>hasOwnProperty</code> 方法来进行判断是否过滤掉那些继承自原型链上的属性</p>
 <p>先来看看一个简单的实现</p>
-<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/js/17.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/17.png" alt></p>
 <p>对于一个复杂的数组对象，要做到深度拷贝（采用递归的方式），在每次遍历之前创建一个新的对象或者数组，从而开辟一个新的存储地址，这样就切断了引用对象的指针联系</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">deepCopy</span>(<span class="hljs-params">o</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 根据传入的元素判断是数组还是对象</span></span><br><span class="line">  <span class="hljs-keyword">let</span> c = o <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Array</span> ? [] : &#123;&#125;;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i <span class="hljs-keyword">in</span> o) &#123;</span><br><span class="line">    <span class="hljs-comment">// 注意数组也是对象类型，如果遍历的元素是对象，进行深度拷贝</span></span><br><span class="line">    c[i] = <span class="hljs-keyword">typeof</span> o[i] === <span class="hljs-string">'object'</span> ? deepCopy(o[i]) : o[i];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> c;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -385,7 +385,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        158
+                        160
                     </p>
                 </div>
             </div>
@@ -514,7 +514,7 @@
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">17</span>
+                <span class="level-item tag">19</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -569,9 +569,47 @@
         
         <article class="media">
             
+            <a href="/2019/11/06/Node/19/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/19.jpg" alt="egg 问题汇总">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-05T16:00:00.000Z">2019-11-06</time></div>
+                    <a href="/2019/11/06/Node/19/" class="has-link-black-ter is-size-6">egg 问题汇总</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/11/01/Node/18/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/18.jpg" alt="egg 实战（实现一个接口服务）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-31T16:00:00.000Z">2019-11-01</time></div>
+                    <a href="/2019/11/01/Node/18/" class="has-link-black-ter is-size-6">egg 实战（实现一个接口服务）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2019/10/30/Node/17/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/17.jpg" alt="koa.js 源码解析">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="koa.js 源码解析">
                 </p>
             </a>
             
@@ -590,7 +628,7 @@
             
             <a href="/2019/10/25/Node/16/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/16.jpg" alt="常用中间件的实现">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg" alt="常用中间件的实现">
                 </p>
             </a>
             
@@ -609,7 +647,7 @@
             
             <a href="/2019/10/19/Node/15/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/15.jpg" alt="中间件">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/15.jpg" alt="中间件">
                 </p>
             </a>
             
@@ -617,44 +655,6 @@
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-18T16:00:00.000Z">2019-10-19</time></div>
                     <a href="/2019/10/19/Node/15/" class="has-link-black-ter is-size-6">中间件</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/10/17/JavaScript/59/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/59.jpg" alt="正则表达式">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-16T16:00:00.000Z">2019-10-17</time></div>
-                    <a href="/2019/10/17/JavaScript/59/" class="has-link-black-ter is-size-6">正则表达式</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/10/14/Node/01/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/01.jpg" alt="Stream（流）">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-13T16:00:00.000Z">2019-10-14</time></div>
-                    <a href="/2019/10/14/Node/01/" class="has-link-black-ter is-size-6">Stream（流）</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
                     </p>
@@ -673,6 +673,17 @@
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2019/10/">
@@ -1106,7 +1117,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">17</span>
+                        <span class="tag is-grey">19</span>
                     </a>
                 </div>
                 

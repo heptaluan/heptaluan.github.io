@@ -15,12 +15,12 @@
 <meta property="og:site_name" content="heptaluan&#39;s blog">
 <meta property="og:description" content="JavaScript 语言自身只有字符串数据类型，没有二进制数据类型 但在处理像 TCP 流或文件流时，必须使用到二进制数据，因此在 Node.js 中，定义了一个 Buffer 类，该类用来创建一个专门存放二进制数据的缓存区 但是在深入展开之前，我们先来了解一下 JavaScript 当中的 ArrayBuffer 本文部分内容截取自 Node.js 中的缓冲区（Buffer）究竟是什么？">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/10.jpg">
-<meta property="og:updated_time" content="2019-10-26T15:09:36.038Z">
+<meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/10.jpg">
+<meta property="og:updated_time" content="2019-11-06T02:35:34.171Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Buffer">
 <meta name="twitter:description" content="JavaScript 语言自身只有字符串数据类型，没有二进制数据类型 但在处理像 TCP 流或文件流时，必须使用到二进制数据，因此在 Node.js 中，定义了一个 Buffer 类，该类用来创建一个专门存放二进制数据的缓存区 但是在深入展开之前，我们先来了解一下 JavaScript 当中的 ArrayBuffer 本文部分内容截取自 Node.js 中的缓冲区（Buffer）究竟是什么？">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/10.jpg">
+<meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/10.jpg">
 
 
 
@@ -28,7 +28,7 @@
 
 
 
-<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/favicon.ico">
+<link rel="icon" href="https://gitee.com/heptaluan/backups/raw/master/cdn/favicon.ico">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -144,7 +144,7 @@
     
     <div class="card-image">
         <span class="image is-7by1">
-            <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/10.jpg" alt="Buffer">
+            <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/10.jpg" alt="Buffer">
         </span>
     </div>
     
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    42 分钟 读完 (大约 6270 个字)
+                    42 分钟 读完 (大约 6266 个字)
                 </span>
                 
                 
@@ -301,7 +301,7 @@
 
 <h2 id="Buffer-内存机制"><a href="#Buffer-内存机制" class="headerlink" title="Buffer 内存机制"></a>Buffer 内存机制</h2><p>由于 <code>Buffer</code> 需要处理的是大量的二进制数据，假如用一点就向系统去申请，则会造成频繁的向系统申请内存调用，所以 <code>Buffer</code> 所占用的内存不再由 <code>V8</code> 分配</p>
 <p>而是在 <code>Node.js</code> 的 <code>C++</code> 层面完成申请，在 <code>JavaScript</code> 中进行内存分配，因此这部分内存我们称之为堆外内存</p>
-<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/node/19.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/node/19.png" alt></p>
 <p><code>Buffer</code> 模块的内部结构如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">exports.Buffer = Buffer;</span><br><span class="line">exports.SlowBuffer = SlowBuffer;</span><br><span class="line">exports.INSPECT_MAX_BYTES = <span class="hljs-number">50</span>;</span><br><span class="line">exports.kMaxLength = binding.kMaxLength;</span><br></pre></td></tr></table></figure>
 
@@ -319,7 +319,7 @@
 <p>其中，由于 <code>Buffer</code> 经常使用，所以 <code>Node.js</code> 在启动的时候，就已经加载了 <code>Buffer</code>，而其他三个仍然需要使用对应的引用来进行使用（<code>require(&#39;buffer&#39;).xxx</code>）</p>
 <p>关于 <code>Buffer</code> 的内存申请、填充、修改等涉及性能问题的操作，均通过 <code>C++</code> 里面的 <code>node_buffer.cc</code> 来实现</p>
 <h4 id="内存分配的策略"><a href="#内存分配的策略" class="headerlink" title="内存分配的策略"></a>内存分配的策略</h4><p><code>Node.js</code> 中 <code>Buffer</code> 内存分配太过常见，从系统性能考虑出发，<code>Buffer</code> 采用了如下的管理策略</p>
-<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/node/20.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/node/20.png" alt></p>
 <p><code>Node.js</code> 采用了 <a href="https://baike.baidu.com/item/slab" target="_blank" rel="noopener">slab</a> 机制进行预先申请、事后分配，是一种动态的管理机制</p>
 <p>使用 <code>Buffer.alloc(size)</code> 传入一个指定的 <code>size</code> 就会申请一块固定大小的内存区域，<code>slab</code> 具有如下三种状态：</p>
 <ul>
@@ -339,12 +339,12 @@
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createUnsafeArrayBuffer</span>(<span class="hljs-params">size</span>) </span>&#123;</span><br><span class="line">  zeroFill[<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;</span><br><span class="line">  <span class="hljs-keyword">try</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// 创建指定 size 大小的 ArrayBuffer 对象，其内容被初始化为 0</span></span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">ArrayBuffer</span>(size);</span><br><span class="line">  &#125; <span class="hljs-keyword">finally</span> &#123;</span><br><span class="line">    zeroFill[<span class="hljs-number">0</span>] = <span class="hljs-number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>此时，新构造的 <code>slab</code> 如下所示</p>
-<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/node/21.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/node/21.png" alt></p>
 <p>现在让我们来尝试分配一个大小为 <code>2048</code> 的 <code>Buffer</code> 对象，代码如下所示：</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Buffer.alloc(<span class="hljs-number">2</span> * <span class="hljs-number">1024</span>)</span><br></pre></td></tr></table></figure>
 
 <p>现在让我们先看下当前的 <code>slab</code> 内存是怎么样的？如下所示：</p>
-<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/node/22.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/node/22.png" alt></p>
 <p>那么这个分配过程是怎样的呢？让我们再看 <code>buffer.js</code> 另外一个核心的方法 <a href="https://github.com/nodejs/node/blob/v10.x/lib/buffer.js#L318" target="_blank" rel="noopener">allocate(size)</a></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">allocate</span>(<span class="hljs-params">size</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (size &lt;= <span class="hljs-number">0</span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> FastBuffer();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 当分配的空间小于 Buffer.poolSize 向右移位，这里得出来的结果为 4KB</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (size &lt; (Buffer.poolSize &gt;&gt;&gt; <span class="hljs-number">1</span>)) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (size &gt; (poolSize - poolOffset))</span><br><span class="line">      createPool();</span><br><span class="line">    <span class="hljs-keyword">var</span> b = <span class="hljs-keyword">new</span> FastBuffer(allocPool, poolOffset, size);</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 已使用空间累加</span></span><br><span class="line">    poolOffset += size;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 8 字节内存对齐处理（关于字节对齐见最下方）</span></span><br><span class="line">    alignPool(); </span><br><span class="line">    <span class="hljs-keyword">return</span> b;</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// C++ 层面申请</span></span><br><span class="line">    <span class="hljs-keyword">return</span> createUnsafeBuffer(size);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -558,7 +558,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        158
+                        160
                     </p>
                 </div>
             </div>
@@ -787,7 +787,7 @@
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">17</span>
+                <span class="level-item tag">19</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -842,9 +842,47 @@
         
         <article class="media">
             
+            <a href="/2019/11/06/Node/19/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/19.jpg" alt="egg 问题汇总">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-05T16:00:00.000Z">2019-11-06</time></div>
+                    <a href="/2019/11/06/Node/19/" class="has-link-black-ter is-size-6">egg 问题汇总</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/11/01/Node/18/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/18.jpg" alt="egg 实战（实现一个接口服务）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-31T16:00:00.000Z">2019-11-01</time></div>
+                    <a href="/2019/11/01/Node/18/" class="has-link-black-ter is-size-6">egg 实战（实现一个接口服务）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2019/10/30/Node/17/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/17.jpg" alt="koa.js 源码解析">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="koa.js 源码解析">
                 </p>
             </a>
             
@@ -863,7 +901,7 @@
             
             <a href="/2019/10/25/Node/16/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/16.jpg" alt="常用中间件的实现">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg" alt="常用中间件的实现">
                 </p>
             </a>
             
@@ -882,7 +920,7 @@
             
             <a href="/2019/10/19/Node/15/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/15.jpg" alt="中间件">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/15.jpg" alt="中间件">
                 </p>
             </a>
             
@@ -890,44 +928,6 @@
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-18T16:00:00.000Z">2019-10-19</time></div>
                     <a href="/2019/10/19/Node/15/" class="has-link-black-ter is-size-6">中间件</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/10/17/JavaScript/59/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/59.jpg" alt="正则表达式">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-16T16:00:00.000Z">2019-10-17</time></div>
-                    <a href="/2019/10/17/JavaScript/59/" class="has-link-black-ter is-size-6">正则表达式</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/10/14/Node/01/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/01.jpg" alt="Stream（流）">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-13T16:00:00.000Z">2019-10-14</time></div>
-                    <a href="/2019/10/14/Node/01/" class="has-link-black-ter is-size-6">Stream（流）</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
                     </p>
@@ -946,6 +946,17 @@
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2019/10/">
@@ -1379,7 +1390,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">17</span>
+                        <span class="tag is-grey">19</span>
                     </a>
                 </div>
                 

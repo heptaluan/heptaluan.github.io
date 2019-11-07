@@ -15,12 +15,12 @@
 <meta property="og:site_name" content="heptaluan&#39;s blog">
 <meta property="og:description" content="今天在群里看到一个讨论，是关于 Angular 的变化检查机制，依稀记得在 AngularJS 当中是使用的脏检查机制 而在 Angular 2.x+ 之后的版本当中依然采用的是脏检查机制，不过使用的是进行优化过的版本 为了探明到底有啥区别，就打算抽点时间，研究研究新版本的脏检查机制，顺便记录记录，就当加深点印象了  为保持区别，文中所指的 AngularJS 所表示的版本为 1.x+ 的版本，而">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/16.jpg">
-<meta property="og:updated_time" content="2019-08-23T19:41:41.284Z">
+<meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg">
+<meta property="og:updated_time" content="2019-11-06T02:35:33.992Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular 中的变化检测机制">
 <meta name="twitter:description" content="今天在群里看到一个讨论，是关于 Angular 的变化检查机制，依稀记得在 AngularJS 当中是使用的脏检查机制 而在 Angular 2.x+ 之后的版本当中依然采用的是脏检查机制，不过使用的是进行优化过的版本 为了探明到底有啥区别，就打算抽点时间，研究研究新版本的脏检查机制，顺便记录记录，就当加深点印象了  为保持区别，文中所指的 AngularJS 所表示的版本为 1.x+ 的版本，而">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/16.jpg">
+<meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg">
 
 
 
@@ -28,7 +28,7 @@
 
 
 
-<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/favicon.ico">
+<link rel="icon" href="https://gitee.com/heptaluan/backups/raw/master/cdn/favicon.ico">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -144,7 +144,7 @@
     
     <div class="card-image">
         <span class="image is-7by1">
-            <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/16.jpg" alt="Angular 中的变化检测机制">
+            <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg" alt="Angular 中的变化检测机制">
         </span>
     </div>
     
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    21 分钟 读完 (大约 3223 个字)
+                    21 分钟 读完 (大约 3216 个字)
                 </span>
                 
                 
@@ -219,7 +219,7 @@
 <p>它们只跟踪数据模型中的变化，而不像 <code>AngularJS</code> 中跟踪所有的内容</p>
 <p><code>Angular</code> 的核心是组件化，组件的嵌套会使得最终形成一棵组件树，<code>Angular</code> 的变化检测可以分组件进行，每个组件都有对应的变化检测器 <code>ChangeDetector</code></p>
 <p>可想而知这些变化检测器也会构成一棵树，如下图所示</p>
-<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/angular/03.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/angular/03.png" alt></p>
 <p>另外，<code>Angular</code> 的数据流是自顶向下，从父组件向子组件的的单向流动，变化监测树与之相呼应，单项数据量保证变化监测的高效性和可预测性</p>
 <p>尽管检查了父组件之后，子组件可能会改变父组件的数据使得父组件需要再次被检查，这是不被推荐的数据处理方式</p>
 <p>在开发模式下，<code>Angular</code> 会进行二次检查，如果出现上述情况，二次检查就会产生如下报错：<code>ExpressionChangedAfterItHasBeenCheckedError</code>（可以参考文章底部链接）</p>
@@ -227,11 +227,11 @@
 <p>相比之下，<code>AngularJS</code> 采用的是双向数据流，错综复杂的数据流使得它不得不多次检查，使得数据最终趋向稳定，但是在理论上，数据可能永远不稳定</p>
 <p>而 <code>AngularJS</code> 给出的策略是，脏检查超过 <code>10</code> 次，就认为程序有问题，不再进行检查（<code>$digest</code> 循环的上限是 <code>10</code> 次，更多可见 <a href="http://vergil.cn/archives/angular-digest-loop" target="_blank" rel="noopener">angular-digest-loop</a>）</p>
 <h2 id="Angular-中的变化检测"><a href="#Angular-中的变化检测" class="headerlink" title="Angular 中的变化检测"></a>Angular 中的变化检测</h2><p>首先我们需要注意的是在 <code>Angular</code> 中每个组件都有自己的变化检测器，这使得我们可以对每个组件分别控制如何以及何时进行变化检测</p>
-<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/angular/04.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/angular/04.png" alt></p>
 <p>由于每个组件都有其自己的变化检测器，即一个 <code>Angular</code> 应用程序由一个组件树组成，所以逻辑结果就是我们也有一个变化检测器树</p>
 <p>这棵树也可以看作是一个流向图，而数据总是从上到下流动，数据从上到下的原因是因为变化检测也总是从上到下对每一个单独的组件进行</p>
 <p>每一次从根组件开始，单向数据流比循环脏检查更可预测，我们总是可以知道视图中使用的数据来自哪里</p>
-<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/angular/05.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/angular/05.png" alt></p>
 <p>我们假设在组件树的某个地方触发一个事件，比如一个按钮被点击，<code>NgZone</code> 会进行事件的处理并通知 <code>Angular</code>，然后变化检测依次向下传递</p>
 <p>另外，<code>Angular</code> 还提供了定制变化检测策略的能力</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> enum ChangeDetectionStrategy &#123; </span><br><span class="line">  OnPush,  <span class="hljs-comment">// 表示变化检测对象的状态为 `CheckOnce` </span></span><br><span class="line">  Default, <span class="hljs-comment">// 表示变化检测对象的状态为 `CheckAlways`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -245,7 +245,7 @@
 <p>当组件中的输入对象是不变量时，可采用 <code>onPush</code> 变化检测策略，减少变化检测的频率，换个角度来说，为了更加智能地执行变化检测，可以在只接受输入的子组件中采用 <code>onPush</code> 策略</p>
 <p>当输入属性不变时，<code>Angular</code> 可以跳过整个变更检测子树，如果我们在 <code>Angular</code> 应用程序中使用不可变对象，我们所需要做的就是告诉 <code>Angular</code> 组件可以跳过变化检测（如果它的输入没有改变的话）</p>
 <p>正如上面的例子所示，<code>VCardCmp</code> 只依赖于它的输入属性，我们可以告诉 <code>Angular</code> 跳过这个组件的子树的变化检测</p>
-<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/angular/06.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/angular/06.png" alt></p>
 <h2 id="更优的变化检测"><a href="#更优的变化检测" class="headerlink" title="更优的变化检测"></a>更优的变化检测</h2><p><code>Angular</code> 每次都要检查每个组件，因为事件发生的原因也许是应用程序状态已经改变，但是如果我们能够告诉 <code>Angular</code> 只对那些改变状态的应用程序部分运行变化检测，那不是很好吗？</p>
 <p>事实证明，有些数据结构可以给我们什么时候发生变化的一些保证，那就是 <code>Immutables</code> 和 <code>Observables</code></p>
 <h4 id="Immutables"><a href="#Immutables" class="headerlink" title="Immutables"></a>Immutables</h4><p>比如我们拥有一个组件 <code>VCardApp</code> 使用 <code>v-card</code> 作为子组件，其具有一个输入属性 <code>vData</code>，并且我们可以使用 <code>changeData</code> 方法改变 <code>vData</code> 对象的 <code>name</code> 属性（并不会改变该对象的引用）</p>
@@ -263,16 +263,16 @@
 <p>该组件有一个 <code>counter</code> 属性和一个输入属性 <code>addItemStream</code>，当产品被添加到购物车时，这是一个被触发的事件流</p>
 <p>另外，我们设置了变化检测策略为 <code>OnPush</code>，只有当组件的输入属性发生变化时，变化检测才会执行</p>
 <p>如前所述，引用 <code>addItemStream</code> 永远不会改变，所以组件的子树从不执行变更检测</p>
-<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/angular/07.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/angular/07.png" alt></p>
 <p>当整个树被设置成 <code>OnPush</code> 后，我们如何通知 <code>Angular</code> 需要对这个组件进行变化检测呢？</p>
 <p>正如我们所知，变化检测总是从上到下执行的，所以我们需要的是一种可以检测树的整个路径到发生变化的组件的变化的方法</p>
 <p>我们可以通过依赖注入访问组件的 <code>ChangeDetectorRef</code>，这个注入来自一个叫做 <code>markForCheck</code> 的 <code>API</code>，它标记从组件到根的路径，以便下次更改检测的运行</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">constructor</span>(private cd: ChangeDetectorRef) &#123; &#125;</span><br><span class="line"></span><br><span class="line">ngOnInit() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.addItemStream.subscribe(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.counter++;           <span class="hljs-comment">// application state changed</span></span><br><span class="line">    <span class="hljs-keyword">this</span>.cd.markForCheck();   <span class="hljs-comment">// marks path</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>下面是在可观察事件被触发后，变化检测开始前</p>
-<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/angular/08.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/angular/08.png" alt></p>
 <p>现在当执行更改检测时，它将从上到下进行</p>
-<p><img src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/angular/09.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/angular/09.png" alt></p>
 <p>并且一旦更改检测运行结束，它将恢复 <code>OnPush</code> 整个树的状态</p>
 <p>参考</p>
 <p><a href="https://teropa.info/blog/2015/03/02/change-and-its-detection-in-javascript-frameworks.html" target="_blank" rel="noopener">Change And Its Detection In JavaScript Frameworks</a></p>
@@ -393,7 +393,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        158
+                        160
                     </p>
                 </div>
             </div>
@@ -538,7 +538,7 @@
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">17</span>
+                <span class="level-item tag">19</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -593,9 +593,47 @@
         
         <article class="media">
             
+            <a href="/2019/11/06/Node/19/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/19.jpg" alt="egg 问题汇总">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-05T16:00:00.000Z">2019-11-06</time></div>
+                    <a href="/2019/11/06/Node/19/" class="has-link-black-ter is-size-6">egg 问题汇总</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/11/01/Node/18/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/18.jpg" alt="egg 实战（实现一个接口服务）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-31T16:00:00.000Z">2019-11-01</time></div>
+                    <a href="/2019/11/01/Node/18/" class="has-link-black-ter is-size-6">egg 实战（实现一个接口服务）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2019/10/30/Node/17/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/17.jpg" alt="koa.js 源码解析">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="koa.js 源码解析">
                 </p>
             </a>
             
@@ -614,7 +652,7 @@
             
             <a href="/2019/10/25/Node/16/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/16.jpg" alt="常用中间件的实现">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg" alt="常用中间件的实现">
                 </p>
             </a>
             
@@ -633,7 +671,7 @@
             
             <a href="/2019/10/19/Node/15/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/15.jpg" alt="中间件">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/15.jpg" alt="中间件">
                 </p>
             </a>
             
@@ -641,44 +679,6 @@
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-18T16:00:00.000Z">2019-10-19</time></div>
                     <a href="/2019/10/19/Node/15/" class="has-link-black-ter is-size-6">中间件</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/10/17/JavaScript/59/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/59.jpg" alt="正则表达式">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-16T16:00:00.000Z">2019-10-17</time></div>
-                    <a href="/2019/10/17/JavaScript/59/" class="has-link-black-ter is-size-6">正则表达式</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/10/14/Node/01/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/cover/01.jpg" alt="Stream（流）">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-13T16:00:00.000Z">2019-10-14</time></div>
-                    <a href="/2019/10/14/Node/01/" class="has-link-black-ter is-size-6">Stream（流）</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
                     </p>
@@ -697,6 +697,17 @@
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2019/10/">
@@ -1130,7 +1141,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">17</span>
+                        <span class="tag is-grey">19</span>
                     </a>
                 </div>
                 
