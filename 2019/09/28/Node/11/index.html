@@ -16,7 +16,7 @@
 <meta property="og:description" content="为了让 Node.js 的文件可以相互调用，Node.js 提供了一个简单的模块系统 模块是 Node.js 应用程序的基本组成部分，文件和模块是一一对应的，换言之，一个 Node.js 文件就是一个模块，这个文件可能是 JavaScript 代码、JSON 或者编译过的 C/C++ 扩展">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/11.jpg">
-<meta property="og:updated_time" content="2019-11-06T02:35:34.106Z">
+<meta property="og:updated_time" content="2019-11-30T15:31:26.540Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Node.js 的模块机制">
 <meta name="twitter:description" content="为了让 Node.js 的文件可以相互调用，Node.js 提供了一个简单的模块系统 模块是 Node.js 应用程序的基本组成部分，文件和模块是一一对应的，换言之，一个 Node.js 文件就是一个模块，这个文件可能是 JavaScript 代码、JSON 或者编译过的 C/C++ 扩展">
@@ -28,7 +28,7 @@
 
 
 
-<link rel="icon" href="https://gitee.com/heptaluan/backups/raw/master/cdn/favicon.ico">
+<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/favicon.ico">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -69,16 +69,6 @@
 
     
     
-<script>
-var _hmt = _hmt || [];
-(function() {
-    var hm = document.createElement("script");
-    hm.src = "//hm.baidu.com/hm.js?f0399d35b846ccd84f70acc7b232fb2e";
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(hm, s);
-})();
-</script>
-
     
     
 
@@ -173,7 +163,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    32 分钟 读完 (大约 4800 个字)
+                    32 分钟 读完 (大约 4799 个字)
                 </span>
                 
                 
@@ -193,7 +183,7 @@ var _hmt = _hmt || [];
 
 <h2 id="CommonJS-规范"><a href="#CommonJS-规范" class="headerlink" title="CommonJS 规范"></a>CommonJS 规范</h2><p><code>Node.js</code> 遵循 <a href="http://wiki.commonjs.org/wiki/CommonJS" target="_blank" rel="noopener">CommonJS</a> 规范，该规范的核心思想是允许模块通过 <code>require</code> 方法来同步加载所要依赖的其他模块，然后通过 <code>exports</code> 或 <code>module.exports</code> 来导出需要暴露的接口</p>
 <p><code>CommonJS</code> 规范是为了解决 <code>JavaScript</code> 的作用域问题而定义的模块形式，可以使每个模块它自身的命名空间中执行，下面是一个简单的示例</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// a.js</span></span><br><span class="line"><span class="hljs-built_in">module</span>.exports = <span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> a + b;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// b.js</span></span><br><span class="line"><span class="hljs-keyword">const</span> add = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./a'</span>);</span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Result: <span class="hljs-subst">$&#123;add(<span class="hljs-number">2</span>, <span class="hljs-number">3</span>)&#125;</span>`</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// a.js</span></span><br><span class="line"><span class="hljs-built_in">module</span>.exports = <span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> a + b;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// b.js</span></span><br><span class="line"><span class="hljs-keyword">const</span> add = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./a'</span>);</span><br><span class="line"><span class="hljs-built_in">console</span>.log(add(<span class="hljs-number">2</span>, <span class="hljs-number">3</span>));</span><br></pre></td></tr></table></figure>
 
 <p><code>CommonJS</code> 也有浏览器端的实现，其原理是现将所有模块都定义好并通过 <code>id</code> 索引，这样就可以方便的在浏览器环境中解析了，可以参考 <a href="https://github.com/Stuk/require1k" target="_blank" rel="noopener">require1k</a> 和 <a href="https://github.com/ruanyf/tiny-browser-require" target="_blank" rel="noopener">tiny-browser-require</a> 源码</p>
 <p>经常与 <code>CommonJS</code> 规范一起出现的还有 <code>AMD</code> 规范和 <code>CMD</code> 规范，在这里就不详细展开，感兴趣的可以参考 <a href="http://blog.chinaunix.net/uid-26672038-id-4112229.html" target="_blank" rel="noopener">JavaSript 模块规范 - AMD 规范与 CMD 规范介绍</a>，总结的很棒</p>
@@ -489,7 +479,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        163
+                        161
                     </p>
                 </div>
             </div>
@@ -658,7 +648,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">React</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">15</span>
+                <span class="level-item tag">13</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Vue/">
@@ -688,7 +678,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 17.78px;">Angular</a> <a href="/tags/CSS/" style="font-size: 14.44px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/Http/" style="font-size: 12.22px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.11px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 18.89px;">Node.js</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Vue/" style="font-size: 15.56px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 13.33px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 17.5px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/Http/" style="font-size: 12.5px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.25px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 18.75px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 16.25px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 13.75px;">jQuery</a>
     </div>
 </div>
 
@@ -707,14 +697,14 @@ var _hmt = _hmt || [];
             
             <a href="/2019/11/25/React/15/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 进阶">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React &amp;&amp; Redux">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-24T16:00:00.000Z">2019-11-25</time></div>
-                    <a href="/2019/11/25/React/15/" class="has-link-black-ter is-size-6">React 进阶</a>
+                    <a href="/2019/11/25/React/15/" class="has-link-black-ter is-size-6">React &amp;&amp; Redux</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/React/">React</a>
                     </p>
@@ -871,7 +861,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">六月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -1260,7 +1250,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/React/">
                         <span class="tag">React</span>
-                        <span class="tag is-grey">15</span>
+                        <span class="tag is-grey">13</span>
                     </a>
                 </div>
                 
