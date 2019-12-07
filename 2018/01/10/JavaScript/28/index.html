@@ -2,24 +2,24 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-<title>原型链和继承 - heptaluan&#39;s blog</title>
+<title>原型继承和类式继承 - heptaluan&#39;s blog</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-    <meta name="description" content="先来回顾一下原型链知识，再来看看继承相关问题">
+    <meta name="description" content="在一些基于类的语言（比如 Java）当中，继承（inheritance/extends）提供了两个有用的服务，如果一个新的类与一个已存在的类大部分相似，那么你只需说明其不同点即可 JavaScript 是一门弱类型语言，从不需要类型转换，它可以模拟那些基于类的模式，同时它也支持其他更具表现力的模式 在基于类的语言中，对象是类的实例，并且类可以用另一个类继承，JavaScript 是一门基于原型的语">
 <meta name="keywords" content="JavaScript">
 <meta property="og:type" content="article">
-<meta property="og:title" content="原型链和继承">
+<meta property="og:title" content="原型继承和类式继承">
 <meta property="og:url" content="http://yoursite.com/2018/01/10/JavaScript/28/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="先来回顾一下原型链知识，再来看看继承相关问题">
+<meta property="og:description" content="在一些基于类的语言（比如 Java）当中，继承（inheritance/extends）提供了两个有用的服务，如果一个新的类与一个已存在的类大部分相似，那么你只需说明其不同点即可 JavaScript 是一门弱类型语言，从不需要类型转换，它可以模拟那些基于类的模式，同时它也支持其他更具表现力的模式 在基于类的语言中，对象是类的实例，并且类可以用另一个类继承，JavaScript 是一门基于原型的语">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/28.jpg">
-<meta property="og:updated_time" content="2019-11-09T15:23:02.890Z">
+<meta property="og:updated_time" content="2019-12-07T14:21:08.357Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="原型链和继承">
-<meta name="twitter:description" content="先来回顾一下原型链知识，再来看看继承相关问题">
+<meta name="twitter:title" content="原型继承和类式继承">
+<meta name="twitter:description" content="在一些基于类的语言（比如 Java）当中，继承（inheritance/extends）提供了两个有用的服务，如果一个新的类与一个已存在的类大部分相似，那么你只需说明其不同点即可 JavaScript 是一门弱类型语言，从不需要类型转换，它可以模拟那些基于类的模式，同时它也支持其他更具表现力的模式 在基于类的语言中，对象是类的实例，并且类可以用另一个类继承，JavaScript 是一门基于原型的语">
 <meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/28.jpg">
 
 
@@ -99,7 +99,7 @@
         <!-- <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="原型链和继承" height="28">
+                <img src="/images/logo.svg" alt="原型继承和类式继承" height="28">
             
             </a>
         </div> -->
@@ -144,7 +144,7 @@
     
     <div class="card-image">
         <span class="image is-7by1">
-            <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/28.jpg" alt="原型链和继承">
+            <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/28.jpg" alt="原型继承和类式继承">
         </span>
     </div>
     
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    15 分钟 读完 (大约 2321 个字)
+                    18 分钟 读完 (大约 2761 个字)
                 </span>
                 
                 
@@ -172,52 +172,64 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                原型链和继承
+                原型继承和类式继承
             
         </h1>
         <div class="content">
-            <p>先来回顾一下原型链知识，再来看看继承相关问题</p>
-<a id="more"></a>
-
-<h2 id="原型链"><a href="#原型链" class="headerlink" title="原型链"></a>原型链</h2><p>每一个构造函数都有一个属性叫做 <code>prototype</code>，指向一个对象，当这个构造函数被 <code>new</code> 的时候，它的每一个实例的 <code>__proto__</code> 属性都会指向这个属性</p>
-<p>每一个函数天生都有 <code>prototype</code> 属性，指向一个空对象，也就是说，不需要去手动的定义这个属性</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">People</span>(<span class="hljs-params">name, age</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.name = name;</span><br><span class="line">  <span class="hljs-keyword">this</span>.age = age;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> man = <span class="hljs-keyword">new</span> People(<span class="hljs-string">'小明'</span>, <span class="hljs-number">20</span>);</span><br><span class="line"></span><br><span class="line">People.prototype === man.__proto__;  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
-
-<p>如上，这时的 <code>People.prototype</code> 是 <code>People</code> 构造函数的 <code>&#39;原型&#39;</code>，<code>People.prototype</code> 则是 <code>man</code> 的 ‘原型对象’</p>
-<p>当 <code>man</code> 身上没有某个属性或者方法的时候，它会沿着 <code>__proto__</code> 属性依次向上查询</p>
-<p>总结如下：</p>
-<ul>
-<li><p>任何函数都有 <code>prototype</code>，是一个空对象（也有特殊情况，比如 <code>Object.create(null)</code>）</p>
-</li>
-<li><p><code>prototype</code> 的值是一个对象，这个函数 new 出来的实例对象的 <code>__proto__</code> 是指向这个函数的 <code>prototype</code> 的</p>
-</li>
-</ul>
-<h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><p>在那些基于类的语言（比如 <code>Java</code>）中，继承（<code>inheritance/extends</code>）提供了两个有用的服务，如果一个新的类与一个已存在的类大部分相似，那么你只需说明其不同点即可</p>
+            <p>在一些基于类的语言（比如 <code>Java</code>）当中，继承（<code>inheritance/extends</code>）提供了两个有用的服务，如果一个新的类与一个已存在的类大部分相似，那么你只需说明其不同点即可</p>
 <p><code>JavaScript</code> 是一门弱类型语言，从不需要类型转换，它可以模拟那些基于类的模式，同时它也支持其他更具表现力的模式</p>
 <p>在基于类的语言中，对象是类的实例，并且类可以用另一个类继承，<code>JavaScript</code> 是一门基于原型的语言，这意味着对象直接从其他对象继承</p>
-<h4 id="类式继承（构造函数）"><a href="#类式继承（构造函数）" class="headerlink" title="类式继承（构造函数）"></a>类式继承（构造函数）</h4><p>类式继承是在函数对象内调用父类的构造函数，使得自身获得父类的方法和属性（<code>call</code> 和 <code>apply</code> 方法为类式继承提供了支持）</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> father = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.age = <span class="hljs-number">20</span>;</span><br><span class="line">  <span class="hljs-keyword">this</span>.say = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    alert(<span class="hljs-string">'hello i am '</span> + <span class="hljs-keyword">this</span>.name + <span class="hljs-string">' and i am '</span> + <span class="hljs-keyword">this</span>.age + <span class="hljs-string">'years old'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> child = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.name = <span class="hljs-string">'zhangsan'</span>;</span><br><span class="line">  father.call(<span class="hljs-keyword">this</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> man = <span class="hljs-keyword">new</span> child();</span><br><span class="line">man.say();</span><br></pre></td></tr></table></figure>
+<p>在 <code>JavaScript</code> 当中比较常见的继承方法有类式继承和原型继承</p>
+<a id="more"></a>
 
-<h4 id="原型继承"><a href="#原型继承" class="headerlink" title="原型继承"></a>原型继承</h4><p>它有别于类继承是因为继承不在对象本身，而在对象的原型上（<code>prototype</code>）</p>
-<p>当一个对象需要调用某个方法时，它回去最近的原型上查找该方法，如果没有找到，它会再次往下继续查找</p>
-<p>这样逐级查找，一直找到了要找的方法，这些查找的原型构成了该对象的原型链条（最后指向 <code>Object.prototype.__proto__</code> 也就是 <code>null</code>）</p>
+
+<h2 id="类式继承（构造函数）"><a href="#类式继承（构造函数）" class="headerlink" title="类式继承（构造函数）"></a>类式继承（构造函数）</h2><p><code>JavaScript</code> 在 <code>ES5</code> 当中其实是没有类的概念的，所谓的类也是模拟出来的，特别是当我们是用 <code>new</code> 关键字的时候，就使得类的概念就越像其他语言中的类了</p>
+<p>类式继承是在函数对象内调用父类的构造函数，使得自身获得父类的方法和属性（<code>call</code> 和 <code>apply</code> 方法为类式继承提供了支持）</p>
+<p>通过改变 <code>this</code> 的作用环境，使得子类本身具有父类的各种属性</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> father = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.age = <span class="hljs-number">20</span>;</span><br><span class="line">  <span class="hljs-keyword">this</span>.say = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    alert(<span class="hljs-keyword">this</span>.name + <span class="hljs-keyword">this</span>.age);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> child = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.name = <span class="hljs-string">'zhangsan'</span>;</span><br><span class="line">  father.call(<span class="hljs-keyword">this</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> man = <span class="hljs-keyword">new</span> child();</span><br><span class="line">man.say();</span><br></pre></td></tr></table></figure>
+
+<h2 id="原型继承"><a href="#原型继承" class="headerlink" title="原型继承"></a>原型继承</h2><p>我们先来看一张珍藏多年的图</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/06.png" alt></p>
+<p>原型继承有别于类继承，因为继承不在对象本身，而在对象的原型上（<code>prototype</code>）</p>
+<p>每一个对象都有原型，在浏览器中它体现在一个隐藏的 <code>__proto__</code> 属性上，在一些现代浏览器中你可以更改它们（不过不太建议这样操作）</p>
+<p>比如在 <code>zepto</code> 中，就是通过添加 <code>zepto</code> 的 <code>fn</code> 对象到一个空的数组的 <code>__proto__</code> 属性上去，从而使得该数组成为一个 <code>zepto</code> 对象并且拥有所有的方法</p>
+<p>当一个对象需要调用某个方法时，它会去最近的原型上查找该方法，如果没有找到，它会再次往下继续查找</p>
+<p>这样逐级查找，一直找到了要找的方法，这些查找的原型构成了该对象的原型链条（最后指向 <code>Object.prototype.__proto__</code> 也就是 <code>null</code>），类似于下面这样</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Foo</span>(<span class="hljs-params"></span>) </span>&#123;&#125;</span><br><span class="line"><span class="hljs-keyword">var</span> f1 = <span class="hljs-keyword">new</span> Foo()</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// f1 的 __proto__ 是指向 Foo.prototype 的</span></span><br><span class="line">f1.__proto__ === Foo.prototype</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 而 Foo.prototype.__proto__ 又是指向 Object.prototype</span></span><br><span class="line">Foo.prototype.__proto__ === <span class="hljs-built_in">Object</span>.prototype</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 而 Object.prototype.__proto__ 则是指向 null 的</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.prototype.__proto__ === <span class="hljs-literal">null</span></span><br></pre></td></tr></table></figure>
+
+<p>下面我们再来看看原型继承的例子，如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> father = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">father.prototype.a = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> child = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">child.prototype = <span class="hljs-keyword">new</span> father();</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> man = <span class="hljs-keyword">new</span> child();</span><br><span class="line">man.a();</span><br></pre></td></tr></table></figure>
 
-<p>下面是一个简单的例子</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Foo</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.y = <span class="hljs-number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">typeof</span> Foo.prototype; <span class="hljs-comment">// Object</span></span><br><span class="line"></span><br><span class="line">Foo.prototype.x = <span class="hljs-number">1</span>;</span><br><span class="line"><span class="hljs-keyword">var</span> obj3 = <span class="hljs-keyword">new</span> Foo();</span><br><span class="line"></span><br><span class="line">obj3.x; <span class="hljs-comment">// 1</span></span><br><span class="line">obj3.y; <span class="hljs-comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>这里面比较重要的一句就是</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">child.prototype = <span class="hljs-keyword">new</span> father();</span><br></pre></td></tr></table></figure>
 
-<p>用函数声名的方式声明函数 <code>Foo</code> 的时候，就会有一个内置的属性，并且这个属性是一个对象，而且是预设的</p>
-<p>然后给这个对象属性增加一个 <code>x</code>，赋值为 <code>1</code>，然后用 <code>new Foo()</code>来创建一个 <code>Foo</code> 的实例</p>
-<p>当使用 <code>new</code> 去使用的时候，函数会做为一个构造器来使用，这时候 <code>this</code> 会指向一个对象，而这个对象的原型会指向构造器的 <code>prototype</code> 属性</p>
-<p>所以，<code>y</code> 是这个对象上的，故为 <code>2</code>，而 <code>x</code> 是原型链上的，也就是 <code>Foo.prototype</code> 上的，为 <code>1</code></p>
-<h2 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h2><p>构造函数继承的方法都会存在父对象之中，每一次实例，都会将 <code>funciton</code> 保存在内存中，这样的做法毫无疑问会带来性能上的问题</p>
-<p>其次类式继承是不可变的，在运行时，无法修改或者添加新的方法，而且类式继承不支持多重继承</p>
-<p>而原型继承是可以通过改变原型链接而对子类进行修改的（重写方法即可），对于原型继承，可以使用类似 <code>extend</code> 等方法对对象进行扩展</p>
+<p>可以发现，<code>child</code> 是通过中间层继承了 <code>father</code> 的原型上的东西的，但是这里有一个问题，为什么不直接使用 <code>child.prototype = father.prototype</code></p>
+<p>如果这样做 <code>child</code> 和 <code>father</code> 就没有区别了，通过上面的图可以发现，在 <code>prototype</code> 中有个 <code>constructor</code> 属性，是指向的是构造函数的</p>
+<p>按照正常的情况我们要把 <code>constructor</code> 的值改回来指向 <code>child</code> 的构造函数，但如果直接把 <code>father.prototype</code> 赋值给 <code>child.prototype</code></p>
+<p>那么 <code>constructor</code> 应该指向谁呢？所以很显然只能通过中间层才能使得 <code>child</code> 和 <code>father</code> 保持为独立的对象</p>
+<h2 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h2><p>和原型对比起来，构造函数（类）式继承有什么不一样呢？首先，构造函数继承的方法都会存在父对象之中，每一次实例，都会将 <code>funciton</code> 保存在内存中，这样的做法毫无疑问会带来性能上的问题</p>
+<p>其次类式继承是不可变的，在运行时，无法修改或者添加新的方法，这种方式是一种固步自封的死方法</p>
+<p>而原型继承是可以通过改变原型链接而对子类进行修改的（重写方法即可）</p>
+<p>另外就是类式继承不支持多重继承，而对于原型继承来说，可以使用类似 <code>extend</code> 等方法对对象进行扩展</p>
 <h2 id="组合模式"><a href="#组合模式" class="headerlink" title="组合模式"></a>组合模式</h2><p>另外的一种模式，是结合类继承和原型继承的各自优点来进行对父类的继承，用类式继承属性，而原型继承方法</p>
 <p>这种模式避免了属性的公用，因为一般来说，每一个子类的属性都是私有的，而方法得到了统一</p>
+<p>这种模式称为组合模式，也是继承类式常用到的一种方法</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">father</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.a = <span class="hljs-string">'father'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">father.prototype.b = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  alert(<span class="hljs-keyword">this</span>.a)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> child = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  father.call(<span class="hljs-keyword">this</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">child.prototype = <span class="hljs-keyword">new</span> father();</span><br></pre></td></tr></table></figure>
 
-<h2 id="使用-Object-create-…"><a href="#使用-Object-create-…" class="headerlink" title="使用 Object.create(…)"></a>使用 Object.create(…)</h2><p>还有一种方式就是使用 <code>Object.create()</code> 来实现，<code>Object.create()</code> 的作用是 创建一个空对象，并且这个对象的原型指向这个参数</p>
+<h2 id="new-关键字和-Obeject-create-方法"><a href="#new-关键字和-Obeject-create-方法" class="headerlink" title="new 关键字和 Obeject.create 方法"></a>new 关键字和 Obeject.create 方法</h2><p>引用 <a href="http://aaditmshah.github.io/why-prototypal-inheritance-matters/" target="_blank" rel="noopener">why-prototypal-inheritance-matters</a> 这篇文章当中的一句话</p>
+<blockquote>
+<p><code>new</code> 关键字掩盖了 <code>JavaScript</code> 中真正的原型继承，使得它更像是基于类的继承</p>
+<p>其实 <code>new</code> 关键字只是 <code>Javascript</code> 在为了获得流行度而加入与 <code>Java</code> 类似的语法时期留下来的一个残留物</p>
+</blockquote>
+<p>作者推荐我们使用 <code>Object.create()</code> 方法创建或者实例化对象，我们可以对比一下使用类式继承和 <code>Object.create</code> 方法两者之间的区别</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 类式继承 </span></span><br><span class="line"><span class="hljs-keyword">var</span> father = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.a = <span class="hljs-string">'father'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">father.prototype.b = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; alert(<span class="hljs-keyword">this</span>.a) &#125;</span><br><span class="line"><span class="hljs-keyword">var</span> obj = <span class="hljs-keyword">new</span> father();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 使用 Object.create()</span></span><br><span class="line"><span class="hljs-keyword">var</span> father = &#123;</span><br><span class="line">  a: <span class="hljs-string">'father'</span>,</span><br><span class="line">  b: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    alert(<span class="hljs-keyword">this</span>.a);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> obj = <span class="hljs-built_in">Object</span>.create(father);</span><br><span class="line"><span class="hljs-built_in">console</span>.dir(obj)</span><br></pre></td></tr></table></figure>
+
+<p>通过在控制台查看结果，我们可以发现</p>
+<p>用 <code>create</code> 的方法构造出来的对象，<code>a</code> 属性和 <code>b</code> 方法都是在对象的原型上，也就是说我们可以通过更改 <code>father</code> 的属性动态改变 <code>obj</code> 的原型上的方法和属性</p>
+<p>而上面通过 <code>new</code> 关键字用构造函数生成的实例，<code>a</code> 属性是无法改变的</p>
+<p>下面我们就来看看 <code>Object.create()</code> 方法到底是个什么东西</p>
+<p>这里只是简单介绍，更多详细的可以查看 <a href="https://heptaluan.github.io/2017/03/03/JavaScript/07/" target="_blank" rel="noopener">Object.create( … )</a> 这篇文章</p>
+<h2 id="使用-Object-create-…"><a href="#使用-Object-create-…" class="headerlink" title="使用 Object.create(…)"></a>使用 Object.create(…)</h2><p><code>Object.create()</code> 的作用是 创建一个空对象，并且这个对象的原型指向这个参数</p>
 <p>典型的原型风格</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Foo</span>(<span class="hljs-params">name</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.name = name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Foo.prototype.myName = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.name;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Bar</span>(<span class="hljs-params">name, label</span>) </span>&#123;</span><br><span class="line">  Foo.call(<span class="hljs-keyword">this</span>, name);</span><br><span class="line">  <span class="hljs-keyword">this</span>.label = label;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 我们创建了一个新的 Bar.prototype 对象并关联到 Foo.prototype</span></span><br><span class="line">Bar.prototype = <span class="hljs-built_in">Object</span>.create(Foo.prototype);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 注意！现在没有 Bar.prototype.constructor 了</span></span><br><span class="line"><span class="hljs-comment">// 如果你需要这个属性的话可能需要手动修复一下它</span></span><br><span class="line"><span class="hljs-comment">// Bar.prototype.constructor = Bar;</span></span><br><span class="line"></span><br><span class="line">Bar.prototype.myLabel = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.label;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-keyword">new</span> Bar(<span class="hljs-string">'a'</span>, <span class="hljs-string">'obj a'</span>);</span><br><span class="line"></span><br><span class="line">a.myName(); <span class="hljs-comment">// 'a'</span></span><br><span class="line">a.myLabel(); <span class="hljs-comment">// 'obj a'</span></span><br></pre></td></tr></table></figure>
 
@@ -373,7 +385,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        161
+                        162
                     </p>
                 </div>
             </div>
@@ -415,22 +427,14 @@
                 目录
             </h3>
             <ul class="menu-list"><li>
-        <a class="is-flex" href="#原型链">
-        <span class="has-mr-6">1</span>
-        <span>原型链</span>
-        </a></li><li>
-        <a class="is-flex" href="#继承">
-        <span class="has-mr-6">2</span>
-        <span>继承</span>
-        </a><ul class="menu-list"><li>
         <a class="is-flex" href="#类式继承（构造函数）">
-        <span class="has-mr-6">2.1</span>
+        <span class="has-mr-6">1</span>
         <span>类式继承（构造函数）</span>
         </a></li><li>
         <a class="is-flex" href="#原型继承">
-        <span class="has-mr-6">2.2</span>
+        <span class="has-mr-6">2</span>
         <span>原型继承</span>
-        </a></li></ul></li><li>
+        </a></li><li>
         <a class="is-flex" href="#对比">
         <span class="has-mr-6">3</span>
         <span>对比</span>
@@ -439,36 +443,40 @@
         <span class="has-mr-6">4</span>
         <span>组合模式</span>
         </a></li><li>
-        <a class="is-flex" href="#使用-Object-create-…">
+        <a class="is-flex" href="#new-关键字和-Obeject-create-方法">
         <span class="has-mr-6">5</span>
+        <span>new 关键字和 Obeject.create 方法</span>
+        </a></li><li>
+        <a class="is-flex" href="#使用-Object-create-…">
+        <span class="has-mr-6">6</span>
         <span>使用 Object.create(…)</span>
         </a></li><li>
         <a class="is-flex" href="#关于-constructor">
-        <span class="has-mr-6">6</span>
+        <span class="has-mr-6">7</span>
         <span>关于 constructor</span>
         </a></li><li>
         <a class="is-flex" href="#总结">
-        <span class="has-mr-6">7</span>
+        <span class="has-mr-6">8</span>
         <span>总结</span>
         </a></li><li>
         <a class="is-flex" href="#综合实例">
-        <span class="has-mr-6">8</span>
+        <span class="has-mr-6">9</span>
         <span>综合实例</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#添加自己新的方法来覆盖-Person-上的方法">
-        <span class="has-mr-6">8.1</span>
+        <span class="has-mr-6">9.1</span>
         <span>添加自己新的方法来覆盖 Person 上的方法</span>
         </a></li><li>
         <a class="is-flex" href="#原型链原理图">
-        <span class="has-mr-6">8.2</span>
+        <span class="has-mr-6">9.2</span>
         <span>原型链原理图</span>
         </a></li><li>
         <a class="is-flex" href="#改变-prototype">
-        <span class="has-mr-6">8.3</span>
+        <span class="has-mr-6">9.3</span>
         <span>改变 prototype</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#几种实现继承方式的优缺点">
-        <span class="has-mr-6">9</span>
+        <span class="has-mr-6">10</span>
         <span>几种实现继承方式的优缺点</span>
         </a></li></ul>
         </div>
@@ -510,7 +518,7 @@
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">4</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Http/">
@@ -597,6 +605,25 @@
         
         <article class="media">
             
+            <a href="/2019/12/01/Essay/05/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/05.jpg" alt="数据结构与算法">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-30T16:00:00.000Z">2019-12-01</time></div>
+                    <a href="/2019/12/01/Essay/05/" class="has-link-black-ter is-size-6">数据结构与算法</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2019/11/25/React/15/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React &amp;&amp; Redux">
@@ -671,25 +698,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/11/01/Node/18/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/18.jpg" alt="egg 实战（实现一个接口服务）">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-31T16:00:00.000Z">2019-11-01</time></div>
-                    <a href="/2019/11/01/Node/18/" class="has-link-black-ter is-size-6">egg 实战（实现一个接口服务）</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -701,6 +709,17 @@
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2019/11/">
@@ -1117,7 +1136,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">4</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
@@ -1189,7 +1208,7 @@
             <div class="level-start has-text-centered-mobile">
                 <!-- <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="原型链和继承" height="28">
+                    <img src="/images/logo.svg" alt="原型继承和类式继承" height="28">
                 
                 </a> -->
                 <p class="is-size-7">
