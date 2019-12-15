@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="前文（为什么要使用依赖注入）只是简单的介绍了依赖注入的基本概念和 Angular 当中的一个简单的依赖注入实例 下面我们就来深入的了解一下 Angular 当中的依赖注入到底是什么东西">
+    <meta name="description" content="在前文（为什么要使用依赖注入）当中，我们简单的介绍了依赖注入的基本概念和 Angular 当中的一个简单的依赖注入实例 下面我们就来深入的了解一下 Angular 当中的依赖注入到底是什么东西 依赖注入（DI）是一种设计模式，也是 Angular 的核心，在 Angular 中我们使用 Provider 来描述与 Token 关联的依赖对象的创建方式 创建方式有四种，它们分别是 useClass，">
 <meta name="keywords" content="Angular">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Angular 中的依赖注入">
 <meta property="og:url" content="http://yoursite.com/2018/12/26/Angular/03/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="前文（为什么要使用依赖注入）只是简单的介绍了依赖注入的基本概念和 Angular 当中的一个简单的依赖注入实例 下面我们就来深入的了解一下 Angular 当中的依赖注入到底是什么东西">
+<meta property="og:description" content="在前文（为什么要使用依赖注入）当中，我们简单的介绍了依赖注入的基本概念和 Angular 当中的一个简单的依赖注入实例 下面我们就来深入的了解一下 Angular 当中的依赖注入到底是什么东西 依赖注入（DI）是一种设计模式，也是 Angular 的核心，在 Angular 中我们使用 Provider 来描述与 Token 关联的依赖对象的创建方式 创建方式有四种，它们分别是 useClass，">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/03.jpg">
-<meta property="og:updated_time" content="2019-11-09T15:23:02.855Z">
+<meta property="og:updated_time" content="2019-12-11T06:30:01.145Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular 中的依赖注入">
-<meta name="twitter:description" content="前文（为什么要使用依赖注入）只是简单的介绍了依赖注入的基本概念和 Angular 当中的一个简单的依赖注入实例 下面我们就来深入的了解一下 Angular 当中的依赖注入到底是什么东西">
+<meta name="twitter:description" content="在前文（为什么要使用依赖注入）当中，我们简单的介绍了依赖注入的基本概念和 Angular 当中的一个简单的依赖注入实例 下面我们就来深入的了解一下 Angular 当中的依赖注入到底是什么东西 依赖注入（DI）是一种设计模式，也是 Angular 的核心，在 Angular 中我们使用 Provider 来描述与 Token 关联的依赖对象的创建方式 创建方式有四种，它们分别是 useClass，">
 <meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/03.jpg">
 
 
@@ -28,7 +28,7 @@
 
 
 
-<link rel="icon" href="https://raw.githubusercontent.com/heptaluan/blog/master/backups/cdn/favicon.ico">
+<link rel="icon" href="https://gitee.com/heptaluan/backups/raw/master/cdn/favicon.ico">
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
@@ -69,6 +69,16 @@
 
     
     
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?f0399d35b846ccd84f70acc7b232fb2e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
     
     
 
@@ -163,7 +173,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    29 分钟 读完 (大约 4394 个字)
+                    29 分钟 读完 (大约 4418 个字)
                 </span>
                 
                 
@@ -176,13 +186,13 @@
             
         </h1>
         <div class="content">
-            <p>前文（<a href="https://heptaluan.github.io/2018/12/14/Angular/02/" target="_blank" rel="noopener">为什么要使用依赖注入</a>）只是简单的介绍了依赖注入的基本概念和 <code>Angular</code> 当中的一个简单的依赖注入实例</p>
+            <p>在前文（<a href="https://heptaluan.github.io/2018/12/14/Angular/02/" target="_blank" rel="noopener">为什么要使用依赖注入</a>）当中，我们简单的介绍了依赖注入的基本概念和 <code>Angular</code> 当中的一个简单的依赖注入实例</p>
 <p>下面我们就来深入的了解一下 <code>Angular</code> 当中的依赖注入到底是什么东西</p>
-<a id="more"></a>
-
 <p>依赖注入（<code>DI</code>）是一种设计模式，也是 <code>Angular</code> 的核心，在 <code>Angular</code> 中我们使用 <code>Provider</code> 来描述与 <code>Token</code> 关联的依赖对象的创建方式</p>
 <p>创建方式有四种，它们分别是 <code>useClass</code>，<code>useValue</code>，<code>useExisting</code> 和 <code>useFactory</code></p>
-<h2 id="useClass"><a href="#useClass" class="headerlink" title="useClass"></a>useClass</h2><figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@NgModule</span>(&#123;</span><br><span class="line">  providers: [</span><br><span class="line">    <span class="hljs-comment">// 两者名称一样的时候可以使用简洁语法，直接使用 ApiService</span></span><br><span class="line">    &#123; provide: ApiService, useClass: ApiService &#125;</span><br><span class="line">  ],</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+
+<h2 id="useClass"><a href="#useClass" class="headerlink" title="useClass"></a>useClass</h2><figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@NgModule</span>(&#123;</span><br><span class="line">  providers: [</span><br><span class="line">    <span class="hljs-comment">// 两者名称一样的时候可以使用简洁语法，即直接使用 ApiService</span></span><br><span class="line">    &#123; provide: ApiService, useClass: ApiService &#125;</span><br><span class="line">  ],</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
 <h4 id="ClassProvider-接口定义"><a href="#ClassProvider-接口定义" class="headerlink" title="ClassProvider 接口定义"></a>ClassProvider 接口定义</h4><figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> ClassProvider &#123;</span><br><span class="line">  <span class="hljs-comment">// 用于设置与依赖对象关联的 Token 值</span></span><br><span class="line">  <span class="hljs-comment">// Token 值可能是 Type、InjectionToken、OpaqueToken 的实例或字符串</span></span><br><span class="line">  provide: <span class="hljs-built_in">any</span>; </span><br><span class="line">  useClass: Type&lt;<span class="hljs-built_in">any</span>&gt;;</span><br><span class="line">  <span class="hljs-comment">// 用于标识是否 multiple providers，若是 multiple 类型，则返回与 Token 关联的依赖对象列表</span></span><br><span class="line">  multi?: <span class="hljs-built_in">boolean</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -275,7 +285,7 @@
 <h4 id="在构造函数中，Type-类型的参数是否可以使用-Inject-Type-的方式注入"><a href="#在构造函数中，Type-类型的参数是否可以使用-Inject-Type-的方式注入" class="headerlink" title="在构造函数中，Type 类型的参数是否可以使用 @Inject(Type) 的方式注入"></a>在构造函数中，Type 类型的参数是否可以使用 @Inject(Type) 的方式注入</h4><p><code>Type</code> 类型的参数也能使用 <code>@Inject(Type)</code> 的方式注入，具体如下：</p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 虽然可以正常使用，但是编辑器会有提示</span></span><br><span class="line"><span class="hljs-comment">// [ts] Parameter 'http' implicitly has an 'any' type.</span></span><br><span class="line"><span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-meta">@Inject</span>(Http) <span class="hljs-keyword">private</span> http</span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 也可以这样使用，但是有些冗余</span></span><br><span class="line"><span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-meta">@Inject</span>(Http) <span class="hljs-keyword">private</span> http: Http</span>) &#123; &#125;</span><br></pre></td></tr></table></figure>
 
-<p>如果是 <code>Type</code> 类型的参数，还是推荐使用下面这样的注入方式</p>
+<p>如果是 <code>Type</code> 类型的参数，还是推荐使用下面这样的方式</p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> http: Http</span>) &#123; &#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="注入器和提供器"><a href="#注入器和提供器" class="headerlink" title="注入器和提供器"></a>注入器和提供器</h2><p>使用的时候定义一个变量用来接收对应的服务 <code>ProductServicr</code></p>
@@ -315,7 +325,7 @@
 </li>
 </ul>
 <h2 id="如果所依赖的服务是动态加载的"><a href="#如果所依赖的服务是动态加载的" class="headerlink" title="如果所依赖的服务是动态加载的"></a>如果所依赖的服务是动态加载的</h2><p>一个简单的示例，随机生成的随机数动态加载对应服务</p>
-<figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// app.module.ts</span></span><br><span class="line"><span class="hljs-meta">@NgModule</span>(&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  providers: [&#123;</span><br><span class="line">    provide: ProductService,</span><br><span class="line">    useFactory: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">let</span> logger = <span class="hljs-keyword">new</span> LoggerService();</span><br><span class="line">      <span class="hljs-keyword">let</span> dev = <span class="hljs-built_in">Math</span>.random() &gt; <span class="hljs-number">0.5</span></span><br><span class="line">      <span class="hljs-keyword">if</span> (dev) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ProductService(logger)</span><br><span class="line">      &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> AnotherProductService(logger)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, LoggerService]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// logger.service.ts</span></span><br><span class="line"><span class="hljs-comment">// 一个简单的打印日志的服务</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123;&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">@Injectable</span>()</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> LoggerService &#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"></span>) &#123; &#125;</span><br><span class="line">  log (messgae: <span class="hljs-built_in">string</span>) &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(messgae)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// app.module.ts</span></span><br><span class="line"><span class="hljs-meta">@NgModule</span>(&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  providers: [&#123;</span><br><span class="line">    provide: ProductService,</span><br><span class="line">    useFactory: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">let</span> logger = <span class="hljs-keyword">new</span> LoggerService();</span><br><span class="line">      <span class="hljs-keyword">let</span> dev = <span class="hljs-built_in">Math</span>.random() &gt; <span class="hljs-number">0.5</span></span><br><span class="line">      <span class="hljs-keyword">if</span> (dev) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ProductService(logger)</span><br><span class="line">      &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> AnotherProductService(logger)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, LoggerService]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// logger.service.ts</span></span><br><span class="line"><span class="hljs-comment">// 一个简单的打印日志的服务</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; Injectable &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">@Injectable</span>()</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> LoggerService &#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"></span>) &#123; &#125;</span><br><span class="line">  log (messgae: <span class="hljs-built_in">string</span>) &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(messgae)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>需要注意，如果多个组件共用这个服务，那么生成的实例都是相同的，因为工厂方法创建的对象是一个单例对象</p>
 <p>工厂方法只会在创建第一个对象的时候被调用一次，然后在整个应用当中所有被注入的服务的实例都是同一个对象</p>
@@ -354,7 +364,7 @@
 <p>简单来说，分为</p>
 <figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">应用级的注入器  ==&gt;  主组件注入器  ==&gt;  子组件注入器</span><br></pre></td></tr></table></figure>
 
-<h2 id="手动添加注入器（避免此类操作）"><a href="#手动添加注入器（避免此类操作）" class="headerlink" title="手动添加注入器（避免此类操作）"></a>手动添加注入器（避免此类操作）</h2><p>但是需要注意，在实际的使用当中避免使用这种方式</p>
+<h2 id="手动添加注入器（避免此类操作）"><a href="#手动添加注入器（避免此类操作）" class="headerlink" title="手动添加注入器（避免此类操作）"></a>手动添加注入器（避免此类操作）</h2><p>在前文当中我们介绍过了这种使用方式，但是需要注意的是，在实际的使用当中避免使用这种方式</p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; Component, OnInit, Injector &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; ProductService &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./product.service'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ProductComponent <span class="hljs-keyword">implements</span> OnInit &#123;</span><br><span class="line">  <span class="hljs-keyword">private</span> productService: ProductService;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> injector: Injector</span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.productService = injector.get(<span class="hljs-keyword">this</span>.productService)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
@@ -438,7 +448,7 @@
                 <div>
                     
                         <figure class="avatar image is-128x128 has-mb-6">
-                            <img class="is-rounded" src="https://avatars2.githubusercontent.com/u/18285736?s=460&amp;v=4" alt="heptaluan">
+                            <img class="is-rounded" src="https://gitee.com/heptaluan/backups/raw/master/cdn/avatar.png" alt="heptaluan">
                         </figure>
                     
                     
@@ -467,7 +477,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        162
+                        164
                     </p>
                 </div>
             </div>
@@ -640,7 +650,7 @@
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">5</span>
+                <span class="level-item tag">6</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Http/">
@@ -680,7 +690,7 @@
                 <span class="level-item">React</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">13</span>
+                <span class="level-item tag">14</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Vue/">
@@ -710,7 +720,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 17.5px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/Http/" style="font-size: 12.5px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 11.25px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 18.75px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 16.25px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 13.75px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 17.14px;">Angular</a> <a href="/tags/CSS/" style="font-size: 14.29px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/Http/" style="font-size: 11.43px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 18.57px;">Node.js</a> <a href="/tags/React/" style="font-size: 15.71px;">React</a> <a href="/tags/Vue/" style="font-size: 15.71px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 12.86px;">jQuery</a>
     </div>
 </div>
 
@@ -724,6 +734,44 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/12/14/Essay/06/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/06.jpg" alt="线性表（顺序存储结构）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-13T16:00:00.000Z">2019-12-14</time></div>
+                    <a href="/2019/12/14/Essay/06/" class="has-link-black-ter is-size-6">线性表（顺序存储结构）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/12/13/React/14/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="Redux 中的 Middleware">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-12T16:00:00.000Z">2019-12-13</time></div>
+                    <a href="/2019/12/13/React/14/" class="has-link-black-ter is-size-6">Redux 中的 Middleware</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -746,16 +794,16 @@
         
         <article class="media">
             
-            <a href="/2019/11/25/React/15/" class="media-left">
+            <a href="/2019/11/25/React/13/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React &amp;&amp; Redux">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg" alt="React &amp;&amp; Redux">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-24T16:00:00.000Z">2019-11-25</time></div>
-                    <a href="/2019/11/25/React/15/" class="has-link-black-ter is-size-6">React &amp;&amp; Redux</a>
+                    <a href="/2019/11/25/React/13/" class="has-link-black-ter is-size-6">React &amp;&amp; Redux</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/React/">React</a>
                     </p>
@@ -765,56 +813,18 @@
         
         <article class="media">
             
-            <a href="/2019/11/23/React/14/" class="media-left">
+            <a href="/2019/11/23/React/12/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/15.jpg" alt="Hook">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/12.jpg" alt="Hook">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-22T16:00:00.000Z">2019-11-23</time></div>
-                    <a href="/2019/11/23/React/14/" class="has-link-black-ter is-size-6">Hook</a>
+                    <a href="/2019/11/23/React/12/" class="has-link-black-ter is-size-6">Hook</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/11/07/JavaScript/60/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/60.jpg" alt="ES6 中的 Symbol，Set 和 Map">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-06T16:00:00.000Z">2019-11-07</time></div>
-                    <a href="/2019/11/07/JavaScript/60/" class="has-link-black-ter is-size-6">ES6 中的 Symbol，Set 和 Map</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/11/06/Node/19/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/19.jpg" alt="egg 问题汇总">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-11-05T16:00:00.000Z">2019-11-06</time></div>
-                    <a href="/2019/11/06/Node/19/" class="has-link-black-ter is-size-6">egg 问题汇总</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
                     </p>
                 </div>
             </div>
@@ -838,7 +848,7 @@
                     <span class="level-item">十二月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1258,7 +1268,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">5</span>
+                        <span class="tag is-grey">6</span>
                     </a>
                 </div>
                 
@@ -1293,7 +1303,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/React/">
                         <span class="tag">React</span>
-                        <span class="tag is-grey">13</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 
