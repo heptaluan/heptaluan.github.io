@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="在看作用域之前，我们先来看看 IIFE（立即执行函数表达式），也就是所谓的立即执行函数，那么为什么需要 IIFE  传统的方法啰嗦，定义和执行分开写  传统的方法直接污染全局命名空间（浏览器里的 global 对象，如 window）">
+    <meta name="description" content="在深入了解作用域之前，我们先来看看什么是变量提升 变量提升（Hoisting）我们通过一个例子来进行理解，如下 12345678910var a = 1;function foo () &amp;#123;  if (!a) &amp;#123;    var a = 2;  &amp;#125;  alert(a);&amp;#125;;foo();  // 输出 2  之所以输出 2，这就是所谓的变量提升了 所谓声明变量 1">
 <meta name="keywords" content="JavaScript">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JavaScript 中的作用域">
 <meta property="og:url" content="http://yoursite.com/2017/01/18/JavaScript/03/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="在看作用域之前，我们先来看看 IIFE（立即执行函数表达式），也就是所谓的立即执行函数，那么为什么需要 IIFE  传统的方法啰嗦，定义和执行分开写  传统的方法直接污染全局命名空间（浏览器里的 global 对象，如 window）">
+<meta property="og:description" content="在深入了解作用域之前，我们先来看看什么是变量提升 变量提升（Hoisting）我们通过一个例子来进行理解，如下 12345678910var a = 1;function foo () &amp;#123;  if (!a) &amp;#123;    var a = 2;  &amp;#125;  alert(a);&amp;#125;;foo();  // 输出 2  之所以输出 2，这就是所谓的变量提升了 所谓声明变量 1">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/03.jpg">
-<meta property="og:updated_time" content="2019-11-09T15:23:02.880Z">
+<meta property="og:updated_time" content="2019-12-31T08:08:55.376Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的作用域">
-<meta name="twitter:description" content="在看作用域之前，我们先来看看 IIFE（立即执行函数表达式），也就是所谓的立即执行函数，那么为什么需要 IIFE  传统的方法啰嗦，定义和执行分开写  传统的方法直接污染全局命名空间（浏览器里的 global 对象，如 window）">
+<meta name="twitter:description" content="在深入了解作用域之前，我们先来看看什么是变量提升 变量提升（Hoisting）我们通过一个例子来进行理解，如下 12345678910var a = 1;function foo () &amp;#123;  if (!a) &amp;#123;    var a = 2;  &amp;#125;  alert(a);&amp;#125;;foo();  // 输出 2  之所以输出 2，这就是所谓的变量提升了 所谓声明变量 1">
 <meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/03.jpg">
 
 
@@ -69,6 +69,16 @@
 
     
     
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?f0399d35b846ccd84f70acc7b232fb2e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
     
     
 
@@ -114,7 +124,7 @@
                 
                 <a class="navbar-item" href="/categories">Categories</a>
                 
-                <a class="navbar-item" href="/about">About</a>
+                <a class="navbar-item" href="/target">Target</a>
                 
                 <a class="navbar-item" href="https://heptaluan.github.io/demos/">Demos</a>
                 
@@ -163,7 +173,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    19 分钟 读完 (大约 2912 个字)
+                    36 分钟 读完 (大约 5446 个字)
                 </span>
                 
                 
@@ -176,33 +186,8 @@
             
         </h1>
         <div class="content">
-            <p>在看作用域之前，我们先来看看 <code>IIFE</code>（立即执行函数表达式），也就是所谓的立即执行函数，那么为什么需要 <code>IIFE</code></p>
-<ul>
-<li><p>传统的方法啰嗦，定义和执行分开写</p>
-</li>
-<li><p>传统的方法直接污染全局命名空间（浏览器里的 <code>global</code> 对象，如 <code>window</code>）</p>
-</li>
-</ul>
-<a id="more"></a>
-
-<p>转变表达式的办法有很多，最常见的办法是把函数声明用一对 <code>()</code> 包裹起来，于是就变成了立即执行函数</p>
-<h2 id="IIFE"><a href="#IIFE" class="headerlink" title="IIFE"></a>IIFE</h2><p>一个简单的 <code>IIFE</code></p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 这里是故意换行，实际上可以和下面的括号连起来</span></span><br><span class="line">(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;...&#125;)</span><br><span class="line">();</span><br></pre></td></tr></table></figure>
-
-<p>这就等价于：</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 这就不是定义，而是表达式了</span></span><br><span class="line"><span class="hljs-keyword">var</span> foo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;...&#125;;</span><br><span class="line"></span><br><span class="line">foo();</span><br></pre></td></tr></table></figure>
-
-<p>但是之前我们说不行的那个写法，其实也可以直接用括号包起来，这也是一种等价的表达式</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>)</span>&#123;...&#125;());</span><br></pre></td></tr></table></figure>
-
-<p>另外，刚才说过转变表达式的方式很多，的确还有很多别的写法，比如</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">!<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;();</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// or</span></span><br><span class="line"></span><br><span class="line">+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;();</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// or</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">void</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;();</span><br></pre></td></tr></table></figure>
-
-<p>所谓不去污染全局命名空间，是因为 <code>IIFE</code> 创建了一个新的函数作用域，你真正的业务代码被封装在其中，自然就不会触碰到全局对象了</p>
-<p>如果你需要全局对象，那就 <code>pass</code> 给 <code>IIFE</code></p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">void</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">global</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 在这里，global 就是全局对象了</span></span><br><span class="line">&#125;(<span class="hljs-keyword">this</span>)  <span class="hljs-comment">// 在浏览器里，this 就是 window 对象</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="变量提升（Hoisting）"><a href="#变量提升（Hoisting）" class="headerlink" title="变量提升（Hoisting）"></a>变量提升（Hoisting）</h2><p>先看一个例子</p>
+            <p>在深入了解作用域之前，我们先来看看什么是变量提升</p>
+<h2 id="变量提升（Hoisting）"><a href="#变量提升（Hoisting）" class="headerlink" title="变量提升（Hoisting）"></a>变量提升（Hoisting）</h2><p>我们通过一个例子来进行理解，如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (!a) &#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> a = <span class="hljs-number">2</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  alert(a);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">foo();  <span class="hljs-comment">// 输出 2</span></span><br></pre></td></tr></table></figure>
 
 <p>之所以输出 <code>2</code>，这就是所谓的变量提升了</p>
@@ -227,12 +212,19 @@
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a;</span><br><span class="line">a = <span class="hljs-number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> a;    <span class="hljs-comment">// 关键在这里</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (!a) &#123;</span><br><span class="line">    a = <span class="hljs-number">2</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  alert(a); <span class="hljs-comment">// 此时的 a 并非函数体外的那个全局变量</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo()</span><br></pre></td></tr></table></figure>
 
 <p>如代码所示，在进入函数体后解释器声明了新的变量 <code>a</code>，而无论 <code>if</code> 语句的条件如何，都将为新的变量 <code>a</code> 赋值为 <code>2</code></p>
-<h2 id="作用域（Scoping）"><a href="#作用域（Scoping）" class="headerlink" title="作用域（Scoping）"></a>作用域（Scoping）</h2><p><code>JavaScript</code> 在 <code>ES6</code> 之前是没有块级作用域的（<code>Block Scoping</code>），只有函数作用域（<code>Function Scoping</code>）</p>
-<p>当解析器读到 <code>if</code> 语句的时候，它发现此处有一个变量声明和赋值，于是解析器会将其声明提升至当前作用域的顶部（这是默认行为，并且无法更改），这个行为就叫做 <code>Hoisting</code></p>
+<p>我们再来看一下函数当中的提升，同样我们也是通过一个例子来理解</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// test1</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">test</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  foo();</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    alert(<span class="hljs-string">'出现'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">test();</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// test2</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">test</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  foo();</span><br><span class="line">  <span class="hljs-keyword">var</span> foo = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    alert(<span class="hljs-string">'不会出现'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">test();</span><br></pre></td></tr></table></figure>
+
+<p>在第一个例子里，函数 <code>foo</code> 是一个声明，既然是声明就会被提升（特意包裹了一个外层作用域，因为全局作用域需要你的想象，不是那么直观，但是道理是一样的），所以在执行 <code>foo()</code> 之前，作用域就知道函数 <code>foo</code> 的存在了</p>
+<p>这叫做：函数声明（<code>Function Declaration</code>），函数声明会连通命名和函数体一起被提升至作用域顶部</p>
+<p>然而在第二个例子里，被提升的仅仅是变量名 <code>foo</code>，至于它的定义依然停留在原处，因此在执行 <code>foo()</code> 之前，作用域只知道 <code>foo</code> 的命名，不知道它到底是什么，所以执行会报错（通常会是：<code>foo is not a function</code>）</p>
+<p>这叫做：函数表达式（<code>Function Expression</code>），函数表达式只有命名会被提升，定义的函数体则不会</p>
+<h2 id="作用域（Scoping）"><a href="#作用域（Scoping）" class="headerlink" title="作用域（Scoping）"></a>作用域（Scoping）</h2><p><code>JavaScript</code> 在 <code>ES6</code> 之前是没有块级作用域的（<code>Block Scoping</code>），只有函数作用域（<code>Function Scoping</code>），并且函数的作用域在函数定义的时候就决定了</p>
+<p>当解析器读到一个变量声明和赋值的时候，解析器会将其声明提升至当前作用域的顶部（这是默认行为，并且无法更改），这个行为就叫做 <code>Hoisting</code></p>
 <blockquote>
 <p><strong>JavaScript 只有函数作用域！</strong></p>
 </blockquote>
-<p>所以在上文当中，若是想要 <code>alert(a)</code> 弹出那个 <code>1</code>，也可以创建有一个新的作用域，就是利用之前所说的 <code>IIFE</code></p>
+<p>比如下面这个例子，若是想要 <code>alert(a)</code> 弹出那个 <code>1</code>，也可以创建一个新的作用域，就是利用 <code>IIFE</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 这个就是 IIFE，它会创建一个新的函数作用域</span></span><br><span class="line">  <span class="hljs-comment">// 并且该作用域在 foo() 的内部，所以 alert 访问不到</span></span><br><span class="line">  <span class="hljs-comment">// 不过这个作用域可以访问上层作用域，这就叫 闭包</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (!a) &#123;</span><br><span class="line">    (<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;   </span><br><span class="line">      <span class="hljs-keyword">var</span> a = <span class="hljs-number">2</span>;  </span><br><span class="line">    &#125;());                </span><br><span class="line">  &#125;;</span><br><span class="line">  alert(a);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">foo();</span><br></pre></td></tr></table></figure>
 
 <blockquote>
@@ -254,14 +246,55 @@
 <blockquote>
 <p><code>Hosting</code> 只提升了命名，没有提升定义</p>
 </blockquote>
-<h2 id="函数声明与函数表达式的差别"><a href="#函数声明与函数表达式的差别" class="headerlink" title="函数声明与函数表达式的差别"></a>函数声明与函数表达式的差别</h2><p>先看两个例子</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// test1</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">test</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  foo();</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    alert(<span class="hljs-string">'出现'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">test();</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// test2</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">test</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  foo();</span><br><span class="line">  <span class="hljs-keyword">var</span> foo = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    alert(<span class="hljs-string">'不会出现'</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">test();</span><br></pre></td></tr></table></figure>
+<p>这里顺便简单的提及一下什么是 <code>IIFE</code>，也就是所谓的 <strong>立即执行函数</strong>，那么为什么需要 <code>IIFE</code></p>
+<ul>
+<li><p>传统的方法啰嗦，定义和执行分开写</p>
+</li>
+<li><p>传统的方法直接污染全局命名空间（浏览器里的 <code>global</code> 对象，如 <code>window</code>）</p>
+</li>
+</ul>
+<p>转变表达式的办法有很多，最常见的办法是把函数声明用一对 <code>()</code> 包裹起来，于是就变成了立即执行函数，一个简单的 <code>IIFE</code> 如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 这里是故意换行，实际上可以和下面的括号连起来</span></span><br><span class="line">(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;...&#125;)</span><br><span class="line">();</span><br></pre></td></tr></table></figure>
 
-<p>在第一个例子里，函数 <code>foo</code> 是一个声明，既然是声明就会被提升（特意包裹了一个外层作用域，因为全局作用域需要你的想象，不是那么直观，但是道理是一样的），所以在执行 <code>foo()</code> 之前，作用域就知道函数 <code>foo</code> 的存在了</p>
-<p>这叫做：函数声明（<code>Function Declaration</code>），函数声明会连通命名和函数体一起被提升至作用域顶部</p>
-<p>然而在第二个例子里，被提升的仅仅是变量名 <code>foo</code>，至于它的定义依然停留在原处，因此在执行 <code>foo()</code> 之前，作用域只知道 <code>foo</code> 的命名，不知道它到底是什么，所以执行会报错（通常会是：<code>foo is not a function</code>）</p>
-<p>这叫做：函数表达式（<code>Function Expression</code>），函数表达式只有命名会被提升，定义的函数体则不会</p>
-<h2 id="变量对象"><a href="#变量对象" class="headerlink" title="变量对象"></a>变量对象</h2><p><code>JavaScript</code> 解释器之所以可以找到我们定义的函数和变量，全部依靠的变量对象（<code>VO</code>）</p>
+<p>这就等价于：</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 这就不是定义，而是表达式了</span></span><br><span class="line"><span class="hljs-keyword">var</span> foo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;...&#125;;</span><br><span class="line"></span><br><span class="line">foo();</span><br></pre></td></tr></table></figure>
+
+<p>但是之前我们说不行的那个写法，其实也可以直接用括号包起来，这也是一种等价的表达式</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>)</span>&#123;...&#125;());</span><br></pre></td></tr></table></figure>
+
+<p>另外，刚才说过转变表达式的方式很多，的确还有很多别的写法，比如</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">!<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;();</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// or</span></span><br><span class="line"></span><br><span class="line">+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;();</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// or</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">void</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;();</span><br></pre></td></tr></table></figure>
+
+<p>所谓不去污染全局命名空间，是因为 <code>IIFE</code> 创建了一个新的函数作用域，你真正的业务代码被封装在其中，自然就不会触碰到全局对象了</p>
+<p>如果你需要全局对象，那就 <code>pass</code> 给 <code>IIFE</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">void</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">global</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 在这里，global 就是全局对象了</span></span><br><span class="line">&#125;(<span class="hljs-keyword">this</span>)  <span class="hljs-comment">// 在浏览器里，this 就是 window 对象</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="执行上下文环境"><a href="#执行上下文环境" class="headerlink" title="执行上下文环境"></a>执行上下文环境</h2><p>简单来说，函数<strong>每被</strong>调用一次，都会产生一个新的执行上下文环境，因为不同的调用可能就会有不同的参数</p>
+<p>需要注意一点：函数体内部自由变量在函数在定义的时候（不是调用的时候）就已经确定了</p>
+<p><code>JavaScript</code> 在执行一个代码段之前，都会进行这些<strong>准备工作</strong>来生成执行上下文，其实分三种情况：全局代码，函数体 和 <code>eval</code>（不推荐这个）</p>
+<h4 id="全局执行上下文环境"><a href="#全局执行上下文环境" class="headerlink" title="全局执行上下文环境"></a>全局执行上下文环境</h4><p>在产生执行全局上下文时，浏览器通常会做以下三个准备工作：</p>
+<ul>
+<li><p>提取 <code>var</code> 声明的变量，并赋值（默认）为 <code>undefined</code>（变量提升）</p>
+</li>
+<li><p>提取声明式函数（<code>function foo () {..}</code>）</p>
+</li>
+<li><p>给 <code>this</code> 赋值（指向 <code>window</code> 或当前对象）</p>
+</li>
+</ul>
+<h4 id="函数体上下文环境（也就是所谓的局部）"><a href="#函数体上下文环境（也就是所谓的局部）" class="headerlink" title="函数体上下文环境（也就是所谓的局部）"></a>函数体上下文环境（也就是所谓的局部）</h4><p>会在以上三个的基础上增加以下三条：</p>
+<ul>
+<li><p>给函数参数赋值</p>
+</li>
+<li><p>给 <code>arguments</code> 赋值（是一个实参副本，与实参保持一致）</p>
+</li>
+<li><p>自由变量的取值作用域，查找并赋值</p>
+</li>
+</ul>
+<p>所以总结来说就是，<strong>在执行代码之前，把将要用到的所有的变量都事先拿出来，有的直接赋值了，有的先用 undefined 占个空</strong></p>
+<p>而在执行 <code>JavaScript</code> 代码时，会有数不清的函数调用次数，会产生许多个上下文环境，这么多上下文环境该如何管理，以及如何销毁而释放内存就主要依靠下面的<strong>执行上下文栈</strong></p>
+<p>不过在此之前，我们先来深入的了解一下之前介绍的上下文环境</p>
+<h4 id="变量对象"><a href="#变量对象" class="headerlink" title="变量对象"></a>变量对象</h4><p>变量对象是与执行上下文相关的数据作用域，存储了在上下文中定义的变量和函数声明</p>
+<p><code>JavaScript</code> 解释器之所以可以找到我们定义的函数和变量，全部依靠的变量对象（<code>VO</code>）</p>
 <p>变量对象（<code>Variable Object</code>，缩写为 <code>VO</code>）是一个抽象概念中的对象，它用于存储执行上下文中</p>
 <ol>
 <li><p>变量</p>
@@ -290,7 +323,120 @@
 <p>函数表达式不会影响 <code>VO</code>，比如 <code>var a = function foo(){}</code></p>
 </blockquote>
 <p>这里的 <code>foo</code> 是函数表达式的名称，这个是不会记录到 <code>VO</code> 中的，这也是为什么我们不能在外部通过 <code>foo</code> 来获取到这个函数对象</p>
-<h2 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h2><p>先来看几个 <code>setTimeout</code> 相关的问题：</p>
+<h4 id="活动对象"><a href="#活动对象" class="headerlink" title="活动对象"></a>活动对象</h4><p>在函数上下文中，我们用活动对象（<code>activation object</code>，<code>AO</code>）来表示变量对象</p>
+<p>活动对象和变量对象其实是一个东西，只是变量对象是规范上的或者说是引擎实现上的，不可在 <code>JavaScript</code> 环境中访问</p>
+<p>只有到当进入一个执行上下文中，这个执行上下文的变量对象才会被激活，所以才叫 <code>activation object</code>，而只有被激活的变量对象，也就是活动对象上的各种属性才能被访问</p>
+<p>活动对象是在进入函数上下文时刻被创建的，它通过函数的 <code>arguments</code> 属性初始化，<code>arguments</code> 属性值是 <code>Arguments</code> 对象</p>
+<p>举个例子：</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params">a</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> b = <span class="hljs-number">2</span>;</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">c</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">  <span class="hljs-keyword">var</span> d = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;;</span><br><span class="line">  b = <span class="hljs-number">3</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo(<span class="hljs-number">1</span>);</span><br></pre></td></tr></table></figure>
+
+<p>在进入执行上下文后，这时候的 <code>AO</code> 是</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">AO = &#123;</span><br><span class="line">  <span class="hljs-built_in">arguments</span>: &#123;</span><br><span class="line">    <span class="hljs-number">0</span>: <span class="hljs-number">1</span>,</span><br><span class="line">    length: <span class="hljs-number">1</span></span><br><span class="line">  &#125;,</span><br><span class="line">  a: <span class="hljs-number">1</span>,</span><br><span class="line">  b: <span class="hljs-literal">undefined</span>,</span><br><span class="line">  c: reference to <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">c</span>(<span class="hljs-params"></span>)</span>&#123; &#125;,</span><br><span class="line">  d: <span class="hljs-literal">undefined</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在代码执行阶段，会顺序执行代码，根据代码，修改变量对象的值，当代码执行完后，这时候的 <code>AO</code> 是</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">AO = &#123;</span><br><span class="line">  <span class="hljs-built_in">arguments</span>: &#123;</span><br><span class="line">    <span class="hljs-number">0</span>: <span class="hljs-number">1</span>,</span><br><span class="line">    length: <span class="hljs-number">1</span></span><br><span class="line">  &#125;,</span><br><span class="line">  a: <span class="hljs-number">1</span>,</span><br><span class="line">  b: <span class="hljs-number">3</span>,</span><br><span class="line">  c: reference to <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">c</span>(<span class="hljs-params"></span>)</span>&#123; &#125;,</span><br><span class="line">  d: reference to FunctionExpression <span class="hljs-string">'d'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们来简单总结一下变量对象的创建过程</p>
+<ol>
+<li><p>全局上下文的变量对象初始化是全局对象</p>
+</li>
+<li><p>函数上下文的变量对象初始化只包括 <code>Arguments</code> 对象</p>
+</li>
+<li><p>在进入执行上下文时会给变量对象添加形参、函数声明、变量声明等初始的属性值</p>
+</li>
+<li><p>在代码执行阶段，会再次修改变量对象的属性值</p>
+</li>
+</ol>
+<p>在看个例子加深一下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(a)</span><br><span class="line">  a = <span class="hljs-number">1</span></span><br><span class="line">&#125;</span><br><span class="line">foo() <span class="hljs-comment">// ???</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bar</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  a = <span class="hljs-number">1</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(a)</span><br><span class="line">&#125;</span><br><span class="line">bar() <span class="hljs-comment">// ???</span></span><br></pre></td></tr></table></figure>
+
+<p>第一段会报错：<code>Uncaught ReferenceError: a is not defined</code></p>
+<p>第二段会打印：<code>1</code></p>
+<p>这是因为函数中的 <code>a</code> 并没有通过 <code>var</code> 等关键字声明，所有不会被存放在 <code>AO</code> 中</p>
+<p>第一段执行 <code>console</code> 的时候，<code>AO</code> 的值是</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AO = &#123;</span><br><span class="line">  <span class="hljs-built_in">arguments</span>: &#123;</span><br><span class="line">    length: <span class="hljs-number">0</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>没有 <code>a</code> 的值，然后就会到全局去找，全局也没有，所以会报错</p>
+<p>当第二段执行 <code>console</code> 的时候，全局对象已经被赋予了 <code>a</code> 属性，这时候就可以从全局找到 <code>a</code> 的值，所以会打印 <code>1</code></p>
+<h2 id="执行上下文栈"><a href="#执行上下文栈" class="headerlink" title="执行上下文栈"></a>执行上下文栈</h2><p>我们都知道在代码执行的时候，<code>JavaScript</code> 引擎并非一行一行地分析和执行程序，而是一段一段地分析执行</p>
+<p>当执行一段代码的时候，会进行一个准备工作，就比如之前示例当中的变量提升和函数提升，这其实就是所谓的执行上下文</p>
+<p>执行全局代码时，会产生一个执行上下文环境，每次调用函数都又会产生执行上下文环境，当函数调用完成时，这个上下文环境以及其中的数据都会被消除，再重新回到全局上下文环境</p>
+<p>处于活动状态的执行上下文环境只有一个</p>
+<p>其实这是一个 <strong>压栈</strong> ==&gt; <strong>出栈</strong> 的过程，如下图所示：</p>
+<ul>
+<li><p>压栈：函数未调用时只有全局上下文在执行，每次调用函数时会产生局部上下文，这就是压栈，也就是进栈</p>
+</li>
+<li><p>出栈：函数调用完成后，就会出栈，会销毁本次调用的局部上下文环境</p>
+</li>
+</ul>
+<p>注意：若函数里面是多层函数嵌套，也会出现多层执行上下文的嵌套（压栈和出栈也是嵌套产生的）</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/07.png" alt></p>
+<p>上面这种只是较为理想的情况，有一种情况无法做到这样干净利落的说销毁就销毁，这个就是闭包，关于闭包的内容会在后面进行介绍</p>
+<p>在代码执行过程中，<code>JavaScript</code> 引擎会创建了执行上下文栈（<code>Execution context stack</code>，<code>ECS</code>）来管理执行上下文，我们可以通过数组来进行模拟</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ECStack = []</span><br></pre></td></tr></table></figure>
+
+<p>当 <code>JavaScript</code> 开始要解释执行代码的时候，最先遇到的就是全局代码，所以初始化的时候首先就会向执行上下文栈压入一个全局执行上下文，我们用 <code>globalContext</code> 表示它</p>
+<p>并且只有当整个应用程序结束的时候，<code>ECStack</code> 才会被清空，所以程序结束之前，<code>ECStack</code> 最底部永远有个 <code>globalContext</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ECStack = [</span><br><span class="line">  globalContext</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>假设遇到下面这段代码</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fun3</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'fun3'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fun2</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  fun3()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fun1</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  fun2()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fun1()</span><br></pre></td></tr></table></figure>
+
+<p>当执行一个函数的时候，就会创建一个执行上下文，并且压入执行上下文栈，当函数执行完毕的时候，就会将函数的执行上下文从栈中弹出</p>
+<p>所以我们可以尝试使用伪代码来描述上述过程</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">ECStack.push(&lt;fun1&gt; functionContext)</span><br><span class="line"></span><br><span class="line">// fun1 中调用了 fun2，创建 fun2 的执行上下文</span><br><span class="line">ECStack.push(&lt;fun2&gt; functionContext)</span><br><span class="line"></span><br><span class="line">// fun2 还调用了 fun3</span><br><span class="line">ECStack.push(&lt;fun3&gt; functionContext)</span><br><span class="line"></span><br><span class="line">// fun3 执行完毕</span><br><span class="line">ECStack.pop()</span><br><span class="line"></span><br><span class="line">// fun2 执行完毕</span><br><span class="line">ECStack.pop()</span><br><span class="line"></span><br><span class="line">// fun1 执行完毕</span><br><span class="line">ECStack.pop()</span><br></pre></td></tr></table></figure>
+
+<p>但是需要注意的是，<code>JavaScript</code> 虽然执行完毕了，但是 <code>ECStack</code> 底层永远有个 <code>globalContext</code></p>
+<p>在了解了大致流程以后，我们来看看变量对象与活动对象</p>
+<h2 id="作用域链"><a href="#作用域链" class="headerlink" title="作用域链"></a>作用域链</h2><p>在上面一小节当中我们可以发现，在查找变量的时候，会先从当前上下文的变量对象中查找，如果没有找到，就会从父级（词法层面上的父级）执行上下文的变量对象中查找</p>
+<p>一直找到全局上下文的变量对象，也就是全局对象，这样由多个执行上下文的变量对象构成的链表就叫做 <strong>作用域链</strong></p>
+<p>又因为函数有一个内部属性 <code>[[scope]]</code>，当函数创建的时候，就会保存所有父变量对象到其中，你可以理解 <code>[[scope]]</code> 就是所有父变量对象的层级链</p>
+<p>比如下面这个例子，函数创建时，各自的 <code>[[scope]]</code> 为</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bar</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ==&gt;</span></span><br><span class="line"></span><br><span class="line">foo.[[scope]] = [</span><br><span class="line">  globalContext.VO</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line">bar.[[scope]] = [</span><br><span class="line">  fooContext.AO,</span><br><span class="line">  globalContext.VO</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>当函数激活时，进入函数上下文，创建 <code>VO/AO</code> 后，就会将活动对象添加到作用链的前端</p>
+<p>这时候执行上下文的作用域链，我们命名为 <code>Scope</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Scope = [AO].concat([[Scope]]);</span><br></pre></td></tr></table></figure>
+
+<p>至此，作用域链创建完毕，下面我们便以一个函数的创建和激活两个时期来讲解作用域链是如何创建和变化的，例子如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> scope = <span class="hljs-string">'global scope'</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">checkscope</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> scope2 = <span class="hljs-string">'local scope'</span></span><br><span class="line">  <span class="hljs-keyword">return</span> scope2</span><br><span class="line">&#125;</span><br><span class="line">checkscope()</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><code>checkscope</code> 函数被创建，保存作用域链到内部属性 <code>[[scope]]</code></li>
+</ol>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">checkscope.[[scope]] = [</span><br><span class="line">  globalContext.VO</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>执行 <code>checkscope</code> 函数，创建 <code>checkscope</code> 函数执行上下文，<code>checkscope</code> 函数执行上下文被压入执行上下文栈</li>
+</ol>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ECStack = [</span><br><span class="line">  checkscopeContext,</span><br><span class="line">  globalContext</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li><code>checkscope</code> 函数并不立刻执行，开始做准备工作，第一步：复制函数 <code>[[scope]]</code> 属性创建作用域链</li>
+</ol>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">checkscopeContext = &#123;</span><br><span class="line">  Scope: checkscope.[[scope]],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li>第二步：用 <code>arguments</code> 创建活动对象，随后初始化活动对象，加入形参、函数声明、变量声明</li>
+</ol>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">checkscopeContext = &#123;</span><br><span class="line">  AO: &#123;</span><br><span class="line">    <span class="hljs-built_in">arguments</span>: &#123;</span><br><span class="line">      length: <span class="hljs-number">0</span></span><br><span class="line">    &#125;,</span><br><span class="line">    scope2: <span class="hljs-literal">undefined</span></span><br><span class="line">  &#125;，</span><br><span class="line">  Scope: checkscope.[[scope]],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>第三步：将活动对象压入 <code>checkscope</code> 作用域链顶端</li>
+</ol>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">checkscopeContext = &#123;</span><br><span class="line">  AO: &#123;</span><br><span class="line">    <span class="hljs-built_in">arguments</span>: &#123;</span><br><span class="line">      length: <span class="hljs-number">0</span></span><br><span class="line">    &#125;,</span><br><span class="line">    scope2: <span class="hljs-literal">undefined</span></span><br><span class="line">  &#125;,</span><br><span class="line">  Scope: [AO, [[Scope]]]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>准备工作做完，开始执行函数，随着函数的执行，修改 <code>AO</code> 的属性值</li>
+</ol>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">checkscopeContext = &#123;</span><br><span class="line">  AO: &#123;</span><br><span class="line">    <span class="hljs-built_in">arguments</span>: &#123;</span><br><span class="line">      length: <span class="hljs-number">0</span></span><br><span class="line">    &#125;,</span><br><span class="line">    scope2: <span class="hljs-string">'local scope'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  Scope: [AO, [[Scope]]]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="7">
+<li>查找到 <code>scope2</code> 的值，返回后函数执行完毕，函数上下文从执行上下文栈中弹出</li>
+</ol>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ECStack = [</span><br><span class="line">  globalContext</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<h2 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h2><p>上面介绍的可能有些偏理论，下面我们就结合 <code>setTimeout</code> 看一些实际当中会遇到的问题：</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 第一个</span></span><br><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-number">6</span>;</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  alert(a); <span class="hljs-comment">// 输出 66</span></span><br><span class="line">  a = <span class="hljs-number">666</span>;</span><br><span class="line">&#125;, <span class="hljs-number">1000</span>);</span><br><span class="line"></span><br><span class="line">a = <span class="hljs-number">66</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 第二个</span></span><br><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-number">6</span>;</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> a = <span class="hljs-number">666</span>;</span><br><span class="line">  alert(a); <span class="hljs-comment">// 输出 666</span></span><br><span class="line">&#125;, <span class="hljs-number">1000</span>);</span><br><span class="line"></span><br><span class="line">a = <span class="hljs-number">66</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//第三个</span></span><br><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-number">6</span>;</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  alert(a); <span class="hljs-comment">// 输出 undefined</span></span><br><span class="line">  <span class="hljs-keyword">var</span> a = <span class="hljs-number">666</span>;</span><br><span class="line">&#125;, <span class="hljs-number">1000</span>);</span><br><span class="line"></span><br><span class="line">a = <span class="hljs-number">66</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//第四个</span></span><br><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-number">6</span>;</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;    </span><br><span class="line">  a = <span class="hljs-number">666</span>;</span><br><span class="line">  alert(a); <span class="hljs-comment">// 输出 666</span></span><br><span class="line">&#125;, <span class="hljs-number">1000</span>);</span><br><span class="line"></span><br><span class="line">a = <span class="hljs-number">66</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//第五个</span></span><br><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-number">6</span>; </span><br><span class="line"></span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>)</span>&#123;</span><br><span class="line">  alert(a);</span><br><span class="line">  <span class="hljs-keyword">var</span> a = <span class="hljs-number">66</span>; </span><br><span class="line">&#125;, <span class="hljs-number">1000</span>);</span><br><span class="line"></span><br><span class="line">a = <span class="hljs-number">666</span>; </span><br><span class="line">alert(a); </span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 666, undefined;</span></span><br></pre></td></tr></table></figure>
 
 <p>这几个问题涉及到了 <code>setTimeout</code> 的工作原理，执行环境与作用域还有函数的创建与调用</p>
@@ -340,8 +486,8 @@
         
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2017/01/10/JavaScript/02/">
-                <span class="level-item">ALT 与 TITLE 的区别</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2016/12/02/CSS/02/">
+                <span class="level-item">CSS 单行，多行溢出隐藏</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -417,7 +563,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        168
+                        126
                     </p>
                 </div>
             </div>
@@ -459,25 +605,41 @@
                 目录
             </h3>
             <ul class="menu-list"><li>
-        <a class="is-flex" href="#IIFE">
-        <span class="has-mr-6">1</span>
-        <span>IIFE</span>
-        </a></li><li>
         <a class="is-flex" href="#变量提升（Hoisting）">
-        <span class="has-mr-6">2</span>
+        <span class="has-mr-6">1</span>
         <span>变量提升（Hoisting）</span>
         </a></li><li>
         <a class="is-flex" href="#作用域（Scoping）">
-        <span class="has-mr-6">3</span>
+        <span class="has-mr-6">2</span>
         <span>作用域（Scoping）</span>
         </a></li><li>
-        <a class="is-flex" href="#函数声明与函数表达式的差别">
-        <span class="has-mr-6">4</span>
-        <span>函数声明与函数表达式的差别</span>
+        <a class="is-flex" href="#执行上下文环境">
+        <span class="has-mr-6">3</span>
+        <span>执行上下文环境</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#全局执行上下文环境">
+        <span class="has-mr-6">3.1</span>
+        <span>全局执行上下文环境</span>
+        </a></li><li>
+        <a class="is-flex" href="#函数体上下文环境（也就是所谓的局部）">
+        <span class="has-mr-6">3.2</span>
+        <span>函数体上下文环境（也就是所谓的局部）</span>
         </a></li><li>
         <a class="is-flex" href="#变量对象">
-        <span class="has-mr-6">5</span>
+        <span class="has-mr-6">3.3</span>
         <span>变量对象</span>
+        </a></li><li>
+        <a class="is-flex" href="#活动对象">
+        <span class="has-mr-6">3.4</span>
+        <span>活动对象</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#执行上下文栈">
+        <span class="has-mr-6">4</span>
+        <span>执行上下文栈</span>
+        </a></li><li>
+        <a class="is-flex" href="#作用域链">
+        <span class="has-mr-6">5</span>
+        <span>作用域链</span>
         </a></li><li>
         <a class="is-flex" href="#实战">
         <span class="has-mr-6">6</span>
@@ -514,7 +676,7 @@
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">13</span>
+                <span class="level-item tag">12</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -522,7 +684,7 @@
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">6</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Http/">
@@ -538,7 +700,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">60</span>
+                <span class="level-item tag">50</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -546,7 +708,7 @@
                 <span class="level-item">MySQL</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">6</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -554,7 +716,7 @@
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">19</span>
+                <span class="level-item tag">15</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -562,7 +724,7 @@
                 <span class="level-item">React</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">18</span>
+                <span class="level-item tag">9</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Vue/">
@@ -570,7 +732,7 @@
                 <span class="level-item">Vue</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">14</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/jQuery/">
@@ -578,7 +740,7 @@
                 <span class="level-item">jQuery</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li>
             </ul>
@@ -592,7 +754,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 16.25px;">Angular</a> <a href="/tags/CSS/" style="font-size: 13.75px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/Http/" style="font-size: 11.25px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 18.75px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.5px;">React</a> <a href="/tags/Vue/" style="font-size: 15px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 12.5px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 18.57px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 11.43px;">Essay</a> <a href="/tags/Http/" style="font-size: 12.86px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.14px;">Node.js</a> <a href="/tags/React/" style="font-size: 14.29px;">React</a> <a href="/tags/Vue/" style="font-size: 11.43px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.43px;">jQuery</a>
     </div>
 </div>
 
@@ -609,16 +771,54 @@
         
         <article class="media">
             
-            <a href="/2019/12/20/React/18/" class="media-left">
+            <a href="/2019/12/22/React/09/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="Virtual DOM 与 Diff 算法内容总结">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="Virtual DOM 与 Diff 算法内容总结">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-21T16:00:00.000Z">2019-12-22</time></div>
+                    <a href="/2019/12/22/React/09/" class="has-link-black-ter is-size-6">Virtual DOM 与 Diff 算法内容总结</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/12/22/React/08/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="渲染器的核心 Diff 算法">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-21T16:00:00.000Z">2019-12-22</time></div>
+                    <a href="/2019/12/22/React/08/" class="has-link-black-ter is-size-6">渲染器的核心 Diff 算法</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/12/20/React/07/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/07.jpg" alt="渲染器">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-19T16:00:00.000Z">2019-12-20</time></div>
-                    <a href="/2019/12/20/React/18/" class="has-link-black-ter is-size-6">Virtual DOM 与 Diff 算法内容总结</a>
+                    <a href="/2019/12/20/React/07/" class="has-link-black-ter is-size-6">渲染器</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/React/">React</a>
                     </p>
@@ -628,16 +828,16 @@
         
         <article class="media">
             
-            <a href="/2019/12/18/React/17/" class="media-left">
+            <a href="/2019/12/15/React/06/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="渲染器的核心 Diff 算法">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/06.jpg" alt="什么是 Virtual DOM？">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-17T16:00:00.000Z">2019-12-18</time></div>
-                    <a href="/2019/12/18/React/17/" class="has-link-black-ter is-size-6">渲染器的核心 Diff 算法</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-14T16:00:00.000Z">2019-12-15</time></div>
+                    <a href="/2019/12/15/React/06/" class="has-link-black-ter is-size-6">什么是 Virtual DOM？</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/React/">React</a>
                     </p>
@@ -647,54 +847,16 @@
         
         <article class="media">
             
-            <a href="/2019/12/17/React/16/" class="media-left">
+            <a href="/2019/12/14/Essay/05/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg" alt="渲染器">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-16T16:00:00.000Z">2019-12-17</time></div>
-                    <a href="/2019/12/17/React/16/" class="has-link-black-ter is-size-6">渲染器</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/12/16/React/15/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/15.jpg" alt="什么是 Virtual DOM？">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-15T16:00:00.000Z">2019-12-16</time></div>
-                    <a href="/2019/12/16/React/15/" class="has-link-black-ter is-size-6">什么是 Virtual DOM？</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/12/14/Essay/06/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/06.jpg" alt="线性表（顺序存储结构）">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/05.jpg" alt="线性表（顺序存储结构）">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-13T16:00:00.000Z">2019-12-14</time></div>
-                    <a href="/2019/12/14/Essay/06/" class="has-link-black-ter is-size-6">线性表（顺序存储结构）</a>
+                    <a href="/2019/12/14/Essay/05/" class="has-link-black-ter is-size-6">线性表（顺序存储结构）</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -731,7 +893,7 @@
                     <span class="level-item">十一月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -764,7 +926,7 @@
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -808,7 +970,7 @@
                     <span class="level-item">四月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -819,7 +981,7 @@
                     <span class="level-item">三月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -841,7 +1003,7 @@
                     <span class="level-item">一月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -852,7 +1014,7 @@
                     <span class="level-item">十二月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -869,12 +1031,23 @@
         </li>
         
         <li>
+            <a class="level is-marginless" href="/archives/2018/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2018/09/">
                 <span class="level-start">
                     <span class="level-item">九月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -885,7 +1058,7 @@
                     <span class="level-item">八月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -896,7 +1069,7 @@
                     <span class="level-item">七月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -907,7 +1080,7 @@
                     <span class="level-item">六月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -918,7 +1091,7 @@
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -929,7 +1102,7 @@
                     <span class="level-item">四月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -940,7 +1113,7 @@
                     <span class="level-item">三月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -962,7 +1135,7 @@
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -984,7 +1157,7 @@
                     <span class="level-item">十月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1006,7 +1179,7 @@
                     <span class="level-item">八月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1017,7 +1190,7 @@
                     <span class="level-item">七月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -1028,7 +1201,7 @@
                     <span class="level-item">六月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1039,7 +1212,7 @@
                     <span class="level-item">五月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1050,7 +1223,7 @@
                     <span class="level-item">四月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1061,7 +1234,7 @@
                     <span class="level-item">三月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1083,7 +1256,7 @@
                     <span class="level-item">一月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1106,6 +1279,28 @@
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1133,14 +1328,14 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">13</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">6</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
@@ -1154,42 +1349,42 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">60</span>
+                        <span class="tag is-grey">50</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/MySQL/">
                         <span class="tag">MySQL</span>
-                        <span class="tag is-grey">6</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">19</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/React/">
                         <span class="tag">React</span>
-                        <span class="tag is-grey">18</span>
+                        <span class="tag is-grey">9</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
-                        <span class="tag is-grey">14</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/jQuery/">
                         <span class="tag">jQuery</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
@@ -1216,7 +1411,7 @@
                 
                 </a> -->
                 <p class="is-size-7">
-                &copy; 2016 - 2019
+                &copy; 2016 - 2020
                 Made with ✿  heptaluan&nbsp;
                 
                 </p>

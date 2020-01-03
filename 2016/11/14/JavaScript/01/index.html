@@ -2,7 +2,7 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-<title>JavaScript 中的事件，冒泡与捕获 - heptaluan&#39;s blog</title>
+<title>JavaScript 中的事件 - heptaluan&#39;s blog</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
@@ -10,15 +10,15 @@
     <meta name="description" content="所谓事件，说的就是用户或浏览器自身执行的某种动作，诸如 click、load、mouseover 等 事件处理程序响应某个事件的函数就叫事件处理程序（或事件侦听器）">
 <meta name="keywords" content="JavaScript">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JavaScript 中的事件，冒泡与捕获">
+<meta property="og:title" content="JavaScript 中的事件">
 <meta property="og:url" content="http://yoursite.com/2016/11/14/JavaScript/01/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
 <meta property="og:description" content="所谓事件，说的就是用户或浏览器自身执行的某种动作，诸如 click、load、mouseover 等 事件处理程序响应某个事件的函数就叫事件处理程序（或事件侦听器）">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/01.jpg">
-<meta property="og:updated_time" content="2019-11-09T15:23:02.878Z">
+<meta property="og:updated_time" content="2019-12-30T03:40:34.977Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JavaScript 中的事件，冒泡与捕获">
+<meta name="twitter:title" content="JavaScript 中的事件">
 <meta name="twitter:description" content="所谓事件，说的就是用户或浏览器自身执行的某种动作，诸如 click、load、mouseover 等 事件处理程序响应某个事件的函数就叫事件处理程序（或事件侦听器）">
 <meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/01.jpg">
 
@@ -69,6 +69,16 @@
 
     
     
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?f0399d35b846ccd84f70acc7b232fb2e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
     
     
 
@@ -99,7 +109,7 @@
         <!-- <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="JavaScript 中的事件，冒泡与捕获" height="28">
+                <img src="/images/logo.svg" alt="JavaScript 中的事件" height="28">
             
             </a>
         </div> -->
@@ -114,7 +124,7 @@
                 
                 <a class="navbar-item" href="/categories">Categories</a>
                 
-                <a class="navbar-item" href="/about">About</a>
+                <a class="navbar-item" href="/target">Target</a>
                 
                 <a class="navbar-item" href="https://heptaluan.github.io/demos/">Demos</a>
                 
@@ -144,7 +154,7 @@
     
     <div class="card-image">
         <span class="image is-7by1">
-            <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/01.jpg" alt="JavaScript 中的事件，冒泡与捕获">
+            <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/01.jpg" alt="JavaScript 中的事件">
         </span>
     </div>
     
@@ -163,7 +173,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    14 分钟 读完 (大约 2124 个字)
+                    14 分钟 读完 (大约 2122 个字)
                 </span>
                 
                 
@@ -172,7 +182,7 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                JavaScript 中的事件，冒泡与捕获
+                JavaScript 中的事件
             
         </h1>
         <div class="content">
@@ -183,9 +193,9 @@
 <h2 id="HTML-事件处理程序"><a href="#HTML-事件处理程序" class="headerlink" title="HTML 事件处理程序"></a>HTML 事件处理程序</h2><figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"button"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"click me"</span> <span class="hljs-attr">onclick</span>=<span class="hljs-string">"alert(1)"</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>在 <code>html</code> 中指定事件处理程序有个缺点，即 <code>html</code> 与 <code>JavaScript</code> 代码紧密耦合，如果要更换处理程序，就要改动两个地方 <code>html</code> 代码和 <code>JavaScript</code> 代码</p>
-<h2 id="DOM-0-级事件处理程序"><a href="#DOM-0-级事件处理程序" class="headerlink" title="DOM 0 级事件处理程序"></a>DOM 0 级事件处理程序</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">btn.onclick = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; </span><br><span class="line">  alert(<span class="hljs-string">'DOM0'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="DOM-0-级事件处理程序"><a href="#DOM-0-级事件处理程序" class="headerlink" title="DOM 0 级事件处理程序"></a>DOM 0 级事件处理程序</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">btn.onclick = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; </span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>以这种方式添加的事件处理程序会在事件流的<strong>冒泡阶段</strong>被处理 </p>
+<p>以这种方式添加的事件处理程序会在事件流的 <strong>冒泡阶段</strong> 被处理 </p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">btn.onclick = <span class="hljs-literal">null</span>; <span class="hljs-comment">// 删除事件处理程序</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="DOM-2-级事件处理程序"><a href="#DOM-2-级事件处理程序" class="headerlink" title="DOM 2 级事件处理程序"></a>DOM 2 级事件处理程序</h2><p>定义了两个方法 <code>addEventListener()</code> 和 <code>removeEventListener()</code></p>
@@ -239,7 +249,7 @@
 <ul>
 <li>下面两句效果相同：</li>
 </ul>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">a</span>(<span class="hljs-params">e</span>)</span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> e = (e) ? evt : ((<span class="hljs-built_in">window</span>.event) ? <span class="hljs-built_in">window</span>.event : <span class="hljs-literal">null</span>);</span><br><span class="line">  <span class="hljs-comment">// firefox 下 window.event 为 null, IE 下 event 为 null</span></span><br><span class="line">  <span class="hljs-keyword">var</span> e = e || <span class="hljs-built_in">window</span>.event;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">a</span>(<span class="hljs-params">e</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> e = e ? evt : ((<span class="hljs-built_in">window</span>.event) ? <span class="hljs-built_in">window</span>.event : <span class="hljs-literal">null</span>);</span><br><span class="line">  <span class="hljs-comment">// firefox 下 window.event 为 null, IE 下 event 为 null</span></span><br><span class="line">  <span class="hljs-keyword">var</span> e = e || <span class="hljs-built_in">window</span>.event;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>在 <code>jQuery</code> 当中阻止事件冒泡的方法如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 阻止事件冒泡</span></span><br><span class="line">e.stopPropagation()</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 阻止事件默认行为</span></span><br><span class="line">e.preventDefault()</span><br></pre></td></tr></table></figure>
@@ -258,7 +268,7 @@
 
 <p>还有另外一个好处，就是新添加的元素还会有之前的事件</p>
 <p>比如我们要实现一个点击 <code>btn</code> 动态的添加 <code>li</code> 的效果，相比利用 <code>for</code> 循环来实现，利用事件委托机制也可以达成我们的目标</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">ul.onmouseover = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">ev</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> ev = ev || <span class="hljs-built_in">window</span>.event;</span><br><span class="line">  <span class="hljs-keyword">var</span> target = ev.target || ev.srcElement;</span><br><span class="line">  <span class="hljs-keyword">if</span> (target.nodeName.toLowerCase() == <span class="hljs-string">'li'</span>) &#123;</span><br><span class="line">    target.style.background = <span class="hljs-string">'red'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ul.onmouseout = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">ev</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> ev = ev || <span class="hljs-built_in">window</span>.event;</span><br><span class="line">  <span class="hljs-keyword">var</span> target = ev.target || ev.srcElement;</span><br><span class="line">  <span class="hljs-keyword">if</span> (target.nodeName.toLowerCase() == <span class="hljs-string">'li'</span>) &#123;</span><br><span class="line">    target.style.background = <span class="hljs-string">''</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">btn.onclick = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  iNow++;</span><br><span class="line">  <span class="hljs-keyword">var</span> li = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'li'</span>);</span><br><span class="line">  li.innerHTML = <span class="hljs-number">1111</span> * iNow;</span><br><span class="line">  oUl.appendChild(li);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">ul.onmouseover = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">ev</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> ev = ev || <span class="hljs-built_in">window</span>.event;</span><br><span class="line">  <span class="hljs-keyword">var</span> target = ev.target || ev.srcElement;</span><br><span class="line">  <span class="hljs-keyword">if</span> (target.nodeName.toLowerCase() == <span class="hljs-string">'li'</span>) &#123;</span><br><span class="line">    target.style.background = <span class="hljs-string">'red'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ul.onmouseout = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">ev</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> ev = ev || <span class="hljs-built_in">window</span>.event;</span><br><span class="line">  <span class="hljs-keyword">var</span> target = ev.target || ev.srcElement;</span><br><span class="line">  <span class="hljs-keyword">if</span> (target.nodeName.toLowerCase() == <span class="hljs-string">'li'</span>) &#123;</span><br><span class="line">    target.style.background = <span class="hljs-string">''</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">btn.onclick = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  iNow++;</span><br><span class="line">  <span class="hljs-keyword">var</span> li = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'li'</span>);</span><br><span class="line">  li.innerHTML = iNow;</span><br><span class="line">  oUl.appendChild(li);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="事件流，冒泡与捕获"><a href="#事件流，冒泡与捕获" class="headerlink" title="事件流，冒泡与捕获"></a>事件流，冒泡与捕获</h2><p>所谓事件流，即为了描述事件的传播而规定的一个事件传播方向，分为两个阶段，事件捕获和事件冒泡</p>
 <p>正常情况下，事件先从最外层的元素向内捕获，然后从最内层的元素往外层传播</p>
@@ -293,7 +303,7 @@
 <p>测试相关代码如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">box2.onclick = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  alert(<span class="hljs-string">'A'</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">box2.onclick = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  alert(<span class="hljs-string">'B'</span>);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">box2.addEventListener(<span class="hljs-string">'click'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  alert(<span class="hljs-string">'C'</span>);</span><br><span class="line">&#125;, <span class="hljs-literal">false</span>);</span><br><span class="line"></span><br><span class="line">box2.addEventListener(<span class="hljs-string">'click'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  alert(<span class="hljs-string">'D'</span>);</span><br><span class="line">&#125;, <span class="hljs-literal">false</span>);</span><br><span class="line"></span><br><span class="line">box2.addEventListener(<span class="hljs-string">'click'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  alert(<span class="hljs-string">'E'</span>);</span><br><span class="line">&#125;, <span class="hljs-literal">true</span>);</span><br><span class="line"></span><br><span class="line">box2.addEventListener(<span class="hljs-string">'click'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  alert(<span class="hljs-string">'F'</span>);</span><br><span class="line">&#125;, <span class="hljs-literal">true</span>);</span><br><span class="line"></span><br><span class="line">box3.addEventListener(<span class="hljs-string">'click'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  alert(<span class="hljs-string">'G'</span>);</span><br><span class="line">&#125;, <span class="hljs-literal">false</span>);</span><br><span class="line"></span><br><span class="line">box3.addEventListener(<span class="hljs-string">'click'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  alert(<span class="hljs-string">'H'</span>);</span><br><span class="line">&#125;, <span class="hljs-literal">true</span>);</span><br></pre></td></tr></table></figure>
 
-<p>执行后的结果依次为：<code>E =&gt; F =&gt; G =&gt; H =&gt; B =&gt; C =&gt; D</code></p>
+<p>执行后的结果依次为：<code>E ==&gt; F ==&gt; G ==&gt; H ==&gt; B ==&gt; C ==&gt; D</code></p>
 <p>最后总结如下</p>
 <ul>
 <li><p><code>DOM 0</code> 级添加到冒泡阶段</p>
@@ -417,7 +427,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        168
+                        126
                     </p>
                 </div>
             </div>
@@ -530,7 +540,7 @@
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">13</span>
+                <span class="level-item tag">12</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -538,7 +548,7 @@
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">6</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Http/">
@@ -554,7 +564,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">60</span>
+                <span class="level-item tag">50</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -562,7 +572,7 @@
                 <span class="level-item">MySQL</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">6</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -570,7 +580,7 @@
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">19</span>
+                <span class="level-item tag">15</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -578,7 +588,7 @@
                 <span class="level-item">React</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">18</span>
+                <span class="level-item tag">9</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Vue/">
@@ -586,7 +596,7 @@
                 <span class="level-item">Vue</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">14</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/jQuery/">
@@ -594,7 +604,7 @@
                 <span class="level-item">jQuery</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li>
             </ul>
@@ -608,7 +618,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 16.25px;">Angular</a> <a href="/tags/CSS/" style="font-size: 13.75px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/Http/" style="font-size: 11.25px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 18.75px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.5px;">React</a> <a href="/tags/Vue/" style="font-size: 15px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 12.5px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 18.57px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 11.43px;">Essay</a> <a href="/tags/Http/" style="font-size: 12.86px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.14px;">Node.js</a> <a href="/tags/React/" style="font-size: 14.29px;">React</a> <a href="/tags/Vue/" style="font-size: 11.43px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.43px;">jQuery</a>
     </div>
 </div>
 
@@ -625,16 +635,54 @@
         
         <article class="media">
             
-            <a href="/2019/12/20/React/18/" class="media-left">
+            <a href="/2019/12/22/React/09/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="Virtual DOM 与 Diff 算法内容总结">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="Virtual DOM 与 Diff 算法内容总结">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-21T16:00:00.000Z">2019-12-22</time></div>
+                    <a href="/2019/12/22/React/09/" class="has-link-black-ter is-size-6">Virtual DOM 与 Diff 算法内容总结</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/12/22/React/08/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="渲染器的核心 Diff 算法">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-21T16:00:00.000Z">2019-12-22</time></div>
+                    <a href="/2019/12/22/React/08/" class="has-link-black-ter is-size-6">渲染器的核心 Diff 算法</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/12/20/React/07/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/07.jpg" alt="渲染器">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-19T16:00:00.000Z">2019-12-20</time></div>
-                    <a href="/2019/12/20/React/18/" class="has-link-black-ter is-size-6">Virtual DOM 与 Diff 算法内容总结</a>
+                    <a href="/2019/12/20/React/07/" class="has-link-black-ter is-size-6">渲染器</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/React/">React</a>
                     </p>
@@ -644,16 +692,16 @@
         
         <article class="media">
             
-            <a href="/2019/12/18/React/17/" class="media-left">
+            <a href="/2019/12/15/React/06/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="渲染器的核心 Diff 算法">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/06.jpg" alt="什么是 Virtual DOM？">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-17T16:00:00.000Z">2019-12-18</time></div>
-                    <a href="/2019/12/18/React/17/" class="has-link-black-ter is-size-6">渲染器的核心 Diff 算法</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-14T16:00:00.000Z">2019-12-15</time></div>
+                    <a href="/2019/12/15/React/06/" class="has-link-black-ter is-size-6">什么是 Virtual DOM？</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/React/">React</a>
                     </p>
@@ -663,54 +711,16 @@
         
         <article class="media">
             
-            <a href="/2019/12/17/React/16/" class="media-left">
+            <a href="/2019/12/14/Essay/05/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg" alt="渲染器">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-16T16:00:00.000Z">2019-12-17</time></div>
-                    <a href="/2019/12/17/React/16/" class="has-link-black-ter is-size-6">渲染器</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/12/16/React/15/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/15.jpg" alt="什么是 Virtual DOM？">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-15T16:00:00.000Z">2019-12-16</time></div>
-                    <a href="/2019/12/16/React/15/" class="has-link-black-ter is-size-6">什么是 Virtual DOM？</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/12/14/Essay/06/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/06.jpg" alt="线性表（顺序存储结构）">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/05.jpg" alt="线性表（顺序存储结构）">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-13T16:00:00.000Z">2019-12-14</time></div>
-                    <a href="/2019/12/14/Essay/06/" class="has-link-black-ter is-size-6">线性表（顺序存储结构）</a>
+                    <a href="/2019/12/14/Essay/05/" class="has-link-black-ter is-size-6">线性表（顺序存储结构）</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -747,7 +757,7 @@
                     <span class="level-item">十一月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -780,7 +790,7 @@
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -824,7 +834,7 @@
                     <span class="level-item">四月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -835,7 +845,7 @@
                     <span class="level-item">三月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -857,7 +867,7 @@
                     <span class="level-item">一月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -868,7 +878,7 @@
                     <span class="level-item">十二月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -885,12 +895,23 @@
         </li>
         
         <li>
+            <a class="level is-marginless" href="/archives/2018/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2018/09/">
                 <span class="level-start">
                     <span class="level-item">九月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -901,7 +922,7 @@
                     <span class="level-item">八月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -912,7 +933,7 @@
                     <span class="level-item">七月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -923,7 +944,7 @@
                     <span class="level-item">六月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -934,7 +955,7 @@
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -945,7 +966,7 @@
                     <span class="level-item">四月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -956,7 +977,7 @@
                     <span class="level-item">三月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -978,7 +999,7 @@
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1000,7 +1021,7 @@
                     <span class="level-item">十月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1022,7 +1043,7 @@
                     <span class="level-item">八月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1033,7 +1054,7 @@
                     <span class="level-item">七月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -1044,7 +1065,7 @@
                     <span class="level-item">六月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1055,7 +1076,7 @@
                     <span class="level-item">五月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1066,7 +1087,7 @@
                     <span class="level-item">四月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1077,7 +1098,7 @@
                     <span class="level-item">三月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1099,7 +1120,7 @@
                     <span class="level-item">一月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1122,6 +1143,28 @@
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1149,14 +1192,14 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">13</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">6</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
@@ -1170,42 +1213,42 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">60</span>
+                        <span class="tag is-grey">50</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/MySQL/">
                         <span class="tag">MySQL</span>
-                        <span class="tag is-grey">6</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">19</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/React/">
                         <span class="tag">React</span>
-                        <span class="tag is-grey">18</span>
+                        <span class="tag is-grey">9</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
-                        <span class="tag is-grey">14</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/jQuery/">
                         <span class="tag">jQuery</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
@@ -1228,11 +1271,11 @@
             <div class="level-start has-text-centered-mobile">
                 <!-- <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="JavaScript 中的事件，冒泡与捕获" height="28">
+                    <img src="/images/logo.svg" alt="JavaScript 中的事件" height="28">
                 
                 </a> -->
                 <p class="is-size-7">
-                &copy; 2016 - 2019
+                &copy; 2016 - 2020
                 Made with ✿  heptaluan&nbsp;
                 
                 </p>

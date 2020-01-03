@@ -16,7 +16,7 @@
 <meta property="og:description" content="Node.js 中的 co 模块主要用于 Generator 函数的自动执行，可以使我们以同步的形式编写异步代码 实例一先来看两个对比实例，传统方式下，sayhello 是一个异步函数，执行 helloworld 会先输出 &amp;#39;world&amp;#39; 再输出 &amp;#39;hello&amp;#39;：">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/02.jpg">
-<meta property="og:updated_time" content="2019-11-09T15:23:02.905Z">
+<meta property="og:updated_time" content="2019-12-30T10:01:51.020Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Node.js 中的 co 模块">
 <meta name="twitter:description" content="Node.js 中的 co 模块主要用于 Generator 函数的自动执行，可以使我们以同步的形式编写异步代码 实例一先来看两个对比实例，传统方式下，sayhello 是一个异步函数，执行 helloworld 会先输出 &amp;#39;world&amp;#39; 再输出 &amp;#39;hello&amp;#39;：">
@@ -69,6 +69,16 @@
 
     
     
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?f0399d35b846ccd84f70acc7b232fb2e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
     
     
 
@@ -114,7 +124,7 @@
                 
                 <a class="navbar-item" href="/categories">Categories</a>
                 
-                <a class="navbar-item" href="/about">About</a>
+                <a class="navbar-item" href="/target">Target</a>
                 
                 <a class="navbar-item" href="https://heptaluan.github.io/demos/">Demos</a>
                 
@@ -163,7 +173,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    18 分钟 读完 (大约 2736 个字)
+                    18 分钟 读完 (大约 2735 个字)
                 </span>
                 
                 
@@ -231,8 +241,7 @@
 <h2 id="run-函数"><a href="#run-函数" class="headerlink" title="run 函数"></a>run 函数</h2><p>一个类似的方法函数，目的也是为了 <code>Generator</code> 函数的自动执行</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">run</span>(<span class="hljs-params">gen</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> args = [].slice(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">1</span>), it;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 在当前上下文中初始化生成器</span></span><br><span class="line">  it = gen.apply(<span class="hljs-keyword">this</span>, args)</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 返回一个 promise 用于生成器完成</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve().then(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">handleNext</span>(<span class="hljs-params">value</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// 对下一个 yield 出的值运行</span></span><br><span class="line">    <span class="hljs-keyword">var</span> next = it.next(value)</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">return</span> (<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">handleResult</span>(<span class="hljs-params">next</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-comment">// 生成器运行完毕了吗</span></span><br><span class="line">      <span class="hljs-keyword">if</span> (next.done) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> next.value</span><br><span class="line"></span><br><span class="line">        <span class="hljs-comment">// 否则继续运行</span></span><br><span class="line">      &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-comment">// 成功就恢复异步循环，把决议的值发回生成器</span></span><br><span class="line">        <span class="hljs-comment">// 如果 value 是被拒绝的 promise</span></span><br><span class="line">        <span class="hljs-comment">// 就把错误传回生成器进行错误处理</span></span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve(next.value).then(handleNext, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">handleErr</span>(<span class="hljs-params">err</span>) </span>&#123;</span><br><span class="line">          <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve(it.throw(err)).then(handleResult)</span><br><span class="line">        &#125;)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)(next)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>参考：</p>
-<p><a href="https://www.npmjs.com/package/co" target="_blank" rel="noopener">co</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.npmjs.com/package/co" target="_blank" rel="noopener">co</a></p>
 <p><a href="https://cnodejs.org/topic/576bdffa889605241796f7d9" target="_blank" rel="noopener">co 4.6源码解析</a></p>
 <p><a href="https://nswbmw.github.io/N-club/1/1.3.html" target="_blank" rel="noopener">Thunk 函数的含义和用法</a></p>
 <p><a href="http://www.ruanyifeng.com/blog/2015/05/thunk.html" target="_blank" rel="noopener">co 和 koa</a></p>
@@ -347,7 +356,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        168
+                        126
                     </p>
                 </div>
             </div>
@@ -408,6 +417,10 @@
         <a class="is-flex" href="#run-函数">
         <span class="has-mr-6">5</span>
         <span>run 函数</span>
+        </a></li><li>
+        <a class="is-flex" href="#参考">
+        <span class="has-mr-6">6</span>
+        <span>参考</span>
         </a></li></ul>
         </div>
     </div>
@@ -440,7 +453,7 @@
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">13</span>
+                <span class="level-item tag">12</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -448,7 +461,7 @@
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">6</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Http/">
@@ -464,7 +477,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">60</span>
+                <span class="level-item tag">50</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -472,7 +485,7 @@
                 <span class="level-item">MySQL</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">6</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -480,7 +493,7 @@
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">19</span>
+                <span class="level-item tag">15</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -488,7 +501,7 @@
                 <span class="level-item">React</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">18</span>
+                <span class="level-item tag">9</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Vue/">
@@ -496,7 +509,7 @@
                 <span class="level-item">Vue</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">14</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/jQuery/">
@@ -504,7 +517,7 @@
                 <span class="level-item">jQuery</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li>
             </ul>
@@ -518,7 +531,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 16.25px;">Angular</a> <a href="/tags/CSS/" style="font-size: 13.75px;">CSS</a> <a href="/tags/Essay/" style="font-size: 10px;">Essay</a> <a href="/tags/Http/" style="font-size: 11.25px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 18.75px;">Node.js</a> <a href="/tags/React/" style="font-size: 17.5px;">React</a> <a href="/tags/Vue/" style="font-size: 15px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 12.5px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 18.57px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 11.43px;">Essay</a> <a href="/tags/Http/" style="font-size: 12.86px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.14px;">Node.js</a> <a href="/tags/React/" style="font-size: 14.29px;">React</a> <a href="/tags/Vue/" style="font-size: 11.43px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.43px;">jQuery</a>
     </div>
 </div>
 
@@ -535,16 +548,54 @@
         
         <article class="media">
             
-            <a href="/2019/12/20/React/18/" class="media-left">
+            <a href="/2019/12/22/React/09/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="Virtual DOM 与 Diff 算法内容总结">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="Virtual DOM 与 Diff 算法内容总结">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-21T16:00:00.000Z">2019-12-22</time></div>
+                    <a href="/2019/12/22/React/09/" class="has-link-black-ter is-size-6">Virtual DOM 与 Diff 算法内容总结</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/12/22/React/08/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="渲染器的核心 Diff 算法">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-21T16:00:00.000Z">2019-12-22</time></div>
+                    <a href="/2019/12/22/React/08/" class="has-link-black-ter is-size-6">渲染器的核心 Diff 算法</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/12/20/React/07/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/07.jpg" alt="渲染器">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-19T16:00:00.000Z">2019-12-20</time></div>
-                    <a href="/2019/12/20/React/18/" class="has-link-black-ter is-size-6">Virtual DOM 与 Diff 算法内容总结</a>
+                    <a href="/2019/12/20/React/07/" class="has-link-black-ter is-size-6">渲染器</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/React/">React</a>
                     </p>
@@ -554,16 +605,16 @@
         
         <article class="media">
             
-            <a href="/2019/12/18/React/17/" class="media-left">
+            <a href="/2019/12/15/React/06/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="渲染器的核心 Diff 算法">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/06.jpg" alt="什么是 Virtual DOM？">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-17T16:00:00.000Z">2019-12-18</time></div>
-                    <a href="/2019/12/18/React/17/" class="has-link-black-ter is-size-6">渲染器的核心 Diff 算法</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-14T16:00:00.000Z">2019-12-15</time></div>
+                    <a href="/2019/12/15/React/06/" class="has-link-black-ter is-size-6">什么是 Virtual DOM？</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/React/">React</a>
                     </p>
@@ -573,54 +624,16 @@
         
         <article class="media">
             
-            <a href="/2019/12/17/React/16/" class="media-left">
+            <a href="/2019/12/14/Essay/05/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg" alt="渲染器">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-16T16:00:00.000Z">2019-12-17</time></div>
-                    <a href="/2019/12/17/React/16/" class="has-link-black-ter is-size-6">渲染器</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/12/16/React/15/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/15.jpg" alt="什么是 Virtual DOM？">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-15T16:00:00.000Z">2019-12-16</time></div>
-                    <a href="/2019/12/16/React/15/" class="has-link-black-ter is-size-6">什么是 Virtual DOM？</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/12/14/Essay/06/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/06.jpg" alt="线性表（顺序存储结构）">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/05.jpg" alt="线性表（顺序存储结构）">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-13T16:00:00.000Z">2019-12-14</time></div>
-                    <a href="/2019/12/14/Essay/06/" class="has-link-black-ter is-size-6">线性表（顺序存储结构）</a>
+                    <a href="/2019/12/14/Essay/05/" class="has-link-black-ter is-size-6">线性表（顺序存储结构）</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -657,7 +670,7 @@
                     <span class="level-item">十一月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -690,7 +703,7 @@
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -734,7 +747,7 @@
                     <span class="level-item">四月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -745,7 +758,7 @@
                     <span class="level-item">三月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -767,7 +780,7 @@
                     <span class="level-item">一月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -778,7 +791,7 @@
                     <span class="level-item">十二月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -795,12 +808,23 @@
         </li>
         
         <li>
+            <a class="level is-marginless" href="/archives/2018/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2018/09/">
                 <span class="level-start">
                     <span class="level-item">九月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -811,7 +835,7 @@
                     <span class="level-item">八月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -822,7 +846,7 @@
                     <span class="level-item">七月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -833,7 +857,7 @@
                     <span class="level-item">六月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -844,7 +868,7 @@
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -855,7 +879,7 @@
                     <span class="level-item">四月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -866,7 +890,7 @@
                     <span class="level-item">三月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -888,7 +912,7 @@
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -910,7 +934,7 @@
                     <span class="level-item">十月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -932,7 +956,7 @@
                     <span class="level-item">八月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -943,7 +967,7 @@
                     <span class="level-item">七月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -954,7 +978,7 @@
                     <span class="level-item">六月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -965,7 +989,7 @@
                     <span class="level-item">五月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -976,7 +1000,7 @@
                     <span class="level-item">四月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -987,7 +1011,7 @@
                     <span class="level-item">三月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1009,7 +1033,7 @@
                     <span class="level-item">一月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1032,6 +1056,28 @@
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1059,14 +1105,14 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">13</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">6</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
@@ -1080,42 +1126,42 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">60</span>
+                        <span class="tag is-grey">50</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/MySQL/">
                         <span class="tag">MySQL</span>
-                        <span class="tag is-grey">6</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">19</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/React/">
                         <span class="tag">React</span>
-                        <span class="tag is-grey">18</span>
+                        <span class="tag is-grey">9</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
-                        <span class="tag is-grey">14</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/jQuery/">
                         <span class="tag">jQuery</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
@@ -1142,7 +1188,7 @@
                 
                 </a> -->
                 <p class="is-size-7">
-                &copy; 2016 - 2019
+                &copy; 2016 - 2020
                 Made with ✿  heptaluan&nbsp;
                 
                 </p>
