@@ -16,7 +16,7 @@
 <meta property="og:description" content="在平常的开发当中，我们会经常用到 ES6 相关语法，大致总结一下，ES6 更新的内容可以分为以下几点  表达式：声明、解构赋值  内置对象：字符串扩展、数值扩展、对象扩展、数组扩展、函数扩展、正则扩展、Symbol、Set、Map、Proxy、Reflect  语句与运算：Class、Module、Iterator  异步编程：Promise、Generator、Async   有一些是我们经常会">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/48.jpg">
-<meta property="og:updated_time" content="2020-01-07T04:43:17.137Z">
+<meta property="og:updated_time" content="2020-01-19T15:36:20.728Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ES6 中的 Symbol，Set 和 Map">
 <meta name="twitter:description" content="在平常的开发当中，我们会经常用到 ES6 相关语法，大致总结一下，ES6 更新的内容可以分为以下几点  表达式：声明、解构赋值  内置对象：字符串扩展、数值扩展、对象扩展、数组扩展、函数扩展、正则扩展、Symbol、Set、Map、Proxy、Reflect  语句与运算：Class、Module、Iterator  异步编程：Promise、Generator、Async   有一些是我们经常会">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    24 分钟 读完 (大约 3547 个字)
+                    26 分钟 读完 (大约 3937 个字)
                 </span>
                 
                 
@@ -199,33 +199,39 @@ var _hmt = _hmt || [];
 </ul>
 <p>有一些是我们经常会遇到和用到的，比如 <code>let</code>，<code>const</code>，扩展运算，<code>promise</code> 等，之前也单独整理过一些，比如 <a href="https://heptaluan.github.io/2017/09/20/JavaScript/24/" target="_blank" rel="noopener">Class</a>，<a href="https://heptaluan.github.io/2019/07/13/JavaScript/56/" target="_blank" rel="noopener">Iterator，Generator</a> 和 <a href="https://heptaluan.github.io/2017/09/21/JavaScript/53/" target="_blank" rel="noopener">Reflect</a> 等</p>
 <p>今天我们就来看看剩下的几个可能是平常用的不太多的 <code>Symbol</code>，<code>Set</code> 和 <code>Map</code></p>
-<p>主要参考的依然是阮一峰老师的 <a href="http://es6.ruanyifeng.com/#docs/symbol" target="_blank" rel="noopener">ECMAScript 6 入门</a></p>
+<p>主要参考的是阮一峰老师的 <a href="http://es6.ruanyifeng.com/#docs/symbol" target="_blank" rel="noopener">ECMAScript 6 入门</a></p>
 <a id="more"></a>
 
 
 
 <h2 id="Symbol"><a href="#Symbol" class="headerlink" title="Symbol"></a>Symbol</h2><p><code>ES6</code> 引入了一种新的原始数据类型 <code>Symbol</code>，表示独一无二的值，它是 <code>JavaScript</code> 语言的第七种数据类型</p>
-<p>比如如下代码，变量 <code>s</code> 就是一个独一无二的值</p>
+<p>比如如下代码，变量 <code>s</code> 就是一个独一无二的值，通过 <code>Symbol</code> 函数生成，使用 <code>typeof</code> 结果为 <code>&#39;symbol&#39;</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> s = <span class="hljs-built_in">Symbol</span>();</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">typeof</span> s;  <span class="hljs-comment">// 'symbol'</span></span><br></pre></td></tr></table></figure>
 
-<p>函数可以接受一个字符串作为参数，表示对 <code>Symbol</code> 实例的描述，主要是为了在控制台显示，或者转为字符串时，比较容易区分</p>
+<blockquote>
+<p>但是需要注意，<code>Symbol</code> 函数前不能使用 <code>new</code> 命令，否则会报错，这是因为生成的 <code>Symbol</code> 是一个原始类型的值，不是对象</p>
+</blockquote>
+<p>下面我们就来看看 <code>Symbol</code> 具备哪些特性</p>
+<h4 id="instanceof-的结果为-false"><a href="#instanceof-的结果为-false" class="headerlink" title="instanceof 的结果为 false"></a>instanceof 的结果为 false</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> s = <span class="hljs-built_in">Symbol</span>(<span class="hljs-string">'foo'</span>)</span><br><span class="line"></span><br><span class="line">s <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Symbol</span>  <span class="hljs-comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="接受字符串作为参数"><a href="#接受字符串作为参数" class="headerlink" title="接受字符串作为参数"></a>接受字符串作为参数</h4><p><code>Symbol</code> 函数可以接受一个字符串作为参数，表示对 <code>Symbol</code> 实例的描述，主要是为了在控制台显示，或者转为字符串时，比较容易区分</p>
 <p>比如如下示例，如果不加参数，它们在控制台的输出都是 <code>Symbol()</code>，不利于区分</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> s1 = <span class="hljs-built_in">Symbol</span>(<span class="hljs-string">'foo'</span>);</span><br><span class="line"><span class="hljs-keyword">let</span> s2 = <span class="hljs-built_in">Symbol</span>(<span class="hljs-string">'bar'</span>);</span><br><span class="line"></span><br><span class="line">s1 <span class="hljs-comment">// Symbol(foo)</span></span><br><span class="line">s2 <span class="hljs-comment">// Symbol(bar)</span></span><br><span class="line"></span><br><span class="line">s1.toString() <span class="hljs-comment">// 'Symbol(foo)'</span></span><br><span class="line">s2.toString() <span class="hljs-comment">// 'Symbol(bar)'</span></span><br></pre></td></tr></table></figure>
 
-<p>如果 <code>Symbol</code> 的参数是一个对象，就会调用该对象的 <code>toString()</code> 方法，将其转为字符串，然后才生成一个 <code>Symbol</code> 值</p>
+<h4 id="如果参数是一个对象，就会调用该对象的-toString-方法，将其转为字符串"><a href="#如果参数是一个对象，就会调用该对象的-toString-方法，将其转为字符串" class="headerlink" title="如果参数是一个对象，就会调用该对象的 toString() 方法，将其转为字符串"></a>如果参数是一个对象，就会调用该对象的 toString() 方法，将其转为字符串</h4><p>如果 <code>Symbol</code> 的参数是一个对象，就会调用该对象的 <code>toString()</code> 方法，将其转为字符串，然后才生成一个 <code>Symbol</code> 值</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> obj = &#123;</span><br><span class="line">  value: <span class="hljs-string">'abc'</span>,</span><br><span class="line">  toString() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-string">'def'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> sym = <span class="hljs-built_in">Symbol</span>(obj);</span><br><span class="line"></span><br><span class="line">sym <span class="hljs-comment">// Symbol(def)</span></span><br></pre></td></tr></table></figure>
 
-<p><code>Symbol</code> 函数的参数只是表示对当前 <code>Symbol</code> 值的描述，因此相同参数的 <code>Symbol</code> 函数的返回值是不相等的</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 没有参数的情况</span></span><br><span class="line"><span class="hljs-keyword">let</span> s1 = <span class="hljs-built_in">Symbol</span>();</span><br><span class="line"><span class="hljs-keyword">let</span> s2 = <span class="hljs-built_in">Symbol</span>();</span><br><span class="line"></span><br><span class="line">s1 === s2 <span class="hljs-comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 有参数的情况</span></span><br><span class="line"><span class="hljs-keyword">let</span> s1 = <span class="hljs-built_in">Symbol</span>(<span class="hljs-string">'foo'</span>);</span><br><span class="line"><span class="hljs-keyword">let</span> s2 = <span class="hljs-built_in">Symbol</span>(<span class="hljs-string">'foo'</span>);</span><br><span class="line"></span><br><span class="line">s1 === s2 <span class="hljs-comment">// false</span></span><br></pre></td></tr></table></figure>
+<h4 id="相同参数的-Symbol-函数的返回值是不相等的"><a href="#相同参数的-Symbol-函数的返回值是不相等的" class="headerlink" title="相同参数的 Symbol 函数的返回值是不相等的"></a>相同参数的 Symbol 函数的返回值是不相等的</h4><p><code>Symbol</code> 函数的参数只是表示对当前 <code>Symbol</code> 值的描述，因此相同参数的 <code>Symbol</code> 函数的返回值是不相等的</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 没有参数的情况</span></span><br><span class="line"><span class="hljs-keyword">let</span> s1 = <span class="hljs-built_in">Symbol</span>();</span><br><span class="line"><span class="hljs-keyword">let</span> s2 = <span class="hljs-built_in">Symbol</span>();</span><br><span class="line"></span><br><span class="line">s1 === s2  <span class="hljs-comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 有参数的情况</span></span><br><span class="line"><span class="hljs-keyword">let</span> s1 = <span class="hljs-built_in">Symbol</span>(<span class="hljs-string">'foo'</span>);</span><br><span class="line"><span class="hljs-keyword">let</span> s2 = <span class="hljs-built_in">Symbol</span>(<span class="hljs-string">'foo'</span>);</span><br><span class="line"></span><br><span class="line">s1 === s2  <span class="hljs-comment">// false</span></span><br></pre></td></tr></table></figure>
 
-<p>另外需要注意的是，虽然 <code>Symbol</code> 值也可以转为布尔值，但是不能转为数值，并且不能与其他类型的值进行运算，会报错</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> sym = <span class="hljs-built_in">Symbol</span>();</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Boolean</span>(sym)  <span class="hljs-comment">// true</span></span><br><span class="line">!sym          <span class="hljs-comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Number</span>(sym) <span class="hljs-comment">// TypeError</span></span><br></pre></td></tr></table></figure>
+<h4 id="Symbol-值可以转为布尔值，但是不能转为数值，也不能与其他类型的值进行运算"><a href="#Symbol-值可以转为布尔值，但是不能转为数值，也不能与其他类型的值进行运算" class="headerlink" title="Symbol 值可以转为布尔值，但是不能转为数值，也不能与其他类型的值进行运算"></a>Symbol 值可以转为布尔值，但是不能转为数值，也不能与其他类型的值进行运算</h4><p>另外需要注意的是，虽然 <code>Symbol</code> 值也可以转为布尔值，但是不能转为数值，并且不能与其他类型的值进行运算，会报错</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> sym = <span class="hljs-built_in">Symbol</span>();</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Boolean</span>(sym)  <span class="hljs-comment">// true</span></span><br><span class="line">!sym          <span class="hljs-comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Number</span>(sym)   <span class="hljs-comment">// TypeError</span></span><br></pre></td></tr></table></figure>
 
 <h4 id="作为属性名的-Symbol"><a href="#作为属性名的-Symbol" class="headerlink" title="作为属性名的 Symbol"></a>作为属性名的 Symbol</h4><p>由于每一个 <code>Symbol</code> 值都是不相等的，这意味着 <code>Symbol</code> 值可以作为标识符，用于对象的属性名，就能保证不会出现同名的属性</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> s = <span class="hljs-built_in">Symbol</span>();</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 第一种写法</span></span><br><span class="line"><span class="hljs-keyword">let</span> a = &#123; &#125;;</span><br><span class="line">a[s] = <span class="hljs-string">'hello!'</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 第二种写法</span></span><br><span class="line"><span class="hljs-keyword">let</span> a = &#123;</span><br><span class="line">  [s]: <span class="hljs-string">'hello!'</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 第三种写法</span></span><br><span class="line"><span class="hljs-keyword">let</span> a = &#123;&#125;;</span><br><span class="line"><span class="hljs-built_in">Object</span>.defineProperty(a, s, &#123; <span class="hljs-attr">value</span>: <span class="hljs-string">'hello!'</span> &#125;);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 以上写法都得到同样结果</span></span><br><span class="line">a[s]  <span class="hljs-comment">// 'hello!'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 但是这里需要注意，不能使用点运算符</span></span><br><span class="line">a.s   <span class="hljs-comment">// undefined</span></span><br></pre></td></tr></table></figure>
 
 <p>还有一点需要注意，<code>Symbol</code> 值作为属性名时，该属性还是<strong>公开属性，不是私有属性</strong></p>
-<h4 id="属性名的遍历"><a href="#属性名的遍历" class="headerlink" title="属性名的遍历"></a>属性名的遍历</h4><p><code>Symbol</code> 作为属性名，遍历对象的时候，该属性不会出现在 <code>for...in</code>、<code>for...of</code> 循环中，也不会被 <code>Object.keys()</code>、<code>Object.getOwnPropertyNames()</code>、<code>JSON.stringify()</code> 返回</p>
+<h4 id="属性名的遍历"><a href="#属性名的遍历" class="headerlink" title="属性名的遍历"></a>属性名的遍历</h4><p><code>Symbol</code> 作为属性名，遍历对象的时候，该属性不会出现在 <code>for-in</code>、<code>for-of</code> 循环中，也不会被 <code>Object.keys()</code>、<code>Object.getOwnPropertyNames()</code>、<code>JSON.stringify()</code> 返回</p>
 <p>但是可以使用 <code>Object.getOwnPropertySymbols()</code> 方法来获取指定对象的所有 <code>Symbol</code> 属性名，该方法返回一个数组</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> obj = &#123;&#125;;</span><br><span class="line"><span class="hljs-keyword">let</span> a = <span class="hljs-built_in">Symbol</span>(<span class="hljs-string">'a'</span>);</span><br><span class="line"><span class="hljs-keyword">let</span> b = <span class="hljs-built_in">Symbol</span>(<span class="hljs-string">'b'</span>);</span><br><span class="line"></span><br><span class="line">obj[a] = <span class="hljs-string">'hello'</span>;</span><br><span class="line">obj[b] = <span class="hljs-string">'world'</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> objectSymbols = <span class="hljs-built_in">Object</span>.getOwnPropertySymbols(obj);</span><br><span class="line"></span><br><span class="line">objectSymbols         <span class="hljs-comment">// [Symbol(a), Symbol(b)]</span></span><br></pre></td></tr></table></figure>
 
@@ -282,7 +288,7 @@ var _hmt = _hmt || [];
 <p>由于 <code>Set</code> 结构没有键名，只有键值（或者说键名和键值是同一个值），所以 <code>keys</code> 方法和 <code>values</code> 方法的行为完全一致</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> <span class="hljs-keyword">set</span> = new Set(['red', 'green', 'blue']);</span><br><span class="line"></span><br><span class="line">for (let item of <span class="hljs-keyword">set</span>.keys()) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(item);</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-comment">// red</span></span><br><span class="line"><span class="hljs-comment">// green</span></span><br><span class="line"><span class="hljs-comment">// blue</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> item <span class="hljs-keyword">of</span> <span class="hljs-keyword">set</span>.values()) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(item);</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-comment">// red</span></span><br><span class="line"><span class="hljs-comment">// green</span></span><br><span class="line"><span class="hljs-comment">// blue</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> item <span class="hljs-keyword">of</span> <span class="hljs-keyword">set</span>.entries()) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(item);</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-comment">// ['red', 'red']</span></span><br><span class="line"><span class="hljs-comment">// ['green', 'green']</span></span><br><span class="line"><span class="hljs-comment">// ['blue', 'blue']</span></span><br></pre></td></tr></table></figure>
 
-<p><code>Set</code> 结构的实例默认可遍历，它的默认遍历器生成函数就是它的 <code>values</code> 方法，所以可以省略 <code>values</code> 方法，直接用 <code>for...of</code> 循环遍历 <code>Set</code></p>
+<p><code>Set</code> 结构的实例默认可遍历，它的默认遍历器生成函数就是它的 <code>values</code> 方法，所以可以省略 <code>values</code> 方法，直接用 <code>for-of</code> 循环遍历 <code>Set</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> <span class="hljs-keyword">set</span> = new Set(['red', 'green', 'blue']);</span><br><span class="line"></span><br><span class="line">for (let x of <span class="hljs-keyword">set</span>) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(x);</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-comment">// red</span></span><br><span class="line"><span class="hljs-comment">// green</span></span><br><span class="line"><span class="hljs-comment">// blue</span></span><br></pre></td></tr></table></figure>
 
 <p><code>Set</code> 结构的实例与数组一样，也拥有 <code>forEach</code> 方法，用于对每个成员执行某种操作，<strong>没有返回值</strong></p>
@@ -394,13 +400,18 @@ var _hmt = _hmt || [];
 <li><p><code>has()</code> – 检查键值对，返回布尔值</p>
 </li>
 </ul>
-<p><code>WeakMap</code> 应用的典型场合就是 <code>DOM</code> 节点作为键名</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> myElement = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'logo'</span>);</span><br><span class="line"><span class="hljs-keyword">let</span> myWeakmap = <span class="hljs-keyword">new</span> <span class="hljs-built_in">WeakMap</span>();</span><br><span class="line"></span><br><span class="line">myWeakmap.set(myElement, &#123; <span class="hljs-attr">timesClicked</span>: <span class="hljs-number">0</span> &#125;);</span><br><span class="line"></span><br><span class="line">myElement.addEventListener(<span class="hljs-string">'click'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> logoData = myWeakmap.get(myElement);</span><br><span class="line">  logoData.timesClicked++;</span><br><span class="line">&#125;, <span class="hljs-literal">false</span>);</span><br></pre></td></tr></table></figure>
+<p>下面我们来看一些 <code>WeakMap</code> 的使用场景</p>
+<h4 id="在-DOM-对象上保存相关数据"><a href="#在-DOM-对象上保存相关数据" class="headerlink" title="在 DOM 对象上保存相关数据"></a>在 DOM 对象上保存相关数据</h4><p>传统使用 <code>jQuery</code> 的时候，我们会通过 <code>$.data()</code> 方法在 <code>DOM</code> 对象上储存相关信息，当你将 <code>DOM</code> 元素删除，<code>DOM</code> 对象置为空的时候，相关联的数据并不会被删除</p>
+<p>你必须手动执行 <code>$.removeData()</code> 方法才能删除掉相关联的数据，<code>WeakMap</code> 就可以简化这一操作</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> wm = <span class="hljs-keyword">new</span> <span class="hljs-built_in">WeakMap</span>(), el = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'.el'</span>)</span><br><span class="line">wm.set(el, <span class="hljs-string">'data'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> value = wm.get(el)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(value)  <span class="hljs-comment">// data</span></span><br><span class="line"></span><br><span class="line">el.parentNode.removeChild(el)</span><br><span class="line">el = <span class="hljs-literal">null</span></span><br></pre></td></tr></table></figure>
 
-<p>另一个用处是部署私有属性</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> _counter = <span class="hljs-keyword">new</span> <span class="hljs-built_in">WeakMap</span>();</span><br><span class="line"><span class="hljs-keyword">const</span> _action = <span class="hljs-keyword">new</span> <span class="hljs-built_in">WeakMap</span>();</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Countdown</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(counter, action) &#123;</span><br><span class="line">    _counter.set(<span class="hljs-keyword">this</span>, counter);</span><br><span class="line">    _action.set(<span class="hljs-keyword">this</span>, action);</span><br><span class="line">  &#125;</span><br><span class="line">  dec() &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> counter = _counter.get(<span class="hljs-keyword">this</span>);</span><br><span class="line">    <span class="hljs-keyword">if</span> (counter &lt; <span class="hljs-number">1</span>) <span class="hljs-keyword">return</span>;</span><br><span class="line">    counter--;</span><br><span class="line">    _counter.set(<span class="hljs-keyword">this</span>, counter);</span><br><span class="line">    <span class="hljs-keyword">if</span> (counter === <span class="hljs-number">0</span>) &#123;</span><br><span class="line">      _action.get(<span class="hljs-keyword">this</span>)();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> c = <span class="hljs-keyword">new</span> Countdown(<span class="hljs-number">2</span>, () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'DONE'</span>));</span><br><span class="line"></span><br><span class="line">c.dec()</span><br><span class="line">c.dec()  <span class="hljs-comment">// DONE</span></span><br></pre></td></tr></table></figure>
+<h4 id="数据缓存"><a href="#数据缓存" class="headerlink" title="数据缓存"></a>数据缓存</h4><p>从之前的例子我们可以看出，当我们需要关联对象和数据，比如在不修改原有对象的情况下储存某些属性或者根据对象储存一些计算的值等，而又不想管理这些数据的时候就可以考虑使用 <code>WeakMap</code></p>
+<p>数据缓存就是一个非常好的例子</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> cache = <span class="hljs-keyword">new</span> <span class="hljs-built_in">WeakMap</span>()</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">countOwnKeys</span>(<span class="hljs-params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (cache.has(obj)) &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Cached'</span>)</span><br><span class="line">    <span class="hljs-keyword">return</span> cache.get(obj)</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Computed'</span>)</span><br><span class="line">    <span class="hljs-keyword">const</span> count = <span class="hljs-built_in">Object</span>.keys(obj).length</span><br><span class="line">    cache.set(obj, count)</span><br><span class="line">    <span class="hljs-keyword">return</span> count</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><code>Countdown</code> 类的两个内部属性 <code>_counter</code> 和 <code>_action</code>，是实例的弱引用，所以如果删除实例，它们也就随之消失，不会造成内存泄漏</p>
+<h4 id="部署私有属性"><a href="#部署私有属性" class="headerlink" title="部署私有属性"></a>部署私有属性</h4><p><code>WeakMap</code> 也可以被用于实现私有变量，不过在 <code>ES6</code> 中实现私有变量的方式有很多种，这只是其中一种</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> privateData = <span class="hljs-keyword">new</span> <span class="hljs-built_in">WeakMap</span>()</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(name, age) &#123;</span><br><span class="line">    privateData.set(<span class="hljs-keyword">this</span>, &#123;</span><br><span class="line">      name,</span><br><span class="line">      age</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  getName() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> privateData.get(<span class="hljs-keyword">this</span>).name</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  getAge() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> privateData.get(<span class="hljs-keyword">this</span>).age</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> p = <span class="hljs-keyword">new</span> Person(<span class="hljs-string">'zhangsan'</span>, <span class="hljs-number">20</span>)</span><br><span class="line"></span><br><span class="line">p.name       <span class="hljs-comment">// undefined</span></span><br><span class="line">p.getName()  <span class="hljs-comment">// zhangsan</span></span><br></pre></td></tr></table></figure>
+
 <h2 id="结论-amp-amp-区别"><a href="#结论-amp-amp-区别" class="headerlink" title="结论 &amp;&amp; 区别"></a>结论 &amp;&amp; 区别</h2><ul>
 <li><p><code>Set</code>、<code>Map</code>、<code>WeakSet</code>、<code>WeakMap</code>、都是一种集合的数据结构</p>
 </li>
@@ -525,7 +536,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        127
+                        129
                     </p>
                 </div>
             </div>
@@ -571,16 +582,36 @@ var _hmt = _hmt || [];
         <span class="has-mr-6">1</span>
         <span>Symbol</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#作为属性名的-Symbol">
+        <a class="is-flex" href="#instanceof-的结果为-false">
         <span class="has-mr-6">1.1</span>
+        <span>instanceof 的结果为 false</span>
+        </a></li><li>
+        <a class="is-flex" href="#接受字符串作为参数">
+        <span class="has-mr-6">1.2</span>
+        <span>接受字符串作为参数</span>
+        </a></li><li>
+        <a class="is-flex" href="#如果参数是一个对象，就会调用该对象的-toString-方法，将其转为字符串">
+        <span class="has-mr-6">1.3</span>
+        <span>如果参数是一个对象，就会调用该对象的 toString() 方法，将其转为字符串</span>
+        </a></li><li>
+        <a class="is-flex" href="#相同参数的-Symbol-函数的返回值是不相等的">
+        <span class="has-mr-6">1.4</span>
+        <span>相同参数的 Symbol 函数的返回值是不相等的</span>
+        </a></li><li>
+        <a class="is-flex" href="#Symbol-值可以转为布尔值，但是不能转为数值，也不能与其他类型的值进行运算">
+        <span class="has-mr-6">1.5</span>
+        <span>Symbol 值可以转为布尔值，但是不能转为数值，也不能与其他类型的值进行运算</span>
+        </a></li><li>
+        <a class="is-flex" href="#作为属性名的-Symbol">
+        <span class="has-mr-6">1.6</span>
         <span>作为属性名的 Symbol</span>
         </a></li><li>
         <a class="is-flex" href="#属性名的遍历">
-        <span class="has-mr-6">1.2</span>
+        <span class="has-mr-6">1.7</span>
         <span>属性名的遍历</span>
         </a></li><li>
         <a class="is-flex" href="#Symbol-for-amp-amp-Symbol-keyFor">
-        <span class="has-mr-6">1.3</span>
+        <span class="has-mr-6">1.8</span>
         <span>Symbol.for() &amp;&amp; Symbol.keyFor()</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#Set">
@@ -606,7 +637,19 @@ var _hmt = _hmt || [];
         <a class="is-flex" href="#WeakMap">
         <span class="has-mr-6">5</span>
         <span>WeakMap</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#在-DOM-对象上保存相关数据">
+        <span class="has-mr-6">5.1</span>
+        <span>在 DOM 对象上保存相关数据</span>
         </a></li><li>
+        <a class="is-flex" href="#数据缓存">
+        <span class="has-mr-6">5.2</span>
+        <span>数据缓存</span>
+        </a></li><li>
+        <a class="is-flex" href="#部署私有属性">
+        <span class="has-mr-6">5.3</span>
+        <span>部署私有属性</span>
+        </a></li></ul></li><li>
         <a class="is-flex" href="#结论-amp-amp-区别">
         <span class="has-mr-6">6</span>
         <span>结论 &amp;&amp; 区别</span>
@@ -666,7 +709,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">51</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -737,6 +780,44 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/01/17/JavaScript/51/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/51.jpg" alt="Object 上的原生 API">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-16T16:00:00.000Z">2020-01-17</time></div>
+                    <a href="/2020/01/17/JavaScript/51/" class="has-link-black-ter is-size-6">Object 上的原生 API</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/01/16/JavaScript/50/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/50.jpg" alt="Async 和 Await">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-15T16:00:00.000Z">2020-01-16</time></div>
+                    <a href="/2020/01/16/JavaScript/50/" class="has-link-black-ter is-size-6">Async 和 Await</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/01/05/JavaScript/49/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/49.jpg" alt="函数防抖和节流">
@@ -792,44 +873,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/12/22/React/08/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="渲染器的核心 Diff 算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-21T16:00:00.000Z">2019-12-22</time></div>
-                    <a href="/2019/12/22/React/08/" class="has-link-black-ter is-size-6">渲染器的核心 Diff 算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/12/20/React/07/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/07.jpg" alt="渲染器">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-19T16:00:00.000Z">2019-12-20</time></div>
-                    <a href="/2019/12/20/React/07/" class="has-link-black-ter is-size-6">渲染器</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -848,7 +891,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1123,7 +1166,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1178,7 +1221,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">六月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1326,7 +1369,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">51</span>
                     </a>
                 </div>
                 

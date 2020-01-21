@@ -16,7 +16,7 @@
 <meta property="og:description" content="JavaScript 由于各种各样的原因，在判断一个变量的数据类型方面一直存在着一些问题，其中最典型的问题恐怕就是 typeof null 会返回 object 因此在这里简单的总结一下判断数据类型时常见的陷阱，以及正确的处理姿势">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/25.jpg">
-<meta property="og:updated_time" content="2020-01-08T07:54:06.412Z">
+<meta property="og:updated_time" content="2020-01-19T16:19:09.305Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的类型判断">
 <meta name="twitter:description" content="JavaScript 由于各种各样的原因，在判断一个变量的数据类型方面一直存在着一些问题，其中最典型的问题恐怕就是 typeof null 会返回 object 因此在这里简单的总结一下判断数据类型时常见的陷阱，以及正确的处理姿势">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    32 分钟 读完 (大约 4768 个字)
+                    33 分钟 读完 (大约 4886 个字)
                 </span>
                 
                 
@@ -283,33 +283,44 @@ var _hmt = _hmt || [];
 
 <p>在判断实例对象是否存在的时候，推荐使用 <code>in</code> 运算符，只有在需要判断实例属性的时候才会用到 <code>hasOwnProperty()</code></p>
 <p>不管你什么时候需要检测属性的存在性，请使用 <code>in</code> 运算符或者 <code>hasOwnProperty()</code>，这样可以避免很多错误</p>
-<h2 id="hasOwnProperty-NaN"><a href="#hasOwnProperty-NaN" class="headerlink" title="hasOwnProperty"></a>hasOwnProperty</h2><p>是用来判断一个对象是否有你给出名称的属性或对象（需要注意的是，此方法无法检查该对象的原型链中是否具有该属性）</p>
-<p>该属性必须是对象本身的一个成员，在跨浏览器的设计中，我们不能依赖于 <code>for in</code> 来获取对象的成员名称，一般使用 <code>hasOwnProperty</code> 来判断</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> buz = &#123;</span><br><span class="line">  fog: <span class="hljs-string">'123'</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> name <span class="hljs-keyword">in</span> buz) &#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (buz.hasOwnProperty(name)) &#123;</span><br><span class="line">    alert(<span class="hljs-string">"this is fog ("</span> + name + <span class="hljs-string">") for sure. Value: "</span> + buz[name]);</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    alert(name); <span class="hljs-comment">// toString or something else</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="instanceof"><a href="#instanceof" class="headerlink" title="instanceof"></a>instanceof</h2><p>该 <strong>运算符</strong> 用于检测构造函数的 <code>prototype</code> 属性是否出现在某个实例对象的原型链上</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Person</span>(<span class="hljs-params">name, age</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.name = name</span><br><span class="line">  <span class="hljs-keyword">this</span>.age = age</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> man = <span class="hljs-keyword">new</span> Person(<span class="hljs-string">'zhangsan'</span>, <span class="hljs-number">20</span>)</span><br><span class="line"></span><br><span class="line">man <span class="hljs-keyword">instanceof</span> Person  <span class="hljs-comment">// true</span></span><br><span class="line">man <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Object</span>  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
 
-<p>在 <code>Object.prototype</code> 中调用 <code>hasOwnProperty()</code></p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 对象</span></span><br><span class="line"><span class="hljs-keyword">var</span> man = &#123;</span><br><span class="line">  hands: <span class="hljs-number">2</span>,</span><br><span class="line">  legs: <span class="hljs-number">2</span>,</span><br><span class="line">  heads: <span class="hljs-number">1</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 将一个方法添加到对象上</span></span><br><span class="line"><span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">Object</span>.prototype.clone === <span class="hljs-string">"undefined"</span>) &#123;</span><br><span class="line">  <span class="hljs-built_in">Object</span>.prototype.clone = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 使用 hasOwnProperty()</span></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> man) &#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.prototype.hasOwnProperty.call(man, i)) &#123;  <span class="hljs-comment">// 过滤</span></span><br><span class="line">    <span class="hljs-built_in">console</span>.log(i, <span class="hljs-string">":"</span>, man[i]);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是需要注意的是，比如我们要检测对象不是某个构造函数的实例时，通常会这样做</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">if</span> (!(man <span class="hljs-keyword">instanceof</span> Person)) &#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>在使用 <code>hasOwnProperty()</code> 对 <code>man</code> 对象进行精炼后，可有效的避免命名冲突，也可以使用一个本地变量来缓存比较长的属性名</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> i, hasOwn = <span class="hljs-built_in">Object</span>.prototype.hasOwnProperty;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> man) &#123;</span><br><span class="line">  <span class="hljs-comment">// 过滤</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (hasOwn.call(man, i)) &#123;  </span><br><span class="line">    <span class="hljs-built_in">console</span>.log(i, <span class="hljs-string">":"</span>, man[i]);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是千万别省略掉了括号</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">if</span> (!man <span class="hljs-keyword">instanceof</span> Person)</span><br></pre></td></tr></table></figure>
 
+<p>这段代码永远会得到 <code>false</code>，因为 <code>!man</code> 将在 <code>instanceof</code> 之前被处理，所以你总是在验证一个布尔值是否是 <code>Person</code> 的一个实例</p>
+<p>所以，在判断一个变量是不是对象的情况下，值类型的类型判断用 <code>typeof</code>，引用类型的类型判断用 <code>instanceof</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> fn = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(fn <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Function</span>)  <span class="hljs-comment">// true</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(fn <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Object</span>)    <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>最后我们再来看几个比较特殊的例子</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> str = <span class="hljs-string">'string'</span></span><br><span class="line"><span class="hljs-keyword">var</span> newStr = <span class="hljs-keyword">new</span> <span class="hljs-built_in">String</span>()</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> newObj = <span class="hljs-built_in">Object</span>.create(<span class="hljs-literal">null</span>)</span><br><span class="line"></span><br><span class="line">str <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">String</span>     <span class="hljs-comment">// false ==&gt; 因为检查原型链会找到 undefined</span></span><br><span class="line">newStr <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">String</span>  <span class="hljs-comment">// true</span></span><br><span class="line">newStr <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Object</span>  <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line">(&#123;&#125;) <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Object</span>    <span class="hljs-comment">// true  ==&gt; 尽管原型没有定义</span></span><br><span class="line">newObj <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Object</span>  <span class="hljs-comment">// false ==&gt; 原型为 null</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Object-prototype-hasOwnProperty"><a href="#Object-prototype-hasOwnProperty" class="headerlink" title="Object.prototype.hasOwnProperty()"></a>Object.prototype.hasOwnProperty()</h2><p>所有继承了 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object" target="_blank" rel="noopener">Object</a> 的对象都会继承到 <code>hasOwnProperty</code> 方法，该方法会返回一个布尔值，用来判断一个对象是否有你给出名称的属性或对象（也就是否有指定的键），即使属性的值是 <code>null</code> 或 <code>undefined</code>，只要属性存在，<code>hasOwnProperty</code> 依旧会返回 <code>true</code></p>
+<p>不过需要注意的是，此方法无法检查该对象的原型链中是否具有该属性</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> foo = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Object</span>()</span><br><span class="line"><span class="hljs-keyword">const</span> bar = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Object</span>()</span><br><span class="line"></span><br><span class="line">foo.age = <span class="hljs-number">22</span></span><br><span class="line">bar.prop = <span class="hljs-literal">null</span></span><br><span class="line"></span><br><span class="line">foo.hasOwnProperty(<span class="hljs-string">'age'</span>)       <span class="hljs-comment">// true</span></span><br><span class="line">foo.hasOwnProperty(<span class="hljs-string">'toString'</span>)  <span class="hljs-comment">// false</span></span><br><span class="line">bar.hasOwnProperty(<span class="hljs-string">'prop'</span>)      <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>比如我们遍历一个对象的所有自身属性的时候就可以使用 <code>hasOwnProperty</code> 来忽略掉继承属性</p>
+<blockquote>
+<p>这里有个需要注意的地方，<code>for-in</code> 循环只会遍历可枚举属性，所以循环中没有不可枚举的属性不是依靠 <code>hasOwnProperty()</code> 得来的</p>
+</blockquote>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> obj = &#123;</span><br><span class="line">  name: <span class="hljs-string">'zhangsan'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> name <span class="hljs-keyword">in</span> obj) &#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (obj.hasOwnProperty(name)) &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(obj.name)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>JavaScript</code> 并没有将 <code>hasOwnProperty</code> 设为关键字，因此当某个对象可能自有一个占用该属性名的属性时，就需要使用外部的 <code>hasOwnProperty</code> 获得正确的结果</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> foo = &#123;</span><br><span class="line">  hasOwnProperty: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span></span><br><span class="line">  &#125;,</span><br><span class="line">  bar: <span class="hljs-string">'zhangsan'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo.hasOwnProperty(<span class="hljs-string">'bar'</span>)                         <span class="hljs-comment">// false</span></span><br><span class="line">(&#123;&#125;).hasOwnProperty.call(foo, <span class="hljs-string">'bar'</span>)              <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 也可以使用 Object 原型上的 hasOwnProperty 属性</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.prototype.hasOwnProperty.call(foo, <span class="hljs-string">'bar'</span>)  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>比如上面这个例子，当我们调用 <code>foo.hasOwnProperty(&#39;bar&#39;)</code> 的时候始终会返回 <code>false</code>，在这种情况下，我们可以直接使用原型链或者 <code>Object</code> 原型上的 <code>hasOwnProperty</code> 方法</p>
 <p>严格来讲，不使用 <code>hasOwnProperty()</code> 并没有错，依赖具体任务和对代码的自信，可以忽略过该方法并略微加快循环的执行速度</p>
 <p>但是当确认不了对象的内容（和原型链）的时候，最好还是加上 <code>hasOwnProperty()</code> 这样安全的检查</p>
-<h2 id="isPrototypeOf-NaN"><a href="#isPrototypeOf-NaN" class="headerlink" title="isPrototypeOf"></a>isPrototypeOf</h2><p>是用来判断要检查其原型链的对象是否存在于指定对象实例中，是则返回 <code>true</code>，否则返回 <code>false</code></p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Fee</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Fi</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">Fi.prototype = <span class="hljs-keyword">new</span> Fee();</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Fo</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">Fo.prototype = <span class="hljs-keyword">new</span> Fi();</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Fum</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">Fum.prototype = <span class="hljs-keyword">new</span> Fo();</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ---------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> fum = <span class="hljs-keyword">new</span> Fum();</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">if</span> (Fi.prototype.isPrototypeOf(fum)) &#123;</span><br><span class="line">  <span class="hljs-comment">// do something safe</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Object-prototype-isPrototypeOf"><a href="#Object-prototype-isPrototypeOf" class="headerlink" title="Object.prototype.isPrototypeOf()"></a>Object.prototype.isPrototypeOf()</h2><p>是用来判断要检查其原型链的对象是否存在于指定对象的原型链上（实例中），是则返回 <code>true</code>，否则返回 <code>false</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">A</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">B</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">C</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// B 继承于 A</span></span><br><span class="line">B.prototype = <span class="hljs-built_in">Object</span>.create(A.prototype)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// C 继承于 B</span></span><br><span class="line">C.prototype = <span class="hljs-built_in">Object</span>.create(B.prototype)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> c = <span class="hljs-keyword">new</span> C()</span><br><span class="line"></span><br><span class="line">C.prototype.isPrototypeOf(c)       <span class="hljs-comment">// true</span></span><br><span class="line">B.prototype.isPrototypeOf(c)       <span class="hljs-comment">// true</span></span><br><span class="line">A.prototype.isPrototypeOf(c)       <span class="hljs-comment">// true</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.prototype.isPrototypeOf(c)  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="instanceof"><a href="#instanceof" class="headerlink" title="instanceof"></a>instanceof</h2><p>用来测试一个对象在其原型链构造函数上是否具有 <code>prototype</code> 属性，直白的说就是，用来检测 <code>constructor.prototype</code> 是否存在于参数 <code>object</code> 的原型链上</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 定义构造函数</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">C</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">D</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> o = <span class="hljs-keyword">new</span> C();</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// true，因为 Object.getPrototypeOf(o) === C.prototype</span></span><br><span class="line">o <span class="hljs-keyword">instanceof</span> C;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// false，因为 D.prototype 不在 o 的原型链上</span></span><br><span class="line">o <span class="hljs-keyword">instanceof</span> D;</span><br><span class="line"></span><br><span class="line">o <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Object</span>;           <span class="hljs-comment">// true，因为 Object.prototype.isPrototypeOf(o) 返回 true</span></span><br><span class="line">C.prototype <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Object</span>  <span class="hljs-comment">// true，同上</span></span><br><span class="line"></span><br><span class="line">C.prototype = &#123;&#125;;</span><br><span class="line"><span class="hljs-keyword">var</span> o2 = <span class="hljs-keyword">new</span> C();</span><br><span class="line"></span><br><span class="line">o2 <span class="hljs-keyword">instanceof</span> C; <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line">o <span class="hljs-keyword">instanceof</span> C;  <span class="hljs-comment">// false，C.prototype 指向了一个空对象，这个空对象不在 o 的原型链上</span></span><br><span class="line"></span><br><span class="line">D.prototype = <span class="hljs-keyword">new</span> C();  <span class="hljs-comment">// 继承</span></span><br><span class="line"><span class="hljs-keyword">var</span> o3 = <span class="hljs-keyword">new</span> D();</span><br><span class="line">o3 <span class="hljs-keyword">instanceof</span> D;        <span class="hljs-comment">// true</span></span><br><span class="line">o3 <span class="hljs-keyword">instanceof</span> C;        <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
-
-<p>需要注意的是，如果表达式 <code>obj instanceof Foo</code> 返回 <code>true</code>，则并不意味着该表达式会永远返回 <code>ture</code>，因为 <code>Foo.prototype</code> 属性的值有可能会改变</p>
-<p>改变之后的值很有可能不存在于 <code>obj</code> 的原型链上，这时原表达式的值就会成为 <code>false</code></p>
-<p>另外一种情况下，原表达式的值也会改变，就是改变对象 <code>obj</code> 的原型链的情况，虽然在目前的 <code>ES</code> 规范中，我们只能读取对象的原型而不能改变它，但借助于非标准的 <code>__proto__</code> 魔法属性，是可以实现的</p>
-<p>比如执行 <code>obj.__proto__ = {}</code> 之后，<code>obj instanceof Foo</code> 就会返回 <code>false</code> 了</p>
-<p>更多详细见： <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/instanceof" target="_blank" rel="noopener">MDN - instanceof</a></p>
-<p>所以，在判断一个变量是不是对象的情况下，值类型的类型判断用 <code>typeof</code>，引用类型的类型判断用 <code>instanceof</code></p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> fn = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(fn <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Object</span>);  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="Object-prototype-toString"><a href="#Object-prototype-toString" class="headerlink" title="Object.prototype.toString()"></a>Object.prototype.toString()</h2><p>在介绍完上面一大堆东西以后，我们来看一个比较新奇的东西，先上规范 <a href="http://yanhaijing.com/es5/#304" target="_blank" rel="noopener">15.2.4.2 Object.prototype.toString()</a></p>
+<h2 id="Object-prototype-toString"><a href="#Object-prototype-toString" class="headerlink" title="Object.prototype.toString()"></a>Object.prototype.toString()</h2><p>在介绍完上面一大堆东西以后，我们来看一个比较新奇的方法 <code>Object.prototype.toString()</code>，它的作用是返回一个表示该对象的字符串</p>
+<p>每个对象都有一个 <code>toString()</code> 方法，默认情况下 <code>toString()</code> 方法被每个 <code>Object</code> 对象继承，如果此方法在自定义对象中未被覆盖</p>
+<p>则 <code>toString()</code> 就返回 <code>[object type]</code>，其中 <code>type</code> 是对象的类型，我们可以根据规范 <a href="http://yanhaijing.com/es5/#304" target="_blank" rel="noopener">15.2.4.2 Object.prototype.toString()</a> 来进行了解</p>
 <p>根据规范可知，当 <code>toString</code> 方法被调用的时候，下面的步骤会被执行</p>
 <ol>
 <li>如果 <code>this</code> 值是 <code>undefined</code>，就返回 <code>[object Undefined]</code></li>
@@ -323,13 +334,13 @@ var _hmt = _hmt || [];
 
 <p>有了这个方法，我们也可以应对许多场景，下面我们再来看一些比较特殊的场景</p>
 <h2 id="空对象检测"><a href="#空对象检测" class="headerlink" title="空对象检测"></a>空对象检测</h2><p>一般有下面这几种方式</p>
-<p>但是有一点需要注意，<code>for...in</code>，<code>JSON.stringify()</code>，<code>Object.keys()</code>，<code>isEmptyObject()</code> 无法检测非枚举属性</p>
+<p>但是有一点需要注意，<code>for-in</code>，<code>JSON.stringify()</code>，<code>Object.keys()</code>，<code>isEmptyObject()</code> 无法检测非枚举属性</p>
 <h4 id="for…in"><a href="#for…in" class="headerlink" title="for…in"></a>for…in</h4><p>返回所有可枚举属性，包括原型中的属性，不含 <code>Symbol</code> 属性</p>
-<p>最常见的思路，<code>for...in</code> 遍历属性，为真则为非空数组，否则为空数组</p>
+<p>最常见的思路，<code>for-in</code> 遍历属性，为真则为非空数组，否则为空数组</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 如果不为空，则会执行到这一步，返回 true</span></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i <span class="hljs-keyword">in</span> obj) &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 如果为空，返回 false</span></span><br><span class="line"><span class="hljs-keyword">return</span> <span class="hljs-literal">false</span></span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>另外有一个可以混淆的 <code>for...of</code> 方法，不过需要注意的是，对象没有部署可迭代接口，所以不适用</p>
+<p>另外有一个可以混淆的 <code>for-in</code> 方法，不过需要注意的是，对象没有部署可迭代接口，所以不适用</p>
 </blockquote>
 <h4 id="JSON-stringify"><a href="#JSON-stringify" class="headerlink" title="JSON.stringify()"></a>JSON.stringify()</h4><p>通过 <code>JSON</code> 自带的 <code>stringify()</code> 方法来判断</p>
 <p><code>JSON.stringify()</code> 方法用于将 <code>JavaScript</code> 值转换为 <code>JSON</code> 字符串</p>
@@ -351,7 +362,7 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.keys(object).length === <span class="hljs-number">0</span>) &#123;</span><br><span class="line">  <span class="hljs-comment">// 如果为空，返回 false</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 如果不为空，则会执行到这一步，返回 true</span></span><br><span class="line"><span class="hljs-keyword">return</span> <span class="hljs-literal">true</span></span><br></pre></td></tr></table></figure>
 
 <h4 id="isEmptyObject"><a href="#isEmptyObject" class="headerlink" title="isEmptyObject()"></a>isEmptyObject()</h4><p><code>jQuery</code> 当中提供了 <code>isEmptyObject()</code> 方法用来判断空对象</p>
-<p>但是其本质也是通过 <code>for...in</code> 循环来进行判断的，源码如下</p>
+<p>但是其本质也是通过 <code>for-in</code> 循环来进行判断的，源码如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">isEmptyObject: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> name;</span><br><span class="line">  <span class="hljs-keyword">for</span> (name <span class="hljs-keyword">in</span> obj) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>下面是一些使用示例</p>
@@ -364,7 +375,7 @@ var _hmt = _hmt || [];
 
 <h4 id="Object-getOwnPropertyNames"><a href="#Object-getOwnPropertyNames" class="headerlink" title="Object.getOwnPropertyNames()"></a>Object.getOwnPropertyNames()</h4><p>该方法会返回一个由指定对象的所有自身属性的属性名（包括不可枚举属性但不包括 <code>Symbol</code> 值作为名称的属性）组成的数组</p>
 <p>需要注意的是，该方法不支持 <code>IE8</code> 及以下，并且在 <code>ES5</code> 版本当中，如果参数不是一个原始对象类型会抛出一个错误</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 判断空对象</span></span><br><span class="line"><span class="hljs-keyword">let</span> obj = &#123;&#125;</span><br><span class="line"><span class="hljs-built_in">Object</span>.getOwnPropertyNames(obj)     <span class="hljs-comment">// []</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES5 版本当中参数不是原始对象类型会引起错误</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.getOwnPropertyNames(<span class="hljs-string">'foo'</span>);  <span class="hljs-comment">// TypeError: 'foo' is not an object</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES6 版本当中非对象参数会被强制转换为对象</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.getOwnPropertyNames(<span class="hljs-string">'foo'</span>);  <span class="hljs-comment">// ['length', '0', '1', '2']</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 判断空对象</span></span><br><span class="line"><span class="hljs-keyword">let</span> obj = &#123;&#125;</span><br><span class="line"><span class="hljs-built_in">Object</span>.getOwnPropertyNames(obj)     <span class="hljs-comment">// []</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES5 版本当中参数不是原始对象类型会引起错误</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.getOwnPropertyNames(<span class="hljs-string">'foo'</span>)   <span class="hljs-comment">// TypeError: 'foo' is not an object</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES6 版本当中非对象参数会被强制转换为对象</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.getOwnPropertyNames(<span class="hljs-string">'foo'</span>)   <span class="hljs-comment">// ['length', '0', '1', '2']</span></span><br></pre></td></tr></table></figure>
 
 <p>利用这个方法可以检测出非枚举属性</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> obj = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.defineProperty(obj, <span class="hljs-string">'key'</span>, &#123;</span><br><span class="line">  enumerable: <span class="hljs-literal">false</span>,</span><br><span class="line">  configurable: <span class="hljs-literal">false</span>,</span><br><span class="line">  writable: <span class="hljs-literal">false</span>,</span><br><span class="line">  value: <span class="hljs-string">'123'</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.getOwnPropertyNames(obj)  <span class="hljs-comment">// ['key']</span></span><br></pre></td></tr></table></figure>
@@ -418,7 +429,7 @@ var _hmt = _hmt || [];
         <div class="level-start">
             <a class="level level-item has-link-grey  article-nav-prev" href="/2018/03/19/JavaScript/26/">
                 <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">Promise 和 setTimeout</span>
+                <span class="level-item">JavaScript 中的 Promise</span>
             </a>
         </div>
         
@@ -501,7 +512,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        127
+                        129
                     </p>
                 </div>
             </div>
@@ -563,17 +574,17 @@ var _hmt = _hmt || [];
         <span class="has-mr-6">5</span>
         <span>属性检测</span>
         </a></li><li>
-        <a class="is-flex" href="#hasOwnProperty-NaN">
-        <span class="has-mr-6">6</span>
-        <span>hasOwnProperty</span>
-        </a></li><li>
-        <a class="is-flex" href="#isPrototypeOf-NaN">
-        <span class="has-mr-6">7</span>
-        <span>isPrototypeOf</span>
-        </a></li><li>
         <a class="is-flex" href="#instanceof">
-        <span class="has-mr-6">8</span>
+        <span class="has-mr-6">6</span>
         <span>instanceof</span>
+        </a></li><li>
+        <a class="is-flex" href="#Object-prototype-hasOwnProperty">
+        <span class="has-mr-6">7</span>
+        <span>Object.prototype.hasOwnProperty()</span>
+        </a></li><li>
+        <a class="is-flex" href="#Object-prototype-isPrototypeOf">
+        <span class="has-mr-6">8</span>
+        <span>Object.prototype.isPrototypeOf()</span>
         </a></li><li>
         <a class="is-flex" href="#Object-prototype-toString">
         <span class="has-mr-6">9</span>
@@ -670,7 +681,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">51</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -741,6 +752,44 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/01/17/JavaScript/51/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/51.jpg" alt="Object 上的原生 API">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-16T16:00:00.000Z">2020-01-17</time></div>
+                    <a href="/2020/01/17/JavaScript/51/" class="has-link-black-ter is-size-6">Object 上的原生 API</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/01/16/JavaScript/50/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/50.jpg" alt="Async 和 Await">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-15T16:00:00.000Z">2020-01-16</time></div>
+                    <a href="/2020/01/16/JavaScript/50/" class="has-link-black-ter is-size-6">Async 和 Await</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/01/05/JavaScript/49/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/49.jpg" alt="函数防抖和节流">
@@ -796,44 +845,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/12/22/React/08/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="渲染器的核心 Diff 算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-21T16:00:00.000Z">2019-12-22</time></div>
-                    <a href="/2019/12/22/React/08/" class="has-link-black-ter is-size-6">渲染器的核心 Diff 算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/12/20/React/07/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/07.jpg" alt="渲染器">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-19T16:00:00.000Z">2019-12-20</time></div>
-                    <a href="/2019/12/20/React/07/" class="has-link-black-ter is-size-6">渲染器</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -852,7 +863,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1127,7 +1138,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1182,7 +1193,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">六月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1330,7 +1341,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">51</span>
                     </a>
                 </div>
                 

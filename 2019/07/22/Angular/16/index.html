@@ -16,7 +16,7 @@
 <meta property="og:description" content="今天在群里看到一个讨论，是关于 Angular 的变化检查机制，依稀记得在 AngularJS 当中是使用的脏检查机制 而在 Angular 2.x+ 之后的版本当中依然采用的是脏检查机制，不过使用的是进行优化过的版本 为了探明到底有啥区别，就打算抽点时间，研究研究新版本的脏检查机制，顺便记录记录，就当加深点印象了  为保持区别，文中所指的 AngularJS 所表示的版本为 1.x+ 的版本，而">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg">
-<meta property="og:updated_time" content="2019-12-30T09:59:19.841Z">
+<meta property="og:updated_time" content="2020-01-21T07:47:09.405Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular 中的变化检测机制">
 <meta name="twitter:description" content="今天在群里看到一个讨论，是关于 Angular 的变化检查机制，依稀记得在 AngularJS 当中是使用的脏检查机制 而在 Angular 2.x+ 之后的版本当中依然采用的是脏检查机制，不过使用的是进行优化过的版本 为了探明到底有啥区别，就打算抽点时间，研究研究新版本的脏检查机制，顺便记录记录，就当加深点印象了  为保持区别，文中所指的 AngularJS 所表示的版本为 1.x+ 的版本，而">
@@ -216,14 +216,14 @@ var _hmt = _hmt || [];
 <p>在 <code>AngularJS</code> 当中使用了观察者和监听器的概念，一个观察者是一个用来返回一个被监听的对象的值的函数，一般是由 <code>$scope.$apply()</code> 或者 <code>$scope.$digest</code> 来进行触发</p>
 <p>而在 <code>Angular</code> 当中则接入了 <a href="https://blog.thoughtram.io/angular/2016/02/01/zones-in-angular-2.html" target="_blank" rel="noopener">NgZone</a>，由它来监听 <code>Angular</code> 所有的异步事件</p>
 <p><code>Angular</code> 在启动时会重写（通过 <code>Zone.js</code>）部分底层浏览器 <code>API</code>，比如 <code>addEventListener</code></p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// this is the new version of addEventListener</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addEventListener</span>(<span class="hljs-params">eventName, callback</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// call the real addEventListener</span></span><br><span class="line">  callRealAddEventListener(eventName, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// first call the original callback</span></span><br><span class="line">    callback(...);</span><br><span class="line">    <span class="hljs-comment">// and then run Angular-specific functionality</span></span><br><span class="line">    <span class="hljs-keyword">var</span> changed = angular2.runChangeDetection();</span><br><span class="line">    <span class="hljs-keyword">if</span> (changed) &#123;</span><br><span class="line">      angular2.reRenderUIPart();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// this is the new version of addEventListener</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addEventListener</span>(<span class="hljs-params">eventName, callback</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// call the real addEventListener</span></span><br><span class="line">  callRealAddEventListener(eventName, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// first call the original callback</span></span><br><span class="line">    callback()</span><br><span class="line">    <span class="hljs-comment">// and then run Angular-specific functionality</span></span><br><span class="line">    <span class="hljs-keyword">var</span> changed = angular2.runChangeDetection()</span><br><span class="line">    <span class="hljs-keyword">if</span> (changed) &#123;</span><br><span class="line">      angular2.reRenderUIPart()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>而在 <code>Angular</code> 当中常见的有两种方式来触发变化检测，一种方法是基于组件的生命周期钩子</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ngAfterViewChecked() &#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.callback &amp;&amp; <span class="hljs-keyword">this</span>.clicked) &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'changing status ...'</span>);</span><br><span class="line">    <span class="hljs-keyword">this</span>.callback(<span class="hljs-built_in">Math</span>.random());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ngAfterViewChecked() &#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.callback &amp;&amp; <span class="hljs-keyword">this</span>.clicked) &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'changing status ...'</span>)</span><br><span class="line">    <span class="hljs-keyword">this</span>.callback(<span class="hljs-built_in">Math</span>.random())</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>在开发模式下运行 <code>Angular</code> 会在控制台中得到一条错误日志，生产模式下则不会抛出</p>
 <p>另一种方法是手动控制变化检测的打开或者关闭，并手动触发</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">constructor</span>(private ref: ChangeDetectorRef) &#123;</span><br><span class="line">  ref.detach();</span><br><span class="line">  setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.ref.detectChanges();</span><br><span class="line">  &#125;, <span class="hljs-number">5000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">constructor</span>(private ref: ChangeDetectorRef) &#123;</span><br><span class="line">  ref.detach()</span><br><span class="line">  setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.ref.detectChanges()</span><br><span class="line">  &#125;, <span class="hljs-number">5000</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="改善的脏检查"><a href="#改善的脏检查" class="headerlink" title="改善的脏检查"></a>改善的脏检查</h2><p>同样是循环脏值检测，虽然 <code>Angular</code> 并没有类似于 <code>AngularJS</code> 的观察者的概念，但是跟踪数据模型属性变化的函数还是存在</p>
 <p>它们只跟踪数据模型中的变化，而不像 <code>AngularJS</code> 中跟踪所有的内容</p>
@@ -249,7 +249,7 @@ var _hmt = _hmt || [];
 <p>从 <code>ChangeDetectionStrategy</code> 可以看到，<code>Angular</code> 有两种变化检测策略，<code>Default</code> 是 <code>Angular</code> 默认的变化检测策略，也就是之前提到的脏检查（只要有值发生变化，就全部检查，但是是经过优化后的单向数据流检查）</p>
 <p>可以根据场景来设置更加高效的变化检测方式：<code>onPush</code></p>
 <p><code>onPush</code> 策略，就是只有当输入数据的引用发生变化或者有事件触发时，组件才进行变化检测</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Component(&#123;</span><br><span class="line">  template: <span class="hljs-string">`</span></span><br><span class="line"><span class="hljs-string">    &lt;h2&gt;&#123;&#123;vData.name&#125;&#125;&lt;/h2&gt;</span></span><br><span class="line"><span class="hljs-string">    &lt;span&gt;&#123;&#123;vData.email&#125;&#125;&lt;/span&gt;</span></span><br><span class="line"><span class="hljs-string">  `</span>,</span><br><span class="line">  <span class="hljs-comment">// 设置该组件的变化检测策略为 onPush</span></span><br><span class="line">  changeDetection: ChangeDetectionStrategy.OnPush</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VCardCmp</span> </span>&#123;</span><br><span class="line">  @Input() vData;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Component(&#123;</span><br><span class="line">  template: <span class="hljs-string">`</span></span><br><span class="line"><span class="hljs-string">    &lt;h2&gt;&#123;&#123;vData.name&#125;&#125;&lt;/h2&gt;</span></span><br><span class="line"><span class="hljs-string">    &lt;span&gt;&#123;&#123;vData.email&#125;&#125;&lt;/span&gt;</span></span><br><span class="line"><span class="hljs-string">  `</span>,</span><br><span class="line">  <span class="hljs-comment">// 设置该组件的变化检测策略为 onPush</span></span><br><span class="line">  changeDetection: ChangeDetectionStrategy.OnPush</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">VCardCmp</span> </span>&#123;</span><br><span class="line">  @Input() vData</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>比如上面这个例子，当 <code>vData</code> 的属性值发生变化的时候，这个组件不会发生变化检测，只有当 <code>vData</code> 重新赋值的时候才会发生变化检测</p>
 <p>当组件中的输入对象是不变量时，可采用 <code>onPush</code> 变化检测策略，减少变化检测的频率，换个角度来说，为了更加智能地执行变化检测，可以在只接受输入的子组件中采用 <code>onPush</code> 策略</p>
@@ -264,11 +264,11 @@ var _hmt = _hmt || [];
 <p>当某些事件导致 <code>changeData</code> 执行时，<code>vData.name</code> 发生改变并传递至 <code>v-card</code> 中，<code>v-card</code> 组件的变化检测器检查给定的数据新 <code>vData</code> 是否与以前一样</p>
 <p>在数据引用未变但是其参数改变的情况下，<code>Angular</code> 也需要对该数据进行变化监测，这就是 <code>immutable</code> 数据结构发挥作用的地方</p>
 <p><code>Immutable</code> 为我们提供不可变的对象：这意味着如果我们使用不可变的对象，并且想要对这样的对象进行更改，我们会得到一个新的引用（保证原始对象不变）</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> vData = Immutables.create(&#123;</span><br><span class="line">  name: <span class="hljs-string">'Pascal Precht'</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> vData2 = vData.set(<span class="hljs-string">'name'</span>, <span class="hljs-string">'Christoph Burgdorf'</span>)</span><br><span class="line"></span><br><span class="line">vData === vData2  <span class="hljs-comment">// false</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> vData = Immutables.create(&#123;</span><br><span class="line">  name: <span class="hljs-string">'Pascal Precht'</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> vData2 = vData.set(<span class="hljs-string">'name'</span>, <span class="hljs-string">'Christoph Burgdorf'</span>)</span><br><span class="line"></span><br><span class="line">vData === vData2  <span class="hljs-comment">// false</span></span><br></pre></td></tr></table></figure>
 
 <h4 id="Observables"><a href="#Observables" class="headerlink" title="Observables"></a>Observables</h4><p>与不可变的对象不同，当进行更改时 <code>Observables</code> 不会给我们提供新的引用，而是发射我们可以订阅的事件来对他们做出反应，比如下面这个示例</p>
 <p>我们用购物车建立一个电子商务应用程序，每当用户将产品放入购物车时，我们需要在用户界面中显示一个小计数器，以便用户可以看到购物车中的产品数量</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@Component(&#123;</span><br><span class="line">  template: <span class="hljs-string">'&#123;&#123;counter&#125;&#125;'</span>,</span><br><span class="line">  changeDetection: ChangeDetectionStrategy.OnPush</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CartBadgeCmp</span> </span>&#123;</span><br><span class="line">  @Input() addItemStream: Observable&lt;any&gt;;</span><br><span class="line">  counter = <span class="hljs-number">0</span>;</span><br><span class="line"></span><br><span class="line">  ngOnInit() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.addItemStream.subscribe(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.counter++; <span class="hljs-comment">// application state changed</span></span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@Component(&#123;</span><br><span class="line">  template: <span class="hljs-string">'&#123;&#123;counter&#125;&#125;'</span>,</span><br><span class="line">  changeDetection: ChangeDetectionStrategy.OnPush</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">CartBadgeCmp</span> </span>&#123;</span><br><span class="line">  @Input() addItemStream: Observable&lt;any&gt;</span><br><span class="line">  counter = <span class="hljs-number">0</span></span><br><span class="line"></span><br><span class="line">  ngOnInit() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.addItemStream.subscribe(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.counter++ <span class="hljs-comment">// application state changed</span></span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>该组件有一个 <code>counter</code> 属性和一个输入属性 <code>addItemStream</code>，当产品被添加到购物车时，这是一个被触发的事件流</p>
 <p>另外，我们设置了变化检测策略为 <code>OnPush</code>，只有当组件的输入属性发生变化时，变化检测才会执行</p>
@@ -277,7 +277,7 @@ var _hmt = _hmt || [];
 <p>当整个树被设置成 <code>OnPush</code> 后，我们如何通知 <code>Angular</code> 需要对这个组件进行变化检测呢？</p>
 <p>正如我们所知，变化检测总是从上到下执行的，所以我们需要的是一种可以检测树的整个路径到发生变化的组件的变化的方法</p>
 <p>我们可以通过依赖注入访问组件的 <code>ChangeDetectorRef</code>，这个注入来自一个叫做 <code>markForCheck</code> 的 <code>API</code>，它标记从组件到根的路径，以便下次更改检测的运行</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">constructor</span>(private cd: ChangeDetectorRef) &#123; &#125;</span><br><span class="line"></span><br><span class="line">ngOnInit() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.addItemStream.subscribe(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.counter++;           <span class="hljs-comment">// application state changed</span></span><br><span class="line">    <span class="hljs-keyword">this</span>.cd.markForCheck();   <span class="hljs-comment">// marks path</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">constructor</span>(private cd: ChangeDetectorRef) &#123; &#125;</span><br><span class="line"></span><br><span class="line">ngOnInit() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.addItemStream.subscribe(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.counter++           <span class="hljs-comment">// application state changed</span></span><br><span class="line">    <span class="hljs-keyword">this</span>.cd.markForCheck()   <span class="hljs-comment">// marks path</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>下面是在可观察事件被触发后，变化检测开始前</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/angular/08.png" alt></p>
@@ -326,7 +326,7 @@ var _hmt = _hmt || [];
         
         <div class="level-end">
             <a class="level level-item has-link-grey  article-nav-next" href="/2019/07/13/JavaScript/44/">
-                <span class="level-item">迭代协议与生成器</span>
+                <span class="level-item">迭代器与生成器</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -402,7 +402,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        127
+                        129
                     </p>
                 </div>
             </div>
@@ -535,7 +535,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">51</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -606,6 +606,44 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/01/17/JavaScript/51/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/51.jpg" alt="Object 上的原生 API">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-16T16:00:00.000Z">2020-01-17</time></div>
+                    <a href="/2020/01/17/JavaScript/51/" class="has-link-black-ter is-size-6">Object 上的原生 API</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/01/16/JavaScript/50/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/50.jpg" alt="Async 和 Await">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-15T16:00:00.000Z">2020-01-16</time></div>
+                    <a href="/2020/01/16/JavaScript/50/" class="has-link-black-ter is-size-6">Async 和 Await</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/01/05/JavaScript/49/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/49.jpg" alt="函数防抖和节流">
@@ -661,44 +699,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/12/22/React/08/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="渲染器的核心 Diff 算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-21T16:00:00.000Z">2019-12-22</time></div>
-                    <a href="/2019/12/22/React/08/" class="has-link-black-ter is-size-6">渲染器的核心 Diff 算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/12/20/React/07/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/07.jpg" alt="渲染器">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-19T16:00:00.000Z">2019-12-20</time></div>
-                    <a href="/2019/12/20/React/07/" class="has-link-black-ter is-size-6">渲染器</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -717,7 +717,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -992,7 +992,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1047,7 +1047,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">六月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1195,7 +1195,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">51</span>
                     </a>
                 </div>
                 

@@ -16,7 +16,7 @@
 <meta property="og:description" content="两者的区别在于：== 允许在相等比较中进行强制类型转换，而 === 则不允许 JavaScript 拥有两套等性运算符： &amp;#39;===&amp;#39; 和 &amp;#39;!==&amp;#39; 以及 &amp;#39;==&amp;#39; 和 &amp;#39;!=&amp;#39;">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg">
-<meta property="og:updated_time" content="2020-01-03T08:00:43.942Z">
+<meta property="og:updated_time" content="2020-01-21T07:54:01.110Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的 == 和 ===">
 <meta name="twitter:description" content="两者的区别在于：== 允许在相等比较中进行强制类型转换，而 === 则不允许 JavaScript 拥有两套等性运算符： &amp;#39;===&amp;#39; 和 &amp;#39;!==&amp;#39; 以及 &amp;#39;==&amp;#39; 和 &amp;#39;!=&amp;#39;">
@@ -193,10 +193,10 @@ var _hmt = _hmt || [];
 <h2 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h2><p>如果两个操作数是相同的类型，具有相同的值，那么 <code>&#39;===&#39;</code> 将会产生 <code>&#39;true&#39;</code>，而 <code>&#39;!==&#39;</code> 则会产生 <code>&#39;false&#39;</code></p>
 <p><code>==</code> 操作符在做任意按需类型转换后将比较相等性，而 <code>===</code> 操作符并不会， <code>===</code> 运算符将不做转换，所以如果两值不一样类型 <code>===</code> 将返回 <code>false</code></p>
 <p>这种情况下，<code>===</code> 将更快，并可能比 <code>==</code> 返回不同的结果，在所有其他情况下的性能都是一样的，这里有一些有趣的例子：</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">[] == ![]         <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-string">''</span> == <span class="hljs-string">'0'</span>         <span class="hljs-comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-number">2</span> == [<span class="hljs-number">2</span>]          <span class="hljs-comment">// true</span></span><br><span class="line"><span class="hljs-string">''</span> == [<span class="hljs-literal">null</span>]      <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-number">0</span> == <span class="hljs-string">'\n'</span>         <span class="hljs-comment">// true</span></span><br><span class="line"><span class="hljs-number">0</span> == <span class="hljs-string">''</span>           <span class="hljs-comment">// true</span></span><br><span class="line"><span class="hljs-number">0</span> == <span class="hljs-string">'0'</span>          <span class="hljs-comment">// true</span></span><br><span class="line"><span class="hljs-string">'0'</span> == <span class="hljs-literal">false</span>      <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line">fasle == <span class="hljs-string">'false'</span>  <span class="hljs-comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-string">'true'</span> == <span class="hljs-literal">true</span>    <span class="hljs-comment">// false</span></span><br><span class="line"><span class="hljs-number">42</span> == <span class="hljs-string">'42'</span>        <span class="hljs-comment">// true</span></span><br><span class="line"><span class="hljs-string">'foo'</span> == [<span class="hljs-string">'foo'</span>]  <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 七种比较少见的情况</span></span><br><span class="line"><span class="hljs-string">'0'</span> == <span class="hljs-literal">false</span>;     <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-literal">false</span> == <span class="hljs-number">0</span>        <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-literal">false</span> == <span class="hljs-string">''</span>       <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-literal">false</span> == []       <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-string">''</span> == <span class="hljs-number">0</span>           <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-string">''</span> == []          <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-number">0</span> == []           <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">[] == ![]         <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-string">''</span> == <span class="hljs-string">'0'</span>         <span class="hljs-comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-number">2</span> == [<span class="hljs-number">2</span>]          <span class="hljs-comment">// true</span></span><br><span class="line"><span class="hljs-string">''</span> == [<span class="hljs-literal">null</span>]      <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-number">0</span> == <span class="hljs-string">'\n'</span>         <span class="hljs-comment">// true</span></span><br><span class="line"><span class="hljs-number">0</span> == <span class="hljs-string">''</span>           <span class="hljs-comment">// true</span></span><br><span class="line"><span class="hljs-number">0</span> == <span class="hljs-string">'0'</span>          <span class="hljs-comment">// true</span></span><br><span class="line"><span class="hljs-string">'0'</span> == <span class="hljs-literal">false</span>      <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line">fasle == <span class="hljs-string">'false'</span>  <span class="hljs-comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-string">'true'</span> == <span class="hljs-literal">true</span>    <span class="hljs-comment">// false</span></span><br><span class="line"><span class="hljs-number">42</span> == <span class="hljs-string">'42'</span>        <span class="hljs-comment">// true</span></span><br><span class="line"><span class="hljs-string">'foo'</span> == [<span class="hljs-string">'foo'</span>]  <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 七种比较少见的情况</span></span><br><span class="line"><span class="hljs-string">'0'</span> == <span class="hljs-literal">false</span>      <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-literal">false</span> == <span class="hljs-number">0</span>        <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-literal">false</span> == <span class="hljs-string">''</span>       <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-literal">false</span> == []       <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-string">''</span> == <span class="hljs-number">0</span>           <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-string">''</span> == []          <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-number">0</span> == []           <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
 
 <p>总之，始终建议使用 <code>===</code> 和 <code>!==</code> </p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];</span><br><span class="line"><span class="hljs-keyword">var</span> b = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> c = &#123; <span class="hljs-attr">x</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">2</span> &#125;;</span><br><span class="line"><span class="hljs-keyword">var</span> d = &#123; <span class="hljs-attr">x</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">2</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> e = <span class="hljs-string">'text'</span>;</span><br><span class="line"><span class="hljs-keyword">var</span> f = <span class="hljs-string">'te'</span> + <span class="hljs-string">'xt'</span>;</span><br><span class="line"></span><br><span class="line">a == b   <span class="hljs-comment">// false</span></span><br><span class="line">a === b  <span class="hljs-comment">// false</span></span><br><span class="line"></span><br><span class="line">c == d   <span class="hljs-comment">// false</span></span><br><span class="line">c === d  <span class="hljs-comment">// false</span></span><br><span class="line"></span><br><span class="line">e == f   <span class="hljs-comment">// true</span></span><br><span class="line">e === f  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]</span><br><span class="line"><span class="hljs-keyword">var</span> b = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> c = &#123; <span class="hljs-attr">x</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">2</span> &#125;</span><br><span class="line"><span class="hljs-keyword">var</span> d = &#123; <span class="hljs-attr">x</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">2</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> e = <span class="hljs-string">'text'</span></span><br><span class="line"><span class="hljs-keyword">var</span> f = <span class="hljs-string">'te'</span> + <span class="hljs-string">'xt'</span></span><br><span class="line"></span><br><span class="line">a == b   <span class="hljs-comment">// false</span></span><br><span class="line">a === b  <span class="hljs-comment">// false</span></span><br><span class="line"></span><br><span class="line">c == d   <span class="hljs-comment">// false</span></span><br><span class="line">c === d  <span class="hljs-comment">// false</span></span><br><span class="line"></span><br><span class="line">e == f   <span class="hljs-comment">// true</span></span><br><span class="line">e === f  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
 
 <p>特殊情况下，当你比较字面量和对象的时候，考虑到它的 <code>toString</code> 或者 <code>valueOf</code> 方法，例如，考虑比较由字符串构造函数创建的字符串对象和字符串字面量</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-string">'abc'</span> == <span class="hljs-keyword">new</span> <span class="hljs-built_in">String</span>(<span class="hljs-string">'abc'</span>)    <span class="hljs-comment">// true</span></span><br><span class="line"><span class="hljs-string">'abc'</span> === <span class="hljs-keyword">new</span> <span class="hljs-built_in">String</span>(<span class="hljs-string">'abc'</span>)   <span class="hljs-comment">// false</span></span><br></pre></td></tr></table></figure>
@@ -363,7 +363,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        127
+                        129
                     </p>
                 </div>
             </div>
@@ -504,7 +504,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">51</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -575,6 +575,44 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/01/17/JavaScript/51/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/51.jpg" alt="Object 上的原生 API">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-16T16:00:00.000Z">2020-01-17</time></div>
+                    <a href="/2020/01/17/JavaScript/51/" class="has-link-black-ter is-size-6">Object 上的原生 API</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/01/16/JavaScript/50/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/50.jpg" alt="Async 和 Await">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-15T16:00:00.000Z">2020-01-16</time></div>
+                    <a href="/2020/01/16/JavaScript/50/" class="has-link-black-ter is-size-6">Async 和 Await</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/01/05/JavaScript/49/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/49.jpg" alt="函数防抖和节流">
@@ -630,44 +668,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/12/22/React/08/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="渲染器的核心 Diff 算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-21T16:00:00.000Z">2019-12-22</time></div>
-                    <a href="/2019/12/22/React/08/" class="has-link-black-ter is-size-6">渲染器的核心 Diff 算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/12/20/React/07/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/07.jpg" alt="渲染器">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-19T16:00:00.000Z">2019-12-20</time></div>
-                    <a href="/2019/12/20/React/07/" class="has-link-black-ter is-size-6">渲染器</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -686,7 +686,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -961,7 +961,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1016,7 +1016,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">六月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1164,7 +1164,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">51</span>
                     </a>
                 </div>
                 

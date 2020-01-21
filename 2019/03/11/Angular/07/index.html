@@ -16,7 +16,7 @@
 <meta property="og:description" content="最近在开发过程中，遇到了 ExpressionChangedAfterItHasBeenCheckedError 这个错误 google 一翻后，发现各种说法众说纷纭，所有抽出时间深入了解一下这个错误，做一下总结，也可以避免以后在遇到这个问题的时候不知道怎么处理">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/07.jpg">
-<meta property="og:updated_time" content="2020-01-03T03:04:17.726Z">
+<meta property="og:updated_time" content="2020-01-21T07:40:04.701Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular 中的 ExpressionChangedAfterItHasBeenCheckedError">
 <meta name="twitter:description" content="最近在开发过程中，遇到了 ExpressionChangedAfterItHasBeenCheckedError 这个错误 google 一翻后，发现各种说法众说纷纭，所有抽出时间深入了解一下这个错误，做一下总结，也可以避免以后在遇到这个问题的时候不知道怎么处理">
@@ -219,43 +219,43 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">template: <span class="hljs-string">'&lt;span&gt;&#123;&#123;name&#125;&#125;&lt;/span&gt;'</span></span><br></pre></td></tr></table></figure>
 
 <p>然后在模板中加入 <code>B</code> 组件，并且通过输入属性绑定给 <code>B</code> 组件输入 <code>text</code> 属性</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// A 组件当中使用 B 组件</span></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'a-comp'</span>,</span><br><span class="line">  template: <span class="hljs-string">`</span></span><br><span class="line"><span class="hljs-string">    &lt;span&gt;&#123;&#123;name&#125;&#125;&lt;/span&gt;</span></span><br><span class="line"><span class="hljs-string">    &lt;b-comp [text]="text"&gt;&lt;/b-comp&gt;</span></span><br><span class="line"><span class="hljs-string">  `</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AComponent</span> </span>&#123;</span><br><span class="line">  name = <span class="hljs-string">'I am A component'</span>;</span><br><span class="line">  text = <span class="hljs-string">'A message for the child component'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// A 组件当中使用 B 组件</span></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'a-comp'</span>,</span><br><span class="line">  template: <span class="hljs-string">`</span></span><br><span class="line"><span class="hljs-string">    &lt;span&gt;&#123;&#123;name&#125;&#125;&lt;/span&gt;</span></span><br><span class="line"><span class="hljs-string">    &lt;b-comp [text]="text"&gt;&lt;/b-comp&gt;</span></span><br><span class="line"><span class="hljs-string">  `</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AComponent</span> </span>&#123;</span><br><span class="line">  name = <span class="hljs-string">'I am A component'</span></span><br><span class="line">  text = <span class="hljs-string">'A message for the child component'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>那么 <code>Angular</code> 在开始变化监测后会发生什么呢？</p>
 <p><code>List1</code> 变化监测会从 <code>A</code> 组件开始检查，第一步将 <code>text</code> 表达式中的 <code>A message for the child component</code> 向下传递到 <code>B</code> 组件，并且将这个值存在 <code>view</code> 上</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">view.oldValues[<span class="hljs-number">0</span>] = <span class="hljs-string">'A message for the child component'</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">view.oldValues[<span class="hljs-number">0</span>] = <span class="hljs-string">'A message for the child component'</span></span><br></pre></td></tr></table></figure>
 
 <p>然后到了变化监测列表里的第二步，调用相应的生命周期函数</p>
 <p>接下来执行第三步，将 <code>name</code> 表达式解析为 <code>I am A component</code> 文本，将解析好的值更新到 <code>DOM</code> 上，并且存入 <code>oldValues</code></p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">view.oldValues[<span class="hljs-number">1</span>] = <span class="hljs-string">'I am A component'</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">view.oldValues[<span class="hljs-number">1</span>] = <span class="hljs-string">'I am A component'</span></span><br></pre></td></tr></table></figure>
 
 <p>最后 <code>Angular</code> 对 <code>B</code> 组件执行相同的操作（<code>List1</code>），一旦 <code>B</code> 组件完成以上的操作，此次变化监测循环便完成了</p>
 <p>但是如果 <code>Angular</code> 在开发模式下运行，那么将会执行另一个监测流程（<code>List2</code>）</p>
 <p><code>text</code> 属性在传递给 <code>B</code> 组件时的值是 <code>A message for the child component</code> 并存入 <code>oldValues</code> ，现在想象一下 <code>A</code> 组件在此之后将 <code>text</code> 的值更新为 <code>updated text</code></p>
 <p>然后 <code>List2</code> 的第一步将会检查 <code>text</code> 属性是否被改变</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AComponentView.instance.text === view.oldValues[<span class="hljs-number">0</span>];      <span class="hljs-comment">// false</span></span><br><span class="line"><span class="hljs-string">'updated text'</span> === <span class="hljs-string">'A message for the child component'</span>;  <span class="hljs-comment">// false</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AComponentView.instance.text === view.oldValues[<span class="hljs-number">0</span>]      <span class="hljs-comment">// false</span></span><br><span class="line"><span class="hljs-string">'updated text'</span> === <span class="hljs-string">'A message for the child component'</span>  <span class="hljs-comment">// false</span></span><br></pre></td></tr></table></figure>
 
 <p>这个时候 <code>Angular</code> 就该抛出这个错误了</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ExpressionChangedAfterItHasBeenCheckedError</span><br></pre></td></tr></table></figure>
 
 <p>同理，如果更新已经被渲染在 <code>DOM</code> 中并且被存在 <code>oldValues</code> 中的 <code>name</code> 属性，也会抛出相同的错误</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AComponentView.instance.name === view.oldValues[<span class="hljs-number">1</span>];  <span class="hljs-comment">// false</span></span><br><span class="line"><span class="hljs-string">'updated name'</span> === <span class="hljs-string">'I am A component'</span>;               <span class="hljs-comment">// false</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">AComponentView.instance.name === view.oldValues[<span class="hljs-number">1</span>]  <span class="hljs-comment">// false</span></span><br><span class="line"><span class="hljs-string">'updated name'</span> === <span class="hljs-string">'I am A component'</span>               <span class="hljs-comment">// false</span></span><br></pre></td></tr></table></figure>
 
 <p>现在你可能会有些疑惑，这些值怎么会被改变呢？</p>
 <h2 id="数据改变的原因"><a href="#数据改变的原因" class="headerlink" title="数据改变的原因"></a>数据改变的原因</h2><p>罪魁祸首一般都是子组件或指令，下面我们来详细的看一下之前的示例</p>
 <p>我们将在子组件的 <code>ngOnInit</code>（此时数据已绑定）生命周期钩子中更新 <code>text</code> 属性</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// B 组件</span></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BComponent</span> </span>&#123;</span><br><span class="line">  @Input() text;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(private parent: AppComponent) &#123; &#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.parent.text = <span class="hljs-string">'updated text'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// B 组件</span></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BComponent</span> </span>&#123;</span><br><span class="line">  @Input() text</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(private parent: AppComponent) &#123; &#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.parent.text = <span class="hljs-string">'updated text'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>我们可以看到预期的错误</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Error</span>: ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked. </span><br><span class="line"></span><br><span class="line">Previous value: <span class="hljs-string">'A message for the child component'</span>. Current value: <span class="hljs-string">'updated text'</span>.</span><br></pre></td></tr></table></figure>
 
 <p>现在我们对被用于父组件模板的 <code>name</code> 属性做相同的操作</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ngOnInit() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.parent.name = <span class="hljs-string">'updated name'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ngOnInit() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.parent.name = <span class="hljs-string">'updated name'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这时候程序并没有报错，为什么会这样呢？</p>
 <p>如果你仔细看变化监测（<code>List1</code>）的执行顺序，你会发现子组件的 <code>ngOnInit</code> 将在当前 <code>component</code> 的 <code>DOM</code> 更新之前被调用（在记录 <code>oldValues</code> 前改变了数据），这就是为什么上面的例子中更改 <code>name</code> 属性却不会报错</p>
 <p>然后我们来利用一个在 <code>DOM</code> 中 <code>values</code> 更新之后的钩子来做实验，比如 <code>ngAfterViewInit</code> 是一个不错的选择</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BComponent</span> </span>&#123;</span><br><span class="line">  @Input() text;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(private parent: AppComponent) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  ngAfterViewInit() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.parent.name = <span class="hljs-string">'updated name'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BComponent</span> </span>&#123;</span><br><span class="line">  @Input() text</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(private parent: AppComponent) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  ngAfterViewInit() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.parent.name = <span class="hljs-string">'updated name'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>我们又一次得到了预期的错误</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AppComponent.ngfactory.js:<span class="hljs-number">8</span> ERROR <span class="hljs-built_in">Error</span>: ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked. </span><br><span class="line"></span><br><span class="line">Previous value: <span class="hljs-string">'I am A component'</span>. Current value: <span class="hljs-string">'updated name'</span>.</span><br></pre></td></tr></table></figure>
@@ -266,20 +266,20 @@ var _hmt = _hmt || [];
 <p>虽然这两种方式都可以解决问题，但是还是更推荐重新设计你的应用而不是使用这两种方法来解决这个问题</p>
 <h4 id="异步更新"><a href="#异步更新" class="headerlink" title="异步更新"></a>异步更新</h4><p>你应该注意到一件事，不管是变化监测还是第二次的验证 <code>digest</code> 都是同步执行的</p>
 <p>这意味着如果我们在代码中异步更新属性的值，那么在第二次验证循环运行时这些属性是不会被改变的，那么也就不会报错了</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BComponent</span> </span>&#123;</span><br><span class="line">  name = <span class="hljs-string">'I am B component'</span>;</span><br><span class="line">  @Input() text;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(private parent: AppComponent) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit() &#123;</span><br><span class="line">    setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.parent.text = <span class="hljs-string">'updated text'</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ngAfterViewInit() &#123;</span><br><span class="line">    setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.parent.name = <span class="hljs-string">'updated name'</span>;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BComponent</span> </span>&#123;</span><br><span class="line">  name = <span class="hljs-string">'I am B component'</span></span><br><span class="line">  @Input() text</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(private parent: AppComponent) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit() &#123;</span><br><span class="line">    setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.parent.text = <span class="hljs-string">'updated text'</span></span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ngAfterViewInit() &#123;</span><br><span class="line">    setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.parent.name = <span class="hljs-string">'updated name'</span></span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>确实没有错误抛出，<code>setTimeout</code> 将函数加入 <code>macrotask</code> 队列中，函数会在下一个 <code>VM</code> 周期里被调用</p>
 <p>也可以通过使用 <code>promise</code> 里的 <code>then</code> 回调将函数加入当前 <code>VM</code> 周期其他同步代码被执行完之后</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-literal">null</span>).then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">this</span>.parent.name = <span class="hljs-string">'updated name'</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-literal">null</span>).then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">this</span>.parent.name = <span class="hljs-string">'updated name'</span>)</span><br></pre></td></tr></table></figure>
 
 <p><code>Promise.then</code> 并不会被放入 <code>macrotask</code>，而是创建一个 <code>microtask</code></p>
 <p><code>microtask</code> 队列将在当前周期中所有同步代码被执行完毕之后执行，因此属性的更新会发生在验证步骤之后</p>
 <p>另外补充一个知识点，给 <code>EventEmitter</code> 传一个 <code>true</code> 能使事件的 <code>emit</code> 变为异步</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">new</span> EventEmitter(<span class="hljs-literal">true</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">new</span> EventEmitter(<span class="hljs-literal">true</span>)</span><br></pre></td></tr></table></figure>
 
 <h4 id="强制变化监测"><a href="#强制变化监测" class="headerlink" title="强制变化监测"></a>强制变化监测</h4><p>另一个解决方案是在父组件 <code>A</code> 的第一和第二次验证之间强制加一个变化监测循环</p>
 <p>触发强制变化监测的最佳位置是在 <code>ngAfterViewInit</code> 生命周期内，这时候所有的子组件的流程都已经执行完毕，所以随便在之前的哪个位置改变父组件的属性都无所谓</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AppComponent</span> </span>&#123;</span><br><span class="line">  name = <span class="hljs-string">'I am A component'</span>;</span><br><span class="line">  text = <span class="hljs-string">'A message for the child component'</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(private cd: ChangeDetectorRef) &#123; &#125;</span><br><span class="line"></span><br><span class="line">  ngAfterViewInit() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.cd.detectChanges();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AppComponent</span> </span>&#123;</span><br><span class="line">  name = <span class="hljs-string">'I am A component'</span></span><br><span class="line">  text = <span class="hljs-string">'A message for the child component'</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(private cd: ChangeDetectorRef) &#123; &#125;</span><br><span class="line"></span><br><span class="line">  ngAfterViewInit() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.cd.detectChanges()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>一样没有报错，但是其实这里有个问题，当在父组件 <code>A</code> 中触发新添加的变化监测时，<code>Anuglar</code> 同样会为所有的子组件运行一次变化监测，那么父组件可能会被又一次更新</p>
 <h2 id="为什么需要第二次监测循环"><a href="#为什么需要第二次监测循环" class="headerlink" title="为什么需要第二次监测循环"></a>为什么需要第二次监测循环</h2><p><code>Angular</code> 强制使用至上而下的单向数据流，在父元素完成变化监测之后不允许内部子组件在第二次变化监测前改变父组件的属性，这能确保第一次变化监测后的组件树是稳定的</p>
@@ -416,7 +416,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        127
+                        129
                     </p>
                 </div>
             </div>
@@ -553,7 +553,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">51</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -624,6 +624,44 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/01/17/JavaScript/51/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/51.jpg" alt="Object 上的原生 API">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-16T16:00:00.000Z">2020-01-17</time></div>
+                    <a href="/2020/01/17/JavaScript/51/" class="has-link-black-ter is-size-6">Object 上的原生 API</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/01/16/JavaScript/50/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/50.jpg" alt="Async 和 Await">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-15T16:00:00.000Z">2020-01-16</time></div>
+                    <a href="/2020/01/16/JavaScript/50/" class="has-link-black-ter is-size-6">Async 和 Await</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/01/05/JavaScript/49/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/49.jpg" alt="函数防抖和节流">
@@ -679,44 +717,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/12/22/React/08/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="渲染器的核心 Diff 算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-21T16:00:00.000Z">2019-12-22</time></div>
-                    <a href="/2019/12/22/React/08/" class="has-link-black-ter is-size-6">渲染器的核心 Diff 算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/12/20/React/07/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/07.jpg" alt="渲染器">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-19T16:00:00.000Z">2019-12-20</time></div>
-                    <a href="/2019/12/20/React/07/" class="has-link-black-ter is-size-6">渲染器</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -735,7 +735,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1010,7 +1010,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1065,7 +1065,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">六月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1213,7 +1213,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">51</span>
                     </a>
                 </div>
                 

@@ -2,7 +2,7 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-<title>迭代协议与生成器 - heptaluan&#39;s blog</title>
+<title>迭代器与生成器 - heptaluan&#39;s blog</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
@@ -10,15 +10,15 @@
     <meta name="description" content="对集合中每个元素进行处理是很常见的操作，比如数组遍历、对象的属性遍历，以往这些操作是通过 for 循环、.forEach、.map 等方式进行 借由迭代器机制为 Map、Array、String 等对象提供了统一的遍历语法，以及更方便的相互转换">
 <meta name="keywords" content="JavaScript">
 <meta property="og:type" content="article">
-<meta property="og:title" content="迭代协议与生成器">
+<meta property="og:title" content="迭代器与生成器">
 <meta property="og:url" content="http://yoursite.com/2019/07/13/JavaScript/44/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
 <meta property="og:description" content="对集合中每个元素进行处理是很常见的操作，比如数组遍历、对象的属性遍历，以往这些操作是通过 for 循环、.forEach、.map 等方式进行 借由迭代器机制为 Map、Array、String 等对象提供了统一的遍历语法，以及更方便的相互转换">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/44.jpg">
-<meta property="og:updated_time" content="2020-01-07T04:43:31.967Z">
+<meta property="og:updated_time" content="2020-01-19T15:36:24.234Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="迭代协议与生成器">
+<meta name="twitter:title" content="迭代器与生成器">
 <meta name="twitter:description" content="对集合中每个元素进行处理是很常见的操作，比如数组遍历、对象的属性遍历，以往这些操作是通过 for 循环、.forEach、.map 等方式进行 借由迭代器机制为 Map、Array、String 等对象提供了统一的遍历语法，以及更方便的相互转换">
 <meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/44.jpg">
 
@@ -109,7 +109,7 @@ var _hmt = _hmt || [];
         <!-- <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="迭代协议与生成器" height="28">
+                <img src="/images/logo.svg" alt="迭代器与生成器" height="28">
             
             </a>
         </div> -->
@@ -154,7 +154,7 @@ var _hmt = _hmt || [];
     
     <div class="card-image">
         <span class="image is-7by1">
-            <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/44.jpg" alt="迭代协议与生成器">
+            <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/44.jpg" alt="迭代器与生成器">
         </span>
     </div>
     
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    21 分钟 读完 (大约 3117 个字)
+                    25 分钟 读完 (大约 3725 个字)
                 </span>
                 
                 
@@ -182,7 +182,7 @@ var _hmt = _hmt || [];
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                迭代协议与生成器
+                迭代器与生成器
             
         </h1>
         <div class="content">
@@ -190,43 +190,38 @@ var _hmt = _hmt || [];
 <p>借由迭代器机制为 <code>Map</code>、<code>Array</code>、<code>String</code> 等对象提供了统一的遍历语法，以及更方便的相互转换</p>
 <a id="more"></a>
 
-<p>为方便编写迭代器还提供了生成器（<code>Generator</code>）语法，迭代器和生成器将迭代的概念直接带入核心语言，并提供了一种机制来自定义 <code>for...of</code> 循环的行为</p>
-<p>我们先来看看可迭代协议和迭代器协议</p>
-<h2 id="可迭代协议"><a href="#可迭代协议" class="headerlink" title="可迭代协议"></a>可迭代协议</h2><p>可迭代协议允许 <code>JavaScript</code> 对象去定义或定制它们的迭代行为，例如在一个 <code>for..of</code> 结构中什么值可以被循环</p>
-<p>一些内置类型都是内置的可迭代类型并且有默认的迭代行为，比如 <code>Array</code> 或者 <code>Map</code>，另一些类型则不是（比如 <code>Object</code>）</p>
-<p>为了变成可迭代对象，一个对象必须实现 <code>@@iterator</code> 方法，意思是这个对象（或者它原型链上的某个对象）必须有一个名字为 <code>Symbol.iterator</code> 的属性</p>
-<p>简单来说， 将 <code>[Symbol.iterator]</code> 属性定义为一个迭代器对象即可实现该协议</p>
-<p>而 <code>Iterator</code> 接口的目的，就是为所有数据结构，提供了一种统一的访问机制，即 <code>for...of</code> 循环</p>
-<p>当使用 <code>for...of</code> 循环遍历某种数据结构时，它会首先调用被遍历集合对象的 <code>Symbol.iterator()</code> 方法，该方法返回一个迭代器对象</p>
-<p>迭代器对象可以是拥有 <code>.next()</code> 方法的任何对象，然后在 <code>for...of</code> 的每次循环中，都将调用该迭代器对象上的 <code>.next()</code> 方法</p>
-<p><code>ES6</code> 规定，默认的 <code>Iterator</code> 接口部署在数据结构的 <code>Symbol.iterator</code> 属性</p>
-<p>或者说，一个数据结构只要具有 <code>Symbol.iterator</code> 属性，就可以认为是<strong>可迭代的</strong>（<code>iterable</code>）</p>
-<p><code>Symbol.iterator</code> 属性本身是一个函数，就是当前数据结构默认的遍历器生成函数，执行这个函数，就会返回一个遍历器</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 数组直接调用 Symbol.iterator 这个接口，这个接口是数组内部已经帮我们实现了的，我们直接调用即可</span></span><br><span class="line"><span class="hljs-keyword">let</span> arr = [<span class="hljs-string">'hello'</span>, <span class="hljs-string">'world'</span>];</span><br><span class="line"><span class="hljs-keyword">let</span> map = arr[<span class="hljs-built_in">Symbol</span>.iterator]();</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(map.next());</span><br><span class="line"><span class="hljs-built_in">console</span>.log(map.next());</span><br><span class="line"><span class="hljs-built_in">console</span>.log(map.next());</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// Object &#123;value: 'hello', done: false&#125;</span></span><br><span class="line"><span class="hljs-comment">// Object &#123;value: 'world', done: false&#125;</span></span><br><span class="line"><span class="hljs-comment">// Object &#123;value: undefined, done: true&#125;</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="迭代器协议"><a href="#迭代器协议" class="headerlink" title="迭代器协议"></a>迭代器协议</h2><p>又称生成器协议，该协议定义了什么是迭代器对象，迭代器协议定义了一种标准的方式来产生一个有限或无限序列的值</p>
-<p>并且当所有的值都已经被迭代后，就会有一个默认的返回值</p>
-<p>迭代器（<code>Iterator</code>）就是这样一种机制，它是一种接口，为各种不同的数据结构提供统一的访问机制，任何数据结构只要部署 <code>Iterator</code> 接口，就可以完成遍历操作</p>
-<p><code>Iterator</code> 的作用有三个</p>
-<ol>
-<li><p>为各种数据结构，提供一个统一的、简便的访问接口</p>
-</li>
-<li><p>使得数据结构的成员能够按某种次序排列</p>
-</li>
-<li><p><code>ES6</code> 创造了一种新的遍历命令 <code>for...of</code> 循环，<code>Iterator</code> 接口主要供 <code>for...of</code> 消费</p>
-</li>
-</ol>
-<p>简单来说，只需要实现 <code>.next()</code> 方法，该方法必须要返回一个<strong>对象</strong>，被返回对象拥有两个属性（如果返回一个非对象值，则需要抛出一个错误）</p>
+<p>为方便编写迭代器还提供了生成器（<code>Generator</code>）语法，迭代器和生成器将迭代的概念直接带入核心语言，并提供了一种机制来自定义 <code>for-of</code> 循环的行为</p>
+<p>但是在展开之前，我们先来看看迭代器和迭代器协议</p>
+<h2 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h2><p>所谓迭代器，其实<strong>就是一个具有 next() 方法的对象</strong>，每次调用 <code>next()</code> 都必须要返回一个<strong>对象</strong>，被返回对象拥有两个属性（如果返回一个非对象值，则需要抛出一个错误）</p>
 <ul>
-<li><p><code>done</code> - 布尔值，如果为 <code>true</code>，则表示迭代器已经超过了可迭代次数，在这种情况下 <code>value</code> 的值可以被省略，如果迭代器可以产生序列中的下一个值，则为 <code>false</code></p>
+<li><p><code>done</code> - 布尔值，表示遍历是否结束，如果为 <code>true</code>，则表示迭代器已经超过了可迭代次数，在这种情况下 <code>value</code> 的值可以被省略，如果迭代器可以产生序列中的下一个值，则为 <code>false</code></p>
 </li>
-<li><p><code>value</code> - 迭代器可以返回的任何 <code>JavaScript</code> 值，在 <code>done</code> 为 <code>true</code> 的时候可省略</p>
+<li><p><code>value</code> - 表示当前的值，迭代器可以返回的任何 <code>JavaScript</code> 值，在 <code>done</code> 为 <code>true</code> 的时候可省略</p>
 </li>
 </ul>
+<p>比如我们来看下面这个例子</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createIterator</span>(<span class="hljs-params">items</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span></span><br><span class="line">  <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">    next: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">var</span> done = i &gt;= items.length</span><br><span class="line">      <span class="hljs-keyword">var</span> value = !done ? items[i++] : <span class="hljs-literal">undefined</span></span><br><span class="line">      <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">        done: done,</span><br><span class="line">        value: value</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// iterator 就是一个迭代器对象</span></span><br><span class="line"><span class="hljs-keyword">var</span> iterator = createIterator([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])</span><br><span class="line"></span><br><span class="line">iterator.next()  <span class="hljs-comment">// &#123; done: false, value: 1 &#125;</span></span><br><span class="line">iterator.next()  <span class="hljs-comment">// &#123; done: false, value: 2 &#125;</span></span><br><span class="line">iterator.next()  <span class="hljs-comment">// &#123; done: false, value: 3 &#125;</span></span><br><span class="line">iterator.next()  <span class="hljs-comment">// &#123; done: true, value: undefined &#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>在了解了上面的例子以后，我们就会考虑，那么这样一来我们的迭代器对象是不是就可以进行遍历了呢？，我们来试一下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> iterator = createIterator([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> value <span class="hljs-keyword">of</span> iterator) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(value)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// iterator is not iterable</span></span><br></pre></td></tr></table></figure>
+
+<p>结果会发现运行报错，那么这就表明我们生成的 <code>iterator</code> 对象并不是 <code>iterable</code>（可遍历的），那么什么又是 <code>iterable</code> 呢？</p>
+<p><code>ES6</code> 规定，默认的 <code>Iterator</code> 接口部署在数据结构的 <code>Symbol.iterator</code> 属性，或者说一个数据结构只要具有 <code>Symbol.iterator</code> 属性，就可以认为是可遍历的（<code>iterable</code>）</p>
+<p>简单来说就是，只要<strong>一种数据结构部署了 Iterator 接口，我们就称这种数据结构是可遍历的（iterable）</strong></p>
+<p>比如下面这个例子</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> obj = &#123;</span><br><span class="line">  value: <span class="hljs-number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (value <span class="hljs-keyword">of</span> obj) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(value)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 直接运行会报错</span></span><br><span class="line"><span class="hljs-comment">// TypeError: iterator is not iterable</span></span><br></pre></td></tr></table></figure>
+
+<p>如果我们直接使用 <code>for-of</code> 遍历一个对象，会报错，然而如果我们给该对象添加 <code>Symbol.iterator</code> 属性</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> obj = &#123;</span><br><span class="line">  value: <span class="hljs-number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">obj[<span class="hljs-built_in">Symbol</span>.iterator] = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> createIterator([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>])</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (value <span class="hljs-keyword">of</span> obj) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(value)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 1</span></span><br><span class="line"><span class="hljs-comment">// 2</span></span><br><span class="line"><span class="hljs-comment">// 3</span></span><br></pre></td></tr></table></figure>
+
+<p>由此可以发现，<code>for-of</code> 遍历的其实是对象的 <code>Symbol.iterator</code> 属性，这里就可以引出我们的迭代器协议</p>
+<h2 id="迭代器协议"><a href="#迭代器协议" class="headerlink" title="迭代器协议"></a>迭代器协议</h2><p><strong>迭代器协议</strong> 又称生成器协议，该协议定义了什么是迭代器对象，迭代器协议定义了一种标准的方式来产生一个有限或无限序列的值，并且当所有的值都已经被迭代后，就会有一个默认的返回值</p>
+<p>一些内置类型都是内置的可迭代类型并且有默认的迭代行为，比如 <code>Array</code> 或者 <code>Map</code>，另一些类型则不是（比如 <code>Object</code>，下方会进行介绍）</p>
+<p>当使用 <code>for-of</code> 循环遍历某种数据结构时，它会首先调用被遍历集合对象的 <code>Symbol.iterator()</code> 方法，该方法返回一个迭代器对象</p>
 <p>基本语法为</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> myIterator = &#123;</span><br><span class="line">  next: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// ...</span></span><br><span class="line">  &#125;,</span><br><span class="line">  [<span class="hljs-built_in">Symbol</span>.iterator]: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="使用迭代协议的实例"><a href="#使用迭代协议的实例" class="headerlink" title="使用迭代协议的实例"></a>使用迭代协议的实例</h2><p>比如 <code>String</code>，就是一个内置的可迭代对象</p>
+<p>比如 <code>String</code>，就是一个内置的可迭代对象</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> str = <span class="hljs-string">'hi'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">typeof</span> str[<span class="hljs-built_in">Symbol</span>.iterator]  <span class="hljs-comment">// 'function'</span></span><br></pre></td></tr></table></figure>
 
 <p><code>String</code> 的默认迭代器会一个接一个返回该字符串的字符</p>
@@ -236,17 +231,49 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> str = <span class="hljs-keyword">new</span> <span class="hljs-built_in">String</span>(<span class="hljs-string">'hi'</span>)</span><br><span class="line"></span><br><span class="line">str[<span class="hljs-built_in">Symbol</span>.iterator] = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">    next: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._first) &#123;</span><br><span class="line">        <span class="hljs-keyword">this</span>._first = <span class="hljs-literal">false</span></span><br><span class="line">        <span class="hljs-keyword">return</span> &#123; <span class="hljs-attr">value</span>: <span class="hljs-string">'hello'</span>, <span class="hljs-attr">done</span>: <span class="hljs-literal">false</span> &#125;</span><br><span class="line">      &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> &#123; <span class="hljs-attr">done</span>: <span class="hljs-literal">true</span> &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    _first: <span class="hljs-literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i <span class="hljs-keyword">of</span> str) &#123;</span><br><span class="line">  <span class="hljs-comment">// hello</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="在对象上实现-Iterator-接口"><a href="#在对象上实现-Iterator-接口" class="headerlink" title="在对象上实现 Iterator 接口"></a>在对象上实现 Iterator 接口</h2><p><code>String</code>，<code>Array</code>，<code>TypedArray</code>，<code>Map</code> 和 <code>Set</code> 是所有内置可迭代对象，因为它们的原型对象都有一个 <code>@@iterator</code> 方法</p>
-<p>那么这里存在一个问题，为什么对象（<code>Object</code>）没有部署 <code>Iterator</code> 接口呢？</p>
-<p>有两个原因</p>
+<p>而针对于对象（<code>Object</code>）默认是没有 <code>Iterator</code> 接口的，如果我们想让它变为可遍历的，有两种方法</p>
+<ul>
+<li><p>一种是在其 <code>[Symbol.iterator]</code> 属性当中实现一个上文所述的 <code>next</code> 方法</p>
+</li>
+<li><p>或者像上方基本语法一样，在外部实现 <code>next()</code> 方法，然后在 <code>[Symbol.iterator]</code> 当中返回 <code>this</code> 也可</p>
+</li>
+</ul>
+<p>那么这里就会存在一个问题，为什么 <code>String</code>，<code>Array</code> 等对象都有部署 <code>Iterator</code> 接口，而偏偏 <code>Object</code> 没有呢？</p>
+<p>其实是有两个原因</p>
 <ul>
 <li><p>一是因为对象的哪个属性先遍历，哪个属性后遍历是不确定的，需要开发者手动指定，然而遍历遍历器是一种线性处理，对于非线性的数据结构，部署遍历器接口，就等于要部署一种线性转换</p>
 </li>
 <li><p>二是对对象部署 <code>Iterator</code> 接口并不是很必要，因为 <code>Map</code> 弥补了它的缺陷，又正好有 <code>Iteraotr</code> 接口</p>
 </li>
 </ul>
-<p>但是我们可以手动的为对象添加一个 <code>Iterator</code> 接口，不过需要注意的就是</p>
-<p>如果一个对象要具备可被 <code>for...of</code> 循环调用的 <code>Iterator</code> 接口，就必须在 <code>Symbol.iterator</code> 的属性上部署遍历器生成方法，比如一个实现 <code>50</code> 以内的斐波那契数列的示例</p>
+<p>但是我们可以手动的为对象添加一个 <code>Iterator</code> 接口，比如下面这个实现 <code>50</code> 以内的斐波纳契数列的示例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> obj = &#123;</span><br><span class="line">  [<span class="hljs-built_in">Symbol</span>.iterator]: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> a = <span class="hljs-number">0</span>, b = <span class="hljs-number">0</span></span><br><span class="line">    <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">      next: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">let</span> value = <span class="hljs-number">0</span></span><br><span class="line">        <span class="hljs-keyword">if</span> (!a) &#123;</span><br><span class="line">          value = a = <span class="hljs-number">1</span></span><br><span class="line">        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!b) &#123;</span><br><span class="line">          value = b = <span class="hljs-number">1</span></span><br><span class="line">        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (b &lt; <span class="hljs-number">50</span>) &#123;</span><br><span class="line">          value = a + b</span><br><span class="line">          a = b</span><br><span class="line">          b = value</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-keyword">return</span> &#123; <span class="hljs-attr">done</span>: value === <span class="hljs-number">0</span>, value &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i <span class="hljs-keyword">of</span> obj) &#123;</span><br><span class="line">  <span class="hljs-comment">// 1 1 2 3 5 8 13 21 34 55</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="模拟实现-for-of"><a href="#模拟实现-for-of" class="headerlink" title="模拟实现 for-of"></a>模拟实现 for-of</h2><p>下面我们可以尝试模拟一下 <code>for-of</code> 的实现，简单来说，就是通过 <code>Symbol.iterator</code> 获取迭代器对象，然后使用 <code>while</code> 遍历，当迭代器的 <code>done</code> 为 <code>false</code> 的时候退出循环</p>
+<p>因为迭代器对象既然可以被 <code>for-of</code> 遍历，那么它肯定就存在 <code>Symbol.iterator</code>属性</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">forOf</span>(<span class="hljs-params">obj, cb</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> iterable, result</span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> obj[<span class="hljs-built_in">Symbol</span>.iterator] !== <span class="hljs-string">'function'</span>)</span><br><span class="line">    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(result + <span class="hljs-string">' is not iterable'</span>)</span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> cb !== <span class="hljs-string">'function'</span>) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">'cb must be callable'</span>)</span><br><span class="line">  iterable = obj[<span class="hljs-built_in">Symbol</span>.iterator]()</span><br><span class="line">  result = iterable.next()</span><br><span class="line">  <span class="hljs-keyword">while</span> (!result.done) &#123;</span><br><span class="line">    cb(result.value)</span><br><span class="line">    result = iterable.next()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="内建迭代器"><a href="#内建迭代器" class="headerlink" title="内建迭代器"></a>内建迭代器</h2><p>为了更好的访问对象中的内容，比如有的时候我们仅需要数组中的值，但有的时候不仅需要使用值还需要使用索引，在 <code>ES6</code> 当中为数组，<code>Map</code>，<code>Set</code> 集合内建了以下三种迭代器</p>
+<ul>
+<li><code>entries()</code>，返回一个遍历器对象，用来遍历 <code>[key, value]</code> 组成的数组，对于数组，键名就是索引值</li>
+<li><code>keys()</code>，返回一个遍历器对象，用来遍历所有的键名</li>
+<li><code>values()</code>，返回一个遍历器对象，用来遍历所有的键值</li>
+</ul>
+<p>比如以数组为例</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> colors = [<span class="hljs-string">'red'</span>, <span class="hljs-string">'green'</span>, <span class="hljs-string">'blue'</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> index <span class="hljs-keyword">of</span> colors.keys()) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(index)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 0</span></span><br><span class="line"><span class="hljs-comment">// 1</span></span><br><span class="line"><span class="hljs-comment">// 2</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> color <span class="hljs-keyword">of</span> colors.values()) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(color)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// red</span></span><br><span class="line"><span class="hljs-comment">// green</span></span><br><span class="line"><span class="hljs-comment">// blue</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> item <span class="hljs-keyword">of</span> colors.entries()) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(item)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// [ 0, 'red' ]</span></span><br><span class="line"><span class="hljs-comment">// [ 1, 'green' ]</span></span><br><span class="line"><span class="hljs-comment">// [ 2, 'blue' ]</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Map</code> 类型与数组类似，但是对于 <code>Set</code> 类型需要注意</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> colors = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>([<span class="hljs-string">'red'</span>, <span class="hljs-string">'green'</span>, <span class="hljs-string">'blue'</span>])</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> index <span class="hljs-keyword">of</span> colors.keys()) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(index)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// red</span></span><br><span class="line"><span class="hljs-comment">// green</span></span><br><span class="line"><span class="hljs-comment">// blue</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> color <span class="hljs-keyword">of</span> colors.values()) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(color)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// red</span></span><br><span class="line"><span class="hljs-comment">// green</span></span><br><span class="line"><span class="hljs-comment">// blue</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> item <span class="hljs-keyword">of</span> colors.entries()) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(item)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// [ 'red', 'red' ]</span></span><br><span class="line"><span class="hljs-comment">// [ 'green', 'green' ]</span></span><br><span class="line"><span class="hljs-comment">// [ 'blue', 'blue' ]</span></span><br></pre></td></tr></table></figure>
+
+<p>通过上面的例子可以发现，<code>Set</code> 类型的 <code>keys()</code> 和 <code>values()</code> 返回的是相同的迭代器，这也意味着在 <code>Set</code> 这种数据结构中键名与键值相同</p>
+<p>这里需要注意一点，每个集合类型都是有一个默认的迭代器的，在 <code>for-of</code> 循环中，如果没有显式指定则使用默认的迭代器，则</p>
+<ul>
+<li>数组和 <code>Set</code> 集合的默认迭代器是 <code>values()</code> 方法</li>
+<li><code>Map</code> 集合的默认迭代器是 <code>entries()</code> 方法</li>
+</ul>
+<p>这也就是为什么直接 <code>for-of</code> 遍历 <code>Set</code> 和 <code>Map</code> 数据结构，会有不同的数据结构返回</p>
+<p>这里有一个小技巧，就是遍历 <code>Map</code> 数据结构的时候可以结合解构赋值来输出想要的格式</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> valuess = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>([[<span class="hljs-string">'key1'</span>, <span class="hljs-string">'value1'</span>], [<span class="hljs-string">'key2'</span>, <span class="hljs-string">'value2'</span>]]);</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [key, value] <span class="hljs-keyword">of</span> valuess) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(key + <span class="hljs-string">' ==&gt; '</span> + value);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// key1 ==&gt; value1</span></span><br><span class="line"><span class="hljs-comment">// key2 ==&gt; value2</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="生成器对象"><a href="#生成器对象" class="headerlink" title="生成器对象"></a>生成器对象</h2><p>生成器对象是由一个 <code>Generator</code> 函数（<code>function*</code>）返回的，并且它符合可迭代协议和迭代器协议</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">g</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>;</span><br><span class="line">  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> iterator = g();</span><br><span class="line"></span><br><span class="line">iterator.next();  <span class="hljs-comment">// &#123; value: 1, done: false &#125;</span></span><br><span class="line">iterator.next();  <span class="hljs-comment">// &#123; value: 2, done: false &#125;</span></span><br><span class="line">iterator.next();  <span class="hljs-comment">// &#123; value: undefined, done: true &#125;</span></span><br></pre></td></tr></table></figure>
@@ -268,7 +295,7 @@ var _hmt = _hmt || [];
 <p>在调用 <code>next()</code> 方法的时候，如果传入了参数，那么这个参数会作为上一条执行的 <code>yield</code> 语句的返回值</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">g</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> first = <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>;</span><br><span class="line">  <span class="hljs-keyword">let</span> second = <span class="hljs-keyword">yield</span> first + <span class="hljs-number">2</span>;  <span class="hljs-comment">// 10 + 2，first 的值是由 next(10) 传递的</span></span><br><span class="line">  <span class="hljs-keyword">yield</span> second + <span class="hljs-number">3</span>;              <span class="hljs-comment">// 5 + 3，需要注意的是，如果在调用的时候不传递参数，则会返回</span></span><br><span class="line">                                 <span class="hljs-comment">// &#123; value: NaN, done: false &#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> iterator = g();</span><br><span class="line"></span><br><span class="line">iterator.next()     <span class="hljs-comment">// &#123; value: 1, done: false &#125;</span></span><br><span class="line">iterator.next(<span class="hljs-number">10</span>)   <span class="hljs-comment">// &#123; value: 12, done: false &#125;</span></span><br><span class="line">iterator.next(<span class="hljs-number">5</span>)    <span class="hljs-comment">// &#123; value: 8, done: false &#125;</span></span><br><span class="line">iterator.next()     <span class="hljs-comment">// &#123; value: undefined, done: true &#125;</span></span><br></pre></td></tr></table></figure>
 
-<p>现在可以使用生成器方法重新实现之前的的斐波那契数列示例</p>
+<p>现在可以使用生成器方法重新实现之前的的斐波纳契数列示例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> obj = &#123;</span><br><span class="line">  [<span class="hljs-built_in">Symbol</span>.iterator]: <span class="hljs-function"><span class="hljs-keyword">function</span>* (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> a = <span class="hljs-number">1</span>, b = <span class="hljs-number">1</span></span><br><span class="line">    <span class="hljs-keyword">yield</span> a</span><br><span class="line">    <span class="hljs-keyword">yield</span> b</span><br><span class="line">    <span class="hljs-keyword">while</span> (b &lt; <span class="hljs-number">50</span>) &#123;</span><br><span class="line">      <span class="hljs-keyword">yield</span> b = a + b</span><br><span class="line">      a = b - a</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i <span class="hljs-keyword">of</span> obj) &#123;</span><br><span class="line">  <span class="hljs-comment">// 1 1 2 3 5 8 13 21 34 55</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="yield"><a href="#yield" class="headerlink" title="yield*"></a>yield*</h2><p><code>yield*</code> 表达式用于委托给另一个 <code>Generator</code> 或可迭代对象，下面是一个基本的示例</p>
@@ -286,7 +313,7 @@ var _hmt = _hmt || [];
 <p>从 <code>Set</code> 得到 <code>Array</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Array</span>.from(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>([<span class="hljs-string">'1'</span>, <span class="hljs-string">'2'</span>, <span class="hljs-string">'3'</span>]))  <span class="hljs-comment">// ['1', '2', '3']</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 等价于</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Array</span>.from([<span class="hljs-string">'1'</span>, <span class="hljs-string">'2'</span>, <span class="hljs-string">'3'</span>][<span class="hljs-built_in">Symbol</span>.iterator]())</span><br></pre></td></tr></table></figure>
 
-<p>除了 <code>for...of</code> 外，扩展运算符（<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Spread_syntax" target="_blank" rel="noopener">Spread Syntax</a>）也支持迭代器（<code>Iterables</code>）</p>
+<p>除了 <code>for-of</code> 外，扩展运算符（<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Spread_syntax" target="_blank" rel="noopener">Spread Syntax</a>）也支持迭代器（<code>Iterables</code>）</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[...new <span class="hljs-built_in">Set</span>([<span class="hljs-string">'1'</span>, <span class="hljs-string">'2'</span>, <span class="hljs-string">'3'</span>])]</span><br></pre></td></tr></table></figure>
 
 <p>从 <code>String</code> 到 <code>Set</code>，得到字符串中包含的字符</p>
@@ -302,13 +329,13 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> g = <span class="hljs-function"><span class="hljs-keyword">function</span>* (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">yield</span> <span class="hljs-number">1</span>;</span><br><span class="line">  <span class="hljs-keyword">yield</span> <span class="hljs-number">2</span>;</span><br><span class="line">  <span class="hljs-keyword">yield</span> <span class="hljs-number">3</span>;</span><br><span class="line">&#125;();</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 'function'，因为有 next() 方法，所以是一个迭代器</span></span><br><span class="line"><span class="hljs-keyword">typeof</span> g.next;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 'function'，因为有 @@iterator 方法，所以是一个迭代器</span></span><br><span class="line"><span class="hljs-keyword">typeof</span> g[<span class="hljs-built_in">Symbol</span>.iterator];</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// true，因为 @@iterator 方法返回它自身（也是一个迭代器）</span></span><br><span class="line">g[<span class="hljs-built_in">Symbol</span>.iterator]() === g;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// [1, 2, 3]</span></span><br><span class="line">[...g];</span><br></pre></td></tr></table></figure>
 
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
-<li><p><code>Iterator</code> 接口的目的就是为所有数据结构提供一种统一访问的机制，用 <code>for...of</code> 实现</p>
+<li><p><code>Iterator</code> 接口的目的就是为所有数据结构提供一种统一访问的机制，用 <code>for-of</code> 实现</p>
 </li>
 <li><p>一个数据结构只要有 <code>Symbol.iterator</code> 属性，就可以认为是<strong>可遍历的</strong></p>
 </li>
-<li><p>实现了可迭代协议的对象称为可迭代对象（<code>Iterables</code>），这种对象可以用 <code>for...of</code> 来遍历，<code>Map</code>，<code>Set</code>，<code>Array</code>，<code>String</code> 都属于可迭代对象，自定义的对象也可以使用这一机制，成为可迭代对象</p>
+<li><p>实现了可迭代协议的对象称为可迭代对象（<code>Iterables</code>），这种对象可以用 <code>for-of</code> 来遍历，<code>Map</code>，<code>Set</code>，<code>Array</code>，<code>String</code> 都属于可迭代对象，自定义的对象也可以使用这一机制，成为可迭代对象</p>
 <ul>
-<li><p>可迭代协议：需要实现一个 <code>@@iterator</code> 方法，即在键 <code>[Symbol.iterator]</code> 上提供一个方法，对象被 <code>for...of</code> 调用时，这个方法会被调用，方法应该返回一个迭代器对象（<code>Iterator</code>）用来迭代</p>
+<li><p>可迭代协议：需要实现一个 <code>@@iterator</code> 方法，即在键 <code>[Symbol.iterator]</code> 上提供一个方法，对象被 <code>for-of</code> 调用时，这个方法会被调用，方法应该返回一个迭代器对象（<code>Iterator</code>）用来迭代</p>
 </li>
 <li><p>简单来说，<strong>一个数据结构只要具有 <code>Symbol.iterator</code> 属性，就可以认为是可迭代的（<code>iterable</code>）</strong></p>
 </li>
@@ -330,8 +357,8 @@ var _hmt = _hmt || [];
 <p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/function*" target="_blank" rel="noopener">function*</a></p>
 <p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/yield" target="_blank" rel="noopener">yield</a></p>
 <p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/yield*" target="_blank" rel="noopener">yield*</a></p>
-<p><a href="https://harttle.land/2016/08/02/es6-generator.html" target="_blank" rel="noopener">ES6生成器：可迭代协议与迭代器协议</a></p>
-<p><a href="https://blog.csdn.net/u012194956/article/details/79722634" target="_blank" rel="noopener">给对象部署Iterator接口</a></p>
+<p><a href="https://harttle.land/2016/08/02/es6-generator.html" target="_blank" rel="noopener">ES6 生成器：可迭代协议与迭代器协议</a></p>
+<p><a href="https://blog.csdn.net/u012194956/article/details/79722634" target="_blank" rel="noopener">给对象部署 Iterator 接口</a></p>
 
         </div>
         
@@ -442,7 +469,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        127
+                        129
                     </p>
                 </div>
             </div>
@@ -484,48 +511,52 @@ var _hmt = _hmt || [];
                 目录
             </h3>
             <ul class="menu-list"><li>
-        <a class="is-flex" href="#可迭代协议">
+        <a class="is-flex" href="#迭代器">
         <span class="has-mr-6">1</span>
-        <span>可迭代协议</span>
+        <span>迭代器</span>
         </a></li><li>
         <a class="is-flex" href="#迭代器协议">
         <span class="has-mr-6">2</span>
         <span>迭代器协议</span>
         </a></li><li>
-        <a class="is-flex" href="#使用迭代协议的实例">
-        <span class="has-mr-6">3</span>
-        <span>使用迭代协议的实例</span>
-        </a></li><li>
         <a class="is-flex" href="#在对象上实现-Iterator-接口">
-        <span class="has-mr-6">4</span>
+        <span class="has-mr-6">3</span>
         <span>在对象上实现 Iterator 接口</span>
         </a></li><li>
-        <a class="is-flex" href="#生成器对象">
+        <a class="is-flex" href="#模拟实现-for-of">
+        <span class="has-mr-6">4</span>
+        <span>模拟实现 for-of</span>
+        </a></li><li>
+        <a class="is-flex" href="#内建迭代器">
         <span class="has-mr-6">5</span>
+        <span>内建迭代器</span>
+        </a></li><li>
+        <a class="is-flex" href="#生成器对象">
+        <span class="has-mr-6">6</span>
         <span>生成器对象</span>
         </a></li><li>
         <a class="is-flex" href="#yield">
-        <span class="has-mr-6">6</span>
+        <span class="has-mr-6">7</span>
         <span>yield*</span>
         </a></li><li>
         <a class="is-flex" href="#生成器也可以接收参数">
-        <span class="has-mr-6">7</span>
+        <span class="has-mr-6">8</span>
         <span>生成器也可以接收参数</span>
         </a></li><li>
         <a class="is-flex" href="#Map，Set，String，Array-互相转换">
-        <span class="has-mr-6">8</span>
+        <span class="has-mr-6">9</span>
         <span>Map，Set，String，Array 互相转换</span>
         </a></li><li>
         <a class="is-flex" href="#生成器对象到底是一个迭代器还是一个可迭代对象">
-        <span class="has-mr-6">9</span>
+        <span class="has-mr-6">10</span>
         <span>生成器对象到底是一个迭代器还是一个可迭代对象</span>
         </a></li><li>
         <a class="is-flex" href="#总结">
-        <span class="has-mr-6">10</span>
+        <span class="has-mr-6">11</span>
         <span>总结</span>
         </a></li><li>
         <a class="is-flex" href="#参考">
-        <span class="has-mr-6">11</span>
+        <span class="has-mr-6">12</span>
         <span>参考</span>
         </a></li></ul>
         </div>
@@ -583,7 +614,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">51</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -654,6 +685,44 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/01/17/JavaScript/51/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/51.jpg" alt="Object 上的原生 API">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-16T16:00:00.000Z">2020-01-17</time></div>
+                    <a href="/2020/01/17/JavaScript/51/" class="has-link-black-ter is-size-6">Object 上的原生 API</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/01/16/JavaScript/50/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/50.jpg" alt="Async 和 Await">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-15T16:00:00.000Z">2020-01-16</time></div>
+                    <a href="/2020/01/16/JavaScript/50/" class="has-link-black-ter is-size-6">Async 和 Await</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/01/05/JavaScript/49/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/49.jpg" alt="函数防抖和节流">
@@ -709,44 +778,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/12/22/React/08/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="渲染器的核心 Diff 算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-21T16:00:00.000Z">2019-12-22</time></div>
-                    <a href="/2019/12/22/React/08/" class="has-link-black-ter is-size-6">渲染器的核心 Diff 算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/12/20/React/07/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/07.jpg" alt="渲染器">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-19T16:00:00.000Z">2019-12-20</time></div>
-                    <a href="/2019/12/20/React/07/" class="has-link-black-ter is-size-6">渲染器</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -765,7 +796,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1040,7 +1071,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1095,7 +1126,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">六月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1243,7 +1274,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">51</span>
                     </a>
                 </div>
                 
@@ -1301,7 +1332,7 @@ var _hmt = _hmt || [];
             <div class="level-start has-text-centered-mobile">
                 <!-- <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="迭代协议与生成器" height="28">
+                    <img src="/images/logo.svg" alt="迭代器与生成器" height="28">
                 
                 </a> -->
                 <p class="is-size-7">

@@ -16,7 +16,7 @@
 <meta property="og:description" content="this 是 JavaScript 语言的一个关键字它代表函数运行时，自动生成的一个内部对象，只能在函数内部使用 随着函数使用场合的不同，this 的值会发生变化，但是有一个总的原则，那就是 this 指向的是，调用函数的那个对象">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/22.jpg">
-<meta property="og:updated_time" content="2020-01-03T08:04:00.038Z">
+<meta property="og:updated_time" content="2020-01-14T17:22:26.718Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的 this">
 <meta name="twitter:description" content="this 是 JavaScript 语言的一个关键字它代表函数运行时，自动生成的一个内部对象，只能在函数内部使用 随着函数使用场合的不同，this 的值会发生变化，但是有一个总的原则，那就是 this 指向的是，调用函数的那个对象">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    30 分钟 读完 (大约 4564 个字)
+                    35 分钟 读完 (大约 5319 个字)
                 </span>
                 
                 
@@ -274,6 +274,44 @@ var _hmt = _hmt || [];
 
 <p>上面的 <code>alert</code> 会显示 <code>button</code>，但是注意只有外层代码中的 <code>this</code> 是这样设置的，如果使用闭包（如下所示），则里面的 <code>this</code> 是指向 <code>window/global</code> 的</p>
 <figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onclick</span>=<span class="hljs-string">"alert((function()&#123;return this&#125;)());"</span>&gt;</span></span><br><span class="line">  Show inner this</span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="箭头函数中的-this"><a href="#箭头函数中的-this" class="headerlink" title="箭头函数中的 this"></a>箭头函数中的 this</h2><p>下面我们在来看一种比较特殊的情况，即箭头函数当中的 <code>this</code>，不过在此之前，我们先来了解一下什么是箭头函数</p>
+<p>箭头函数是 <code>ES6</code> 当中新增的一种比函数表达式更简洁的语法，比如下面这个例子</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> foo = <span class="hljs-function"><span class="hljs-params">val</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(val)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 等同于 ==&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params">val</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(val)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们在这里主要关注箭头函数当中的 <code>this</code> 指向和它与普通函数之前的区别</p>
+<h4 id="箭头函数与普通函数之间的差异"><a href="#箭头函数与普通函数之间的差异" class="headerlink" title="箭头函数与普通函数之间的差异"></a>箭头函数与普通函数之间的差异</h4><p>主要涉及以下几点，更为详细的内容可以参考 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Functions/Arrow_functions" target="_blank" rel="noopener">箭头函数</a></p>
+<ul>
+<li><p>因为箭头函数没有 <code>this</code>，所以也不能用 <code>call()</code>、<code>apply()</code>、<code>bind()</code> 这些方法改变 <code>this</code> 的指向</p>
+</li>
+<li><p>没有 <code>arguments</code>，但是箭头函数可以访问外围函数的 <code>arguments</code> 对象</p>
+</li>
+<li><p>箭头函数不能用作构造器，和 <code>new</code> 一起用会抛出错误</p>
+</li>
+<li><p>因为不能使用 <code>new</code> 调用，所以也没有 <code>new.target</code> 值，也就没有 <code>prototype</code> 属性</p>
+</li>
+<li><p>没有原型，自然也不能通过 <code>super</code> 来访问原型的属性，所以箭头函数也是没有 <code>super</code> 的，不过跟 <code>arguments</code>、<code>new.target</code> 一样，这些值由外围最近一层非箭头函数决定</p>
+</li>
+<li><p><code>yield</code> 关键字通常不能在箭头函数中使用（除非是嵌套在允许使用的函数内），因此箭头函数不能用作函数生成器</p>
+</li>
+</ul>
+<p>下面我们来着重看一下箭头函数当中的 <code>this</code></p>
+<h4 id="没有-this"><a href="#没有-this" class="headerlink" title="没有 this"></a>没有 this</h4><p>箭头函数没有 <code>this</code>，所以需要通过查找作用域链来确定 <code>this</code> 的值，这就意味着如果箭头函数被非箭头函数包含，<code>this</code> 绑定的就是最近一层非箭头函数的 <code>this</code></p>
+<p>简单来说就是，箭头函数不会创建自己的 <code>this</code>，它会从自己的作用域链的上一层继承 <code>this</code>，比如下面这个例子，其中的 <code>this</code> 会正确地指向 <code>p</code> 实例</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Person</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.age = <span class="hljs-number">0</span></span><br><span class="line">  setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.age++</span><br><span class="line">  &#125;, <span class="hljs-number">1000</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> p = <span class="hljs-keyword">new</span> Person()</span><br></pre></td></tr></table></figure>
+
+<p>但是这里需要注意，在严格模式下，与 <code>this</code> 相关的规则都将被忽略</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> foo = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line"><span class="hljs-meta">  'use strict'</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> bar = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line"><span class="hljs-meta">  'use strict'</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo() === <span class="hljs-built_in">window</span>     <span class="hljs-comment">// true</span></span><br><span class="line">bar() === <span class="hljs-literal">undefined</span>  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>最后我们来看一个小例子，下面的输出结果是什么</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123; <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>) &#125;())</span><br></pre></td></tr></table></figure>
+
+<p>运行以后可以发现，是会报错的，至于原因可以参考 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Expressions_and_Operators" target="_blank" rel="noopener">这里</a></p>
+<p>其实我们可以来把它还原一下就知道为什么了</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123; <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>) &#125;())</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ==&gt; 等同于</span></span><br><span class="line">(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">f</span>(<span class="hljs-params"></span>) </span>&#123; <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>) &#125;())</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ==&gt; 也就是</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">f</span>(<span class="hljs-params"></span>) </span>&#123; <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>) &#125; ()</span><br></pre></td></tr></table></figure>
+
+<p>可以发现，其实写法是有问题的，至于解决办法，可以采用下面这种方式，用括号将函数包裹起来</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(<span class="hljs-function">(<span class="hljs-params">(</span>) =&gt;</span> &#123; <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>) &#125;)())</span><br></pre></td></tr></table></figure>
 
 <h2 id="深入-this"><a href="#深入-this" class="headerlink" title="深入 this"></a>深入 this</h2><p>在前文部分，我们花了大量章节来对各个场景下的 <code>this</code> 做了介绍，总结了 <code>this</code> 在不同场景下的指向结果，但是都没有从根本上解释现象出现的原因</p>
 <p>所以今天我们就借助 <a href="http://yanhaijing.com/es5/#155" target="_blank" rel="noopener">ECMAScript 规范</a> 来深入的来了解一下，到底 <code>this</code> 是个什么东西</p>
@@ -612,7 +650,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        127
+                        129
                     </p>
                 </div>
             </div>
@@ -698,60 +736,72 @@ var _hmt = _hmt || [];
         <span class="has-mr-6">2.4</span>
         <span>内联事件处理函数中的 this</span>
         </a></li></ul></li><li>
-        <a class="is-flex" href="#深入-this">
+        <a class="is-flex" href="#箭头函数中的-this">
         <span class="has-mr-6">3</span>
+        <span>箭头函数中的 this</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#箭头函数与普通函数之间的差异">
+        <span class="has-mr-6">3.1</span>
+        <span>箭头函数与普通函数之间的差异</span>
+        </a></li><li>
+        <a class="is-flex" href="#没有-this">
+        <span class="has-mr-6">3.2</span>
+        <span>没有 this</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#深入-this">
+        <span class="has-mr-6">4</span>
         <span>深入 this</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#函数调用">
-        <span class="has-mr-6">3.1</span>
+        <span class="has-mr-6">4.1</span>
         <span>函数调用</span>
         </a></li><li>
         <a class="is-flex" href="#Type-ref-is-Reference">
-        <span class="has-mr-6">3.2</span>
+        <span class="has-mr-6">4.2</span>
         <span>Type(ref) is Reference</span>
         </a></li><li>
         <a class="is-flex" href="#GetValue">
-        <span class="has-mr-6">3.3</span>
+        <span class="has-mr-6">4.3</span>
         <span>GetValue</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#确定-this-的值">
-        <span class="has-mr-6">4</span>
+        <span class="has-mr-6">5</span>
         <span>确定 this 的值</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#MemberExpression">
-        <span class="has-mr-6">4.1</span>
+        <span class="has-mr-6">5.1</span>
         <span>MemberExpression</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#计算-Reference">
-        <span class="has-mr-6">5</span>
+        <span class="has-mr-6">6</span>
         <span>计算 Reference</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#foo-bar">
-        <span class="has-mr-6">5.1</span>
+        <span class="has-mr-6">6.1</span>
         <span>foo.bar()</span>
         </a></li><li>
         <a class="is-flex" href="#foo-bar-1">
-        <span class="has-mr-6">5.2</span>
+        <span class="has-mr-6">6.2</span>
         <span>(foo.bar)()</span>
         </a></li><li>
         <a class="is-flex" href="#foo-bar-foo-bar">
-        <span class="has-mr-6">5.3</span>
+        <span class="has-mr-6">6.3</span>
         <span>(foo.bar = foo.bar)()</span>
         </a></li><li>
         <a class="is-flex" href="#false-foo-bar">
-        <span class="has-mr-6">5.4</span>
+        <span class="has-mr-6">6.4</span>
         <span>(false || foo.bar)()</span>
         </a></li><li>
         <a class="is-flex" href="#foo-bar-foo-bar-1">
-        <span class="has-mr-6">5.5</span>
+        <span class="has-mr-6">6.5</span>
         <span>(foo.bar, foo.bar)()</span>
         </a></li><li>
         <a class="is-flex" href="#结果汇总">
-        <span class="has-mr-6">5.6</span>
+        <span class="has-mr-6">6.6</span>
         <span>结果汇总</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#总结">
-        <span class="has-mr-6">6</span>
+        <span class="has-mr-6">7</span>
         <span>总结</span>
         </a></li></ul>
         </div>
@@ -809,7 +859,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">51</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -880,6 +930,44 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/01/17/JavaScript/51/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/51.jpg" alt="Object 上的原生 API">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-16T16:00:00.000Z">2020-01-17</time></div>
+                    <a href="/2020/01/17/JavaScript/51/" class="has-link-black-ter is-size-6">Object 上的原生 API</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/01/16/JavaScript/50/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/50.jpg" alt="Async 和 Await">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-15T16:00:00.000Z">2020-01-16</time></div>
+                    <a href="/2020/01/16/JavaScript/50/" class="has-link-black-ter is-size-6">Async 和 Await</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/01/05/JavaScript/49/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/49.jpg" alt="函数防抖和节流">
@@ -935,44 +1023,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/12/22/React/08/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="渲染器的核心 Diff 算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-21T16:00:00.000Z">2019-12-22</time></div>
-                    <a href="/2019/12/22/React/08/" class="has-link-black-ter is-size-6">渲染器的核心 Diff 算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/12/20/React/07/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/07.jpg" alt="渲染器">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-19T16:00:00.000Z">2019-12-20</time></div>
-                    <a href="/2019/12/20/React/07/" class="has-link-black-ter is-size-6">渲染器</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -991,7 +1041,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1266,7 +1316,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1321,7 +1371,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">六月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1469,7 +1519,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">51</span>
                     </a>
                 </div>
                 

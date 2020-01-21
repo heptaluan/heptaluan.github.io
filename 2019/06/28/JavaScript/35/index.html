@@ -16,7 +16,7 @@
 <meta property="og:description" content="先来小小的总结一下，大致有以下几种">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/35.jpg">
-<meta property="og:updated_time" content="2020-01-03T08:05:34.690Z">
+<meta property="og:updated_time" content="2020-01-19T15:36:20.728Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="遍历对象的几种方法">
 <meta name="twitter:description" content="先来小小的总结一下，大致有以下几种">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    11 分钟 读完 (大约 1659 个字)
+                    14 分钟 读完 (大约 2138 个字)
                 </span>
                 
                 
@@ -189,124 +189,109 @@ var _hmt = _hmt || [];
             <p>先来小小的总结一下，大致有以下几种</p>
 <a id="more"></a>
 
-
 <ul>
 <li><p><code>Object.keys(obj)</code></p>
 <ul>
-<li><p>返回所有可枚举属性（不包括原型中属性，不含 <code>Symbol</code> 属性）</p>
-</li>
-<li><p>如果参数不是一个对象，<code>ES6</code> 之前报错，之后强制转换为对象</p>
-</li>
-<li><p>返回数组</p>
-</li>
+<li>返回所有可枚举属性，不包括原型中属性，不含 <code>Symbol</code> 属性</li>
+<li>如果参数不是一个对象，<code>ES6</code> 之前报错，之后强制转换为对象</li>
+<li>返回结果为数组</li>
 </ul>
 </li>
-<li><p><code>for...in</code></p>
+<li><p><code>for-in</code></p>
 <ul>
-<li><p>返回所有可枚举属性（包括原型中的属性，不含 <code>Symbol</code> 属性）</p>
-</li>
-<li><p>如果参数不是一个对象，<code>ES6</code> 之前报错，之后强制转换为对象</p>
-</li>
+<li>返回所有可枚举属性，包括原型中的属性，不含 <code>Symbol</code> 属性</li>
+<li>如果参数不是一个对象，<code>ES6</code> 之前报错，之后强制转换为对象</li>
 </ul>
 </li>
-</ul>
-<ul>
 <li><p><code>Object.getOwnPropertyNames(obj)</code></p>
 <ul>
-<li><p>返回所有的自身属性（不包括原型中属性，不含 <code>Symbol</code> 属性，包括不可枚举（<code>length</code>））</p>
-</li>
-<li><p>如果参数不是一个对象，<code>ES6</code> 之前报错，之后强制转换为对象</p>
-</li>
-<li><p>返回数组</p>
-</li>
+<li>返回所有的自身属性，不包括原型中属性，不含 <code>Symbol</code> 属性，包括不可枚举属性，需要注意的是，如果是数组，那么 <code>length</code> 属性也包含其中</li>
+<li>如果参数不是一个对象，<code>ES6</code> 之前报错，之后强制转换为对象</li>
+<li>返回结果为数组</li>
 </ul>
 </li>
-</ul>
-<ul>
 <li><p><code>Reflect.ownKeys(obj)</code></p>
 <ul>
-<li><p>返回所有的自身属性（不管是否可枚举，不管是不是 <code>Symbol</code>，一律返回）</p>
-</li>
-<li><p>如果参数不是一个对象，报错</p>
-</li>
-<li><p>返回数组</p>
-</li>
+<li>返回 <strong>所有的</strong> 自身属性，不管是否可枚举，不管是不是 <code>Symbol</code>，一律返回</li>
+<li>如果参数不是一个对象，报错</li>
+<li>返回结果为数组</li>
 </ul>
 </li>
-</ul>
+<li><p><code>for-of</code></p>
 <ul>
-<li><p><code>for...of</code></p>
-<ul>
-<li><p>返回当前对象上的每一个属性（不包括原型中的属性，包括 <code>Symbol</code> 属性）</p>
-</li>
-<li><p>对于普通的对象，<code>for...of</code> 不能直接使用，否则会报错，必须部署了 <code>iterator</code> 接口才能使用</p>
-</li>
+<li>返回当前对象上的每一个属性，不包括原型中的属性，不包括 <code>Symbol</code> 属性</li>
+<li>对于普通的对象，<code>for-of</code> 不能直接使用，否则会报错，必须部署了 <code>iterator</code> 接口才能使用</li>
+<li>可以考虑使用 <code>Object.entries(obj)</code></li>
 </ul>
 </li>
 </ul>
-<h2 id="Object-keys-obj"><a href="#Object-keys-obj" class="headerlink" title="Object.keys(obj)"></a>Object.keys(obj)</h2><p>返回一个表示给定对象的所有可枚举属性的字符串数组，包括对象自身的（不含继承的）所有可枚举属性（不含 <code>Symbol</code> 属性）</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> arr = [<span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'c'</span>];</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">Object</span>.keys(arr));  <span class="hljs-comment">// ['0', '1', '2']</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// -------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> an_obj = &#123; <span class="hljs-number">100</span>: <span class="hljs-string">'a'</span>, <span class="hljs-number">2</span>: <span class="hljs-string">'b'</span>, <span class="hljs-number">7</span>: <span class="hljs-string">'c'</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">Object</span>.keys(an_obj));  <span class="hljs-comment">// ['2', '7', '100']</span></span><br></pre></td></tr></table></figure>
+<p>下面我们就一个一个来分别进行介绍</p>
+<h2 id="Object-keys-obj"><a href="#Object-keys-obj" class="headerlink" title="Object.keys(obj)"></a>Object.keys(obj)</h2><p>它返回一个表示给定对象的所有可枚举属性的字符串数组，包括对象自身的（不含继承的）所有可枚举属性，不包含 <code>Symbol</code> 属性</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> arr = [<span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'c'</span>]</span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">Object</span>.keys(arr))     <span class="hljs-comment">// ['0', '1', '2']</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// -------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> an_obj = &#123; <span class="hljs-number">100</span>: <span class="hljs-string">'a'</span>, <span class="hljs-number">2</span>: <span class="hljs-string">'b'</span>, <span class="hljs-number">7</span>: <span class="hljs-string">'c'</span> &#125;</span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">Object</span>.keys(an_obj))  <span class="hljs-comment">// ['2', '7', '100']</span></span><br></pre></td></tr></table></figure>
 
-<p>几个注意点：</p>
-<p>返回所有可枚举属性（不包括原型中属性，不含 <code>Symbol</code> 属性）（如果参数不是一个对象，<code>ES6</code> 之前报错，之后强制转换为对象）（返回数组）</p>
+<p>它返回所有可枚举属性，不包括原型中属性，不包含 <code>Symbol</code> 属性，如果参数不是一个对象，<code>ES6</code> 之前报错，之后强制转换为对象</p>
 <p>返回的是一个表示给定对象的所有可枚举属性的字符串数组（但不包括原型中的属性）</p>
-<p>数组中属性名的排列顺序和使用 <code>for...in</code> 循环遍历该对象时返回的顺序一致</p>
-<p>因为 <code>for...in</code> 语句无法保证遍历顺序，故 <code>Object.keys(obj)</code> 顺序也是无法保证的</p>
+<p>数组中属性名的排列顺序和使用 <code>for-in</code> 循环遍历该对象时返回的顺序一致</p>
+<p>因为 <code>for-in</code> 语句无法保证遍历顺序，故 <code>Object.keys(obj)</code> 顺序也是无法保证的</p>
 <p>原因如下</p>
-<p><code>Chrome</code>，<code>Opera</code> 的 <code>JavaScript</code> 解析引擎遵循的是新版 <code>ECMA-262</code> 第五版规范，因此，使用 <code>for...in</code> 语句遍历对象属性时遍历书序并非属性构建顺序</p>
+<p><code>Chrome</code>，<code>Opera</code> 的 <code>JavaScript</code> 解析引擎遵循的是新版 <code>ECMA-262</code> 第五版规范，因此，使用 <code>for-in</code> 语句遍历对象属性时遍历书序并非属性构建顺序</p>
 <p>而 <code>IE6</code>，<code>IE7</code>，<code>IE8</code>，<code>Firefox</code>，<code>Safari</code> 的 <code>JavaScript</code> 解析引擎遵循的是较老的 <code>ECMA-262</code> 第三版规范，属性遍历顺序由属性构建的顺序决定</p>
 <blockquote>
 <p>如果想要保证对象遍历的输出顺序，可以将对象转换为数组来进行操作</p>
 </blockquote>
-<h2 id="for…in"><a href="#for…in" class="headerlink" title="for…in"></a>for…in</h2><p><code>for...in</code> 语句以任意顺序遍历一个对象的可枚举属性，对于每个不同的属性，语句都会被执行</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> obj = &#123; <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">c</span>: <span class="hljs-number">3</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> prop <span class="hljs-keyword">in</span> obj) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(prop);  <span class="hljs-comment">// a b c</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="for…in"><a href="#for…in" class="headerlink" title="for…in"></a>for…in</h2><p><code>for-in</code> 语句以任意顺序遍历一个对象的可枚举属性，对于每个不同的属性，语句都会被执行</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> c = <span class="hljs-built_in">Symbol</span>(<span class="hljs-string">'c'</span>)</span><br><span class="line"><span class="hljs-keyword">var</span> obj = &#123; <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">2</span>, [c]: <span class="hljs-number">3</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> prop <span class="hljs-keyword">in</span> obj) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(prop);  <span class="hljs-comment">// a b</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>几个注意点：</p>
-<p>返回所有可枚举属性（包括原型中的属性，不含 <code>Symbol</code> 属性）（如果参数不是一个对象，<code>ES6</code> 之前报错，之后强制转换为对象）</p>
-<p><code>for...in</code> 循环只遍历<strong>可枚举</strong>属性，循环将迭代对象的所有可枚举属性和从它的构造函数的 <code>prototype</code> <strong>继承</strong>而来的（包括被覆盖的内建属性）（即包括原型中的属性）</p>
-<p><code>for...in</code> 不应该被用来迭代一个下标顺序很重要的 <code>Array</code></p>
-<p>同 <code>Object.keys(obj)</code> 一样，<code>for...in</code> 并不能够保证返回的是按一定顺序的索引，但是它会返回所有可枚举属性，包括非整数名称的和继承的</p>
+<p>它返回返回所有可枚举属性，包括原型中的属性，不含 <code>Symbol</code> 属性，如果参数不是一个对象，<code>ES6</code> 之前报错，之后强制转换为对象</p>
+<p><code>for-in</code> 循环只遍历<strong>可枚举</strong>属性，循环将迭代对象的所有可枚举属性和从它的构造函数的 <code>prototype</code> <strong>继承</strong>而来的（包括被覆盖的内建属性，即包括原型中的属性）</p>
+<p><code>for-in</code> 不应该被用来迭代一个下标顺序很重要的 <code>Array</code></p>
+<p>同 <code>Object.keys(obj)</code> 一样，<code>for-in</code> 并不能够保证返回的是按一定顺序的索引，但是它会返回所有可枚举属性，包括非整数名称的和继承的</p>
 <p>如果仅迭代自身的属性，而不是它的原型，可以使用：</p>
 <ul>
-<li><p><code>getOwnPropertyNames()</code></p>
-<ul>
+<li><code>getOwnPropertyNames()</code><ul>
 <li>返回一个由指定对象的所有自身属性的属性名（包括不可枚举属性）组成的数组</li>
 </ul>
 </li>
-<li><p><code>hasOwnProperty()</code></p>
-<ul>
+<li><code>hasOwnProperty()</code><ul>
 <li>来确定某属性是否是对象本身的属性（一般使用这个来过滤）</li>
 </ul>
 </li>
-<li><p><code>propertyIsEnumerable()</code></p>
-<ul>
+<li><code>propertyIsEnumerable()</code><ul>
 <li>返回一个布尔值，表明指定的属性名是否是当前对象可枚举的自身属性</li>
 </ul>
 </li>
 </ul>
-<h2 id="Object-getOwnPropertyNames-obj"><a href="#Object-getOwnPropertyNames-obj" class="headerlink" title="Object.getOwnPropertyNames(obj)"></a>Object.getOwnPropertyNames(obj)</h2><p><code>Object.getOwnPropertyNames()</code> 方法返回一个由指定对象的所有自身属性的属性名（<strong>包括</strong>不可枚举属性）组成的数组（但不会获取原型链上的属性）</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> arr = [<span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'c'</span>];</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">Object</span>.getOwnPropertyNames(arr).sort()); <span class="hljs-comment">// ['0', '1', '2', 'length']</span></span><br></pre></td></tr></table></figure>
+<h2 id="Object-getOwnPropertyNames-obj"><a href="#Object-getOwnPropertyNames-obj" class="headerlink" title="Object.getOwnPropertyNames(obj)"></a>Object.getOwnPropertyNames(obj)</h2><p><code>Object.getOwnPropertyNames()</code> 方法返回一个由指定对象的所有自身属性的属性名，<strong>包括</strong>不可枚举属性组成的数组（但不会获取原型链上的属性）</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> arr = [<span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'c'</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">Object</span>.getOwnPropertyNames(arr).sort()) <span class="hljs-comment">// ['0', '1', '2', 'length']</span></span><br></pre></td></tr></table></figure>
 
-<p>几个注意点：</p>
-<p>返回所有的自身属性（不包括原型中属性，不含 <code>Symbol</code> 属性，包括不可枚举（<code>length</code>））（如果参数不是一个对象，<code>ES6</code> 之前报错，之后强制转换为对象）（返回数组）</p>
-<p>返回指定对象的所有自身属性的属性名<strong>包括不可枚举属性</strong>组成的数组</p>
-<p>不会获取原型链上的属性</p>
-<p>枚举属性的顺序与通过 <code>for...in</code> 循环（或 <code>Object.keys</code>）迭代该对象属性时一致</p>
-<p>如果只获取到可枚举属性，使用 <code>Object.keys</code> 或用 <code>for...in</code> 循环（配合 <code>hasOwnProperty()</code>）</p>
+<p>它会返回所有的自身属性，不包括原型中属性，不含 <code>Symbol</code> 属性，包括不可枚举（<code>length</code>）</p>
+<p>如果参数不是一个对象，<code>ES6</code> 之前报错，<code>ES6</code> 之后强制转换为对象</p>
+<p>返回指定对象的所有自身属性的属性名<strong>包括不可枚举属性</strong>组成的数组，但是不会获取原型链上的属性</p>
+<p>枚举属性的顺序与通过 <code>for-in</code> 循环（或 <code>Object.keys</code>）迭代该对象属性时一致</p>
+<p>如果只获取到可枚举属性，使用 <code>Object.keys</code> 或用 <code>for-in</code> 循环（配合 <code>hasOwnProperty()</code>）</p>
 <h2 id="Reflect-ownKeys"><a href="#Reflect-ownKeys" class="headerlink" title="Reflect.ownKeys"></a>Reflect.ownKeys</h2><p>静态方法 <code>Reflect.ownKeys()</code> 返回一个由目标对象自身的属性键组成的数组</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Reflect</span>.ownKeys(&#123; <span class="hljs-attr">z</span>: <span class="hljs-number">3</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">x</span>: <span class="hljs-number">1</span> &#125;); <span class="hljs-comment">// [ 'z', 'y', 'x' ]</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Reflect</span>.ownKeys([]); <span class="hljs-comment">// ['length']</span></span><br></pre></td></tr></table></figure>
 
-<p>几个注意点：</p>
-<p>返回所有的自身属性（不管是否可枚举，不管是不是 <code>Symbol</code>，一律返回）（如果参数不是一个对象，报错）（返回数组）</p>
+<p>它会返回所有的自身属性，不管是否可枚举，不管是不是 <code>Symbol</code>，一律返回（如果参数不是一个对象，报错），最后返回的结果是一个数组</p>
 <p>返回值等同于 <code>Object.getOwnPropertyNames(target).concat(Object.getOwnPropertySymbols(target))</code></p>
-<h2 id="for…of"><a href="#for…of" class="headerlink" title="for…of"></a>for…of</h2><p><code>for...of</code> 语句在可迭代对象（包括 <code>Array</code>, <code>Map</code>, <code>Set</code>, <code>String</code>, <code>TypedArray</code>（描述一个底层的二进制数据缓存区的一个类似数组（<code>array-like</code>）视图），<code>arguments</code> 对象等）上创建一个迭代循环，对每个不同属性的属性值，调用一个自定义的有执行语句的迭代挂钩</p>
+<h2 id="for…of"><a href="#for…of" class="headerlink" title="for…of"></a>for…of</h2><p><code>for-of</code> 语句在可迭代对象（包括 <code>Array</code>，<code>Map</code>，<code>Set</code>，<code>String</code>，<code>TypedArray</code>（描述一个底层的二进制数据缓存区的一个类似数组（<code>array-like</code>）视图），<code>arguments</code> 对象等）上创建一个迭代循环，对每个不同属性的属性值，调用一个自定义的有执行语句的迭代挂钩</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> iterable = [<span class="hljs-number">10</span>, <span class="hljs-number">20</span>, <span class="hljs-number">30</span>];</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> value <span class="hljs-keyword">of</span> iterable) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(value);</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-comment">// 10</span></span><br><span class="line"><span class="hljs-comment">// 20</span></span><br><span class="line"><span class="hljs-comment">// 30</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//-----------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> iterable = <span class="hljs-string">'foo'</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> value <span class="hljs-keyword">of</span> iterable) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(value);</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-comment">// 'f'</span></span><br><span class="line"><span class="hljs-comment">// 'o'</span></span><br><span class="line"><span class="hljs-comment">// 'o'</span></span><br></pre></td></tr></table></figure>
 
-<p>几个注意点：</p>
-<p>返回当前对象上的每一个属性（对于普通的对象，<code>for...of</code> 不能直接使用，否则会报错，必须部署了 <code>iterator</code> 接口才能使用）（不包括原型中的属性，包括 <code>Symbol</code> 属性）</p>
-<p>并不适用于所有的 <code>object</code>，可以迭代出任何拥有 <code>iterator</code> 的对象</p>
-<p><code>for...of</code> 遍历的是<strong>当前对象</strong>上的每一个属性值（不包括原型上的）</p>
+<p><code>for-of</code> 会返回当前对象上的每一个属性，遍历的是 <strong>当前对象</strong> 上的每一个属性值（不包括原型上的），但是并不适用于所有的 <code>object</code>，只能迭代出拥有 <code>iterator</code> 的对象</p>
+<p>通过观察上面的例子我们可以发现，我们在其中分别使用的是数组跟字符串，这两者都是默认部署了 <code>Iterator</code> 接口，所以可以使用 <code>for-of</code> 来进行遍历</p>
+<p>那么对于普通的对象会是什么情况呢，我们来看下面这个例子</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> c = <span class="hljs-built_in">Symbol</span>(<span class="hljs-string">'c'</span>)</span><br><span class="line"><span class="hljs-keyword">var</span> obj = &#123; <span class="hljs-attr">a</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">b</span>: <span class="hljs-number">2</span>, [c]: <span class="hljs-number">3</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [key, value] <span class="hljs-keyword">of</span> obj) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">$&#123;key&#125;</span>: <span class="hljs-subst">$&#123;value&#125;</span>`</span>)  <span class="hljs-comment">// TypeError: obj is not iterable</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>运行以后可以发现，对于普通的对象，<code>for-of</code> 不能直接使用，否则会报错，在这种情况下，我们可以使用 <code>Object.entries()</code> 来将我们的对象包裹一下即可</p>
+<p>该方法返回一个给定对象 <strong>自身可枚举</strong> 属性的键值对数组，其排列与使用 <code>for-in</code> 循环遍历该对象时返回的顺序一致（区别在于 <code>for-in</code> 循环还会枚举原型链中的属性）</p>
+<p>因为返回的是数组，所以具有 <code>Iterator</code> 接口可以直接被 <code>for-of</code> 遍历</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> [key, value] <span class="hljs-keyword">of</span> <span class="hljs-built_in">Object</span>.entries(obj)) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">$&#123;key&#125;</span>: <span class="hljs-subst">$&#123;value&#125;</span>`</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// a: 1</span></span><br><span class="line"><span class="hljs-comment">// b: 2</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Object-getOwnPropertySymbols"><a href="#Object-getOwnPropertySymbols" class="headerlink" title="Object.getOwnPropertySymbols()"></a>Object.getOwnPropertySymbols()</h2><p>最后我们再来看一个比较特殊的方法，因为我们可以发现，在上面的一系列方法当中，有很多方法的输出结果都是不包括 <code>Symbol</code> 属性的</p>
+<p>所以 <code>JavaScript</code> 提供了一个 <code>Object.getOwnPropertySymbols()</code> 方法，专门用来返回一个给定对象自身的所有 <code>Symbol</code> 属性的数组</p>
+<p>但是有一点需要注意，所有的对象在初始化的时候不会包含任何的 <code>Symbol</code>，除非你在对象上赋值了 <code>Symbol</code> 否则 <code>Object.getOwnPropertySymbols()</code> 只会返回一个空的数组</p>
+<p>我们还是使用 <a href="http://localhost:4000/2017/09/21/JavaScript/43/#Reflect-ownKeys-target" target="_blank" rel="noopener">Reflect.ownKeys(target)</a> 当中的例子来进行对比说明，如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> a = <span class="hljs-built_in">Symbol</span>.for(<span class="hljs-string">'a'</span>)</span><br><span class="line"><span class="hljs-keyword">let</span> b = <span class="hljs-built_in">Symbol</span>.for(<span class="hljs-string">'b'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> obj = &#123;</span><br><span class="line">  [a]: <span class="hljs-number">10</span>,</span><br><span class="line">  [b]: <span class="hljs-number">20</span>,</span><br><span class="line">  key1: <span class="hljs-number">30</span>,</span><br><span class="line">  key2: <span class="hljs-number">40</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.getOwnPropertyNames(obj)    <span class="hljs-comment">// [ 'key1', 'key2' ]</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.getOwnPropertySymbols(obj)  <span class="hljs-comment">// [ Symbol(a), Symbol(b) ]</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Reflect</span>.ownKeys(obj)               <span class="hljs-comment">// [ 'key1', 'key2', Symbol(a), Symbol(b) ]</span></span><br></pre></td></tr></table></figure>
         </div>
         
         <div class="level is-size-7 is-uppercase">
@@ -416,7 +401,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        127
+                        129
                     </p>
                 </div>
             </div>
@@ -477,6 +462,10 @@ var _hmt = _hmt || [];
         <a class="is-flex" href="#for…of">
         <span class="has-mr-6">5</span>
         <span>for…of</span>
+        </a></li><li>
+        <a class="is-flex" href="#Object-getOwnPropertySymbols">
+        <span class="has-mr-6">6</span>
+        <span>Object.getOwnPropertySymbols()</span>
         </a></li></ul>
         </div>
     </div>
@@ -533,7 +522,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">51</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -604,6 +593,44 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/01/17/JavaScript/51/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/51.jpg" alt="Object 上的原生 API">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-16T16:00:00.000Z">2020-01-17</time></div>
+                    <a href="/2020/01/17/JavaScript/51/" class="has-link-black-ter is-size-6">Object 上的原生 API</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/01/16/JavaScript/50/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/50.jpg" alt="Async 和 Await">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-01-15T16:00:00.000Z">2020-01-16</time></div>
+                    <a href="/2020/01/16/JavaScript/50/" class="has-link-black-ter is-size-6">Async 和 Await</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/01/05/JavaScript/49/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/49.jpg" alt="函数防抖和节流">
@@ -659,44 +686,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/12/22/React/08/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="渲染器的核心 Diff 算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-21T16:00:00.000Z">2019-12-22</time></div>
-                    <a href="/2019/12/22/React/08/" class="has-link-black-ter is-size-6">渲染器的核心 Diff 算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2019/12/20/React/07/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/07.jpg" alt="渲染器">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-12-19T16:00:00.000Z">2019-12-20</time></div>
-                    <a href="/2019/12/20/React/07/" class="has-link-black-ter is-size-6">渲染器</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -715,7 +704,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -990,7 +979,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1045,7 +1034,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">六月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1193,7 +1182,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">51</span>
                     </a>
                 </div>
                 
