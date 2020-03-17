@@ -16,7 +16,7 @@
 <meta property="og:description" content="最近在复习相关内容，感觉对于操作系统方面的知识都是一片空白，所以打算简单的学习学习，顺便简单的汇总整理一下 其实也就是一些基本概念的介绍，主要方便时不时回来看看复习一下">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/06.jpg">
-<meta property="og:updated_time" content="2020-02-23T09:29:21.706Z">
+<meta property="og:updated_time" content="2020-03-16T09:13:17.827Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="体系结构与操作系统">
 <meta name="twitter:description" content="最近在复习相关内容，感觉对于操作系统方面的知识都是一片空白，所以打算简单的学习学习，顺便简单的汇总整理一下 其实也就是一些基本概念的介绍，主要方便时不时回来看看复习一下">
@@ -199,7 +199,7 @@ var _hmt = _hmt || [];
 <li>位（<code>Bit</code>）、字节（<code>Byte</code>）、字（<code>Word</code>）</li>
 </ul>
 <h2 id="冯·诺依曼体系结构"><a href="#冯·诺依曼体系结构" class="headerlink" title="冯·诺依曼体系结构"></a>冯·诺依曼体系结构</h2><p>如下图</p>
-<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/04.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/06-01.png" alt></p>
 <p>特点分为三部分</p>
 <ul>
 <li>计算机处理的数据和指令一律用二进制数表示</li>
@@ -251,7 +251,7 @@ var _hmt = _hmt || [];
 <h2 id="位（Bit）、字节（Byte）、字（Word）"><a href="#位（Bit）、字节（Byte）、字（Word）" class="headerlink" title="位（Bit）、字节（Byte）、字（Word）"></a>位（Bit）、字节（Byte）、字（Word）</h2><ul>
 <li><strong>位</strong>，位（<code>Bit</code>）是电子计算机中最小的数据单位，每一位的状态只能是 <code>0</code> 或 <code>1</code></li>
 <li><strong>字节</strong>，<code>8</code> 个二进制位构成 <code>1</code> 个字节（<code>Byte</code>），它是存储空间的基本计量单位，<code>1</code> 个字节可以储存 <code>1</code> 个英文字母或者半个汉字，换句话说，<code>1</code> 个汉字占据 <code>2</code> 个字节的存储空间</li>
-<li><strong>字</strong>，由若干个字节构成，字（Word）的位数叫做字长，不同档次的机器有不同的字长，例如一台 <code>8</code> 位机，它的 <code>1</code> 个字就等于 <code>1</code> 个字节，字长为 <code>8</code> 位，如果是一台 <code>16</code> 位机，那么，它的 <code>1</code> 个字就由 <code>2</code> 个字节构成，字长为 <code>16</code> 位，字是计算机进行数据处理和运算的单位</li>
+<li><strong>字</strong>，由若干个字节构成，字（<code>Word</code>）的位数叫做字长，不同档次的机器有不同的字长，例如一台 <code>8</code> 位机，它的 <code>1</code> 个字就等于 <code>1</code> 个字节，字长为 <code>8</code> 位，如果是一台 <code>16</code> 位机，那么，它的 <code>1</code> 个字就由 <code>2</code> 个字节构成，字长为 <code>16</code> 位，字是计算机进行数据处理和运算的单位</li>
 </ul>
 <h4 id="字节序"><a href="#字节序" class="headerlink" title="字节序"></a>字节序</h4><p>字节顺序是指占内存多于一个字节类型的数据在内存中的存放顺序，通常有小端、大端两种字节顺序</p>
 <ul>
@@ -264,7 +264,7 @@ var _hmt = _hmt || [];
 
 <p>从上面两图可以看出，采用 <code>Big Endian</code> 方式存储数据是符合我们人类的思维习惯的</p>
 <p>联合体 <code>union</code> 的存放顺序是所有成员都从低地址开始存放，利用该特性，就能判断 <code>CPU</code> 对内存采用 <code>Little-endian</code> 还是 <code>Big-endian</code> 模式读写</p>
-<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">union</span> test&#123;  </span><br><span class="line">  <span class="hljs-keyword">short</span>  i;  </span><br><span class="line">  <span class="hljs-keyword">char</span> str[<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">short</span>)];  </span><br><span class="line">&#125;tt;  </span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">()</span>  </span></span><br><span class="line"><span class="hljs-function"></span>&#123;  </span><br><span class="line">  tt.i = <span class="hljs-number">0x0102</span>;  </span><br><span class="line">  <span class="hljs-keyword">if</span>(<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">short</span>) == <span class="hljs-number">2</span>) &#123;  </span><br><span class="line">    <span class="hljs-keyword">if</span>(tt.str[<span class="hljs-number">0</span>] == <span class="hljs-number">1</span> &amp;&amp; tt.str[<span class="hljs-number">1</span>] == <span class="hljs-number">2</span>)  </span><br><span class="line">      <span class="hljs-built_in">printf</span>(<span class="hljs-string">"大端字节序"</span>);  </span><br><span class="line">    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(tt.str[<span class="hljs-number">0</span>] = <span class="hljs-number">2</span> &amp;&amp; tt.str[<span class="hljs-number">1</span>] == <span class="hljs-number">1</span>)  </span><br><span class="line">      <span class="hljs-built_in">printf</span>(<span class="hljs-string">"小端字节序"</span>);  </span><br><span class="line">    <span class="hljs-keyword">else</span>  </span><br><span class="line">      <span class="hljs-built_in">printf</span>(<span class="hljs-string">"结果未知"</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">  <span class="hljs-keyword">else</span>  </span><br><span class="line">    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"sizof(short) = %d 不等于 2"</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">short</span>));  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">union</span> test &#123;  </span><br><span class="line">  <span class="hljs-keyword">short</span>  i;  </span><br><span class="line">  <span class="hljs-keyword">char</span> str[<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">short</span>)];  </span><br><span class="line">&#125;tt;  </span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;  </span><br><span class="line">  tt.i = <span class="hljs-number">0x0102</span>;  </span><br><span class="line">  </span><br><span class="line">  <span class="hljs-keyword">if</span>(<span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">short</span>) == <span class="hljs-number">2</span>) &#123;  </span><br><span class="line">    <span class="hljs-keyword">if</span>(tt.str[<span class="hljs-number">0</span>] == <span class="hljs-number">1</span> &amp;&amp; tt.str[<span class="hljs-number">1</span>] == <span class="hljs-number">2</span>)  </span><br><span class="line">      <span class="hljs-built_in">printf</span>(<span class="hljs-string">"大端字节序"</span>);  </span><br><span class="line">    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(tt.str[<span class="hljs-number">0</span>] = <span class="hljs-number">2</span> &amp;&amp; tt.str[<span class="hljs-number">1</span>] == <span class="hljs-number">1</span>)  </span><br><span class="line">      <span class="hljs-built_in">printf</span>(<span class="hljs-string">"小端字节序"</span>);  </span><br><span class="line">    <span class="hljs-keyword">else</span>  </span><br><span class="line">      <span class="hljs-built_in">printf</span>(<span class="hljs-string">"结果未知"</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">  <span class="hljs-keyword">else</span>  </span><br><span class="line">    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"sizof(short) = %d 不等于 2"</span>, <span class="hljs-keyword">sizeof</span>(<span class="hljs-keyword">short</span>));  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h4 id="字节对齐"><a href="#字节对齐" class="headerlink" title="字节对齐"></a>字节对齐</h4><p>现代计算机中内存空间都是按照 <code>byte</code> 划分的，从理论上讲似乎对任何类型的变量的访问可以从任何地址开始，但实际情况是在访问特定类型变量的时候经常在特定的内存地址访问，这就需要各种类型数据按照一定的规则在空间上排列，而不是顺序的一个接一个的排放，这就是对齐</p>
 <p>那么问题来了，为什么要进行字节对齐呢，主要因为下面两点原因</p>
@@ -282,7 +282,7 @@ var _hmt = _hmt || [];
 <li><p>收尾工作，结构体的总大小，也就是 <code>sizeof</code> 的结果，必须是其内部最大成员的整数倍，不足的要补齐</p>
 </li>
 </ul>
-<h1 id="第二部分，操作系统基础"><a href="#第二部分，操作系统基础" class="headerlink" title="第二部分，操作系统基础"></a>第二部分，操作系统基础</h1><p>操作系统的五大功能，分别为<strong>作业管理</strong>、<strong>文件管理</strong>、<strong>存储管理</strong>、<strong>输入输出设备管理</strong>、<strong>进程及处理机管理</strong></p>
+<h1 id="第二部分，操作系统基础"><a href="#第二部分，操作系统基础" class="headerlink" title="第二部分，操作系统基础"></a>第二部分，操作系统基础</h1><p>操作系统的五大功能，分别为 <strong>作业管理</strong>、<strong>文件管理</strong>、<strong>存储管理</strong>、<strong>输入输出设备管理</strong>、<strong>进程及处理机管理</strong></p>
 <p>主要介绍以下内容</p>
 <ul>
 <li>中断</li>
@@ -396,7 +396,7 @@ var _hmt = _hmt || [];
 <li>当其值 <code>&gt;= 0</code> 时，表示系统中当前可用资源的数目</li>
 <li>当其值 <code>&lt; 0</code> 时，其绝对值表示系统中因请求该类资源而被阻塞的进程数目</li>
 </ul>
-<p>除信号量的初值外，信号量的值仅能由 <code>P</code>操作和 <code>V</code> 操作更改，操作系统利用它的状态对进程和资源进行管理</p>
+<p>除信号量的初值外，信号量的值仅能由 <code>P</code> 操作和 <code>V</code> 操作更改，操作系统利用它的状态对进程和资源进行管理</p>
 <ul>
 <li><code>P</code> 操作记为 <code>P(s)</code>，其中 <code>s</code> 为一信号量，它执行时主要完成 <code>s.value = s.value - 1</code>（可理解为占用 <code>1</code> 个资源，若原来就没有则记帐欠 <code>1</code>个）<ul>
 <li>若 <code>s.value &gt;= 0</code>，则进程继续执行，否则（即 <code>s.value &lt; 0</code>）则进程被阻塞，并将该进程插入到信号量 <code>s</code> 的等待队列 <code>s.queue</code> 中</li>
@@ -680,7 +680,7 @@ var _hmt = _hmt || [];
 <li><code>s</code>、<code>p</code> – 这些文件关系到系统的数据结构和管道，通常很少见到</li>
 </ul>
 <p>第 <code>2 ~ 10</code> 个字符当中的每 <code>3</code> 个为一组，左边三个字符表示所有者权限，中间 <code>3</code> 个字符表示与所有者同一组的用户的权限，右边 <code>3</code> 个字符是其他用户的权限</p>
-<p>这三个一组共9个字符，代表的意义如下</p>
+<p>这三个一组共 <code>9</code> 个字符，代表的意义如下</p>
 <ul>
 <li><code>r</code>（<code>Read</code>，读取） – 对文件而言，具有读取文件内容的权限，对目录来说，具有浏览目录的权限</li>
 <li><code>w</code>（<code>Write</code>，写入） – 对文件而言，具有新增、修改文件内容的权限，对目录来说，具有删除、移动目录内文件的权限</li>
@@ -870,7 +870,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        140
+                        150
                     </p>
                 </div>
             </div>
@@ -1195,7 +1195,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">17</span>
+                <span class="level-item tag">27</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Http/">
@@ -1282,16 +1282,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/03/05/Essay/17/" class="media-left">
+            <a href="/2020/03/02/Essay/27/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="二叉树的遍历">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/27.jpg" alt="二叉排序树">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-04T16:00:00.000Z">2020-03-05</time></div>
-                    <a href="/2020/03/05/Essay/17/" class="has-link-black-ter is-size-6">二叉树的遍历</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-01T16:00:00.000Z">2020-03-02</time></div>
+                    <a href="/2020/03/02/Essay/27/" class="has-link-black-ter is-size-6">二叉排序树</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -1301,35 +1301,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/03/03/Essay/16/" class="media-left">
+            <a href="/2020/03/01/Essay/26/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg" alt="二叉树">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-02T16:00:00.000Z">2020-03-03</time></div>
-                    <a href="/2020/03/03/Essay/16/" class="has-link-black-ter is-size-6">二叉树</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/03/01/Essay/15/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/15.jpg" alt="树">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/26.jpg" alt="查找算法">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-29T16:00:00.000Z">2020-03-01</time></div>
-                    <a href="/2020/03/01/Essay/15/" class="has-link-black-ter is-size-6">树</a>
+                    <a href="/2020/03/01/Essay/26/" class="has-link-black-ter is-size-6">查找算法</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -1339,16 +1320,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/02/24/Essay/14/" class="media-left">
+            <a href="/2020/02/27/Essay/25/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="BF 和 KMP 算法">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/25.jpg" alt="关键路径">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-23T16:00:00.000Z">2020-02-24</time></div>
-                    <a href="/2020/02/24/Essay/14/" class="has-link-black-ter is-size-6">BF 和 KMP 算法</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-26T16:00:00.000Z">2020-02-27</time></div>
+                    <a href="/2020/02/27/Essay/25/" class="has-link-black-ter is-size-6">关键路径</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -1358,16 +1339,35 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/02/22/Essay/13/" class="media-left">
+            <a href="/2020/02/26/Essay/24/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg" alt="递归">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/24.jpg" alt="最短路径">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-21T16:00:00.000Z">2020-02-22</time></div>
-                    <a href="/2020/02/22/Essay/13/" class="has-link-black-ter is-size-6">递归</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-25T16:00:00.000Z">2020-02-26</time></div>
+                    <a href="/2020/02/26/Essay/24/" class="has-link-black-ter is-size-6">最短路径</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/02/25/Essay/23/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/23.jpg" alt="普里姆算法和克鲁斯卡尔算法">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-24T16:00:00.000Z">2020-02-25</time></div>
+                    <a href="/2020/02/25/Essay/23/" class="has-link-black-ter is-size-6">普里姆算法和克鲁斯卡尔算法</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -1393,7 +1393,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">三月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1404,7 +1404,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">二月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">19</span>
                 </span>
             </a>
         </li>
@@ -1415,7 +1415,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1879,7 +1879,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">17</span>
+                        <span class="tag is-grey">27</span>
                     </a>
                 </div>
                 
