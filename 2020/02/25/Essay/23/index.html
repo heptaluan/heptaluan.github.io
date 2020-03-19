@@ -16,7 +16,7 @@
 <meta property="og:description" content="本章我们主要来看两个最小生成树的算法，即 普里姆算法 和 克鲁斯卡尔算法，它们的目的都是生成 最小生成树 因为它们两者的实现原理是比较相似的，只不过一个通过边，而另一个主要是通过顶点来实现的 下面我们就一个一个来进行了解">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/23.jpg">
-<meta property="og:updated_time" content="2020-03-17T12:04:53.081Z">
+<meta property="og:updated_time" content="2020-03-19T14:04:15.721Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="普里姆算法和克鲁斯卡尔算法">
 <meta name="twitter:description" content="本章我们主要来看两个最小生成树的算法，即 普里姆算法 和 克鲁斯卡尔算法，它们的目的都是生成 最小生成树 因为它们两者的实现原理是比较相似的，只不过一个通过边，而另一个主要是通过顶点来实现的 下面我们就一个一个来进行了解">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    16 分钟 读完 (大约 2472 个字)
+                    16 分钟 读完 (大约 2474 个字)
                 </span>
                 
                 
@@ -241,7 +241,7 @@ var _hmt = _hmt || [];
 </ul>
 <p>在此之前，我们可以将上面的图片当中的数据转化为图片的格式，如下</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/23-16.png" alt></p>
-<p>下面来看如何用代码实现，关于 <a href="http://localhost:4000/2020/02/22/Essay/21/#%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5%E7%9A%84%E5%AE%9E%E7%8E%B0" target="_blank" rel="noopener">图的生成</a> 可以见之前的章节，依然使用的是之前的代码，这里我们主要来看算法的实现</p>
+<p>下面来看如何用代码实现，关于 <a href="https://heptaluan.github.io/2020/02/22/Essay/21/#%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5%E7%9A%84%E5%AE%9E%E7%8E%B0" target="_blank" rel="noopener">图的生成</a> 可以见之前的章节，依然使用的是之前的代码，这里我们主要来看算法的实现</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">MiniSpanTree_Prim</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> min, i, j, k </span><br><span class="line">  <span class="hljs-keyword">let</span> adjvex = []             <span class="hljs-comment">// 保存相关顶点下标</span></span><br><span class="line">  <span class="hljs-keyword">let</span> lowcost = []            <span class="hljs-comment">// 保存相关顶点间的权值</span></span><br><span class="line">  <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; G.numVertexes; i++) &#123;</span><br><span class="line">    lowcost[i] = G.arc[<span class="hljs-number">0</span>][i]  <span class="hljs-comment">// 将 v0 顶点与之有边的权的权值存入数组</span></span><br><span class="line">    adjvex[i] = <span class="hljs-number">0</span>             <span class="hljs-comment">// 初始化都为 v0 的下标</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">for</span> (i = <span class="hljs-number">1</span>; i &lt; G.numVertexes; i++) &#123;</span><br><span class="line">    min = <span class="hljs-number">65535</span></span><br><span class="line">    j = <span class="hljs-number">0</span></span><br><span class="line">    k = <span class="hljs-number">0</span></span><br><span class="line">    <span class="hljs-keyword">while</span> (j &lt; G.numVertexes) &#123;</span><br><span class="line">      <span class="hljs-comment">// 如果权值不为 0 且小于 min</span></span><br><span class="line">      <span class="hljs-keyword">if</span> (lowcost[j] != <span class="hljs-number">0</span> &amp;&amp; lowcost[j] &lt; min) &#123; </span><br><span class="line">        min = lowcost[j]</span><br><span class="line">        k = j</span><br><span class="line">      &#125;</span><br><span class="line">      j++</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 将当前顶点的权值设置为 0，表示此顶点已完成任务</span></span><br><span class="line">    lowcost[k] = <span class="hljs-number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="hljs-comment">// 打印当前顶点边中权值最小边，和权值</span></span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'(%s, %s, %d)'</span>, G.vexs[adjvex[k]], G.vexs[k], min)</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 循环所有顶点</span></span><br><span class="line">    <span class="hljs-keyword">for</span> (j = <span class="hljs-number">0</span>; j &lt; G.numVertexes; j++) &#123;</span><br><span class="line">      <span class="hljs-comment">// 若下标为 k 顶点各边权值小于此前这些顶点未被加入生成树权值</span></span><br><span class="line">      <span class="hljs-keyword">if</span> (lowcost[j] != <span class="hljs-number">0</span> &amp;&amp; G.arc[k][j] &lt; lowcost[j]) &#123;</span><br><span class="line">        <span class="hljs-comment">// 将较小权值存入 lowcost</span></span><br><span class="line">        lowcost[j] = G.arc[k][j]</span><br><span class="line">        adjvex[j] = k</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 图的生成可以见之前的章节</span></span><br><span class="line">createMGraph()</span><br><span class="line">MiniSpanTree_Prim()</span><br></pre></td></tr></table></figure>
 
 <h2 id="克鲁斯卡尔算法"><a href="#克鲁斯卡尔算法" class="headerlink" title="克鲁斯卡尔算法"></a>克鲁斯卡尔算法</h2><p>无论是普里姆算法（<code>Prim</code>）还是克鲁斯卡尔算法（<code>Kruskal</code>），他们考虑问题的出发点都是为使生成树上边的权值之和达到最小，则应使生成树中每一条边的权值尽可能的小。</p>
@@ -374,7 +374,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        150
+                        152
                     </p>
                 </div>
             </div>
@@ -467,7 +467,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">27</span>
+                <span class="level-item tag">29</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Http/">
@@ -554,6 +554,44 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/03/04/Essay/29/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/29.jpg" alt="散列表查找">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-03T16:00:00.000Z">2020-03-04</time></div>
+                    <a href="/2020/03/04/Essay/29/" class="has-link-black-ter is-size-6">散列表查找</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/03/03/Essay/28/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/28.jpg" alt="平衡二叉排序树">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-02T16:00:00.000Z">2020-03-03</time></div>
+                    <a href="/2020/03/03/Essay/28/" class="has-link-black-ter is-size-6">平衡二叉排序树</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/03/02/Essay/27/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/27.jpg" alt="二叉排序树">
@@ -609,44 +647,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/02/26/Essay/24/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/24.jpg" alt="最短路径">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-25T16:00:00.000Z">2020-02-26</time></div>
-                    <a href="/2020/02/26/Essay/24/" class="has-link-black-ter is-size-6">最短路径</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/02/25/Essay/23/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/23.jpg" alt="普里姆算法和克鲁斯卡尔算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-24T16:00:00.000Z">2020-02-25</time></div>
-                    <a href="/2020/02/25/Essay/23/" class="has-link-black-ter is-size-6">普里姆算法和克鲁斯卡尔算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -665,7 +665,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">三月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1151,7 +1151,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">27</span>
+                        <span class="tag is-grey">29</span>
                     </a>
                 </div>
                 

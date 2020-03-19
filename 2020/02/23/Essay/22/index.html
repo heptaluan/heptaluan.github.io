@@ -16,7 +16,7 @@
 <meta property="og:description" content="之前我们介绍了 图的存储结构，主要有五种方式，有两种使用较多的 邻接矩阵 和 邻接表，另外还有三种使用较少的，它们是 十字链表，邻接多重表 和 边集数组 本章我们主要来看一下图的遍历">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/22.jpg">
-<meta property="og:updated_time" content="2020-03-17T11:30:04.619Z">
+<meta property="og:updated_time" content="2020-03-19T14:04:15.721Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="图的遍历">
 <meta name="twitter:description" content="之前我们介绍了 图的存储结构，主要有五种方式，有两种使用较多的 邻接矩阵 和 邻接表，另外还有三种使用较少的，它们是 十字链表，邻接多重表 和 边集数组 本章我们主要来看一下图的遍历">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    23 分钟 读完 (大约 3456 个字)
+                    23 分钟 读完 (大约 3460 个字)
                 </span>
                 
                 
@@ -186,7 +186,7 @@ var _hmt = _hmt || [];
             
         </h1>
         <div class="content">
-            <p>之前我们介绍了 <a href="http://localhost:4000/2020/02/22/Essay/21/" target="_blank" rel="noopener">图的存储结构</a>，主要有五种方式，有两种使用较多的 <strong>邻接矩阵</strong> 和 <strong>邻接表</strong>，另外还有三种使用较少的，它们是 <strong>十字链表</strong>，<strong>邻接多重表</strong> 和 <strong>边集数组</strong></p>
+            <p>之前我们介绍了 <a href="https://heptaluan.github.io/2020/02/22/Essay/21/" target="_blank" rel="noopener">图的存储结构</a>，主要有五种方式，有两种使用较多的 <strong>邻接矩阵</strong> 和 <strong>邻接表</strong>，另外还有三种使用较少的，它们是 <strong>十字链表</strong>，<strong>邻接多重表</strong> 和 <strong>边集数组</strong></p>
 <p>本章我们主要来看一下图的遍历</p>
 <a id="more"></a>
 
@@ -211,7 +211,7 @@ var _hmt = _hmt || [];
 <p>简单总结一下可以发现，<strong>深度优先遍历</strong> 其实就是一个 <strong>递归</strong> 的过程，如果再细心观察，可以发现，其实整个遍历过程就 <strong>像是一棵树的前序遍历</strong></p>
 <p>我们将上面到流程简单总结一下其实就是下图这样到流程</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/22-02.png" alt></p>
-<h2 id="深度优先遍历的代码实现"><a href="#深度优先遍历的代码实现" class="headerlink" title="深度优先遍历的代码实现"></a>深度优先遍历的代码实现</h2><p>下面我们来看看如何进行实现，图结构的生成可以参考我们在图的存储结构当中介绍过的 <a href="http://localhost:4000/2020/02/22/Essay/21/#%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5%E7%9A%84%E5%AE%9E%E7%8E%B0" target="_blank" rel="noopener">图的存储结构的实现</a>，所以在这里我们只介绍遍历方法</p>
+<h2 id="深度优先遍历的代码实现"><a href="#深度优先遍历的代码实现" class="headerlink" title="深度优先遍历的代码实现"></a>深度优先遍历的代码实现</h2><p>下面我们来看看如何进行实现，图结构的生成可以参考我们在图的存储结构当中介绍过的 <a href="https://heptaluan.github.io/2020/02/22/Essay/21/#%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5%E7%9A%84%E5%AE%9E%E7%8E%B0" target="_blank" rel="noopener">图的存储结构的实现</a>，所以在这里我们只介绍遍历方法</p>
 <p>这里以邻接矩阵为例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 访问标志数组，遍历时使用</span></span><br><span class="line"><span class="hljs-keyword">let</span> visited = []</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 邻接矩阵的深度优先递归算法</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">DFS</span>(<span class="hljs-params">i</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 访问过的顶点设置为 TRUE</span></span><br><span class="line">  visited[i] = <span class="hljs-literal">true</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'打印顶点:'</span>, G.vexs[i])</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>; j &lt; G.numVertexes; j++) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (G.arc[i][j] == <span class="hljs-number">1</span> &amp;&amp; !visited[j]) &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(G.vexs[i], <span class="hljs-string">'-&gt;'</span>, G.vexs[j])</span><br><span class="line">      <span class="hljs-comment">// 对未访问的顶点进行递归</span></span><br><span class="line">      DFS(j)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 邻接矩阵的深度遍历操作</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">DFSTraverse</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; G.numVertexes; i++) &#123;</span><br><span class="line">    <span class="hljs-comment">// 初始化所有顶点状态都是未访问过状态</span></span><br><span class="line">    visited[i] = <span class="hljs-literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; G.numVertexes; i++) &#123;</span><br><span class="line">    <span class="hljs-comment">// 若是连通图，只会执行一次</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (!visited[i])</span><br><span class="line">      DFS(i)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -412,7 +412,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        150
+                        152
                     </p>
                 </div>
             </div>
@@ -517,7 +517,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">27</span>
+                <span class="level-item tag">29</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Http/">
@@ -604,6 +604,44 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/03/04/Essay/29/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/29.jpg" alt="散列表查找">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-03T16:00:00.000Z">2020-03-04</time></div>
+                    <a href="/2020/03/04/Essay/29/" class="has-link-black-ter is-size-6">散列表查找</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/03/03/Essay/28/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/28.jpg" alt="平衡二叉排序树">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-02T16:00:00.000Z">2020-03-03</time></div>
+                    <a href="/2020/03/03/Essay/28/" class="has-link-black-ter is-size-6">平衡二叉排序树</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/03/02/Essay/27/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/27.jpg" alt="二叉排序树">
@@ -659,44 +697,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/02/26/Essay/24/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/24.jpg" alt="最短路径">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-25T16:00:00.000Z">2020-02-26</time></div>
-                    <a href="/2020/02/26/Essay/24/" class="has-link-black-ter is-size-6">最短路径</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/02/25/Essay/23/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/23.jpg" alt="普里姆算法和克鲁斯卡尔算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-24T16:00:00.000Z">2020-02-25</time></div>
-                    <a href="/2020/02/25/Essay/23/" class="has-link-black-ter is-size-6">普里姆算法和克鲁斯卡尔算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -715,7 +715,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">三月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1201,7 +1201,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">27</span>
+                        <span class="tag is-grey">29</span>
                     </a>
                 </div>
                 
