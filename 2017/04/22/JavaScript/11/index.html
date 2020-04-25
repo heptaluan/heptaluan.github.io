@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="先来看下面这个实例 123456var myObject = &amp;#123;  a: undefined&amp;#125;myObject.a // undefined  myObject.b // undefined">
+    <meta name="description" content="在展开之前，我们先来看看下面这个实例 123456var myObject = &amp;#123;  a: undefined&amp;#125;myObject.a // undefined  myObject.b // undefined">
 <meta name="keywords" content="JavaScript">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JavaScript 中的遍历和枚举">
 <meta property="og:url" content="http://yoursite.com/2017/04/22/JavaScript/11/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="先来看下面这个实例 123456var myObject = &amp;#123;  a: undefined&amp;#125;myObject.a // undefined  myObject.b // undefined">
+<meta property="og:description" content="在展开之前，我们先来看看下面这个实例 123456var myObject = &amp;#123;  a: undefined&amp;#125;myObject.a // undefined  myObject.b // undefined">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/11.jpg">
-<meta property="og:updated_time" content="2020-02-23T09:29:21.713Z">
+<meta property="og:updated_time" content="2020-04-23T13:52:15.761Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的遍历和枚举">
-<meta name="twitter:description" content="先来看下面这个实例 123456var myObject = &amp;#123;  a: undefined&amp;#125;myObject.a // undefined  myObject.b // undefined">
+<meta name="twitter:description" content="在展开之前，我们先来看看下面这个实例 123456var myObject = &amp;#123;  a: undefined&amp;#125;myObject.a // undefined  myObject.b // undefined">
 <meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/11.jpg">
 
 
@@ -124,8 +124,6 @@ var _hmt = _hmt || [];
                 
                 <a class="navbar-item" href="/categories">Categories</a>
                 
-                <a class="navbar-item" href="/target">Target</a>
-                
                 <a class="navbar-item" href="https://heptaluan.github.io/demos/">Demos</a>
                 
             </div>
@@ -173,7 +171,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    10 分钟 读完 (大约 1458 个字)
+                    10 分钟 读完 (大约 1478 个字)
                 </span>
                 
                 
@@ -186,18 +184,18 @@ var _hmt = _hmt || [];
             
         </h1>
         <div class="content">
-            <p>先来看下面这个实例</p>
+            <p>在展开之前，我们先来看看下面这个实例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> myObject = &#123;</span><br><span class="line">  a: <span class="hljs-literal">undefined</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">myObject.a <span class="hljs-comment">// undefined  </span></span><br><span class="line">myObject.b <span class="hljs-comment">// undefined</span></span><br></pre></td></tr></table></figure>
 
 <a id="more"></a>
 
 <p>两个返回值均返回 <code>undefined</code>，但是这个值有可能是属性中存储的 <code>undefined</code>，也可能是因为属性不存在所以返回 <code>undefined</code>，那么如何区分这两种情况呢？</p>
-<p>我们可以在<strong>不访问属性值的情况下判断对象中是否存在这个属性</strong></p>
+<p>针对于以上这样的情况，我们可以在 <strong>不访问属性值的情况下判断对象中是否存在这个属性</strong></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> myObject = &#123;</span><br><span class="line">  a: <span class="hljs-number">2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">(<span class="hljs-string">'a'</span> <span class="hljs-keyword">in</span> myObject)  <span class="hljs-comment">// true </span></span><br><span class="line">(<span class="hljs-string">'b'</span> <span class="hljs-keyword">in</span> myObject)  <span class="hljs-comment">// false  </span></span><br><span class="line"></span><br><span class="line">myObject.hasOwnProperty(<span class="hljs-string">'a'</span>) <span class="hljs-comment">// true </span></span><br><span class="line">myObject.hasOwnProperty(<span class="hljs-string">'b'</span>) <span class="hljs-comment">// false</span></span><br></pre></td></tr></table></figure>
 
 <p><code>in</code> 操作符会检查属性是否在对象及其 <code>[[Prototype]]</code> 原型链中，相比之下，<code>hasOwnProperty()</code> 只会检查属性是否在 <code>myObject</code> 对象中，不会检查 <code>[[Prototype]]</code> 链</p>
 <p>所有的普通对象都可以通过对于 <code>Object.prototype</code> 的委托来访问 <code>hasOwnProperty()</code></p>
-<p>但是有的对象可能没有连接到 <code>Object.prototype</code>（比如通过<code>Object.create(null)</code> 来创建），在这种情况下，形如 <code>myObejct.hasOwnProperty()</code> 就会失败</p>
+<p>但是有的对象可能没有连接到 <code>Object.prototype</code>（比如通过 <code>Object.create(null)</code> 来创建），在这种情况下，形如 <code>myObejct.hasOwnProperty()</code> 就会失败</p>
 <p>这时可以使用一种更加强硬的方法来进行判断，<code>Object.prototype.hasOwnProperty.call(myObject, &#39;a&#39;)</code>，它借用基础的 <code>hasOwnProperty()</code> 方法并把它显式绑定到 <code>myObject</code> 上</p>
 <blockquote>
 <p>不过需要注意，看起来 <code>in</code> 操作符可以检查容器内是否有某个值，但是它实际上检查的是某个属性名是否存在，对于数组来说这个区别非常重要，<code>4 in [2, 4, 6]</code> 的结果并不是你期待的 <code>True</code>，因为 <code>[2, 4, 6]</code> 这个数组中包含的属性名是 <code>0、1、2</code>，没有 <code>4</code></p>
@@ -205,7 +203,7 @@ var _hmt = _hmt || [];
 <h2 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h2><p>先来看一个实例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> myObject = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.defineProperty(</span><br><span class="line">  myObject,</span><br><span class="line">  <span class="hljs-string">'a'</span>,</span><br><span class="line">  &#123; <span class="hljs-attr">enumerable</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">value</span>: <span class="hljs-number">2</span> &#125;  <span class="hljs-comment">// 让 a 像普通属性一样可以枚举 </span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.defineProperty(</span><br><span class="line">  myObject,</span><br><span class="line">  <span class="hljs-string">'b'</span>,</span><br><span class="line">  &#123; <span class="hljs-attr">enumerable</span>: <span class="hljs-literal">false</span>, <span class="hljs-attr">value</span>: <span class="hljs-number">3</span> &#125; <span class="hljs-comment">// 让 b 不可枚举 </span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">myObject.b                       <span class="hljs-comment">// 3 </span></span><br><span class="line">(<span class="hljs-string">'b'</span> <span class="hljs-keyword">in</span> myObject)                <span class="hljs-comment">// true  </span></span><br><span class="line">myObject.hasOwnProperty(<span class="hljs-string">'b'</span>)     <span class="hljs-comment">// true </span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// myObject 中仅能枚举出 a</span></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> k <span class="hljs-keyword">in</span> myObject) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(k, myObject[k])    <span class="hljs-comment">// 'a' 2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>可以看到，<code>myObject.b</code> 确实存在并且有访问值，但是却<strong>不会出现</strong>在 <code>for-in</code> 循环中（尽管可以通过 <code>in</code> 操作符来判断是否存在），<strong>原因是可枚举就相当于可以出现在对象属性的遍历中</strong> </p>
+<p>可以看到，<code>myObject.b</code> 确实存在并且有访问值，但是却 <strong>不会出现</strong> 在 <code>for-in</code> 循环中（尽管可以通过 <code>in</code> 操作符来判断是否存在），<strong>原因是可枚举就相当于可以出现在对象属性的遍历中</strong> </p>
 <ul>
 <li><p>注意，在数组上应用 <code>for-in</code> 循环有时会产生出人意料的结果，因为这种枚举不仅会包含所有数值索引，还会包含所有可枚举属性</p>
 </li>
@@ -216,7 +214,7 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> myObject = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.defineProperty(</span><br><span class="line">  myObject,</span><br><span class="line">  <span class="hljs-string">'a'</span>,</span><br><span class="line">  &#123; <span class="hljs-attr">enumerable</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">value</span>: <span class="hljs-number">2</span> &#125;      <span class="hljs-comment">// 让 a 像普通属性一样可以枚举 </span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.defineProperty(</span><br><span class="line">  myObject,</span><br><span class="line">  <span class="hljs-string">'b'</span>,</span><br><span class="line">  &#123; <span class="hljs-attr">enumerable</span>: <span class="hljs-literal">false</span>, <span class="hljs-attr">value</span>: <span class="hljs-number">3</span> &#125;     <span class="hljs-comment">// 让 b 不可枚举 </span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">myObject.propertyIsEnumerable(<span class="hljs-string">'a'</span>)   <span class="hljs-comment">// true </span></span><br><span class="line">myObject.propertyIsEnumerable(<span class="hljs-string">'b'</span>)   <span class="hljs-comment">// false  </span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.keys(myObject)                <span class="hljs-comment">// ['a'] </span></span><br><span class="line"><span class="hljs-built_in">Object</span>.getOwnPropertyNames(myObject) <span class="hljs-comment">// ['a', 'b']</span></span><br></pre></td></tr></table></figure>
 
 <p><code>propertyIsEnumerable()</code> 会检查给定的属性名是否直接存在于对象中（而不是在原型链上）并且满足 <code>enumerable: true</code></p>
-<p><code>Object.keys()</code> 会返回一个数组，包含<strong>所有可枚举</strong>属性，而 <code>Object.getOwnPropertyNames()</code> 会返回一个数组，包含<strong>所有属性，无论它们是否可枚举</strong></p>
+<p><code>Object.keys()</code> 会返回一个数组，包含 <strong>所有可枚举</strong> 属性，而 <code>Object.getOwnPropertyNames()</code> 会返回一个数组，包含 <strong>所有属性</strong>，无论它们是否可枚举</p>
 <blockquote>
 <p><code>in</code> 和 <code>hasOwnProperty()</code> 的区别在于是否查找 <code>[[Prototype]]</code> 链，然而，<code>Object.keys()</code> 和 <code>Object.getOwnPropertyNames()</code> 都只会查找对象直接包含的属性</p>
 </blockquote>
@@ -224,8 +222,8 @@ var _hmt = _hmt || [];
 <p>对于数值索引的数组来说，可以使用标准的 <code>for</code> 循环来遍历值</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> myArray = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; myArray.length; i++) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(myArray[i])</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-comment">// 1 2 3</span></span><br></pre></td></tr></table></figure>
 
-<p>这实际上并不是在遍历值，而是<strong>遍历下标来指向值</strong>，如 <code>myArray[i]</code></p>
-<p>使用 <code>for-in</code> 遍历对象是无法直接获取属性值的，因为它<strong>实际上遍历的是对象中的所有可枚举属性</strong>，你需要手动获取属性值</p>
+<p>这实际上并不是在遍历值，而是 <strong>遍历下标来指向值</strong>，如 <code>myArray[i]</code></p>
+<p>使用 <code>for-in</code> 遍历对象是无法直接获取属性值的，因为它 <strong>实际上遍历的是对象中的所有可枚举属性</strong>，你需要手动获取属性值</p>
 <p>在 <code>ES6</code> 中增加了一种用来遍历数组的 <code>for-of</code> 循环语法（如果对象本身定义了迭代器的话也可以遍历对象），利用它便可以直接遍历值而不是数组下标（或者对象属性）</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> myArray = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> v <span class="hljs-keyword">of</span> myArray) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(v)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 1  </span></span><br><span class="line"><span class="hljs-comment">// 2  </span></span><br><span class="line"><span class="hljs-comment">// 3</span></span><br></pre></td></tr></table></figure>
 
@@ -350,7 +348,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        153
+                        147
                     </p>
                 </div>
             </div>
@@ -431,7 +429,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">12</span>
+                <span class="level-item tag">11</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -455,7 +453,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">51</span>
+                <span class="level-item tag">47</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -495,7 +493,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">jQuery</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">5</span>
+                <span class="level-item tag">4</span>
             </span>
         </a></li>
             </ul>
@@ -509,7 +507,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 17.14px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.57px;">Essay</a> <a href="/tags/Http/" style="font-size: 12.86px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.14px;">Node.js</a> <a href="/tags/React/" style="font-size: 14.29px;">React</a> <a href="/tags/Vue/" style="font-size: 11.43px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.43px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 17.5px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16.25px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.75px;">Essay</a> <a href="/tags/Http/" style="font-size: 13.75px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.5px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 12.5px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.25px;">jQuery</a>
     </div>
 </div>
 
@@ -526,7 +524,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/03/10/Essay/30/" class="media-left">
+            <a href="/2020/04/16/Essay/30/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/30.jpg" alt="排序算法">
                 </p>
@@ -534,8 +532,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-09T16:00:00.000Z">2020-03-10</time></div>
-                    <a href="/2020/03/10/Essay/30/" class="has-link-black-ter is-size-6">排序算法</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-15T16:00:00.000Z">2020-04-16</time></div>
+                    <a href="/2020/04/16/Essay/30/" class="has-link-black-ter is-size-6">排序算法</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -545,7 +543,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/03/04/Essay/29/" class="media-left">
+            <a href="/2020/04/15/Essay/29/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/29.jpg" alt="散列表查找">
                 </p>
@@ -553,8 +551,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-03T16:00:00.000Z">2020-03-04</time></div>
-                    <a href="/2020/03/04/Essay/29/" class="has-link-black-ter is-size-6">散列表查找</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-14T16:00:00.000Z">2020-04-15</time></div>
+                    <a href="/2020/04/15/Essay/29/" class="has-link-black-ter is-size-6">散列表查找</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -564,7 +562,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/03/03/Essay/28/" class="media-left">
+            <a href="/2020/04/14/Essay/28/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/28.jpg" alt="平衡二叉排序树">
                 </p>
@@ -572,8 +570,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-02T16:00:00.000Z">2020-03-03</time></div>
-                    <a href="/2020/03/03/Essay/28/" class="has-link-black-ter is-size-6">平衡二叉排序树</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-13T16:00:00.000Z">2020-04-14</time></div>
+                    <a href="/2020/04/14/Essay/28/" class="has-link-black-ter is-size-6">平衡二叉排序树</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -583,7 +581,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/03/02/Essay/27/" class="media-left">
+            <a href="/2020/04/12/Essay/27/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/27.jpg" alt="二叉排序树">
                 </p>
@@ -591,8 +589,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-03-01T16:00:00.000Z">2020-03-02</time></div>
-                    <a href="/2020/03/02/Essay/27/" class="has-link-black-ter is-size-6">二叉排序树</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-11T16:00:00.000Z">2020-04-12</time></div>
+                    <a href="/2020/04/12/Essay/27/" class="has-link-black-ter is-size-6">二叉排序树</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -602,7 +600,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/03/01/Essay/26/" class="media-left">
+            <a href="/2020/04/07/Essay/26/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/26.jpg" alt="查找算法">
                 </p>
@@ -610,8 +608,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-02-29T16:00:00.000Z">2020-03-01</time></div>
-                    <a href="/2020/03/01/Essay/26/" class="has-link-black-ter is-size-6">查找算法</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-06T16:00:00.000Z">2020-04-07</time></div>
+                    <a href="/2020/04/07/Essay/26/" class="has-link-black-ter is-size-6">查找算法</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -632,12 +630,23 @@ var _hmt = _hmt || [];
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2020/03/">
                 <span class="level-start">
                     <span class="level-item">三月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">9</span>
                 </span>
             </a>
         </li>
@@ -648,7 +657,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">二月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">19</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -659,7 +668,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -907,12 +916,23 @@ var _hmt = _hmt || [];
         </li>
         
         <li>
+            <a class="level is-marginless" href="/archives/2018/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2018/01/">
                 <span class="level-start">
                     <span class="level-item">一月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -956,7 +976,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">九月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -989,7 +1009,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">六月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1044,7 +1064,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1066,7 +1086,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2016</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1075,17 +1095,6 @@ var _hmt = _hmt || [];
             <a class="level is-marginless" href="/archives/2016/10/">
                 <span class="level-start">
                     <span class="level-item">十月 2016</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2016/09/">
-                <span class="level-start">
-                    <span class="level-item">九月 2016</span>
                 </span>
                 <span class="level-end">
                     <span class="level-item tag">1</span>
@@ -1116,7 +1125,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">12</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
@@ -1137,7 +1146,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">51</span>
+                        <span class="tag is-grey">47</span>
                     </a>
                 </div>
                 
@@ -1172,7 +1181,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/jQuery/">
                         <span class="tag">jQuery</span>
-                        <span class="tag is-grey">5</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 
