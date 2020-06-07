@@ -16,7 +16,7 @@
 <meta property="og:description" content="在深入了解作用域之前，我们先来看看什么是变量提升">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/03.jpg">
-<meta property="og:updated_time" content="2020-04-23T13:52:15.757Z">
+<meta property="og:updated_time" content="2020-06-05T09:31:37.810Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的作用域">
 <meta name="twitter:description" content="在深入了解作用域之前，我们先来看看什么是变量提升">
@@ -124,6 +124,8 @@ var _hmt = _hmt || [];
                 
                 <a class="navbar-item" href="/categories">Categories</a>
                 
+                <a class="navbar-item" href="/target">Target</a>
+                
                 <a class="navbar-item" href="https://heptaluan.github.io/demos/">Demos</a>
                 
             </div>
@@ -171,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    31 分钟 读完 (大约 4625 个字)
+                    31 分钟 读完 (大约 4628 个字)
                 </span>
                 
                 
@@ -198,20 +200,17 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-number">1</span></span><br></pre></td></tr></table></figure>
 
 <ul>
-<li><p>声明：是指你声称某样东西的存在，比如一个变量或一个函数，但你没有说明这样东西到底是什么，仅仅是告诉解释器这样东西存在而已</p>
-</li>
-<li><p>定义：是指你指明了某样东西的具体实现，比如一个变量的值是多少，一个函数的函数体是什么，确切的表达了这样东西的意义</p>
-</li>
+<li>声明：是指你声称某样东西的存在，比如一个变量或一个函数，但你没有说明这样东西到底是什么，仅仅是告诉解释器这样东西存在而已</li>
+<li>定义：是指你指明了某样东西的具体实现，比如一个变量的值是多少，一个函数的函数体是什么，确切的表达了这样东西的意义</li>
 </ul>
 <p>总结下来就是：</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a      <span class="hljs-comment">// 这是声明</span></span><br><span class="line">a = <span class="hljs-number">1</span>      <span class="hljs-comment">// 这是定义（赋值）</span></span><br><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-number">1</span>  <span class="hljs-comment">// 合二为一，声明变量的存在并赋值给它</span></span><br></pre></td></tr></table></figure>
 
-<p>当你以为你只做了一件事情的时候（<code>var a = 1</code>），实际上解释器把这件事情分解成了两个步骤</p>
-<p>一个是声明（<code>var a</code>），另一个是定义（<code>a = 1</code>）</p>
+<p>当你以为你只做了一件事情的时候（<code>var a = 1</code>），实际上解释器把这件事情分解成了两个步骤，一个是声明（<code>var a</code>），另一个是定义（<code>a = 1</code>）</p>
 <p>可以把之前的例子稍微转换一下，就成了如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a</span><br><span class="line">a = <span class="hljs-number">1</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> a    <span class="hljs-comment">// 关键在这里</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (!a) &#123;</span><br><span class="line">    a = <span class="hljs-number">2</span></span><br><span class="line">  &#125;</span><br><span class="line">  alert(a) <span class="hljs-comment">// 此时的 a 并非函数体外的那个全局变量</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo()</span><br></pre></td></tr></table></figure>
 
-<p>如代码所示，在进入函数体后解释器声明了新的变量 <code>a</code>，而无论 <code>if</code> 语句的条件如何，都将为新的变量 <code>a</code> 赋值为 <code>2</code></p>
+<p>如代码所示，在进入函数体后解释器声明了新的变量 <code>a</code>，所以当 <code>!a</code> 的时候，将为新的变量 <code>a</code> 赋值为 <code>2</code></p>
 <p>我们再来看一下函数当中的提升，同样我们也是通过一个例子来理解</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// test1</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">test</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  foo()</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    alert(<span class="hljs-string">'出现'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">test()</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// test2</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">test</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  foo()</span><br><span class="line">  <span class="hljs-keyword">var</span> foo = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    alert(<span class="hljs-string">'不会出现'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">test()</span><br></pre></td></tr></table></figure>
 
@@ -222,7 +221,7 @@ var _hmt = _hmt || [];
 <h2 id="作用域（Scoping）"><a href="#作用域（Scoping）" class="headerlink" title="作用域（Scoping）"></a>作用域（Scoping）</h2><p><code>JavaScript</code> 在 <code>ES6</code> 之前是没有块级作用域的（<code>Block Scoping</code>），只有函数作用域（<code>Function Scoping</code>），并且函数的作用域在函数定义的时候就决定了</p>
 <p>当解析器读到一个变量声明和赋值的时候，解析器会将其声明提升至当前作用域的顶部（这是默认行为，并且无法更改），这个行为就叫做 <code>Hoisting</code></p>
 <blockquote>
-<p><strong>JavaScript 只有函数作用域！</strong></p>
+<p><strong>在 ES6 之前，JavaScript 只有函数作用域！</strong></p>
 </blockquote>
 <p>比如下面这个例子，若是想要 <code>alert(a)</code> 弹出那个 <code>1</code>，也可以创建一个新的作用域，就是利用 <code>IIFE</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-number">1</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 这个就是 IIFE，它会创建一个新的函数作用域</span></span><br><span class="line">  <span class="hljs-comment">// 并且该作用域在 foo() 的内部，所以 alert 访问不到</span></span><br><span class="line">  <span class="hljs-comment">// 不过这个作用域可以访问上层作用域，这就叫 闭包</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (!a) &#123;</span><br><span class="line">    (<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;   </span><br><span class="line">      <span class="hljs-keyword">var</span> a = <span class="hljs-number">2</span>  </span><br><span class="line">    &#125;())                </span><br><span class="line">  &#125;</span><br><span class="line">  alert(a)  <span class="hljs-comment">// 1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo()</span><br></pre></td></tr></table></figure>
@@ -231,27 +230,20 @@ var _hmt = _hmt || [];
 <p>请始终保持作用域内所有变量的声明放置在作用域的顶部</p>
 </blockquote>
 <p>因为这样可以避免 <code>Hoisting</code> 特性给你带来的困扰，也可以很明确的告诉所有阅读代码的人（包括你自己）在当前作用域内有哪些变量可以访问</p>
-<p>但是，变量声明的提升并非 <code>Hoisting</code> 的全部</p>
-<p>在 <code>JavaScript</code> 中，有四种方式可以让命名进入到作用域中（按优先级）</p>
+<p>但是，变量声明的提升并非 <code>Hoisting</code> 的全部，在 <code>JavaScript</code> 中，有四种方式可以让命名进入到作用域中（按优先级）</p>
 <ol>
-<li><p>语言定义的命名：比如 <code>this</code> 或者 <code>arguments</code>，它们在所有作用域内都有效且优先级最高，所以在任何地方你都不能把变量命名为 <code>this</code> 之类的，这样是没有意义的</p>
-</li>
-<li><p>形式参数：函数定义时声明的形式参数会作为变量被 <code>hoisting</code> 至该函数的作用域内，所以形式参数是本地的，不是外部的或者全局的，当然你可以在执行函数的时候把外部变量传进来，但是传进来之后就是本地的了</p>
-</li>
-<li><p>函数声明：函数体内部还可以声明函数，不过它们也都是本地的了</p>
-</li>
-<li><p>变量声明：这个优先级其实还是最低的，不过它们也都是最常用的</p>
-</li>
+<li>语言定义的命名：比如 <code>this</code> 或者 <code>arguments</code>，它们在所有作用域内都有效且优先级最高，所以在任何地方你都不能把变量命名为 <code>this</code> 之类的，这样是没有意义的</li>
+<li>形式参数：函数定义时声明的形式参数会作为变量被 <code>hoisting</code> 至该函数的作用域内，所以形式参数是本地的，不是外部的或者全局的，当然你可以在执行函数的时候把外部变量传进来，但是传进来之后就是本地的了</li>
+<li>函数声明：函数体内部还可以声明函数，不过它们也都是本地的了</li>
+<li>变量声明：这个优先级其实还是最低的，不过它们也都是最常用的</li>
 </ol>
 <blockquote>
 <p><code>Hosting</code> 只提升了命名，没有提升定义</p>
 </blockquote>
 <p>这里顺便简单的提及一下什么是 <code>IIFE</code>，也就是所谓的 <strong>立即执行函数</strong>，那么为什么需要 <code>IIFE</code></p>
 <ul>
-<li><p>传统的方法啰嗦，定义和执行分开写</p>
-</li>
-<li><p>传统的方法直接污染全局命名空间（浏览器里的 <code>global</code> 对象，如 <code>window</code>）</p>
-</li>
+<li>传统的方法啰嗦，定义和执行分开写</li>
+<li>传统的方法直接污染全局命名空间（浏览器里的 <code>global</code> 对象，如 <code>window</code>）</li>
 </ul>
 <p>转变表达式的办法有很多，最常见的办法是把函数声明用一对 <code>()</code> 包裹起来，于是就变成了立即执行函数，一个简单的 <code>IIFE</code> 如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 这里是故意换行，实际上可以和下面的括号连起来</span></span><br><span class="line">(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;...&#125;)</span><br><span class="line">()</span><br></pre></td></tr></table></figure>
@@ -274,53 +266,41 @@ var _hmt = _hmt || [];
 <p><code>JavaScript</code> 在执行一个代码段之前，都会进行这些 <strong>准备工作</strong> 来生成执行上下文，其实分三种情况，全局代码，函数体 和 <code>eval</code>（不推荐使用这个，所以我们主要介绍前两种）</p>
 <h4 id="全局执行上下文环境"><a href="#全局执行上下文环境" class="headerlink" title="全局执行上下文环境"></a>全局执行上下文环境</h4><p>在产生执行全局上下文时，浏览器通常会做以下三个准备工作</p>
 <ul>
-<li><p>提取 <code>var</code> 声明的变量，并赋值（默认）为 <code>undefined</code>（变量提升）</p>
-</li>
-<li><p>提取声明式函数（<code>function foo () {..}</code>）</p>
-</li>
-<li><p>给 <code>this</code> 赋值（指向 <code>window</code> 或当前对象）</p>
-</li>
+<li>提取 <code>var</code> 声明的变量，并赋值（默认）为 <code>undefined</code>（变量提升）</li>
+<li>提取声明式函数（<code>function foo () {..}</code>）</li>
+<li>给 <code>this</code> 赋值（指向 <code>window</code> 或当前对象）</li>
 </ul>
 <h4 id="函数体上下文环境（也就是所谓的局部）"><a href="#函数体上下文环境（也就是所谓的局部）" class="headerlink" title="函数体上下文环境（也就是所谓的局部）"></a>函数体上下文环境（也就是所谓的局部）</h4><p>会在以上三个的基础上增加以下三条</p>
 <ul>
-<li><p>给函数参数赋值</p>
-</li>
-<li><p>给 <code>arguments</code> 赋值（是一个实参副本，与实参保持一致）</p>
-</li>
-<li><p>自由变量的取值作用域，查找并赋值</p>
-</li>
+<li>给函数参数赋值</li>
+<li>给 <code>arguments</code> 赋值（是一个实参副本，与实参保持一致）</li>
+<li>自由变量的取值作用域，查找并赋值</li>
 </ul>
 <p>所以总结来说就是，<strong>在执行代码之前，把将要用到的所有的变量都事先拿出来，有的直接赋值了，有的先用 undefined 占个空</strong></p>
 <p>而在执行 <code>JavaScript</code> 代码时，会有数不清的函数调用次数，自然就会产生许多个上下文环境，那么这么多的上下文环境该如何管理，以及如何销毁而释放内存呢</p>
 <p>其实这个就主要依靠我们下面将会介绍到的 <strong>执行上下文栈</strong>，不过在此之前，我们先来针对上面提到过的上下文环境在深入的了解一下</p>
 <h4 id="变量对象"><a href="#变量对象" class="headerlink" title="变量对象"></a>变量对象</h4><p>变量对象是与执行上下文相关的数据作用域，存储了在上下文中定义的变量和函数声明</p>
 <p><code>JavaScript</code> 解释器之所以可以找到我们定义的函数和变量，全部依靠的变量对象（<code>VO</code>）</p>
-<p>变量对象（<code>Variable Object</code>，缩写为 <code>VO</code>）是一个抽象概念中的对象，它用于存储执行上下文中</p>
+<p>变量对象（<code>Variable Object</code>，缩写为 <code>VO</code>）是一个抽象概念中的对象，它用于存储执行上下文中的</p>
 <ol>
-<li><p>变量</p>
-</li>
-<li><p>函数声明</p>
-</li>
-<li><p>函数参数</p>
-</li>
+<li>变量</li>
+<li>函数声明</li>
+<li>函数参数</li>
 </ol>
 <p><code>VO</code> 一般是按照如下顺序填充的</p>
 <ol>
-<li><p>函数参数（若为传入，初始化该参数值为 <code>undefined</code>）</p>
-</li>
-<li><p>函数声明（若发生命名冲突，会覆盖）</p>
-</li>
-<li><p>变量声明（初始化变量值为 <code>undefined</code>，若发生命名冲突，会忽略）</p>
-</li>
+<li>函数参数（若为传入，初始化该参数值为 <code>undefined</code>）</li>
+<li>函数声明（若发生命名冲突，会覆盖）</li>
+<li>变量声明（初始化变量值为 <code>undefined</code>，若发生命名冲突，会忽略）</li>
 </ol>
 <p>来看看以下几个实例，可以加深我们理解 <code>VO</code></p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span> (<span class="hljs-params">x, y, z</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">x</span> (<span class="hljs-params"></span>) </span>&#123;&#125;</span><br><span class="line">  alert(x)   <span class="hljs-comment">// function x () &#123;&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo(<span class="hljs-number">100</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span> (<span class="hljs-params">x, y, z</span>) </span>&#123;</span><br><span class="line">  alert(x)   <span class="hljs-comment">// function x () &#123;&#125;</span></span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">x</span> (<span class="hljs-params"></span>) </span>&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo(<span class="hljs-number">100</span>)</span><br></pre></td></tr></table></figure>
 
 <p>在初始化阶段，先初始化函数的参数，参数 <code>x</code> 即为传进来的参数，为 <code>100</code>，但是在处理函数声明的时候，发生冲突，<code>x</code> 会被覆盖，所以返回的是一个函数对象</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// var fn 的时候，发现 fn 已经在函数声明的时候定义过了，所以会忽略</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params">x, y, z</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">  <span class="hljs-keyword">var</span> fn</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(fn)    <span class="hljs-comment">// function fn () &#123;&#125;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo(<span class="hljs-number">100</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 跟上例是一样的，但是在代码执行阶段，fn 会被执行赋值操作</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params">x, y, z</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">  <span class="hljs-keyword">var</span> fn = <span class="hljs-number">1</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(fn)    <span class="hljs-comment">// 1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo(<span class="hljs-number">100</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 在看一个容易出错的，最终会输出 100 和 0</span></span><br><span class="line"><span class="hljs-keyword">var</span> num = <span class="hljs-number">0</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">a</span>(<span class="hljs-params">num</span>) </span>&#123;</span><br><span class="line">  num = <span class="hljs-number">100</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(num)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a()</span><br><span class="line"><span class="hljs-built_in">console</span>.log(num)</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>函数表达式不会影响 <code>VO</code>，比如 <code>var a = function foo(){}</code></p>
+<p>函数表达式不会影响 <code>VO</code>，比如 <code>var a = function foo() { }</code></p>
 </blockquote>
 <p>这里的 <code>foo</code> 是函数表达式的名称，这个是不会记录到 <code>VO</code> 中的，这也是为什么我们不能在外部通过 <code>foo</code> 来获取到这个函数对象</p>
 <h4 id="活动对象"><a href="#活动对象" class="headerlink" title="活动对象"></a>活动对象</h4><p>在函数上下文中，我们用活动对象（<code>activation object</code>，<code>AO</code>）来表示变量对象</p>
@@ -749,7 +729,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/04/16/Essay/30/" class="media-left">
+            <a href="/2020/05/26/Essay/30/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/30.jpg" alt="排序算法">
                 </p>
@@ -757,8 +737,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-15T16:00:00.000Z">2020-04-16</time></div>
-                    <a href="/2020/04/16/Essay/30/" class="has-link-black-ter is-size-6">排序算法</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-25T16:00:00.000Z">2020-05-26</time></div>
+                    <a href="/2020/05/26/Essay/30/" class="has-link-black-ter is-size-6">排序算法</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -768,7 +748,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/04/15/Essay/29/" class="media-left">
+            <a href="/2020/05/15/Essay/29/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/29.jpg" alt="散列表查找">
                 </p>
@@ -776,8 +756,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-14T16:00:00.000Z">2020-04-15</time></div>
-                    <a href="/2020/04/15/Essay/29/" class="has-link-black-ter is-size-6">散列表查找</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-14T16:00:00.000Z">2020-05-15</time></div>
+                    <a href="/2020/05/15/Essay/29/" class="has-link-black-ter is-size-6">散列表查找</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -787,7 +767,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/04/14/Essay/28/" class="media-left">
+            <a href="/2020/05/03/Essay/28/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/28.jpg" alt="平衡二叉排序树">
                 </p>
@@ -795,8 +775,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-13T16:00:00.000Z">2020-04-14</time></div>
-                    <a href="/2020/04/14/Essay/28/" class="has-link-black-ter is-size-6">平衡二叉排序树</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-02T16:00:00.000Z">2020-05-03</time></div>
+                    <a href="/2020/05/03/Essay/28/" class="has-link-black-ter is-size-6">平衡二叉排序树</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -806,7 +786,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/04/12/Essay/27/" class="media-left">
+            <a href="/2020/04/27/Essay/27/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/27.jpg" alt="二叉排序树">
                 </p>
@@ -814,8 +794,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-11T16:00:00.000Z">2020-04-12</time></div>
-                    <a href="/2020/04/12/Essay/27/" class="has-link-black-ter is-size-6">二叉排序树</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-26T16:00:00.000Z">2020-04-27</time></div>
+                    <a href="/2020/04/27/Essay/27/" class="has-link-black-ter is-size-6">二叉排序树</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -825,7 +805,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/04/07/Essay/26/" class="media-left">
+            <a href="/2020/04/25/Essay/26/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/26.jpg" alt="查找算法">
                 </p>
@@ -833,8 +813,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-06T16:00:00.000Z">2020-04-07</time></div>
-                    <a href="/2020/04/07/Essay/26/" class="has-link-black-ter is-size-6">查找算法</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-24T16:00:00.000Z">2020-04-25</time></div>
+                    <a href="/2020/04/25/Essay/26/" class="has-link-black-ter is-size-6">查找算法</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -855,6 +835,17 @@ var _hmt = _hmt || [];
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2020/04/">
                 <span class="level-start">
                     <span class="level-item">四月 2020</span>
@@ -871,7 +862,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">三月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">9</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
