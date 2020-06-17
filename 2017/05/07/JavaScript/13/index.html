@@ -16,7 +16,7 @@
 <meta property="og:description" content="要想改变被调用函数的上下文，可以使用 call 或 apply 方法，但如果重复使用就会很不方便，因为每次都要把上下文对象作为参数传递，而且还会使代码变得不直观 针对这种情况，我们可以使用 bind 方法来永久地绑定函数的上下文，使其无论被谁调用，上下文都是固定的">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg">
-<meta property="og:updated_time" content="2020-04-23T13:52:15.762Z">
+<meta property="og:updated_time" content="2020-06-08T08:12:10.186Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Function.prototype.bind()">
 <meta name="twitter:description" content="要想改变被调用函数的上下文，可以使用 call 或 apply 方法，但如果重复使用就会很不方便，因为每次都要把上下文对象作为参数传递，而且还会使代码变得不直观 针对这种情况，我们可以使用 bind 方法来永久地绑定函数的上下文，使其无论被谁调用，上下文都是固定的">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    20 分钟 读完 (大约 3063 个字)
+                    21 分钟 读完 (大约 3103 个字)
                 </span>
                 
                 
@@ -222,7 +222,7 @@ var _hmt = _hmt || [];
 <p>假设上面函数是 <code>someuser.func</code> 的 <code>bind</code> 方法的实现，函数体内 <code>this</code> 指向的是 <code>someuser.func</code>，因为函数也是对象，所以 <code>this.call(self)</code> 的作用就是以 <code>self</code> 作为 <code>this</code> 指针调用 <code>someuser.func</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 将 func = someuser.func.bind(foo) 展开</span></span><br><span class="line">func = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> someuser.func.call(foo) </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 再将 func2 = func.bind(someuser) 展开</span></span><br><span class="line">func2 = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> func.call(someuser)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>从上面展开过程我们可以看出，<code>func2</code> 实际上是以 <code>someuser</code> 作为 <code>func</code> 的 <code>this</code> 指针调用了 <code>func</code>，而 <code>func</code> 根本没有使用 <code>this</code> 指针，所以两次 <code>bind</code> 是没有效果的</p>
+<p>从上面展开过程我们可以看出，<code>func2</code> 实际上是以 <code>someuser</code> 作为 <code>func</code> 的 <code>this</code> 指针调用了 <code>func</code>，而 <code>func</code> 根本没有使用 <code>this</code> 指针，所以第二次 <code>bind</code> 是没有效果的</p>
 <h2 id="bind-与-currying"><a href="#bind-与-currying" class="headerlink" title="bind 与 currying"></a>bind 与 currying</h2><p>比如我们有一个函数</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">add</span>(<span class="hljs-params">a, b, c</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> a + b + c</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -236,15 +236,12 @@ var _hmt = _hmt || [];
 
 <p>我们声明了一个全局变量 <code>b</code>，并且把它的值赋为 <code>100</code>，然后返回全局变量 <code>a</code>，这样我们直接调用的话，那么 <code>this</code> 就会指向 <code>bind</code> 这样的一个参数，所以 <code>return this.a</code> 就会返回 <code>1</code></p>
 <p>如果使用了 <code>new</code>，那么针对于 <code>ruturn</code>，如果不是对象，将会把 <code>this</code> 做为返回值，并且 <code>this</code> 会被初始化为默认的一个空对象，这个对象的原型为 <code>foo.prototype</code> </p>
-<p>所以说，我们用 <code>new</code> 去调用的话，这种情况下，即使我们使用了 <code>bind</code> 方法，但是这个 <code>this</code> 依然会指向没有 <code>bind</code> 的时候所指向的（正常状态），这样一个空对象的 <code>b</code> 属性会被赋值为 <code>100</code>，然后整个这个对象会做为返回值返回，会忽略这样一个 <code>return</code></p>
-<h2 id="bind-详解"><a href="#bind-详解" class="headerlink" title="bind 详解"></a>bind 详解</h2><p><code>bind</code> 方法主要实现以下功能</p>
+<p>所以说，我们用 <code>new</code> 去调用的话，这种情况下，即使我们使用了 <code>bind</code> 方法，但是这个 <code>this</code> 依然会指向没有 <code>bind</code> 的时候所指向的（正常状态），这样一个空对象的 <code>b</code> 属性会被赋值为 <code>100</code>，然后整个这个对象会做为返回值返回，所以就会忽略这样一个 <code>return</code></p>
+<h2 id="bind-实现"><a href="#bind-实现" class="headerlink" title="bind 实现"></a>bind 实现</h2><p>最后我们再来尝试一下手动的实现 <code>bind</code> 方法，通过上文的了解我们可以发现，其实要实现 <code>bind</code> 就是实现以下功能</p>
 <ul>
-<li><p>一个是绑定函数里面的 <code>this</code>（或者说改变函数里面的 <code>this</code> 指向）</p>
-</li>
-<li><p>另一个就是把函数拆分为不同的子函数，即柯里化功能</p>
-</li>
-<li><p>还有就是在 <code>new</code> 调用的时候，忽略掉 <code>bind</code> 的作用（通过 <code>instanceof</code> 判断函数是否通过 <code>new</code> 调用，来决定绑定的 <code>context</code>）</p>
-</li>
+<li>一个是绑定函数里面的 <code>this</code>（或者说改变函数里面的 <code>this</code> 指向）</li>
+<li>另一个就是把函数拆分为不同的子函数，即柯里化功能</li>
+<li>还有就是在 <code>new</code> 调用的时候，忽略掉 <code>bind</code> 的作用（通过 <code>instanceof</code> 判断函数是否通过 <code>new</code> 调用，来决定绑定的 <code>context</code>）</li>
 </ul>
 <p>其实在使用 <code>bind</code> 的时候，无非就分为两种情况，一种是直接调用，另一种就是 <code>new</code> 调用，如下所示</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params">c</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.b = <span class="hljs-number">100</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(c)</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.a</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> func =  foo.bind(&#123;<span class="hljs-attr">a</span>: <span class="hljs-number">1</span>&#125;, <span class="hljs-number">20</span>)</span><br><span class="line"></span><br><span class="line">func()       <span class="hljs-comment">// 20 1</span></span><br><span class="line"><span class="hljs-keyword">new</span> func()   <span class="hljs-comment">// 20 &#123;b: 100&#125;</span></span><br></pre></td></tr></table></figure>
@@ -465,9 +462,9 @@ var _hmt = _hmt || [];
         <span class="has-mr-6">5</span>
         <span>bind 与 new</span>
         </a></li><li>
-        <a class="is-flex" href="#bind-详解">
+        <a class="is-flex" href="#bind-实现">
         <span class="has-mr-6">6</span>
-        <span>bind 详解</span>
+        <span>bind 实现</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#关于-this-指向的是一个空对象">
         <span class="has-mr-6">6.1</span>
