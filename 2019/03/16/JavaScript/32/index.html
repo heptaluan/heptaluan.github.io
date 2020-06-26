@@ -16,7 +16,7 @@
 <meta property="og:description" content="我们先来看一个实例，如下所示">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg">
-<meta property="og:updated_time" content="2020-01-19T15:36:11.950Z">
+<meta property="og:updated_time" content="2020-06-25T14:38:25.040Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="为什么 Object.keys 的返回值会自动排序">
 <meta name="twitter:description" content="我们先来看一个实例，如下所示">
@@ -194,12 +194,9 @@ var _hmt = _hmt || [];
 <p>至于为什么会发生这样的情况，我们需要来看看在 <code>Object.keys()</code> 的调用过程中到底发生了些什么</p>
 <p>查看 <a href="http://zhoushengfe.com/es6/es6-ch.html#sec-object.keys" target="_blank" rel="noopener">规范</a> 可知，总共有三步流程</p>
 <ul>
-<li><p>调用 <code>ToObject(O)</code> 将结果赋值给变量 <code>obj</code></p>
-</li>
-<li><p>调用 <code>EnumerableOwnPropertyNames(obj, &#39;key&#39;)</code> 将结果赋值给变量 <code>nameList</code></p>
-</li>
-<li><p>调用 <code>CreateArrayFromList(nameList)</code> 得到最终的结果</p>
-</li>
+<li>调用 <code>ToObject(O)</code> 将结果赋值给变量 <code>obj</code></li>
+<li>调用 <code>EnumerableOwnPropertyNames(obj, &#39;key&#39;)</code> 将结果赋值给变量 <code>nameList</code></li>
+<li>调用 <code>CreateArrayFromList(nameList)</code> 得到最终的结果</li>
 </ul>
 <h2 id="ToObject-O"><a href="#ToObject-O" class="headerlink" title="ToObject(O)"></a>ToObject(O)</h2><p>首先第一步是将参数转换成 <code>Object()</code>，根据参数的不同结果有所不同，如下所示</p>
 <table>
@@ -244,16 +241,11 @@ var _hmt = _hmt || [];
 <h2 id="EnumerableOwnPropertyNames-obj-‘key’"><a href="#EnumerableOwnPropertyNames-obj-‘key’" class="headerlink" title="EnumerableOwnPropertyNames(obj, ‘key’)"></a>EnumerableOwnPropertyNames(obj, ‘key’)</h2><p>接下来就是获得属性列表</p>
 <p>过程有很多，比较重要的一个是调用对象的内部方法 <code>OwnPropertyKeys</code> 获得对象的 <code>ownKeys</code>，也正是该方法决定了属性的顺序</p>
 <ul>
-<li><p>声明变量 <code>keys</code> 值为一个空列表（<code>List</code> 类型）</p>
-</li>
-<li><p>把每个 <code>Number</code> 类型的属性，按数值大小升序排序，并依次添加到 <code>keys</code> 中</p>
-</li>
-<li><p>把每个 <code>String</code> 类型的属性，按创建时间升序排序，并依次添加到 <code>keys</code> 中</p>
-</li>
-<li><p>把每个 <code>Symbol</code> 类型的属性，按创建时间升序排序，并依次添加到 <code>keys</code> 中</p>
-</li>
-<li><p>将 <code>keys</code> 返回（<code>return keys</code>）</p>
-</li>
+<li>声明变量 <code>keys</code> 值为一个空列表（<code>List</code> 类型）</li>
+<li>把每个 <code>Number</code> 类型的属性，按数值大小升序排序，并依次添加到 <code>keys</code> 中</li>
+<li>把每个 <code>String</code> 类型的属性，按创建时间升序排序，并依次添加到 <code>keys</code> 中</li>
+<li>把每个 <code>Symbol</code> 类型的属性，按创建时间升序排序，并依次添加到 <code>keys</code> 中</li>
+<li>将 <code>keys</code> 返回（<code>return keys</code>）</li>
 </ul>
 <p>除此之外，还有一点需要补充，如果对象的属性类型是数字，字符与 <code>Symbol</code> 混合的，那么返回顺序永远是数字在前，然后是字符串，最后是 <code>Symbol</code></p>
 <p>不过虽然规定了 <code>Symbol</code>，最终会将 <code>Symbol</code> 类型的属性过滤出去</p>
@@ -262,25 +254,17 @@ var _hmt = _hmt || [];
 <h2 id="CreateArrayFromList-nameList"><a href="#CreateArrayFromList-nameList" class="headerlink" title="CreateArrayFromList(nameList)"></a>CreateArrayFromList(nameList)</h2><p>最后一步就是调用 <code>CreateArrayFromList(nameList)</code> 来得到最终的结果</p>
 <p>现在已经得到了一个对象的属性列表，最后一步是将 <code>List</code> 类型的属性列表转换成 <code>Array</code> 类型</p>
 <ul>
-<li><p>先声明一个变量 <code>array</code>，值是一个空数组</p>
-</li>
-<li><p>循环属性列表，将每个元素添加到 <code>array</code> 中</p>
-</li>
-<li><p>将 <code>array</code> 返回</p>
-</li>
+<li>先声明一个变量 <code>array</code>，值是一个空数组</li>
+<li>循环属性列表，将每个元素添加到 <code>array</code> 中</li>
+<li>将 <code>array</code> 返回</li>
 </ul>
 <h2 id="一些其他的-API"><a href="#一些其他的-API" class="headerlink" title="一些其他的 API"></a>一些其他的 API</h2><p>上面介绍的排序规则同样适用于下列 <code>API</code></p>
 <ul>
-<li><p><code>Object.entries</code></p>
-</li>
-<li><p><code>Object.values</code></p>
-</li>
-<li><p><code>for-in</code></p>
-</li>
-<li><p><code>Object.getOwnPropertyNames</code></p>
-</li>
-<li><p><code>Reflect.ownKeys</code></p>
-</li>
+<li><code>Object.entries</code></li>
+<li><code>Object.values</code></li>
+<li><code>for-in</code></li>
+<li><code>Object.getOwnPropertyNames</code></li>
+<li><code>Reflect.ownKeys</code></li>
 </ul>
 <blockquote>
 <p>不过需要注意的是，以上 <code>API</code> 除了 <code>Reflect.ownKeys</code> 之外，其他 <code>API</code> 均会将 <code>Symbol</code> 类型的属性过滤掉</p>
