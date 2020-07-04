@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="先来简单说一下 Web 缓存，所谓 Web 缓存，是一种保存 Web 资源副本并在下次请求时直接使用该副本的技术 Web 缓存可以分为这几种，浏览器缓存、CDN 缓存、服务器缓存、数据库数据缓存">
+    <meta name="description" content="先来简单说一下 Web 缓存，所谓 Web 缓存，是一种保存 Web 资源副本并在下次请求时直接使用该副本的技术，Web 缓存可以分为这几种，浏览器缓存、CDN 缓存、服务器缓存、数据库数据缓存">
 <meta name="keywords" content="Http">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Http 缓存机制">
 <meta property="og:url" content="http://yoursite.com/2017/12/12/HTTP/04/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="先来简单说一下 Web 缓存，所谓 Web 缓存，是一种保存 Web 资源副本并在下次请求时直接使用该副本的技术 Web 缓存可以分为这几种，浏览器缓存、CDN 缓存、服务器缓存、数据库数据缓存">
+<meta property="og:description" content="先来简单说一下 Web 缓存，所谓 Web 缓存，是一种保存 Web 资源副本并在下次请求时直接使用该副本的技术，Web 缓存可以分为这几种，浏览器缓存、CDN 缓存、服务器缓存、数据库数据缓存">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/04.jpg">
-<meta property="og:updated_time" content="2020-01-21T07:50:24.021Z">
+<meta property="og:updated_time" content="2020-07-04T15:33:32.523Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Http 缓存机制">
-<meta name="twitter:description" content="先来简单说一下 Web 缓存，所谓 Web 缓存，是一种保存 Web 资源副本并在下次请求时直接使用该副本的技术 Web 缓存可以分为这几种，浏览器缓存、CDN 缓存、服务器缓存、数据库数据缓存">
+<meta name="twitter:description" content="先来简单说一下 Web 缓存，所谓 Web 缓存，是一种保存 Web 资源副本并在下次请求时直接使用该副本的技术，Web 缓存可以分为这几种，浏览器缓存、CDN 缓存、服务器缓存、数据库数据缓存">
 <meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/04.jpg">
 
 
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    23 分钟 读完 (大约 3470 个字)
+                    23 分钟 读完 (大约 3482 个字)
                 </span>
                 
                 
@@ -186,48 +186,41 @@ var _hmt = _hmt || [];
             
         </h1>
         <div class="content">
-            <p>先来简单说一下 <code>Web</code> 缓存，所谓 <code>Web</code> 缓存，是一种保存 <code>Web</code> 资源副本并在下次请求时直接使用该副本的技术</p>
-<p><code>Web</code> 缓存可以分为这几种，浏览器缓存、<code>CDN</code> 缓存、服务器缓存、数据库数据缓存</p>
+            <p>先来简单说一下 <code>Web</code> 缓存，所谓 <code>Web</code> 缓存，是一种保存 <code>Web</code> 资源副本并在下次请求时直接使用该副本的技术，<code>Web</code> 缓存可以分为这几种，浏览器缓存、<code>CDN</code> 缓存、服务器缓存、数据库数据缓存</p>
 <a id="more"></a>
 
-<p>因为可能会直接使用副本免于重新发送请求或者仅仅确认资源没变无需重新传输资源实体</p>
-<p><code>Web</code> 缓存可以减少延迟加快网页打开速度、重复利用资源减少网络带宽消耗、降低请求次数或者减少传输内容从而减轻服务器压力，</p>
-<h2 id="缓存的流程"><a href="#缓存的流程" class="headerlink" title="缓存的流程"></a>缓存的流程</h2><p>简单来说，浏览器在请求一个资源时，使用缓存的流程大概如下，</p>
+<p>因为可能会直接使用副本免于重新发送请求或者仅仅确认资源没变无需重新传输资源实体，<code>Web</code> 缓存可以减少延迟加快网页打开速度、重复利用资源减少网络带宽消耗、降低请求次数或者减少传输内容从而减轻服务器压力</p>
+<h2 id="缓存的流程"><a href="#缓存的流程" class="headerlink" title="缓存的流程"></a>缓存的流程</h2><p>简单来说，浏览器在请求一个资源时，使用缓存的流程大概如下</p>
 <ul>
-<li><p>首先浏览器会判断，这个资源是否有缓存，没有的话，正常请求</p>
-</li>
-<li><p>如果有缓存的话，浏览会判断缓存是否过期，如果缓存没有过期，则直接使用，此时就是 <code>200</code>（<code>from cache</code>），通过上次缓存留下的 <code>cache-control</code>，<code>max-age</code> 和 <code>Expires</code>（需要注意的是，<code>cache-control</code> 的优先级高于 <code>Expires</code>，下面会详细介绍）</p>
-</li>
-<li><p>如果浏览器的缓存过期了，它会请求服务器，服务器会校验缓存的数据是否真的发生了更改</p>
-<ul>
-<li><p>如果服务器端发现数据没有变，就会返回一个 <code>304</code> 告诉浏览器，你请求的数据 <code>Not Modified</code>，可以继续用缓存，同时浏览器会更新缓存首部的过期时间等信息</p>
-</li>
-<li><p>这里浏览器发起请求时，会用到上次缓存首部的 <code>Last-Modified/E-tag</code></p>
-<ul>
-<li><p>具体做法是取出上次缓存的 <code>Last-Modified</code> 的值，放在本次请求 <code>header</code> 的 <code>If-Modified-Since</code> 中</p>
-</li>
-<li><p>取出上次缓存的 <code>E-tag</code> 的值，放在本次请求 <code>header</code> 中的 <code>If-None-Match</code> 中</p>
-</li>
-<li><p>服务器会据此判断资源是否发生过修改，浏览器中的缓存是否依然可用</p>
+<li>首先浏览器会判断，这个资源是否有缓存，没有的话，正常请求</li>
+<li>如果有缓存的话，浏览会判断缓存是否过期<ul>
+<li>如果缓存没有过期，则直接使用，此时就是 <code>200</code>（<code>from cache</code>），通过上次缓存留下的 <code>cache-control</code>，<code>max-age</code> 和 <code>Expires</code>（需要注意的是，<code>cache-control</code> 的优先级高于 <code>Expires</code>，下面会详细介绍）</li>
+<li>如果浏览器的缓存过期了，它会请求服务器，服务器会校验缓存的数据是否真的发生了更改<ul>
+<li>如果服务器端发现数据没有变，就会返回一个 <code>304</code> 告诉浏览器，你请求的数据 <code>Not Modified</code>，可以继续用缓存，同时浏览器会更新缓存首部的过期时间等信息</li>
+<li>这里浏览器发起请求时，会用到上次缓存首部的 <code>Last-Modified/E-tag</code><ul>
+<li>具体做法是取出上次缓存的 <code>Last-Modified</code> 的值，放在本次请求 <code>header</code> 的 <code>If-Modified-Since</code> 中</li>
+<li>取出上次缓存的 <code>E-tag</code> 的值，放在本次请求 <code>header</code> 中的 <code>If-None-Match</code> 中</li>
+<li>服务器会据此判断资源是否发生过修改，浏览器中的缓存是否依然可用</li>
+</ul>
 </li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p>如果服务器端修改了上次缓存的内容，则直接返回 <code>200</code>，并携带新的内容</p>
-</li>
+<li>如果服务器端修改了上次缓存的内容，则直接返回 <code>200</code>，并携带新的内容</li>
 </ul>
+<p>大致流程如下图所示</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/01.png" alt></p>
-<h2 id="强缓存和协商缓存"><a href="#强缓存和协商缓存" class="headerlink" title="强缓存和协商缓存"></a>强缓存和协商缓存</h2><p>浏览器 <code>http</code> 缓存可以分为<strong>强缓存</strong>和<strong>协商缓存</strong>，强缓存和协商缓存最大也是最根本的区别是</p>
-<p>强缓存命中的话不会发请求到服务器（比如 <code>chrome</code> 中的 <code>200 from memory cache</code>）</p>
-<p>协商缓存一定会发请求到服务器，通过资源的请求首部字段验证资源是否命中协商缓存，如果协商缓存命中，服务器会将这个请求返回</p>
-<p>但是不会返回这个资源的实体，而是通知客户端可以从缓存中加载这个资源（<code>304 not modified</code>）</p>
-<p>所以上图可以简单的调整为</p>
+<h2 id="强缓存和协商缓存"><a href="#强缓存和协商缓存" class="headerlink" title="强缓存和协商缓存"></a>强缓存和协商缓存</h2><p>浏览器 <code>http</code> 缓存可以分为 <strong>强缓存</strong> 和 <strong>协商缓存</strong>，强缓存和协商缓存最大也是最根本的区别是</p>
+<ul>
+<li>强缓存命中的话不会发请求到服务器（比如 <code>chrome</code> 中的 <code>200 from memory cache</code>）</li>
+<li>协商缓存一定会发请求到服务器，通过资源的请求首部字段验证资源是否命中协商缓存，如果协商缓存命中，服务器会将这个请求返回</li>
+</ul>
+<p>但是不会返回这个资源的实体，而是通知客户端可以从缓存中加载这个资源（<code>304 not modified</code>），所以上图可以简单的调整为</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/02.png" alt></p>
 <p>而浏览器 <code>http</code> 缓存由 <code>http</code> 报文的首部字段决定</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/03.png" alt></p>
-<p>浏览器对于请求资源，拥有一系列成熟的缓存策略</p>
-<p>按照发生的时间顺序分别为存储策略，过期策略，协商策略，其中存储策略在收到响应后应用，过期策略和协商策略则在发送请求前应用</p>
+<p>浏览器对于请求资源，拥有一系列成熟的缓存策略，按照发生的时间顺序分别为存储策略，过期策略，协商策略，其中存储策略在收到响应后应用，过期策略和协商策略则在发送请求前应用</p>
 <p>简单来说</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/04.png" alt></p>
 <h2 id="缓存参数"><a href="#缓存参数" class="headerlink" title="缓存参数"></a>缓存参数</h2><p>下面表格表示的就是 <code>http header</code> 中与缓存有关的 <code>key</code></p>
@@ -372,54 +365,41 @@ var _hmt = _hmt || [];
 <p>例如，如果两个页面仅仅在页脚的生成时间有所不同，就可以认为二者是相同的</p>
 <p>因为 <code>ETag</code> 的特性，所以相较于 <code>Last-Modified</code> 有一些优势</p>
 <ul>
-<li><p>某些情况下服务器无法获取资源的最后修改时间</p>
-</li>
-<li><p>资源的最后修改时间变了但是内容没变，使用 <code>ETag</code> 可以正确缓存</p>
-</li>
-<li><p>如果资源修改非常频繁，在秒以下的时间进行修改，<code>Last-Modified</code> 只能精确到秒</p>
-</li>
+<li>某些情况下服务器无法获取资源的最后修改时间</li>
+<li>资源的最后修改时间变了但是内容没变，使用 <code>ETag</code> 可以正确缓存</li>
+<li>如果资源修改非常频繁，在秒以下的时间进行修改，<code>Last-Modified</code> 只能精确到秒</li>
 </ul>
 <h2 id="整体流程"><a href="#整体流程" class="headerlink" title="整体流程"></a>整体流程</h2><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/05.png" alt></p>
 <h2 id="优先级"><a href="#优先级" class="headerlink" title="优先级"></a>优先级</h2><p>若同时存在各种缓存头时，各缓存头优先级及生效情况如下</p>
 <ul>
-<li><p>强缓存和对比缓存同时存在，如果强缓存还在生效期则强制缓存覆盖对比缓存，对比缓存不生效</p>
-<ul>
+<li>强缓存和对比缓存同时存在，如果强缓存还在生效期则强制缓存覆盖对比缓存，对比缓存不生效<ul>
 <li>如果强缓存不在有效期，对比缓存生效，即：强缓存优先级 &gt; 对比缓存优先级</li>
 </ul>
 </li>
-<li><p><code>pragma</code>，和 <code>cache-control</code> 类似，前者是 <code>http1.0</code> 内容，后者是 <code>http1.1</code> 内容</p>
-<ul>
+<li><code>pragma</code>，和 <code>cache-control</code> 类似，前者是 <code>http1.0</code> 内容，后者是 <code>http1.1</code> 内容<ul>
 <li>并且 <code>pragma</code> 优先级 &gt; <code>cache-control</code> 优先级，不过前者目前基本不使用</li>
 </ul>
 </li>
-<li><p>强缓存 <code>expires</code> 和 <code>cache-control</code> 同时存在时，则 <code>cache-control</code> 会覆盖 <code>expires</code></p>
-<ul>
+<li>强缓存 <code>expires</code> 和 <code>cache-control</code> 同时存在时，则 <code>cache-control</code> 会覆盖 <code>expires</code><ul>
 <li><code>expires</code> 无论有没有过期都无效，即 <code>cache-control</code> 优先级 &gt; <code>expires</code> 优先级</li>
 </ul>
 </li>
-<li><p>对比缓存 <code>Etag</code> 和 <code>Last-Modified</code> 同时存在时，则 <code>Etag</code> 会覆盖 <code>Last-Modified</code></p>
-<ul>
+<li>对比缓存 <code>Etag</code> 和 <code>Last-Modified</code> 同时存在时，则 <code>Etag</code> 会覆盖 <code>Last-Modified</code><ul>
 <li><code>Last-Modified</code> 不会生效，即 <code>ETag</code>优先级 &gt; <code>Last-Modified</code> 优先级</li>
 </ul>
 </li>
 </ul>
 <p>针对于一般的项目，由于 <code>CSS</code> 和 <code>JavaScript</code> 在打包时加了 <code>md5</code> 值，建议直接使用强缓存，并且 <code>expires</code> 和 <code>cache-control</code> 同时使用，建议设置时长为 <code>7</code> 天较为妥当，图片文件由于没有加 <code>md5</code> 值，建议采用对比缓存，<code>html</code> 文件也建议采用对比缓存</p>
-<h2 id="浏览器的不同表现"><a href="#浏览器的不同表现" class="headerlink" title="浏览器的不同表现"></a>浏览器的不同表现</h2><p>需要注意的是，当我们不设置 <code>cache-control</code>，只设置对比缓存，在不同浏览器下会有不同的表现</p>
-<p><code>chrome</code> 会直接从本地缓存获取，其他会请求服务器返回 <code>304</code>，这时候有两种方式让他们的响应一致</p>
+<h2 id="浏览器的不同表现"><a href="#浏览器的不同表现" class="headerlink" title="浏览器的不同表现"></a>浏览器的不同表现</h2><p>需要注意的是，当我们不设置 <code>cache-control</code>，只设置对比缓存，在不同浏览器下会有不同的表现，<code>chrome</code> 会直接从本地缓存获取，其他会请求服务器返回 <code>304</code>，这时候有两种方式让他们的响应一致</p>
 <ul>
-<li><p>设置 <code>cache-control: public, max-age=0</code>，这里的 <code>public</code> 是关键</p>
-<ul>
-<li><p>因为默认值是 <code>private</code>，表示其他代理都不要缓存，只有服务器缓存，而 <code>max-age</code> 又为 <code>0</code></p>
-</li>
-<li><p>所以每次都会发起 <code>200</code> 的请求，设置 <code>public</code> 的意思就是允许其他各级代理缓存资源，因此如果资源没改变会返回 <code>304</code></p>
-</li>
+<li>设置 <code>cache-control: public, max-age=0</code>，这里的 <code>public</code> 是关键<ul>
+<li>因为默认值是 <code>private</code>，表示其他代理都不要缓存，只有服务器缓存，而 <code>max-age</code> 又为 <code>0</code></li>
+<li>所以每次都会发起 <code>200</code> 的请求，设置 <code>public</code> 的意思就是允许其他各级代理缓存资源，因此如果资源没改变会返回 <code>304</code></li>
 </ul>
 </li>
-<li><p>直接设置 <code>max-age = 1000</code>，即是一秒之后内容过期，目的是触发浏览器缓存，也能达到想要 <code>304</code> 的效果</p>
-</li>
+<li>直接设置 <code>max-age = 1000</code>，即是一秒之后内容过期，目的是触发浏览器缓存，也能达到想要 <code>304</code> 的效果</li>
 </ul>
-<h2 id="如何让浏览器不缓存静态资源"><a href="#如何让浏览器不缓存静态资源" class="headerlink" title="如何让浏览器不缓存静态资源"></a>如何让浏览器不缓存静态资源</h2><p>实际上，工作中很多场景都需要避免浏览器缓存，除了浏览器隐私模式，请求时想要禁用缓存</p>
-<p>还可以设置请求头: <code>Cache-Control: no-cache, no-store, must-revalidate</code></p>
+<h2 id="如何让浏览器不缓存静态资源"><a href="#如何让浏览器不缓存静态资源" class="headerlink" title="如何让浏览器不缓存静态资源"></a>如何让浏览器不缓存静态资源</h2><p>实际上，工作中很多场景都需要避免浏览器缓存，除了浏览器隐私模式，请求时想要禁用缓存，还可以设置请求头 <code>Cache-Control: no-cache, no-store, must-revalidate</code></p>
 <p>当然，还有一种常用做法，即给请求的资源增加一个版本号，比如</p>
 <figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"stylesheet"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text/css"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"../css/style.css?version=2.1.1"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
 
@@ -431,10 +411,12 @@ var _hmt = _hmt || [];
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>Expires / Cache-Control</code> 用来设置缓存时间，即资源有效时间（状态码 <code>200</code>（<code>from cache</code>）），可避免请求发送到服务器</p>
 <p><code>Last-Modified / ETag</code> 用来判断资源是否被修改了（状态码 <code>304</code>（<code>not change</code>）），可避免传输相同的资源内容，造成带宽和时间的浪费</p>
 <p>使用原则</p>
-<p>需要兼容 <code>http 1.0</code> 的时候需要使用 <code>Expires</code>，不然可以考虑直接使用 <code>Cache-Control</code></p>
-<p>需要处理一秒内多次修改的情况，或者其他 <code>Last-Modified</code> 处理不了的情况，才使用 <code>ETag</code>，否则使用 <code>Last-- Modified</code></p>
-<p>对于所有可缓存资源，需要指定一个 <code>Expires</code> 或 <code>Cache-Control</code>，同时指定 <code>Last-Modified</code> 或者 <code>Etag</code></p>
-<p>可以通过标识文件版本名、加长缓存时间的方式来减少 <code>304</code> 响应</p>
+<ul>
+<li>需要兼容 <code>http 1.0</code> 的时候需要使用 <code>Expires</code>，不然可以考虑直接使用 <code>Cache-Control</code></li>
+<li>需要处理一秒内多次修改的情况，或者其他 <code>Last-Modified</code> 处理不了的情况，才使用 <code>ETag</code>，否则使用 <code>Last-- Modified</code></li>
+<li>对于所有可缓存资源，需要指定一个 <code>Expires</code> 或 <code>Cache-Control</code>，同时指定 <code>Last-Modified</code> 或者 <code>Etag</code></li>
+<li>可以通过标识文件版本名、加长缓存时间的方式来减少 <code>304</code> 响应</li>
+</ul>
 
         </div>
         
@@ -460,9 +442,9 @@ var _hmt = _hmt || [];
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/12/24/Essay/01/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/01/11/Angular/04/">
                 <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">字符编码</span>
+                <span class="level-item">Angular 中的管道</span>
             </a>
         </div>
         
@@ -545,7 +527,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        146
+                        141
                     </p>
                 </div>
             </div>
@@ -690,7 +672,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">10</span>
+                <span class="level-item tag">9</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -698,7 +680,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">28</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Http/">
@@ -714,7 +696,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">47</span>
+                <span class="level-item tag">45</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -768,7 +750,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 17.5px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16.25px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.75px;">Essay</a> <a href="/tags/Http/" style="font-size: 13.75px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.5px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 12.5px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.25px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 17.14px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.57px;">Essay</a> <a href="/tags/Http/" style="font-size: 14.29px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.14px;">Node.js</a> <a href="/tags/React/" style="font-size: 15.71px;">React</a> <a href="/tags/Vue/" style="font-size: 12.86px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.43px;">jQuery</a>
     </div>
 </div>
 
@@ -1204,7 +1186,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1215,7 +1197,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1248,7 +1230,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">九月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1397,14 +1379,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">10</span>
+                        <span class="tag is-grey">9</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
@@ -1418,7 +1400,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">47</span>
+                        <span class="tag is-grey">45</span>
                     </a>
                 </div>
                 

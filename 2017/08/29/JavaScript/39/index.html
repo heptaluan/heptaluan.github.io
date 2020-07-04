@@ -16,7 +16,7 @@
 <meta property="og:description" content="如何监听对象和数组的属性改变算是一个老生常谈的问题，一些现有框架当中也都有各自的实现方式，今天我们就来深入的了解一下具体的实现原理 先来看看如何监听对象的属性改变">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/39.jpg">
-<meta property="og:updated_time" content="2020-04-23T15:01:38.436Z">
+<meta property="og:updated_time" content="2020-07-04T15:33:32.537Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何监听对象和数组的属性改变">
 <meta name="twitter:description" content="如何监听对象和数组的属性改变算是一个老生常谈的问题，一些现有框架当中也都有各自的实现方式，今天我们就来深入的了解一下具体的实现原理 先来看看如何监听对象的属性改变">
@@ -209,7 +209,7 @@ var _hmt = _hmt || [];
 <h2 id="关于-ES5-以下实现"><a href="#关于-ES5-以下实现" class="headerlink" title="关于 ES5 以下实现"></a>关于 ES5 以下实现</h2><p>上面我们介绍了 <code>ES6</code> 当中的数组监听方法的实现，那么 <code>ES6</code> 以下还能实现吗？</p>
 <p>这里就需要注意了，在 <code>ES5</code> 及以下的 <code>JavaScript</code> 因为无法完美的继承数组，所以虽然可以实现，但是是存在一定缺陷的</p>
 <p>因为 <code>Array</code> 构造函数执行时不会对传进去的 <code>this</code> 做任何处理，不止 <code>Array</code>，<code>String</code>，<code>Number</code>，<code>Regexp</code>，<code>Object</code> 等等 <code>JavaScript</code> 的内置类都不行</p>
-<p>数组其响应式的 <code>length</code> 属性以及内部的 <code>[[class]]</code> 属性我们无法再 <code>JavaScript</code> 层面实现，这就导致我们无法去用任何一个对象来模仿一个数组，但是可以使用非标准属性 <code>__proto__</code> 来实现，如下</p>
+<p>数组其响应式的 <code>length</code> 属性以及内部的 <code>[[class]]</code> 属性我们无法在 <code>JavaScript</code> 层面实现，这就导致我们无法去用任何一个对象来模仿一个数组，但是可以使用非标准属性 <code>__proto__</code> 来实现，如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 首先获取 Array 原型</span></span><br><span class="line"><span class="hljs-keyword">const</span> oldMethod = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Array</span>.prototype)</span><br><span class="line"><span class="hljs-keyword">const</span> newMethod = []</span><br><span class="line"></span><br><span class="line">[<span class="hljs-string">'push'</span>, <span class="hljs-string">'pop'</span>, <span class="hljs-string">'shift'</span>, <span class="hljs-string">'unshift'</span>, <span class="hljs-string">'splice'</span>, <span class="hljs-string">'sort'</span>, <span class="hljs-string">'reverse'</span>].forEach(<span class="hljs-function"><span class="hljs-params">method</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// 在 newMethod 上进行方法的重写</span></span><br><span class="line">  <span class="hljs-comment">// 这里需要注意的是重写的方法是定义在 newMethod 的属性上而不是其原型属性（newMethod.__proto__ 没有改变）</span></span><br><span class="line">  newMethod[method] = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`监听到数组的变化`</span>)</span><br><span class="line">    <span class="hljs-keyword">return</span> oldMethod[method].apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> list = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]</span><br><span class="line"><span class="hljs-comment">// 将需要监听的数组的原型指针指向我们重新定义的新对象</span></span><br><span class="line">list.__proto__ = newMethod</span><br><span class="line">list.push(<span class="hljs-number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 如果不设定指向，则默认使用原生的方法</span></span><br><span class="line"><span class="hljs-keyword">let</span> list2 = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]</span><br><span class="line">list2.push(<span class="hljs-number">3</span>)</span><br></pre></td></tr></table></figure>
 
 
@@ -237,9 +237,9 @@ var _hmt = _hmt || [];
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/09/17/JavaScript/41/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2017/09/20/JavaScript/19/">
                 <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">从请求的异步回调函数中取值的解决办法</span>
+                <span class="level-item">ES6 中的 Class</span>
             </a>
         </div>
         
@@ -322,7 +322,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        146
+                        141
                     </p>
                 </div>
             </div>
@@ -411,7 +411,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">10</span>
+                <span class="level-item tag">9</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -419,7 +419,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">28</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Http/">
@@ -435,7 +435,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">47</span>
+                <span class="level-item tag">45</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -489,7 +489,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 17.5px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16.25px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.75px;">Essay</a> <a href="/tags/Http/" style="font-size: 13.75px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.5px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 12.5px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.25px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 17.14px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.57px;">Essay</a> <a href="/tags/Http/" style="font-size: 14.29px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.14px;">Node.js</a> <a href="/tags/React/" style="font-size: 15.71px;">React</a> <a href="/tags/Vue/" style="font-size: 12.86px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.43px;">jQuery</a>
     </div>
 </div>
 
@@ -925,7 +925,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -936,7 +936,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -969,7 +969,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">九月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1118,14 +1118,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">10</span>
+                        <span class="tag is-grey">9</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
@@ -1139,7 +1139,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">47</span>
+                        <span class="tag is-grey">45</span>
                     </a>
                 </div>
                 

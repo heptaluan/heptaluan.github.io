@@ -16,7 +16,7 @@
 <meta property="og:description" content="在深入了解作用域之前，我们先来看看什么是变量提升">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/03.jpg">
-<meta property="og:updated_time" content="2020-06-07T16:19:09.413Z">
+<meta property="og:updated_time" content="2020-07-04T15:33:32.525Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的作用域">
 <meta name="twitter:description" content="在深入了解作用域之前，我们先来看看什么是变量提升">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    31 分钟 读完 (大约 4658 个字)
+                    32 分钟 读完 (大约 4779 个字)
                 </span>
                 
                 
@@ -298,12 +298,19 @@ var _hmt = _hmt || [];
 
 <p>在初始化阶段，先初始化函数的参数，参数 <code>x</code> 即为传进来的参数，为 <code>100</code>，但是在处理函数声明的时候，发生冲突，<code>x</code> 会被覆盖，所以返回的是一个函数对象</p>
 <p>我们将上面的示例稍微调整一下，如下</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// var fn 的时候，发现 fn 已经在函数声明的时候定义过了，所以会忽略</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params">x, y, z</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">  <span class="hljs-keyword">var</span> fn</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(fn)    <span class="hljs-comment">// function fn () &#123;&#125;</span></span><br><span class="line">&#125;</span><br><span class="line">foo(<span class="hljs-number">100</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 跟上例是一样的，但是在代码执行阶段，fn 会被执行赋值操作</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params">x, y, z</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">  <span class="hljs-keyword">var</span> fn = <span class="hljs-number">1</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(fn)    <span class="hljs-comment">// 1</span></span><br><span class="line">&#125;</span><br><span class="line">foo(<span class="hljs-number">100</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 在看一个容易出错的，最终会输出 100 和 0</span></span><br><span class="line"><span class="hljs-keyword">var</span> num = <span class="hljs-number">0</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">a</span>(<span class="hljs-params">num</span>) </span>&#123;</span><br><span class="line">  num = <span class="hljs-number">100</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(num)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a()</span><br><span class="line"><span class="hljs-built_in">console</span>.log(num)</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// var fn 的时候，发现 fn 已经在函数声明的时候定义过了，所以会忽略</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params">x, y, z</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">  <span class="hljs-keyword">var</span> fn</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(fn)    <span class="hljs-comment">// function fn () &#123;&#125;</span></span><br><span class="line">&#125;</span><br><span class="line">foo(<span class="hljs-number">100</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 跟上例是一样的，但是在代码执行阶段，fn 会被执行赋值操作</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params">x, y, z</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fn</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">  <span class="hljs-keyword">var</span> fn = <span class="hljs-number">1</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(fn)    <span class="hljs-comment">// 1</span></span><br><span class="line">&#125;</span><br><span class="line">foo(<span class="hljs-number">100</span>)</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>函数表达式不会影响 <code>VO</code>，比如 <code>var a = function foo() { }</code></p>
 </blockquote>
 <p>这里的 <code>foo</code> 是函数表达式的名称，这个是不会记录到 <code>VO</code> 中的，这也是为什么我们不能在外部通过 <code>foo</code> 来获取到这个函数对象</p>
+<p>最后我们再来看一个比较容易出错的，巩固一下上面所介绍的，如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> num = <span class="hljs-number">0</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">a</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  num = <span class="hljs-number">100</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(num)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a()</span><br><span class="line"><span class="hljs-built_in">console</span>.log(num)</span><br></pre></td></tr></table></figure>
+
+<p>很明显，在执行了函数 <code>a()</code> 以后，将全局当中的 <code>num</code> 修改成了 <code>100</code>，所以两次输出均为 <code>100</code>，但是如果我们给函数 <code>a()</code> 添加一个参数呢，如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> num = <span class="hljs-number">0</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">a</span>(<span class="hljs-params">num</span>) </span>&#123;</span><br><span class="line">  num = <span class="hljs-number">100</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(num)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a()</span><br><span class="line"><span class="hljs-built_in">console</span>.log(num)  <span class="hljs-comment">// ?</span></span><br></pre></td></tr></table></figure>
+
+<p>这里就需要注意一下了，如果调整成这样的话，最后的结果依次为 <code>100</code> 和 <code>0</code>，而不再是两个 <code>100</code> 了</p>
 <h4 id="活动对象"><a href="#活动对象" class="headerlink" title="活动对象"></a>活动对象</h4><p>在函数上下文中，我们用活动对象（<code>activation object</code>，<code>AO</code>）来表示变量对象</p>
 <p>活动对象和变量对象其实是一个东西，只是变量对象是规范上的或者说是引擎实现上的，不可在 <code>JavaScript</code> 环境中访问</p>
 <p>只有到当进入一个执行上下文中，这个执行上下文的变量对象才会被激活，所以才叫 <code>activation object</code>，而只有被激活的变量对象，也就是活动对象上的各种属性才能被访问</p>
@@ -319,14 +326,10 @@ var _hmt = _hmt || [];
 
 <p>我们来简单总结一下变量对象的创建过程</p>
 <ol>
-<li><p>全局上下文的变量对象初始化是全局对象</p>
-</li>
-<li><p>函数上下文的变量对象初始化只包括 <code>Arguments</code> 对象</p>
-</li>
-<li><p>在进入执行上下文时会给变量对象添加形参、函数声明、变量声明等初始的属性值</p>
-</li>
-<li><p>在代码执行阶段，会再次修改变量对象的属性值</p>
-</li>
+<li>全局上下文的变量对象初始化是全局对象</li>
+<li>函数上下文的变量对象初始化只包括 <code>Arguments</code> 对象</li>
+<li>在进入执行上下文时会给变量对象添加形参、函数声明、变量声明等初始的属性值</li>
+<li>在代码执行阶段，会再次修改变量对象的属性值</li>
 </ol>
 <p>在看个例子加深一下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(a)</span><br><span class="line">  a = <span class="hljs-number">1</span></span><br><span class="line">&#125;</span><br><span class="line">foo() <span class="hljs-comment">// ???</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bar</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  a = <span class="hljs-number">1</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(a)</span><br><span class="line">&#125;</span><br><span class="line">bar() <span class="hljs-comment">// ???</span></span><br></pre></td></tr></table></figure>
@@ -361,7 +364,7 @@ var _hmt = _hmt || [];
 
 <p>当执行一个函数的时候，就会创建一个执行上下文，并且压入执行上下文栈，当函数执行完毕的时候，就会将函数的执行上下文从栈中弹出</p>
 <p>所以我们可以尝试使用伪代码来描述上述过程</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">ECStack.push(&lt;fun1&gt; functionContext)</span><br><span class="line"></span><br><span class="line">// fun1 中调用了 fun2，创建 fun2 的执行上下文</span><br><span class="line">ECStack.push(&lt;fun2&gt; functionContext)</span><br><span class="line"></span><br><span class="line">// fun2 还调用了 fun3</span><br><span class="line">ECStack.push(&lt;fun3&gt; functionContext)</span><br><span class="line"></span><br><span class="line">// fun3 执行完毕</span><br><span class="line">ECStack.pop()</span><br><span class="line"></span><br><span class="line">// fun2 执行完毕</span><br><span class="line">ECStack.pop()</span><br><span class="line"></span><br><span class="line">// fun1 执行完毕</span><br><span class="line">ECStack.pop()</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">ECStack.push(<span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">fun1</span>&gt;</span> functionContext)</span></span><br><span class="line"><span class="hljs-xml"></span></span><br><span class="line"><span class="hljs-xml">// fun1 中调用了 fun2，创建 fun2 的执行上下文</span></span><br><span class="line">ECStack.push(&lt;fun2&gt; functionContext)</span><br><span class="line"></span><br><span class="line">// fun2 还调用了 fun3</span><br><span class="line">ECStack.push(&lt;fun3&gt; functionContext)</span><br><span class="line"></span><br><span class="line">// fun3 执行完毕</span><br><span class="line">ECStack.pop()</span><br><span class="line"></span><br><span class="line">// fun2 执行完毕</span><br><span class="line">ECStack.pop()</span><br><span class="line"></span><br><span class="line">// fun1 执行完毕</span><br><span class="line">ECStack.pop()</span><br></pre></td></tr></table></figure>
 
 <p>但是需要注意的是，<code>JavaScript</code> 虽然执行完毕了，但是 <code>ECStack</code> 底层永远有个 <code>globalContext</code></p>
 <h2 id="作用域链"><a href="#作用域链" class="headerlink" title="作用域链"></a>作用域链</h2><p>在上面我们介绍 <code>AO</code> 部分概念的时候，我们曾经提到过，在查找变量的时候，会先从当前上下文的变量对象中查找，如果没有找到，就会从父级（词法层面上的父级）执行上下文的变量对象中查找</p>
@@ -522,7 +525,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        146
+                        141
                     </p>
                 </div>
             </div>
@@ -631,7 +634,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">10</span>
+                <span class="level-item tag">9</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -639,7 +642,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">28</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Http/">
@@ -655,7 +658,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">47</span>
+                <span class="level-item tag">45</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -709,7 +712,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 17.5px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16.25px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.75px;">Essay</a> <a href="/tags/Http/" style="font-size: 13.75px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.5px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 12.5px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.25px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 17.14px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.57px;">Essay</a> <a href="/tags/Http/" style="font-size: 14.29px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.14px;">Node.js</a> <a href="/tags/React/" style="font-size: 15.71px;">React</a> <a href="/tags/Vue/" style="font-size: 12.86px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.43px;">jQuery</a>
     </div>
 </div>
 
@@ -1145,7 +1148,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1156,7 +1159,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1189,7 +1192,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">九月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1338,14 +1341,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">10</span>
+                        <span class="tag is-grey">9</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
@@ -1359,7 +1362,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">47</span>
+                        <span class="tag is-grey">45</span>
                     </a>
                 </div>
                 

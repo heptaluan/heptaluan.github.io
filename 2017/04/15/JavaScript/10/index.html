@@ -16,7 +16,7 @@
 <meta property="og:description" content="在 JavaScript 中，parseInt() 和 parseFloat() 的函数功能都是将所谓的数字字符串转化为一个真正的数值 但是两者在使用之上还是存在一定的区别的，我们下面就来看看它们两者之间的区别">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/10.jpg">
-<meta property="og:updated_time" content="2020-06-08T06:03:52.727Z">
+<meta property="og:updated_time" content="2020-07-04T15:33:32.529Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="parseInt() 与 parseFloat()">
 <meta name="twitter:description" content="在 JavaScript 中，parseInt() 和 parseFloat() 的函数功能都是将所谓的数字字符串转化为一个真正的数值 但是两者在使用之上还是存在一定的区别的，我们下面就来看看它们两者之间的区别">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    15 分钟 读完 (大约 2223 个字)
+                    15 分钟 读完 (大约 2231 个字)
                 </span>
                 
                 
@@ -201,12 +201,9 @@ var _hmt = _hmt || [];
 <p>根据 <a href="https://www.w3.org/html/ig/zh/wiki/ES5/%E6%A0%87%E5%87%86_ECMAScript_%E5%86%85%E7%BD%AE%E5%AF%B9%E8%B1%A1#parseFloat_.28string.29" target="_blank" rel="noopener">#parseFloat</a> 可知，当调用 <code>parseFloat</code> 函数，是先转成字符串，再转为数字，如果不能转为数字，则返回 <code>NaN</code></p>
 <p>大体意思就是</p>
 <ol>
-<li><p>如果返回的是原始类型（即 <code>Number</code>，<code>String</code>，<code>Boolean</code>，<code>Undefined</code>，<code>Null</code>），则将此返回值转为字符串，再尝试将字符串转为数字，如果不能转成数字则返回 <code>NaN</code></p>
-</li>
-<li><p>如果 <code>toString</code> 方法返回的不是原始类型，则继续调用 <code>valueOf</code> 方法，如果返回的是原始类型，则将其转为字符串，再将字符串转为数字返回</p>
-</li>
-<li><p>如果 <code>valueOf</code> 方法返回的也不是原始类型，则返回 <code>NaN</code></p>
-</li>
+<li>如果返回的是原始类型（即 <code>Number</code>，<code>String</code>，<code>Boolean</code>，<code>Undefined</code>，<code>Null</code>），则将此返回值转为字符串，再尝试将字符串转为数字，如果不能转成数字则返回 <code>NaN</code></li>
+<li>如果 <code>toString</code> 方法返回的不是原始类型，则继续调用 <code>valueOf</code> 方法，如果返回的是原始类型，则将其转为字符串，再将字符串转为数字返回</li>
+<li>如果 <code>valueOf</code> 方法返回的也不是原始类型，则返回 <code>NaN</code></li>
 </ol>
 <h2 id="map-parseInt"><a href="#map-parseInt" class="headerlink" title="map(parseInt)"></a>map(parseInt)</h2><p>一个经典的问题</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 下面的语句返回什么</span></span><br><span class="line">[<span class="hljs-string">'1'</span>, <span class="hljs-string">'2'</span>, <span class="hljs-string">'3'</span>].map(<span class="hljs-built_in">parseInt</span>)</span><br></pre></td></tr></table></figure>
@@ -226,9 +223,9 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> num = <span class="hljs-built_in">parseFloat</span>(<span class="hljs-string">'233333.9'</span>) - <span class="hljs-built_in">parseFloat</span>(<span class="hljs-string">'0.2'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 233333.69999999998</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(num)</span><br></pre></td></tr></table></figure>
 
 <p>很明显结果并不是我们想要的样子，那么为什么会造成这种情况呢？其实最主要的原因就在于能被计算机读懂的是二进制，而不是十进制，我们来把 <code>0.2</code> 转换为二进制看一看</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-number">0.2</span> =&gt; <span class="hljs-number">0.0011</span> <span class="hljs-number">0011</span> <span class="hljs-number">0011</span> <span class="hljs-number">0011</span>…（无限循环）</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-number">0.2</span> ==&gt; <span class="hljs-number">0.0011</span> <span class="hljs-number">0011</span> <span class="hljs-number">0011</span> <span class="hljs-number">0011</span> …</span><br></pre></td></tr></table></figure>
 
-<p>这样一看问题就很明显了，所以我们在平常过程当中需要做的就是尽量避免这样的情况发生，如果无法避免的话，可以采用以下几种方式来进行处理</p>
+<p>这样一看问题就很明显了，因为它是一个无限循环的小数，所以我们在平常过程当中需要做的就是尽量避免这样的情况发生，如果无法避免的话，可以采用以下几种方式来进行处理</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 第一种，四舍五入</span></span><br><span class="line"><span class="hljs-built_in">Math</span>.round(<span class="hljs-built_in">parseFloat</span>(<span class="hljs-string">'233333.9'</span>) - <span class="hljs-built_in">parseFloat</span>(<span class="hljs-number">0.2</span>))</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 第二种，保留几位小数</span></span><br><span class="line">num.toFixed(<span class="hljs-number">2</span>)  <span class="hljs-comment">// toFixed(n) 中的 n 代表保留几位 </span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 第三种，扩大一定的倍数，对结果在缩小这个倍数</span></span><br><span class="line"><span class="hljs-keyword">var</span> num1 = <span class="hljs-built_in">parseFloat</span>(<span class="hljs-string">'233333.9'</span>) * <span class="hljs-number">1000000000000</span></span><br><span class="line"><span class="hljs-keyword">var</span> num2 = <span class="hljs-built_in">parseFloat</span>(<span class="hljs-string">'0.2'</span>) * <span class="hljs-number">1000000000000</span></span><br><span class="line"><span class="hljs-keyword">var</span> num3 = (num1 - num2) / <span class="hljs-number">1000000000000</span></span><br></pre></td></tr></table></figure>
 
 <blockquote>
@@ -284,10 +281,8 @@ var _hmt = _hmt || [];
 </tbody></table>
 <p>通过上面两个表我们可以发现，其实简单来说就是</p>
 <ul>
-<li><p>十进制整数转二进制方法 – 除 <code>2</code> 取余</p>
-</li>
-<li><p>十进制小数转二进制方法 – 乘 <code>2</code> 除整</p>
-</li>
+<li>十进制整数转二进制方法 – 除 <code>2</code> 取余</li>
+<li>十进制小数转二进制方法 – 乘 <code>2</code> 除整</li>
 </ul>
 <p>在这里就不得不提 <code>0.1</code> 这个比较特殊的小数了，<code>0.1</code> 的二进制格式是 <code>0.0001100011 ...</code></p>
 <p>这是一个二进制无限循环小数，但是计算机内存有限，不可能存储所有的小数位数</p>
@@ -304,14 +299,10 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> x = <span class="hljs-keyword">new</span> BigNumber(<span class="hljs-number">0.1</span>)</span><br><span class="line">  <span class="hljs-keyword">let</span> y = <span class="hljs-keyword">new</span> BigNumber(<span class="hljs-number">0.2</span>)</span><br><span class="line">  <span class="hljs-keyword">let</span> z = <span class="hljs-keyword">new</span> BigNumber(<span class="hljs-number">0.3</span>)</span><br><span class="line"></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(z.equals(x.add(y)))    <span class="hljs-comment">// 0.3 === 0.1 + 0.2, true</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(z.minus(x).equals(y))  <span class="hljs-comment">// true</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(z.minus(y).equals(x))  <span class="hljs-comment">// true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> x = <span class="hljs-number">0.2</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(x * x === <span class="hljs-number">0.04</span>)  <span class="hljs-comment">// false</span></span><br><span class="line">  <span class="hljs-keyword">let</span> y = <span class="hljs-keyword">new</span> BigNumber(<span class="hljs-number">0.2</span>)</span><br><span class="line">  <span class="hljs-keyword">let</span> r = y.mul(y)             <span class="hljs-comment">// 0.04</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(r.equals(<span class="hljs-keyword">new</span> BigNumber(<span class="hljs-number">0.04</span>)))  <span class="hljs-comment">// true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
-<li><p>为什么 <code>0.1 + 0.2</code> 不等于 <code>0.3</code>，因为计算机不能精确表示 <code>0.1</code>， <code>0.2</code> 这样的浮点数，计算时使用的是带有舍入误差的数</p>
-</li>
-<li><p>并不是所有的浮点数在计算机内部都存在舍入误差，比如 <code>0.5</code> 就没有舍入误差</p>
-</li>
-<li><p>具有舍入误差的运算结可能会符合我们的期望，原因可能是负负得正，相互抵消这样的效果</p>
-</li>
-<li><p>怎么办？一是使用整型代替浮点数计算，二是不要直接比较两个浮点数，而应该使用 <a href="https://github.com/MikeMcl/bignumber.js" target="_blank" rel="noopener">bignumber</a> 这样的浮点数运算库</p>
-</li>
+<li>为什么 <code>0.1 + 0.2</code> 不等于 <code>0.3</code>，因为计算机不能精确表示 <code>0.1</code>， <code>0.2</code> 这样的浮点数，计算时使用的是带有舍入误差的数</li>
+<li>并不是所有的浮点数在计算机内部都存在舍入误差，比如 <code>0.5</code> 就没有舍入误差</li>
+<li>具有舍入误差的运算结可能会符合我们的期望，原因可能是负负得正，相互抵消这样的效果</li>
+<li>怎么办？一是使用整型代替浮点数计算，二是不要直接比较两个浮点数，而应该使用 <a href="https://github.com/MikeMcl/bignumber.js" target="_blank" rel="noopener">bignumber</a> 这样的浮点数运算库</li>
 </ul>
 
         </div>
@@ -423,7 +414,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        146
+                        141
                     </p>
                 </div>
             </div>
@@ -532,7 +523,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">10</span>
+                <span class="level-item tag">9</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -540,7 +531,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">28</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Http/">
@@ -556,7 +547,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">47</span>
+                <span class="level-item tag">45</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -610,7 +601,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 17.5px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16.25px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.75px;">Essay</a> <a href="/tags/Http/" style="font-size: 13.75px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.5px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 12.5px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.25px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 17.14px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.57px;">Essay</a> <a href="/tags/Http/" style="font-size: 14.29px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.14px;">Node.js</a> <a href="/tags/React/" style="font-size: 15.71px;">React</a> <a href="/tags/Vue/" style="font-size: 12.86px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.43px;">jQuery</a>
     </div>
 </div>
 
@@ -1046,7 +1037,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1057,7 +1048,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1090,7 +1081,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">九月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1239,14 +1230,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">10</span>
+                        <span class="tag is-grey">9</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
@@ -1260,7 +1251,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">47</span>
+                        <span class="tag is-grey">45</span>
                     </a>
                 </div>
                 

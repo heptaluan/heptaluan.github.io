@@ -16,7 +16,7 @@
 <meta property="og:description" content="所谓事件，说的就是用户或浏览器自身执行的某种动作，诸如 click、load、mouseover 等，事件处理程序响应某个事件的函数就叫事件处理程序（或事件侦听器）">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/01.jpg">
-<meta property="og:updated_time" content="2020-06-05T07:57:13.756Z">
+<meta property="og:updated_time" content="2020-07-04T15:33:32.524Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的事件">
 <meta name="twitter:description" content="所谓事件，说的就是用户或浏览器自身执行的某种动作，诸如 click、load、mouseover 等，事件处理程序响应某个事件的函数就叫事件处理程序（或事件侦听器）">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    15 分钟 读完 (大约 2196 个字)
+                    15 分钟 读完 (大约 2197 个字)
                 </span>
                 
                 
@@ -227,7 +227,7 @@ var _hmt = _hmt || [];
 <li><code>stopPropagation()</code> 方法，用于阻止事件冒泡</li>
 <li><code>preventDefault()</code> 方法，阻止事件的默认行为</li>
 </ul>
-<p>兼容方法：</p>
+<p>兼容方法如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> eventHandle = &#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 添加</span></span><br><span class="line">  addEvent: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el, type, fn</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (el.addEventListener) &#123;</span><br><span class="line">      el.addEventListener(type, fn, <span class="hljs-literal">false</span>)</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (el.attachEvent) &#123;</span><br><span class="line">      el.attachEvent(<span class="hljs-string">'on'</span> + type, fn)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 删除</span></span><br><span class="line">  removeEvent: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">el, type, fn</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (el.removeEventListener) &#123;</span><br><span class="line">      el.removeEventListener(type, fn, <span class="hljs-literal">false</span>)</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (el.detachEvent) &#123;</span><br><span class="line">      el.detachEvent(<span class="hljs-string">'on'</span> + type, fn)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 事件对象</span></span><br><span class="line">  getEvent: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> e ? event : <span class="hljs-built_in">window</span>.event</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 事件监听的元素</span></span><br><span class="line">  getElement: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> e.target || e.srcElement</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 阻止冒泡</span></span><br><span class="line">  stopBubble: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (e &amp;&amp; e.stopPropagation) &#123;</span><br><span class="line">      e.stopPropagation()</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-built_in">window</span>.event.cancelBubble = <span class="hljs-literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 阻止默认行为</span></span><br><span class="line">  stopDefault: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (e &amp;&amp; e.preventDefault) &#123;</span><br><span class="line">      e.preventDefault()</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-built_in">window</span>.event.returnValue = <span class="hljs-literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="关于-event"><a href="#关于-event" class="headerlink" title="关于 event"></a>关于 event</h2><ul>
@@ -417,7 +417,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        146
+                        141
                     </p>
                 </div>
             </div>
@@ -530,7 +530,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">10</span>
+                <span class="level-item tag">9</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -538,7 +538,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">28</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Http/">
@@ -554,7 +554,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">47</span>
+                <span class="level-item tag">45</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -608,7 +608,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 17.5px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16.25px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.75px;">Essay</a> <a href="/tags/Http/" style="font-size: 13.75px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.5px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 12.5px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.25px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 17.14px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.57px;">Essay</a> <a href="/tags/Http/" style="font-size: 14.29px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.14px;">Node.js</a> <a href="/tags/React/" style="font-size: 15.71px;">React</a> <a href="/tags/Vue/" style="font-size: 12.86px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.43px;">jQuery</a>
     </div>
 </div>
 
@@ -1044,7 +1044,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1055,7 +1055,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1088,7 +1088,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">九月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1237,14 +1237,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">10</span>
+                        <span class="tag is-grey">9</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
@@ -1258,7 +1258,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">47</span>
+                        <span class="tag is-grey">45</span>
                     </a>
                 </div>
                 

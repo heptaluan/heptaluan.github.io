@@ -16,7 +16,7 @@
 <meta property="og:description" content="我们首先先来看一张图，如下">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg">
-<meta property="og:updated_time" content="2020-06-08T05:44:11.130Z">
+<meta property="og:updated_time" content="2020-07-04T15:33:32.528Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的原型和原型对象">
 <meta name="twitter:description" content="我们首先先来看一张图，如下">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    22 分钟 读完 (大约 3362 个字)
+                    22 分钟 读完 (大约 3367 个字)
                 </span>
                 
                 
@@ -238,32 +238,31 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a, b</span><br><span class="line">(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">A</span>(<span class="hljs-params">arg1, arg2</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.a = <span class="hljs-number">1</span></span><br><span class="line">    <span class="hljs-keyword">this</span>.b = <span class="hljs-number">2</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  A.prototype.log = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.a)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  a = <span class="hljs-keyword">new</span> A()</span><br><span class="line">  b = <span class="hljs-keyword">new</span> A()</span><br><span class="line">&#125;)()</span><br><span class="line"></span><br><span class="line">a.log()  <span class="hljs-comment">// 1</span></span><br><span class="line">b.log()  <span class="hljs-comment">// 1</span></span><br></pre></td></tr></table></figure>
 
 <p>因为 <code>A</code> 在闭包里，所以现在我们是不能直接访问 <code>A</code> 的，那如果我们想给类 <code>A</code> 增加新方法，那么就可以通过访问 <code>constructor</code> 就可以了</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// a.constructor.prototype 在 chrome，firefox 中可以通过 a.__proto__ 直接访问</span></span><br><span class="line">a.constructor.prototype.log2 = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.b)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a.log2()  <span class="hljs-comment">// 2</span></span><br><span class="line">b.log2()  <span class="hljs-comment">// 2</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// a.constructor.prototype 在 chrome 和 firefox 中可以通过 a.__proto__ 直接访问</span></span><br><span class="line">a.constructor.prototype.log2 = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.b)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">a.log2()  <span class="hljs-comment">// 2</span></span><br><span class="line">b.log2()  <span class="hljs-comment">// 2</span></span><br></pre></td></tr></table></figure>
 
 <p>或者我们想知道 <code>a</code> 的构造函数有几个参数？</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a.constructor.length</span><br></pre></td></tr></table></figure>
 
 <p>或者再复杂点，我想知道 <code>a</code> 的构造函数的参数名是什么</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a.constructor.toString().match(<span class="hljs-regexp">/\(.*\)/</span>).pop().slice(<span class="hljs-number">1</span>,<span class="hljs-number">-1</span>).split(<span class="hljs-string">','</span>)</span><br><span class="line"><span class="hljs-comment">// ['arg1', 'arg2']</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">a.constructor.toString().match(<span class="hljs-regexp">/\(.*\)/</span>).pop().slice(<span class="hljs-number">1</span>, <span class="hljs-number">-1</span>).split(<span class="hljs-string">','</span>)</span><br><span class="line"><span class="hljs-comment">// ['arg1', 'arg2']</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="实例与原型"><a href="#实例与原型" class="headerlink" title="实例与原型"></a>实例与原型</h2><p>当读取实例的属性时，如果找不到，就会查找与对象关联的原型中的属性，如果还查不到，就去找原型的原型，以此类推，一直找到最顶层为止</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Foo</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line">Foo.prototype.name = <span class="hljs-string">'zhangsan'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> f1 = <span class="hljs-keyword">new</span> Foo</span><br><span class="line">f1.name = <span class="hljs-string">'lisi'</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(f1.name)  <span class="hljs-comment">// lisi</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">delete</span> f1.name</span><br><span class="line"><span class="hljs-built_in">console</span>.log(f1.name)  <span class="hljs-comment">// zhangsan</span></span><br></pre></td></tr></table></figure>
 
 <p>在上面的例子中，我们给实例对象 <code>f1</code> 添加了 <code>name</code> 属性，当我们打印 <code>f1.name</code> 的时候，结果自然为 <code>lisi</code></p>
-<p>但是当我们删除了 <code>f1</code> 的 <code>name</code> 属性时，再次读取 <code>f1.name</code> 的时候，从 <code>f1</code> 对象中找不到 <code>name</code> 属性就会从 <code>f1</code> 的原型也就是 <code>f1.__proto__</code></p>
-<p>对应的也就是 <code>Foo.prototype</code> 中查找，幸运的是我们找到了 <code>name</code> 属性，结果为 <code>zhangsan</code></p>
+<p>但是当我们删除了 <code>f1</code> 的 <code>name</code> 属性时，再次读取 <code>f1.name</code> 的时候，就会发现在 <code>f1</code> 对象中已经找不到 <code>name</code> 属性了，所以就会从 <code>f1</code> 的原型，也就是 <code>f1.__proto__</code> 对应的 <code>Foo.prototype</code> 当中去进行查找，所幸的是我们找到了 <code>name</code> 属性，结果为 <code>zhangsan</code></p>
 <p>但是万一还没有找到呢？原型的原型又是什么呢？</p>
 <h2 id="原型的原型"><a href="#原型的原型" class="headerlink" title="原型的原型"></a>原型的原型</h2><p>在前面，我们已经讲了原型也是一个对象，既然是对象，我们就可以用最原始的方式创建它，那就是</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> obj = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Object</span>()</span><br><span class="line">obj.name = <span class="hljs-string">'zhangsan'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(obj.name)  <span class="hljs-comment">// zhangsan</span></span><br></pre></td></tr></table></figure>
 
 <p>其实原型对象就是通过 <code>Object</code> 构造函数生成的，结合之前所讲，实例的 <code>__proto__</code> 指向构造函数的 <code>prototype</code></p>
 <p>那 <code>Object.prototype</code> 的原型又是指向哪里的呢？我们可以打印一下</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">Object</span>.prototype.__proto__ === <span class="hljs-literal">null</span>)  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Object</span>.prototype.__proto__           <span class="hljs-comment">// null</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.prototype.__proto__ === <span class="hljs-literal">null</span>  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
 
 <p><code>null</code> 表示没有对象，即该处不应该有值</p>
 <p>所以 <code>Object.prototype.__proto__</code> 的值为 <code>null</code> 跟 <code>Object.prototype</code> 没有原型，其实表达了一个意思</p>
 <p>所以查找属性的时候查到 <code>Object.prototype</code> 就可以停止查找了，这也就是开头部分的图片当中所表达的这个意思</p>
-<p>下面我们通过一个小例子来巩固一下上面所涉及到的知识点</p>
+<p>来看下面这个示例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = &#123;</span><br><span class="line">  x: <span class="hljs-number">1</span>,</span><br><span class="line">  y: &#123; <span class="hljs-attr">z</span>: <span class="hljs-number">2</span> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> b = &#123;&#125;</span><br><span class="line">b.__proto__ = a</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// a 和 b 都是对象（通过new Object() 生成，这里是简写）</span></span><br><span class="line"><span class="hljs-comment">// 所以 a.__proto__ === b.__proto__ 是相等的（都是指向 Object.prototype）</span></span><br><span class="line"><span class="hljs-comment">// 所以在查找 b.x 的时候先去 b 查看，发现是空对象（&#123;&#125;），所以 b.x 是不存在的</span></span><br><span class="line"><span class="hljs-comment">// 然后原则上应该去 Object.prototype 上查找，但是现在把 b.__proto__ 从新指回了 a，所以应该就去 a 上查找</span></span><br><span class="line"><span class="hljs-comment">// 所以 b.x 为 1，b.y 为 &#123; z: 2 &#125;</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(a.x)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(b.x)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 然后把 b.x 重新赋值为 22</span></span><br><span class="line"><span class="hljs-comment">// 因为是基本类型，所以 a.x 是不变的</span></span><br><span class="line">b.x = <span class="hljs-number">22</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(a.x)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(b.x)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 这个同上面那个类似</span></span><br><span class="line"><span class="hljs-comment">// 但是由于是引用类型，所以 a.y 和 b.y 指向的都是同一个地址</span></span><br><span class="line"><span class="hljs-comment">// 其中一个变化的话自然会引起另外一个变化</span></span><br><span class="line">b.y.z = <span class="hljs-number">33</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(a.y.z)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(b.y.z)</span><br></pre></td></tr></table></figure>
 
 <h2 id="自定义对象"><a href="#自定义对象" class="headerlink" title="自定义对象"></a>自定义对象</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 1. 默认情况下</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Foo</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"><span class="hljs-keyword">var</span> foo = <span class="hljs-keyword">new</span> Foo()</span><br><span class="line">Foo.prototype.__proto__ === <span class="hljs-built_in">Object</span>.prototype  <span class="hljs-comment">// true 理由同上</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 2. 其他情况 </span></span><br><span class="line"><span class="hljs-comment">// 第一种情况</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Bar</span>(<span class="hljs-params"></span>) </span>&#123; &#125;  <span class="hljs-comment">// 这时我们想让 Foo 继承 Bar</span></span><br><span class="line"></span><br><span class="line">Foo.prototype = <span class="hljs-keyword">new</span> Bar()</span><br><span class="line">Foo.prototype.__proto__ === Bar.prototype     <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 第二种情况</span></span><br><span class="line"><span class="hljs-comment">// 我们不想让 Foo 继承谁，但是我们要自己重新定义 Foo.prototype（实际过程当中不建议这样操作）</span></span><br><span class="line">Foo.prototype = &#123;</span><br><span class="line">  a: <span class="hljs-number">10</span>,</span><br><span class="line">  b: <span class="hljs-number">-10</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 这种方式就是用了对象字面量的方式来创建一个对象，根据前文所述 </span></span><br><span class="line">Foo.prototype.__proto__ === <span class="hljs-built_in">Object</span>.prototype  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
@@ -274,7 +273,7 @@ var _hmt = _hmt || [];
 
 <p>一般函数直接调用，默认 <code>this</code> 指向全局 <code>window/global</code></p>
 <p>通过 <code>obj(&#39;name1&#39;)</code> 调用，返回 <code>this</code> 引用，并传递给 <code>a</code>，此时 <code>a</code> 等于 <code>window</code> 对象，即可输出 <code>name</code> 值</p>
-<p><code>new</code> 操作，<code>new obj</code> 等价于 <code>new obj()</code> ，实例化一个对象，这时 <code>this</code> 指向 <code>obj</code>，要拿到 <code>b.name</code> 的值，需要保证 <code>name</code> 属性存在</p>
+<p><code>new</code> 操作，在没有参数的情况下 <code>new obj</code> 等价于 <code>new obj()</code> ，实例化一个对象，这时 <code>this</code> 指向 <code>obj</code>，要拿到 <code>b.name</code> 的值，需要保证 <code>name</code> 属性存在</p>
 <p>属性查找原则是先查找当前实例有没有属性，如果有就直接使用，如果没有，就到原型上去找，在没有就接着原型链一步一步往上</p>
 <p>这里为了和 <code>a.name</code> 作属性区别，使用了 <code>if (name)</code> 有条件的构建 <code>this</code> 的属性 <code>name</code></p>
 <p>所以，现在 <code>name</code> 属性提供给 <code>a</code> 使用，原型上的 <code>name</code> 提供给 <code>b</code> 使用</p>
@@ -435,7 +434,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        146
+                        141
                     </p>
                 </div>
             </div>
@@ -560,7 +559,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">10</span>
+                <span class="level-item tag">9</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -568,7 +567,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">28</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Http/">
@@ -584,7 +583,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">47</span>
+                <span class="level-item tag">45</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/MySQL/">
@@ -638,7 +637,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 17.5px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16.25px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.75px;">Essay</a> <a href="/tags/Http/" style="font-size: 13.75px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.5px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 12.5px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.25px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 17.14px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.57px;">Essay</a> <a href="/tags/Http/" style="font-size: 14.29px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.14px;">Node.js</a> <a href="/tags/React/" style="font-size: 15.71px;">React</a> <a href="/tags/Vue/" style="font-size: 12.86px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.43px;">jQuery</a>
     </div>
 </div>
 
@@ -1074,7 +1073,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1085,7 +1084,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1118,7 +1117,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">九月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1267,14 +1266,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">10</span>
+                        <span class="tag is-grey">9</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
@@ -1288,7 +1287,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">47</span>
+                        <span class="tag is-grey">45</span>
                     </a>
                 </div>
                 
