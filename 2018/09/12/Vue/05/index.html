@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="这里不使用 vue-cli，而是从头开始搭建，一步一步实现一个简易脚手架 理解 vue-cli 到底是怎么实现的（顺路了解一下 webpack 在 vue 项目中的使用）">
+    <meta name="description" content="在本章当中，我们不使用官方提供的 vue-cli，而是从头开始搭建，一步一步实现一个简易脚手架，理解 vue-cli 到底是怎么实现的（顺路了解一下 webpack 在 vue 项目中的使用）">
 <meta name="keywords" content="Vue">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用 webpack 来构建 vue 项目">
 <meta property="og:url" content="http://yoursite.com/2018/09/12/Vue/05/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="这里不使用 vue-cli，而是从头开始搭建，一步一步实现一个简易脚手架 理解 vue-cli 到底是怎么实现的（顺路了解一下 webpack 在 vue 项目中的使用）">
+<meta property="og:description" content="在本章当中，我们不使用官方提供的 vue-cli，而是从头开始搭建，一步一步实现一个简易脚手架，理解 vue-cli 到底是怎么实现的（顺路了解一下 webpack 在 vue 项目中的使用）">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/05.jpg">
-<meta property="og:updated_time" content="2020-01-08T13:45:37.376Z">
+<meta property="og:updated_time" content="2020-07-05T08:12:23.761Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用 webpack 来构建 vue 项目">
-<meta name="twitter:description" content="这里不使用 vue-cli，而是从头开始搭建，一步一步实现一个简易脚手架 理解 vue-cli 到底是怎么实现的（顺路了解一下 webpack 在 vue 项目中的使用）">
+<meta name="twitter:description" content="在本章当中，我们不使用官方提供的 vue-cli，而是从头开始搭建，一步一步实现一个简易脚手架，理解 vue-cli 到底是怎么实现的（顺路了解一下 webpack 在 vue 项目中的使用）">
 <meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/05.jpg">
 
 
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    20 分钟 读完 (大约 2937 个字)
+                    20 分钟 读完 (大约 2957 个字)
                 </span>
                 
                 
@@ -186,13 +186,12 @@ var _hmt = _hmt || [];
             
         </h1>
         <div class="content">
-            <p>这里不使用 <code>vue-cli</code>，而是从头开始搭建，一步一步实现一个简易脚手架</p>
-<p>理解 <code>vue-cli</code> 到底是怎么实现的（顺路了解一下 <code>webpack</code> 在 <code>vue</code> 项目中的使用）</p>
+            <p>在本章当中，我们不使用官方提供的 <code>vue-cli</code>，而是从头开始搭建，一步一步实现一个简易脚手架，理解 <code>vue-cli</code> 到底是怎么实现的（顺路了解一下 <code>webpack</code> 在 <code>vue</code> 项目中的使用）</p>
 <a id="more"></a>
 
 <p>源码可以见 <a href="https://github.com/heptaluan/myConfig" target="_blank" rel="noopener">基于 vue-cli 整合的一个个人脚手架</a></p>
 <blockquote>
-<p>注：<code>webpack</code> 和 <code>vue</code> 的版本均在 <code>2.0</code> 以上</p>
+<p>需要注意的是，<code>webpack</code> 和 <code>vue</code> 的版本均在 <code>2.0</code> 以上</p>
 </blockquote>
 <h2 id="创建目录"><a href="#创建目录" class="headerlink" title="创建目录"></a>创建目录</h2><p>大致目录结构如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">├── index.html         ==&gt; 根本件，最后用于展示 App.vue 组件</span><br><span class="line">├── main.js            ==&gt; 入口文件</span><br><span class="line">├── App.vue            ==&gt; vue 组件</span><br><span class="line">├── pacjage.json       ==&gt; 工程配置文件（依赖，配置）</span><br><span class="line">└── webpack.config.js  ==&gt; webpack 配置文件</span><br></pre></td></tr></table></figure>
@@ -208,27 +207,23 @@ var _hmt = _hmt || [];
 
 <p>然后就可以在我们的 <code>index.html</code> 中引入出口文件中指定的 <code>JavaScript</code></p>
 <ul>
-<li><p>这里是 <code>bundle.js</code>，但是目录中不使用 <code>webpack -p</code> 的话是不存在这个文件的</p>
-</li>
-<li><p><code>webpack</code> 会在编译执行的时候为我们自动生成该文件</p>
-</li>
+<li>这里是 <code>bundle.js</code>，但是目录中不使用 <code>webpack -p</code> 的话是不存在这个文件的</li>
+<li><code>webpack</code> 会在编译执行的时候为我们自动生成该文件</li>
 </ul>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// index.html</span></span><br><span class="line">&lt;script src=<span class="hljs-string">'./bundle.js'</span>&gt;<span class="hljs-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
 
 <p>关于出口文件，如果想指定输出的目录，可以按照下面这样来设置</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">output: &#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 如果目录，如果不存在则会去新建</span></span><br><span class="line">  path: path.resolve(__dirname, <span class="hljs-string">'./src'</span>),</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 设置静态目录（可以从这个目录下直接进行读取）</span></span><br><span class="line">  publicPath: <span class="hljs-string">'/src/'</span>,</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 文件名称</span></span><br><span class="line">  filename: <span class="hljs-string">'bundle.js'</span></span><br><span class="line"></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
 
-<h2 id="配置-vue-loader"><a href="#配置-vue-loader" class="headerlink" title="配置 vue-loader"></a>配置 vue-loader</h2><p>如果需要解析像 <code>App.vue</code> 这样的文件，使其变成正常可以访问的代码，我们需要引入 <code>vue-loader</code> 来处理</p>
-<p>这个时候我们就可以在 <code>webpack</code> 中配置我们的相关 <code>loader</code> 了（这也是 <code>webpack</code> 最核心的东西）</p>
+<h2 id="配置-vue-loader"><a href="#配置-vue-loader" class="headerlink" title="配置 vue-loader"></a>配置 vue-loader</h2><p>如果需要解析像 <code>App.vue</code> 这样的文件，使其变成正常可以访问的代码，我们需要引入 <code>vue-loader</code> 来处理，这个时候我们就可以在 <code>webpack</code> 中配置我们的相关 <code>loader</code> 了（这也是 <code>webpack</code> 最核心的东西）</p>
 <p>在 <code>webpack.config.js</code> 中添加</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">module</span>: &#123;</span><br><span class="line">  <span class="hljs-comment">// 所有的 loader 都配置在这里</span></span><br><span class="line">  rules: [</span><br><span class="line">    <span class="hljs-comment">// 下面这句的意思是 使用 vue-loader 来解析处理以 .vue 结尾的文件</span></span><br><span class="line">    <span class="hljs-comment">// 如果多个 loader 的话，中间可以使用 ! 来连接，比如 style!css</span></span><br><span class="line">    &#123;</span><br><span class="line">      test: <span class="hljs-regexp">/\.vue$/</span>,</span><br><span class="line">      loader: <span class="hljs-string">'vue-loader'</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>配置完 <code>webpack</code> 以后就可以来安装 <code>vue-loader</code> 以及其相关的一些组件了</p>
-<p>单单使用 <code>vue-loader</code> 编译写入 <code>.vue</code> 文件是不够的，因为在 <code>.vue</code> 文件当中主要分为三大块，如下所示</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt; ... &lt;<span class="hljs-regexp">/template&gt;</span></span><br><span class="line"><span class="hljs-regexp"></span></span><br><span class="line"><span class="hljs-regexp">&lt;script&gt; ... &lt;/</span>script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style&gt; ... &lt;<span class="hljs-regexp">/style&gt;</span></span><br></pre></td></tr></table></figure>
+<p>配置完 <code>webpack</code> 以后就可以来安装 <code>vue-loader</code> 以及其相关的一些组件了，单单使用 <code>vue-loader</code> 编译写入 <code>.vue</code> 文件是不够的，因为在 <code>.vue</code> 文件当中主要分为三大块，如下所示</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>每一部分都需要相对应的 <code>loader</code> 来进行处理，这时就需要同时安装以下 <code>loader</code></p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 处理模版</span></span><br><span class="line">vue-template-compiler   ==&gt; 编译 vue 的 template 部分（之前使用的是 vue-html-loader） </span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 处理 css，因为 css 分为 .css 文件和行内样式，需要同时加载</span></span><br><span class="line">css-loader              ==&gt; 编译写入 css</span><br><span class="line">vue-style-loader        ==&gt; 编译 vue 的样式部分</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 处理 js，关于 babel 部分见下方</span></span><br><span class="line">vue-hot-reload-api      ==&gt; 使 webpack 对 vue 实现热替换</span><br></pre></td></tr></table></figure>
+<figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 处理模版</span></span><br><span class="line">vue-template-compiler   ==&gt; 编译 vue 的 template 部分（之前使用的是 vue-html-loader） </span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 处理 css，因为 css 分为 .css 文件和行内样式，需要同时加载</span></span><br><span class="line">css-loader              ==&gt; 编译写入 css</span><br><span class="line">vue-style-loader        ==&gt; 编译 vue 的样式部分</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 处理 js，关于 babel 部分见下方</span></span><br><span class="line">vue-hot-reload-api      ==&gt; 使 webpack 对 vue 实现热替换</span><br></pre></td></tr></table></figure>
 
 <p>可以使用以下命令来进行安装</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install vue-template-compiler css-loader vue-style-loader vue-hot-reload-api --save-dev</span><br></pre></td></tr></table></figure>
@@ -236,60 +231,50 @@ var _hmt = _hmt || [];
 <h2 id="配置-babel"><a href="#配置-babel" class="headerlink" title="配置 babel"></a>配置 babel</h2><p>众所周知，现在浏览器对 <code>ES6</code> 语法的支持还不是很完善，这个时候也就需要使用 <code>babel</code> 来解析 <code>ES6</code> 语法，先来配置 <code>webpack</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">module</span>: &#123;</span><br><span class="line">  rules: [</span><br><span class="line">    <span class="hljs-comment">// 规则和上面类似，需要注意的就是多了一个 exclude</span></span><br><span class="line">    <span class="hljs-comment">// 意思是 匹配除了 /node_modules/ 和 bower_components 之外的所有 .js 文件</span></span><br><span class="line">    <span class="hljs-comment">// 关于 options 选项，如果在根目录下的 .babelrc 配置了，这里就不需要了，两者是一样的</span></span><br><span class="line">    <span class="hljs-comment">// 关于 .babelrc 见最后</span></span><br><span class="line">    &#123;</span><br><span class="line">      test: <span class="hljs-regexp">/\.js$/</span>,</span><br><span class="line">      exclude: <span class="hljs-regexp">/(node_modules|bower_components)/</span>,</span><br><span class="line">      use: &#123;</span><br><span class="line">        loader: <span class="hljs-string">'babel-loader'</span>,</span><br><span class="line">        options: &#123;</span><br><span class="line">          <span class="hljs-comment">// 先配置一个前置</span></span><br><span class="line">          presets: [<span class="hljs-string">'es2015'</span>],</span><br><span class="line">          <span class="hljs-comment">// 还需要一个插件来使每次改变的时候，实时编译</span></span><br><span class="line">          plugins: [<span class="hljs-string">'transform-runtime'</span>]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>babel 需要的相关组件如下：</p>
+<p><code>babel</code> 需要的相关组件如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">babel-loader                    ==&gt; 主程序</span><br><span class="line"></span><br><span class="line">babel-core                      ==&gt; 编译核心（语法层面）</span><br><span class="line"></span><br><span class="line">babel-plugin-transform-runtime  ==&gt; 实时编译插件</span><br><span class="line"></span><br><span class="line">babel-perset-es2015             ==&gt; es6 语法</span><br><span class="line"></span><br><span class="line">babel-runtime                   ==&gt; 上面几个程序需要这个组件来运行（babel 执行环境）</span><br></pre></td></tr></table></figure>
 
-<p>最后来汇总一下所有涉及到的依赖：</p>
+<p>最后来汇总一下所有涉及到的依赖</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">vue-loader                      ==&gt; 编译写入 .vue 文件</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 处理 .vue 中的模版</span></span><br><span class="line">vue-template-compiler           ==&gt; 编译 vue 的 template 部分，（之前使用的是 vue-html-loader） </span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 处理 css，因为 css 分为 .css 文件和行内样式，需要同时加载</span></span><br><span class="line">css-loader                      ==&gt; 编译写入 css</span><br><span class="line">vue-style-loader                ==&gt; 编译 vue 的样式部分</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 处理 js</span></span><br><span class="line">vue-hot-reload-api              ==&gt; 使 webpack 对 vue 实现热替换</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 使用 babel 来处理 es6 语法</span></span><br><span class="line">babel-loader                    ==&gt; 主程序</span><br><span class="line">babel-core                      ==&gt; 编译核心（语法层面）</span><br><span class="line">babel-plugin-transform-runtime  ==&gt; 实时编译插件</span><br><span class="line">babel-perset-es2015             ==&gt; es6 语法</span><br><span class="line">babel-runtime                   ==&gt; 上面几个 babel 程序需要这个组件来运行（babel 执行环境）</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 处理文件和图片</span></span><br><span class="line">file-loader                     ==&gt; 用于打包文件和图片，默认情况下生成文件的文件名是文件名与 md5 哈希值的组合</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// webpack</span></span><br><span class="line">webpack                         ==&gt; webpack 主程序</span><br><span class="line">webpack-dev-server              ==&gt; webpack 执行环境</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// vue</span></span><br><span class="line">vue                             ==&gt; 这个就不用多说了</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 可选</span></span><br><span class="line">url-loader                      ==&gt; 实际上是对 file-loader 的封装（见最后）</span><br><span class="line">webpack-merge                   ==&gt; 开发环境和生产环节的 webpaak 配置文件的配置合并</span><br></pre></td></tr></table></figure>
 
-<h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><p>安装和配置完成以后，这个时候就可以来启动程序了</p>
-<p>但是如果想在命令行直接使用类似 <code>npm run dev</code> 命令的话，就需要配置一下 <code>package.json</code> 文件</p>
-<p>在 <code>scripts</code> 标签下设置：</p>
+<h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><p>安装和配置完成以后，这个时候就可以来启动程序了，但是如果想在命令行直接使用类似 <code>npm run dev</code> 命令的话，就需要配置一下 <code>package.json</code> 文件</p>
+<p>在 <code>scripts</code> 标签下设置</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 设置 scripts 即可</span></span><br><span class="line"><span class="hljs-comment">// --inline 自动刷新</span></span><br><span class="line"><span class="hljs-comment">// --hot 热载</span></span><br><span class="line"><span class="hljs-comment">// --port 设定端口（在端口被占用的情况下可以利用这个参数来指定，默认的为 8080）</span></span><br><span class="line"><span class="hljs-string">'scripts'</span>: &#123;</span><br><span class="line">  <span class="hljs-string">'dev'</span>: <span class="hljs-string">'webpack-dev-server --inline --hot'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>然后就可以使用 <code>npm run dev</code> 命令来启动服务了，如果在控制台中看到：</p>
+<p>然后就可以使用 <code>npm run dev</code> 命令来启动服务了，如果在控制台中看到</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Project is running at http:<span class="hljs-comment">//localhost:8080/</span></span><br></pre></td></tr></table></figure>
 
-<p>这个时候就表明启动成功了，可以访问 <code>http://localhost:8080/</code> 来查看效果了</p>
-<p>如果配置全部正确的话，就可以在浏览器中看到对应的内容了，修改内容直接保存，浏览器也会自动跟着刷新</p>
-<p>如果在最后运行的时候发现控制台出现如下内容：</p>
+<p>这个时候就表明启动成功了，可以访问 <code>http://localhost:8080/</code> 来查看效果了，如果配置全部正确的话，就可以在浏览器中看到对应的内容了，修改内容直接保存，浏览器也会自动跟着刷新</p>
+<p>如果在最后运行的时候发现控制台出现如下内容</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[Vue warn]: You are using the runtime-only build <span class="hljs-keyword">of</span> Vue where the template compiler is not available. Either pre-compile the templates into render functions, or use the compiler-included build.</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ...</span></span><br></pre></td></tr></table></figure>
 
-<p>这个就主要涉及到了 <code>vue</code> 的运行时构建和独立构建的区别</p>
-<p>简单来说，就是在独立构建的时候可以使用用 <code>template</code> 选项，而在运行时构建则不行，只能通过模板来编译转成 <code>render</code> 函数</p>
-<p>两者区别如下：</p>
+<p>这个就主要涉及到了 <code>vue</code> 的运行时构建和独立构建的区别，简单来说，就是在独立构建的时候可以使用用 <code>template</code> 选项，而在运行时构建则不行，只能通过模板来编译转成 <code>render</code> 函数</p>
+<p>两者区别如下</p>
 <ul>
-<li><p>独立构建包含模板编译器，运行时构建不包含模板编译器</p>
-</li>
-<li><p>模板编译器的作用就是将 <code>template</code> 选项编译成 <code>render</code> 函数，<code>render</code> 函数是渲染的关键</p>
-</li>
-<li><p>鉴于以上两点，使用运行时构建时，不能出现 <code>template</code> 选项</p>
-<ul>
-<li>因为此时没有模板编译器，但是有一种情况除外：即 <code>webpack + vue-loader</code> 情况下单文件组件中出现 <code>template</code> 是可以的</li>
+<li>独立构建包含模板编译器，运行时构建不包含模板编译器</li>
+<li>模板编译器的作用就是将 <code>template</code> 选项编译成 <code>render</code> 函数，<code>render</code> 函数是渲染的关键</li>
+<li>鉴于以上两点，使用运行时构建时，不能出现 <code>template</code> 选项<ul>
+<li>因为此时没有模板编译器，但是有一种情况除外，即 <code>webpack + vue-loader</code> 情况下单文件组件中出现 <code>template</code> 是可以的</li>
 </ul>
 </li>
-<li><p>使用 <code>vue-cli</code> 生成项目时，会提醒使用哪种构建方式，<code>npm</code> 包默认导出的是运行时构建</p>
-<ul>
+<li>使用 <code>vue-cli</code> 生成项目时，会提醒使用哪种构建方式，<code>npm</code> 包默认导出的是运行时构建<ul>
 <li>如果需要使用独立构建，需要在 <code>webpack</code> 中配置 <code>alias</code></li>
 </ul>
 </li>
 </ul>
-<p>目前暂时发现的两者的应用场景上的区别有：</p>
+<p>目前暂时发现的两者的应用场景上的区别有</p>
 <ul>
-<li><p>需要注意 <code>Vue</code> 实例化时的方式，运行时构建方式下实例化 <code>Vue</code> 时，不要出现 <code>template</code> 属性</p>
-</li>
-<li><p><code>index.html</code> 中不要出现 <code>template</code> 或者是通过 <code>vue-router</code> 渲染的 <code>route-view</code></p>
-</li>
-<li><p>以上区别讨论的场景均为使用 <code>webpack + vue-loader</code> 单文件组件下</p>
-</li>
+<li>需要注意 <code>Vue</code> 实例化时的方式，运行时构建方式下实例化 <code>Vue</code> 时，不要出现 <code>template</code> 属性</li>
+<li><code>index.html</code> 中不要出现 <code>template</code> 或者是通过 <code>vue-router</code> 渲染的 <code>route-view</code></li>
+<li>以上区别讨论的场景均为使用 <code>webpack + vue-loader</code> 单文件组件下</li>
 </ul>
 <p>解决办法也很简单，只需在 <code>webpack</code> 配置中设置一下 <code>vue</code> 的别名即可</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">resolve: &#123;</span><br><span class="line">  alias: &#123;</span><br><span class="line">    <span class="hljs-string">'vue'</span>: <span class="hljs-string">'vue/dist/vue.js'</span> </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="h-gt-h-App"><a href="#h-gt-h-App" class="headerlink" title="h =&gt; h(App)"></a>h =&gt; h(App)</h2><p>在 <code>vuejs</code> 中，可以把 <code>h</code> 函数仅是作为 <code>createElement</code> 函数的缩写，所以上述代码可以理解为</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">render: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">createElement</span>)</span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> createElement(app);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">render: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">createElement</span>)</span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> createElement(app)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><code>render</code> 方法：</p>
+<p><code>render</code> 方法</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">render: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">createElement</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> createElement(</span><br><span class="line">    <span class="hljs-comment">// tag name 标签名称</span></span><br><span class="line">    <span class="hljs-string">'h'</span> + <span class="hljs-keyword">this</span>.level,</span><br><span class="line">    <span class="hljs-comment">// 子组件中的阵列</span></span><br><span class="line">    <span class="hljs-keyword">this</span>.$slots.default</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>也是 <code>2.0</code> 新增的函数，可以直接给绑定节点渲染一个 <code>vue</code> 组件，如果在 <code>1.x</code> 的版本下，就应该使用</p>
@@ -302,14 +287,10 @@ var _hmt = _hmt || [];
 <h2 id="url-loader"><a href="#url-loader" class="headerlink" title="url-loader"></a>url-loader</h2><p><code>url-loader</code> 是对 <code>file-loader</code> 的上层封装，比如可以在 <code>webpack</code> 中对图片的加载器进行配置</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  test: <span class="hljs-regexp">/\.(png|jpg)$/</span>,</span><br><span class="line">  loader: <span class="hljs-string">'url-loader?limit=8192'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>这样一来，在小于 <code>8K</code> 的图片将直接以 <code>base64</code> 的形式内联在代码中，可以减少一次 <code>http</code> 请求</p>
-<p>所以在处理一般小图片的时候就可以使用 <code>url-loader</code> 来转为 <code>base64</code>，其他情况照常使用 <code>file-loader</code></p>
-<h2 id="webpack-中的-loader-和-plugin"><a href="#webpack-中的-loader-和-plugin" class="headerlink" title="webpack 中的 loader 和 plugin"></a>webpack 中的 loader 和 plugin</h2><p><code>webpack</code> 是一个模块打包器（<code>module bundler</code>），提供了一个核心，核心提供了很多开箱即用的功能，同时它可以用 <code>loader</code> 和 <code>plugin</code> 来扩展</p>
-<p><code>webpack</code> 常用配置包括：<code>devtool</code>、<code>entry</code>、<code>output</code>、<code>module</code>、<code>resolve</code>、<code>plugins</code>、<code>externals</code> 等</p>
-<p>本章节主要介绍 <code>webpack</code> 常用的 <code>loader</code> 和 <code>plugin</code></p>
+<p>这样一来，在小于 <code>8K</code> 的图片将直接以 <code>base64</code> 的形式内联在代码中，可以减少一次 <code>http</code> 请求，所以在处理一般小图片的时候就可以使用 <code>url-loader</code> 来转为 <code>base64</code>，其他情况照常使用 <code>file-loader</code></p>
+<h2 id="webpack-中的-loader-和-plugin"><a href="#webpack-中的-loader-和-plugin" class="headerlink" title="webpack 中的 loader 和 plugin"></a>webpack 中的 loader 和 plugin</h2><p><code>webpack</code> 是一个模块打包器（<code>module bundler</code>），提供了一个核心，核心提供了很多开箱即用的功能，同时它可以用 <code>loader</code> 和 <code>plugin</code> 来扩展，<code>webpack</code> 常用配置包括 <code>devtool</code>、<code>entry</code>、<code>output</code>、<code>module</code>、<code>resolve</code>、<code>plugins</code>、<code>externals</code> 等，这里我们主要介绍 <code>webpack</code> 常用的 <code>loader</code> 和 <code>plugin</code></p>
 <p><code>webpack</code> 允许我们使用 <code>loader</code> 来处理文件，<code>loader</code> 是一个导出为 <code>function</code> 的 <code>Node.js</code> 模块，可以将匹配到的文件进行一次转换，同时 <code>loader</code> 可以链式传递</p>
-<h4 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h4><p>一般 <code>loader</code> 的使用方式分为三种：</p>
-<p>第一种，在 <code>webpack.config.js</code> 中配置（较多）</p>
+<h4 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h4><p>一般 <code>loader</code> 的使用方式分为三种，第一种，在 <code>webpack.config.js</code> 中配置（较多）</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="hljs-built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="hljs-regexp">/\.txt$/</span>,</span><br><span class="line">        use: <span class="hljs-string">'raw-loader'</span></span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>第二种，通过命令行参数方式</p>
@@ -319,80 +300,51 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> txt <span class="hljs-keyword">from</span> <span class="hljs-string">'raw-loader!./file.txt'</span>;</span><br></pre></td></tr></table></figure>
 
 <h4 id="一些比较常用的-loader"><a href="#一些比较常用的-loader" class="headerlink" title="一些比较常用的 loader"></a>一些比较常用的 loader</h4><ul>
-<li><p>样式：<code>style-loader</code>、<code>css-loader</code>、<code>less-loader</code>、<code>sass-loader</code> 等</p>
-</li>
-<li><p>文件：<code>raw-loader</code>、<code>file-loader</code> 、<code>url-loader</code> 等</p>
-</li>
-<li><p>编译：<code>babel-loader</code>、<code>coffee-loader</code> 、<code>ts-loader</code> 等</p>
-</li>
-<li><p>校验测试：<code>mocha-loader</code>、<code>jshint-loader</code> 、<code>eslint-loader</code> 等</p>
-</li>
+<li>样式：<code>style-loader</code>、<code>css-loader</code>、<code>less-loader</code>、<code>sass-loader</code> 等</li>
+<li>文件：<code>raw-loader</code>、<code>file-loader</code> 、<code>url-loader</code> 等</li>
+<li>编译：<code>babel-loader</code>、<code>coffee-loader</code> 、<code>ts-loader</code> 等</li>
+<li>校验测试：<code>mocha-loader</code>、<code>jshint-loader</code> 、<code>eslint-loader</code> 等</li>
 </ul>
 <p>比如下面配置，可以匹配 <code>.scss</code> 的文件，分别经过 <code>sass-loader</code>、<code>css-loader</code>、<code>style-loader</code> 的处理</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="hljs-built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="hljs-regexp">/\.scss$/</span>,</span><br><span class="line">        use: [</span><br><span class="line">          &#123; <span class="hljs-attr">loader</span>: <span class="hljs-string">'style-loader'</span> &#125;,</span><br><span class="line">          &#123; <span class="hljs-attr">loader</span>: <span class="hljs-string">'css-loader'</span>, <span class="hljs-attr">options</span>: &#123; <span class="hljs-attr">sourceMap</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">modules</span>: <span class="hljs-literal">true</span> &#125; &#125;,</span><br><span class="line">          &#123; <span class="hljs-attr">loader</span>: <span class="hljs-string">'sass-loader'</span>, <span class="hljs-attr">options</span>: &#123; <span class="hljs-attr">sourceMap</span>: <span class="hljs-literal">true</span> &#125; &#125;</span><br><span class="line">        ],</span><br><span class="line">        exclude: <span class="hljs-regexp">/node_modules/</span></span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li><p><code>style-loader</code></p>
-<ul>
-<li>将创建一个 <code>style</code> 标签将 <code>CSS</code> 文件嵌入到 <code>html</code> 中</li>
-</ul>
-</li>
-<li><p><code>css-loader</code></p>
-<ul>
-<li>处理其中的 <code>@import</code> 和 <code>url()</code></li>
-</ul>
-</li>
-<li><p><code>sass-loader</code></p>
-<ul>
-<li>转化 <code>sass</code> 为 <code>CSS</code> 文件，并且包一层 <code>module.exports</code> 成为一个 <code>js module</code></li>
-</ul>
-</li>
+<li><code>style-loader</code>，将创建一个 <code>style</code> 标签将 <code>CSS</code> 文件嵌入到 <code>html</code> 中</li>
+<li><code>css-loader</code>，处理其中的 <code>@import</code> 和 <code>url()</code></li>
+<li><code>sass-loader</code>，转化 <code>sass</code> 为 <code>CSS</code> 文件，并且包一层 <code>module.exports</code> 成为一个 <code>js module</code></li>
 </ul>
 <h4 id="其他一些相关-loader-介绍"><a href="#其他一些相关-loader-介绍" class="headerlink" title="其他一些相关 loader 介绍"></a>其他一些相关 loader 介绍</h4><ul>
-<li><p><code>vue-loader</code>、<code>coffee-loader</code>、<code>babel-loader</code></p>
-<ul>
-<li><p>等可以将特定文件格式转成 <code>JavaScript</code> 模块</p>
-</li>
-<li><p>将其他语言转化为 <code>JavaScript</code> 语言和编译下一代 <code>JavaScript</code> 语言（<code>ES6</code>）</p>
-</li>
+<li><code>vue-loader</code>、<code>coffee-loader</code>、<code>babel-loader</code><ul>
+<li>等可以将特定文件格式转成 <code>JavaScript</code> 模块</li>
+<li>将其他语言转化为 <code>JavaScript</code> 语言和编译下一代 <code>JavaScript</code> 语言（<code>ES6</code>）</li>
 </ul>
 </li>
-<li><p><code>file-loader</code>、<code>url-loader</code> </p>
-<ul>
+<li><code>file-loader</code>、<code>url-loader</code> <ul>
 <li>可以处理（静态）资源</li>
 </ul>
 </li>
-<li><p><code>file-loader</code> </p>
-<ul>
+<li><code>file-loader</code> <ul>
 <li>可以复制和放置资源位置，并可以指定文件名模板，用 <code>hash</code> 命名更好利用缓存</li>
 </ul>
 </li>
-<li><p><code>url-loader</code> </p>
-<ul>
+<li><code>url-loader</code> <ul>
 <li>可以将小于配置 <code>limit</code> 大小的文件转换成内敛 <code>data url</code> 的方式，减少请求</li>
 </ul>
 </li>
-<li><p><code>raw-loader</code> </p>
-<ul>
+<li><code>raw-loader</code> <ul>
 <li>可以将文件以字符串的形式返回</li>
 </ul>
 </li>
-<li><p><code>imports-loader</code>、<code>exports-loader</code> </p>
-<ul>
-<li><p>等可以向模块注入变量或者提供导出模块功能，常见场景是</p>
-<ul>
-<li><p><code>jQuery</code> 插件注入 <code>$</code>，<code>imports-loader?$=jQuery</code></p>
-</li>
-<li><p>禁用 <code>AMD</code>，<code>imports-loader?define=false</code></p>
-</li>
-<li><p>等同于 <code>var $ = require(&#39;jQuery&#39;)</code> 和 <code>var define = false;</code></p>
-</li>
+<li><code>imports-loader</code>、<code>exports-loader</code> <ul>
+<li>等可以向模块注入变量或者提供导出模块功能，常见场景是<ul>
+<li><code>jQuery</code> 插件注入 <code>$</code>，<code>imports-loader?$=jQuery</code></li>
+<li>禁用 <code>AMD</code>，<code>imports-loader?define=false</code></li>
+<li>等同于 <code>var $ = require(&#39;jQuery&#39;)</code> 和 <code>var define = false;</code></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><p><code>expose-loader</code></p>
-<ul>
+<li><code>expose-loader</code><ul>
 <li>暴露对象为全局变量</li>
 </ul>
 </li>
@@ -422,16 +374,16 @@ var _hmt = _hmt || [];
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/09/12/JavaScript/31/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/10/12/CSS/08/">
                 <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">JavaScript 中的 Map 与 forEach 的对比</span>
+                <span class="level-item">IE 中的 haslayout</span>
             </a>
         </div>
         
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2018/08/25/Vue/04/">
-                <span class="level-item">深入 Vuex</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/09/12/JavaScript/31/">
+                <span class="level-item">JavaScript 中的 Map 与 forEach 的对比</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -507,7 +459,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        141
+                        139
                     </p>
                 </div>
             </div>
@@ -517,7 +469,7 @@ var _hmt = _hmt || [];
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        9
                     </p>
                 </div>
             </div>
@@ -527,7 +479,7 @@ var _hmt = _hmt || [];
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        9
                     </p>
                 </div>
             </div>
@@ -651,14 +603,6 @@ var _hmt = _hmt || [];
                 <span class="level-item tag">45</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/MySQL/">
-            <span class="level-start">
-                <span class="level-item">MySQL</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">2</span>
-            </span>
-        </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
             <span class="level-start">
                 <span class="level-item">Node.js</span>
@@ -702,7 +646,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 17.14px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.57px;">Essay</a> <a href="/tags/Http/" style="font-size: 14.29px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.14px;">Node.js</a> <a href="/tags/React/" style="font-size: 15.71px;">React</a> <a href="/tags/Vue/" style="font-size: 12.86px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.43px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 16.67px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/Http/" style="font-size: 13.33px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16.67px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 11.67px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
     </div>
 </div>
 
@@ -1028,7 +972,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1116,7 +1060,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">三月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1353,13 +1297,6 @@ var _hmt = _hmt || [];
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
                         <span class="tag is-grey">45</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/MySQL/">
-                        <span class="tag">MySQL</span>
-                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 

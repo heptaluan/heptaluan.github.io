@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="本文章节如下  首先先来看看 Vuex 的整体流程  然后介绍一些比较常见的 API 的用法  最后则是介绍一下初始化装载与注入的过程   至于源码的部分，则是会下一篇章节当中来进行介绍">
+    <meta name="description" content="本文章节如下  首先先来看看 Vuex 的整体流程 然后介绍一些比较常见的 API 的用法 最后则是介绍一下初始化装载与注入的过程  至于源码的部分，则是会下一篇章节当中来进行介绍">
 <meta name="keywords" content="Vue">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Vuex 框架核心流程">
 <meta property="og:url" content="http://yoursite.com/2018/08/13/Vue/03/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="本文章节如下  首先先来看看 Vuex 的整体流程  然后介绍一些比较常见的 API 的用法  最后则是介绍一下初始化装载与注入的过程   至于源码的部分，则是会下一篇章节当中来进行介绍">
+<meta property="og:description" content="本文章节如下  首先先来看看 Vuex 的整体流程 然后介绍一些比较常见的 API 的用法 最后则是介绍一下初始化装载与注入的过程  至于源码的部分，则是会下一篇章节当中来进行介绍">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/03.jpg">
-<meta property="og:updated_time" content="2020-01-08T13:45:37.376Z">
+<meta property="og:updated_time" content="2020-07-05T08:03:39.820Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Vuex 框架核心流程">
-<meta name="twitter:description" content="本文章节如下  首先先来看看 Vuex 的整体流程  然后介绍一些比较常见的 API 的用法  最后则是介绍一下初始化装载与注入的过程   至于源码的部分，则是会下一篇章节当中来进行介绍">
+<meta name="twitter:description" content="本文章节如下  首先先来看看 Vuex 的整体流程 然后介绍一些比较常见的 API 的用法 最后则是介绍一下初始化装载与注入的过程  至于源码的部分，则是会下一篇章节当中来进行介绍">
 <meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/03.jpg">
 
 
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    16 分钟 读完 (大约 2338 个字)
+                    16 分钟 读完 (大约 2367 个字)
                 </span>
                 
                 
@@ -188,83 +188,58 @@ var _hmt = _hmt || [];
         <div class="content">
             <p>本文章节如下</p>
 <ul>
-<li><p>首先先来看看 <code>Vuex</code> 的整体流程</p>
-</li>
-<li><p>然后介绍一些比较常见的 <code>API</code> 的用法</p>
-</li>
-<li><p>最后则是介绍一下初始化装载与注入的过程</p>
-</li>
+<li>首先先来看看 <code>Vuex</code> 的整体流程</li>
+<li>然后介绍一些比较常见的 <code>API</code> 的用法</li>
+<li>最后则是介绍一下初始化装载与注入的过程</li>
 </ul>
 <p>至于源码的部分，则是会下一篇章节当中来进行介绍</p>
 <a id="more"></a>
 
-<h2 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h2><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/vue/01.png" alt></p>
+<h2 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a>流程图</h2><p><code>Vuex</code> 的整个执行流程如下（转自网络）</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/vue/01.png" alt></p>
 <p><code>Vuex</code> 为 <code>Vue Components</code> 建立起了一个完整的生态圈，包括开发中的 <code>API</code> 调用一环，围绕这个生态圈，简要介绍一下各模块在核心流程中的主要功能</p>
 <ul>
-<li><p><code>Vue Components</code></p>
-<ul>
-<li><p><code>Vue</code> 组件，<code>HTML</code> 页面上负责接收用户操作等交互行为</p>
-</li>
-<li><p>执行 <code>dispatch</code> 方法触发对应 <code>action</code> 进行回应</p>
-</li>
+<li><code>Vue Components</code><ul>
+<li><code>Vue</code> 组件，<code>HTML</code> 页面上负责接收用户操作等交互行为</li>
+<li>执行 <code>dispatch</code> 方法触发对应 <code>action</code> 进行回应</li>
 </ul>
 </li>
-<li><p><code>dispatch</code></p>
-<ul>
+<li><code>dispatch</code><ul>
 <li>操作行为触发方法，是唯一能执行 <code>action</code> 的方法</li>
 </ul>
 </li>
-<li><p><code>actions</code></p>
-<ul>
-<li><p>操作行为处理模块，负责处理 <code>Vue Components</code> 接收到的所有交互行为，包含同步或者异步的操作</p>
-</li>
-<li><p>支持多个同名方法，按照注册的顺序依次触发，向后台 <code>API</code> 请求的操作就在这个模块中进行，包括触发其他 <code>action</code> 以及提交 <code>mutation</code> 的操作</p>
-</li>
-<li><p>该模块提供了 <code>promise</code> 的封装，以支持 <code>action</code> 的链式触发</p>
-</li>
+<li><code>actions</code><ul>
+<li>操作行为处理模块，负责处理 <code>Vue Components</code> 接收到的所有交互行为，包含同步或者异步的操作</li>
+<li>支持多个同名方法，按照注册的顺序依次触发，向后台 <code>API</code> 请求的操作就在这个模块中进行，包括触发其他 <code>action</code> 以及提交 <code>mutation</code> 的操作</li>
+<li>该模块提供了 <code>promise</code> 的封装，以支持 <code>action</code> 的链式触发</li>
 </ul>
 </li>
-<li><p><code>commit</code></p>
-<ul>
-<li><p>状态改变提交操作方法，对 <code>mutation</code> 进行提交</p>
-</li>
-<li><p>是唯一能执行 <code>mutation</code> 的方法</p>
-</li>
+<li><code>commit</code><ul>
+<li>状态改变提交操作方法，对 <code>mutation</code> 进行提交</li>
+<li>是唯一能执行 <code>mutation</code> 的方法</li>
 </ul>
 </li>
-<li><p><code>mutations</code></p>
-<ul>
-<li><p>状态改变操作方法，是 <code>Vuex</code> 修改 <code>state</code> 的唯一推荐方法，其他修改方式在严格模式下将会报错</p>
-</li>
-<li><p>该方法只能进行同步操作，且方法名只能全局唯一，操作之中会有一些 <code>hook</code> 暴露出来，以进行 <code>state</code> 的监控等</p>
-</li>
+<li><code>mutations</code><ul>
+<li>状态改变操作方法，是 <code>Vuex</code> 修改 <code>state</code> 的唯一推荐方法，其他修改方式在严格模式下将会报错</li>
+<li>该方法只能进行同步操作，且方法名只能全局唯一，操作之中会有一些 <code>hook</code> 暴露出来，以进行 <code>state</code> 的监控等</li>
 </ul>
 </li>
-<li><p><code>state</code></p>
-<ul>
-<li><p>页面状态管理容器对象，集中存储 <code>Vue components</code> 中 <code>data</code> 对象的零散数据</p>
-</li>
-<li><p>全局唯一，以进行统一的状态管理，页面显示所需的数据从该对象中进行读取，利用 <code>Vue</code> 的细粒度数据响应机制来进行高效的状态更新</p>
-</li>
+<li><code>state</code><ul>
+<li>页面状态管理容器对象，集中存储 <code>Vue components</code> 中 <code>data</code> 对象的零散数据</li>
+<li>全局唯一，以进行统一的状态管理，页面显示所需的数据从该对象中进行读取，利用 <code>Vue</code> 的细粒度数据响应机制来进行高效的状态更新</li>
 </ul>
 </li>
-<li><p><code>getters</code></p>
-<ul>
-<li><p><code>state</code> 对象读取方法，图中没有单独列出该模块，应该被包含在了 <code>render</code> 中</p>
-</li>
-<li><p><code>Vue Components</code> 通过该方法读取全局 <code>state</code> 对象</p>
-</li>
+<li><code>getters</code><ul>
+<li><code>state</code> 对象读取方法，图中没有单独列出该模块，应该被包含在了 <code>render</code> 中</li>
+<li><code>Vue Components</code> 通过该方法读取全局 <code>state</code> 对象</li>
 </ul>
 </li>
 </ul>
-<p>总结如下：</p>
+<p>总结如下</p>
 <ul>
-<li><p><code>Vue</code> 组件接收交互行为，调用 <code>dispatch</code> 方法触发 <code>action</code> 相关处理</p>
-</li>
-<li><p>若页面状态需要改变，则调用 <code>commit</code> 方法提交 <code>mutation</code> 修改 <code>state</code></p>
-</li>
-<li><p>通过 <code>getters</code> 获取到 <code>state</code> 新值，重新渲染 <code>Vue Components</code>，界面随之更新</p>
-</li>
+<li><code>Vue</code> 组件接收交互行为，调用 <code>dispatch</code> 方法触发 <code>action</code> 相关处理</li>
+<li>若页面状态需要改变，则调用 <code>commit</code> 方法提交 <code>mutation</code> 修改 <code>state</code></li>
+<li>通过 <code>getters</code> 获取到 <code>state</code> 新值，重新渲染 <code>Vue Components</code>，界面随之更新</li>
 </ul>
 <h2 id="目录结构"><a href="#目录结构" class="headerlink" title="目录结构"></a>目录结构</h2><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/vue/02.png" alt></p>
 <table>
@@ -307,15 +282,13 @@ var _hmt = _hmt || [];
 <p>子组件可以通过 <code>this.$store</code> 访问到该 <code>store</code> 的实例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> Counter = &#123;</span><br><span class="line">  template: <span class="hljs-string">`&lt;div&gt;&#123;&#123; count &#125;&#125;&lt;/div&gt;`</span>,</span><br><span class="line">  computed: &#123;</span><br><span class="line">    count() &#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.$store.state.count</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="Getter"><a href="#Getter" class="headerlink" title="Getter"></a>Getter</h2><p>简单的来说，可以将其理解为 <code>store</code> 的计算属性</p>
-<p><code>getter</code> 的返回值会根据它的依赖被缓存起来，且只有当它的依赖值发生了改变才会被重新计算</p>
-<p>接收 <code>state</code> 作为<strong>第一个参数</strong></p>
+<h2 id="Getter"><a href="#Getter" class="headerlink" title="Getter"></a>Getter</h2><p>简单的来说，可以将其理解为 <code>store</code> 的计算属性，<code>getter</code> 的返回值会根据它的依赖被缓存起来，且只有当它的依赖值发生了改变才会被重新计算，它接收 <code>state</code> 作为 <strong>第一个参数</strong></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> store = <span class="hljs-keyword">new</span> Vuex.store(&#123;</span><br><span class="line">  state: &#123;</span><br><span class="line">    todos: [</span><br><span class="line">      &#123; <span class="hljs-attr">id</span>: <span class="hljs-number">1</span>, <span class="hljs-attr">text</span>: <span class="hljs-string">'...'</span>, <span class="hljs-attr">done</span>: <span class="hljs-literal">true</span> &#125;,</span><br><span class="line">      &#123; <span class="hljs-attr">id</span>: <span class="hljs-number">2</span>, <span class="hljs-attr">text</span>: <span class="hljs-string">'...'</span>, <span class="hljs-attr">done</span>: <span class="hljs-literal">false</span> &#125;,</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  getters: &#123;</span><br><span class="line">    doneTodos: <span class="hljs-function"><span class="hljs-params">state</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> state.todos.filter(<span class="hljs-function"><span class="hljs-params">todo</span> =&gt;</span> todo.done)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
 <p>外部调用</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">store.getters.doneTodos  <span class="hljs-comment">// [&#123; id: 1, text: '...', done: true &#125;]</span></span><br></pre></td></tr></table></figure>
 
-<p>也可以接受其他的 <code>getter</code> 作为<strong>第二个参数</strong></p>
+<p>也可以接受其他的 <code>getter</code> 作为 <strong>第二个参数</strong></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">getters: &#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  doneTodosCount: <span class="hljs-function">(<span class="hljs-params">state, getters</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> getters.doneTodos.length</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">store.getters.doneTodosCount  <span class="hljs-comment">// 1</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 在组件当中使用</span></span><br><span class="line">computed: &#123;</span><br><span class="line">  doneTodosCount() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.$store.getters.doneTodosCount</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>也可以返回一个函数，来实现给 <code>getter</code> 传参</p>
@@ -323,19 +296,15 @@ var _hmt = _hmt || [];
 
 <h2 id="Mutation"><a href="#Mutation" class="headerlink" title="Mutation"></a>Mutation</h2><p>更改 <code>Vuex</code> 的 <code>store</code> 中的状态的唯一方法就是提交 <code>mutation</code>，非常类似于事件</p>
 <ul>
-<li><p>每个 <code>mutation</code> 都有一个事件类型（<code>type</code>）和一个回调函数（<code>handler</code>）</p>
-</li>
-<li><p>回调函数就是进行状态更改的地方，并且接收 <code>state</code> 作为第一个参数</p>
-</li>
+<li>每个 <code>mutation</code> 都有一个事件类型（<code>type</code>）和一个回调函数（<code>handler</code>）</li>
+<li>回调函数就是进行状态更改的地方，并且接收 <code>state</code> 作为第一个参数</li>
 </ul>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> store = <span class="hljs-keyword">new</span> Vuex.Store(&#123;</span><br><span class="line">  state: &#123;</span><br><span class="line">    count: <span class="hljs-number">1</span></span><br><span class="line">  &#125;,</span><br><span class="line">  mutations: &#123;</span><br><span class="line">    increment(state) &#123;</span><br><span class="line">      state.count++</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
-<p>需要注意：</p>
+<p>需要注意</p>
 <ul>
-<li><p>不能直接调用 <code>mutation handle</code></p>
-</li>
-<li><p>应当以相应的 <code>type</code> 调用 <code>store.commit</code> 方法</p>
-</li>
+<li>不能直接调用 <code>mutation handle</code></li>
+<li>应当以相应的 <code>type</code> 调用 <code>store.commit</code> 方法</li>
 </ul>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">store.commit(<span class="hljs-string">'increment'</span>)</span><br></pre></td></tr></table></figure>
 
@@ -343,20 +312,15 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// ...</span></span><br><span class="line">mutations: &#123;</span><br><span class="line">  increment(state, payload) &#123;</span><br><span class="line">    state.count += payload.amount;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">store.commit(<span class="hljs-string">'increment'</span>, &#123;</span><br><span class="line">  amount: <span class="hljs-number">10</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 等同于</span></span><br><span class="line"></span><br><span class="line">store.commit(&#123;</span><br><span class="line">  type: <span class="hljs-string">'increment'</span>,</span><br><span class="line">  payload: <span class="hljs-number">10</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
 <h2 id="Mutation-的提交"><a href="#Mutation-的提交" class="headerlink" title="Mutation 的提交"></a>Mutation 的提交</h2><ul>
-<li><p>必须是同步函数（若是异步，则可能存在当 <code>mutation</code> 触发的时候，回调函数还没有被调用的情况）</p>
-</li>
-<li><p><code>mutation</code> 的提交可以使用 <code>this.$store.commit(&#39;...&#39;)</code></p>
-</li>
-<li><p>或者可以使用 <code>mapMutations</code> 辅助函数将组建中的 <code>methods</code> 映射为 <code>store.commit</code> 调用，如下所示</p>
-</li>
+<li>必须是同步函数（若是异步，则可能存在当 <code>mutation</code> 触发的时候，回调函数还没有被调用的情况）</li>
+<li><code>mutation</code> 的提交可以使用 <code>this.$store.commit(&#39;...&#39;)</code></li>
+<li>或者可以使用 <code>mapMutations</code> 辅助函数将组建中的 <code>methods</code> 映射为 <code>store.commit</code> 调用，如下所示</li>
 </ul>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; mapMutations &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'Vuex'</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">  methods: &#123;</span><br><span class="line">    ...mapMutations([</span><br><span class="line">      <span class="hljs-comment">// 将 this.increment() 映射为 this.$store.commit('increment')</span></span><br><span class="line">      <span class="hljs-string">'increment'</span>,</span><br><span class="line"></span><br><span class="line">      <span class="hljs-comment">// 将 this.incrementBy(amount) 映射为 this.$store.commit('incrementBy', amount)</span></span><br><span class="line">      <span class="hljs-string">'incrementBy'</span></span><br><span class="line">    ]),</span><br><span class="line">    ...mapMutations(&#123;</span><br><span class="line">      <span class="hljs-comment">// 将 this.add() 映射为 this.$store.commit('increment')</span></span><br><span class="line">      add: <span class="hljs-string">'increment'</span></span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="Action"><a href="#Action" class="headerlink" title="Action"></a>Action</h2><ul>
-<li><p>提交的是 <code>mutation</code>，而不是直接变更状态</p>
-</li>
-<li><p>可以包含任意异步操作</p>
-</li>
+<li>提交的是 <code>mutation</code>，而不是直接变更状态</li>
+<li>可以包含任意异步操作</li>
 </ul>
 <p>一个简单的 <code>action</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> store = <span class="hljs-keyword">new</span> Vuex.store(&#123;</span><br><span class="line">  state: &#123;</span><br><span class="line">    count: <span class="hljs-number">0</span></span><br><span class="line">  &#125;,</span><br><span class="line">  mutations: &#123;</span><br><span class="line">    increment(state) &#123;</span><br><span class="line">      state.count++</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  actions: &#123;</span><br><span class="line">    increment(context) &#123;</span><br><span class="line">      context.commit(<span class="hljs-string">'increment'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
@@ -373,11 +337,9 @@ var _hmt = _hmt || [];
 <p>亦或是可以使用 <code>async/await</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 假设 gotData() 与 gotOtherData() 均返回 Promise</span></span><br><span class="line">actions: &#123;</span><br><span class="line">  <span class="hljs-keyword">async</span> actionA(&#123; commit &#125;) &#123;</span><br><span class="line">    commit(<span class="hljs-string">'gotData'</span>, <span class="hljs-keyword">await</span> gotData())</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-keyword">async</span> actionB(&#123; commit &#125;) &#123;</span><br><span class="line">    <span class="hljs-comment">// 等待 actionA 完成</span></span><br><span class="line">    <span class="hljs-keyword">await</span> dispatch(<span class="hljs-string">'actionA'</span>)</span><br><span class="line">    commit(<span class="hljs-string">'gotOtherData'</span>, <span class="hljs-keyword">await</span> gotOtherData())</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="初始化装载与注入"><a href="#初始化装载与注入" class="headerlink" title="初始化装载与注入"></a>初始化装载与注入</h2><p>下面我们就来看看 <code>Vuex</code> 到底是如何在项目当中进行装载与注入的，首先是入口文件</p>
-<p>先来看入口处的 <code>export</code> 函数到底导出了哪些东西</p>
-<p>详细见 <a href="https://github.com/vuejs/vuex/blob/dev/src/index.js" target="_blank" rel="noopener">vuejs/vuex</a></p>
+<h2 id="初始化装载与注入"><a href="#初始化装载与注入" class="headerlink" title="初始化装载与注入"></a>初始化装载与注入</h2><p>下面我们就来看看 <code>Vuex</code> 到底是如何在项目当中进行装载与注入的，首先是入口文件，先来看入口处的 <code>export</code> 函数到底导出了哪些东西，详细可以见官方 <a href="https://github.com/vuejs/vuex/blob/dev/src/index.js" target="_blank" rel="noopener">vuejs/vuex</a></p>
 <blockquote>
-<p>注：可能版本不同而导致内容有所不同，但是我们关心的仅仅是几个核心方法</p>
+<p>需要注意的是，可能版本不同而导致内容有所不同，但是我们关心的仅仅是几个核心方法</p>
 </blockquote>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// https://github.com/vuejs/vuex/blob/dev/src/index.js</span></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> &#123;</span><br><span class="line">  Store,</span><br><span class="line">  install,</span><br><span class="line">  mapState,</span><br><span class="line">  mapMutations,</span><br><span class="line">  mapGetters,</span><br><span class="line">  mapActions</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -393,8 +355,7 @@ var _hmt = _hmt || [];
 <p>下面是 <code>applyMixin</code> 的源码，如果是 <code>2.x</code> 以上的版本，可以使用 <code>hook</code> 的形式进行注入，即在 <code>beforeCreated</code> 钩子前插入初始化代码（<code>vuexInit</code>）</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">Vue</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> version = <span class="hljs-built_in">Number</span>(Vue.version.split(<span class="hljs-string">'.'</span>)[<span class="hljs-number">0</span>])</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (version &gt;= <span class="hljs-number">2</span>) &#123;</span><br><span class="line">    Vue.mixin(&#123; <span class="hljs-attr">beforeCreate</span>: vuexInit &#125;)</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// override init and inject vuex init procedure</span></span><br><span class="line">    <span class="hljs-comment">// for 1.x backwards compatibility.</span></span><br><span class="line">    <span class="hljs-keyword">const</span> _init = Vue.prototype._init</span><br><span class="line">    Vue.prototype._init = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">options = &#123;&#125;</span>) </span>&#123;</span><br><span class="line">      options.init = options.init</span><br><span class="line">        ? [vuexInit].concat(options.init)</span><br><span class="line">        : vuexInit</span><br><span class="line">      _init.call(<span class="hljs-keyword">this</span>, options)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * Vuex init hook, injected into each instances init hooks list.</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">vuexInit</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> options = <span class="hljs-keyword">this</span>.$options</span><br><span class="line">    <span class="hljs-comment">// 将初始化 Vue 根组件时传入的 store 设置到 this 对象的 $store 属性上</span></span><br><span class="line">    <span class="hljs-comment">// 子组件从其父组件引用 $store 属性，层层嵌套进行设置</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (options.store) &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.$store = <span class="hljs-keyword">typeof</span> options.store === <span class="hljs-string">'function'</span></span><br><span class="line">        ? options.store()</span><br><span class="line">        : options.store</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (options.parent &amp;&amp; options.parent.$store) &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.$store = options.parent.$store</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>这也就是为什么我们在 <code>Vue</code> 的组件中可以通过 <code>this.$store.xxx</code> 来访问到 <code>Vuex</code> 的各种数据和状态的原因了</p>
-<p>因为在任意组件中执行 <code>this.$store</code> 都能找到装载的那个 <code>store</code> 对象</p>
+<p>这也就是为什么我们在 <code>Vue</code> 的组件中可以通过 <code>this.$store.xxx</code> 来访问到 <code>Vuex</code> 的各种数据和状态的原因了，因为在任意组件中执行 <code>this.$store</code> 都能找到装载的那个 <code>store</code> 对象</p>
 <p>如下图所示，页面的结构为</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/vue/03.png" alt></p>
 <p>对应的 <code>store</code> 流向</p>
@@ -509,7 +470,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        141
+                        139
                     </p>
                 </div>
             </div>
@@ -519,7 +480,7 @@ var _hmt = _hmt || [];
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        9
                     </p>
                 </div>
             </div>
@@ -529,7 +490,7 @@ var _hmt = _hmt || [];
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        9
                     </p>
                 </div>
             </div>
@@ -657,14 +618,6 @@ var _hmt = _hmt || [];
                 <span class="level-item tag">45</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/MySQL/">
-            <span class="level-start">
-                <span class="level-item">MySQL</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">2</span>
-            </span>
-        </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
             <span class="level-start">
                 <span class="level-item">Node.js</span>
@@ -708,7 +661,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 17.14px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.57px;">Essay</a> <a href="/tags/Http/" style="font-size: 14.29px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/MySQL/" style="font-size: 10px;">MySQL</a> <a href="/tags/Node-js/" style="font-size: 17.14px;">Node.js</a> <a href="/tags/React/" style="font-size: 15.71px;">React</a> <a href="/tags/Vue/" style="font-size: 12.86px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.43px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 16.67px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/Http/" style="font-size: 13.33px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16.67px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 11.67px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
     </div>
 </div>
 
@@ -1034,7 +987,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1122,7 +1075,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">三月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1359,13 +1312,6 @@ var _hmt = _hmt || [];
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
                         <span class="tag is-grey">45</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/MySQL/">
-                        <span class="tag">MySQL</span>
-                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
