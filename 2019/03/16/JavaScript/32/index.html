@@ -16,7 +16,7 @@
 <meta property="og:description" content="我们先来看一个实例，如下所示">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg">
-<meta property="og:updated_time" content="2020-06-25T14:38:25.040Z">
+<meta property="og:updated_time" content="2020-07-11T15:24:13.503Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="为什么 Object.keys 的返回值会自动排序">
 <meta name="twitter:description" content="我们先来看一个实例，如下所示">
@@ -32,7 +32,7 @@
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="/fontawesome.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
 
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    5 分钟 读完 (大约 711 个字)
+                    5 分钟 读完 (大约 761 个字)
                 </span>
                 
                 
@@ -189,15 +189,15 @@ var _hmt = _hmt || [];
             <p>我们先来看一个实例，如下所示</p>
 <a id="more"></a>
 
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> arr = [<span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'c'</span>];</span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">Object</span>.keys(arr));     <span class="hljs-comment">// ['0', '1', '2']</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// -------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> an_obj = &#123; <span class="hljs-number">100</span>: <span class="hljs-string">'a'</span>, <span class="hljs-number">2</span>: <span class="hljs-string">'b'</span>, <span class="hljs-number">7</span>: <span class="hljs-string">'c'</span> &#125;;</span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">Object</span>.keys(an_obj));  <span class="hljs-comment">// ['2', '7', '100']</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> arr = [<span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'c'</span>]</span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">Object</span>.keys(arr))     <span class="hljs-comment">// ['0', '1', '2']</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// -------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> an_obj = &#123; <span class="hljs-number">100</span>: <span class="hljs-string">'a'</span>, <span class="hljs-number">2</span>: <span class="hljs-string">'b'</span>, <span class="hljs-number">7</span>: <span class="hljs-string">'c'</span> &#125;</span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">Object</span>.keys(an_obj))  <span class="hljs-comment">// ['2', '7', '100']</span></span><br></pre></td></tr></table></figure>
 
-<p>至于为什么会发生这样的情况，我们需要来看看在 <code>Object.keys()</code> 的调用过程中到底发生了些什么</p>
-<p>查看 <a href="http://zhoushengfe.com/es6/es6-ch.html#sec-object.keys" target="_blank" rel="noopener">规范</a> 可知，总共有三步流程</p>
+<p>至于为什么会发生这样的情况，我们需要来看看在 <code>Object.keys()</code> 的调用过程中到底发生了些什么，我们通过查阅 <a href="http://zhoushengfe.com/es6/es6-ch.html#sec-object.keys" target="_blank" rel="noopener">规范</a> 可知，在 <code>Object.keys()</code> 的调用过程中总共有三步流程</p>
 <ul>
 <li>调用 <code>ToObject(O)</code> 将结果赋值给变量 <code>obj</code></li>
-<li>调用 <code>EnumerableOwnPropertyNames(obj, &#39;key&#39;)</code> 将结果赋值给变量 <code>nameList</code></li>
+<li>调用 <code>EnumerableOwnPropertyNames(obj, key)</code> 将结果赋值给变量 <code>nameList</code></li>
 <li>调用 <code>CreateArrayFromList(nameList)</code> 得到最终的结果</li>
 </ul>
+<p>下面我们就一步一步来看这三个步骤</p>
 <h2 id="ToObject-O"><a href="#ToObject-O" class="headerlink" title="ToObject(O)"></a>ToObject(O)</h2><p>首先第一步是将参数转换成 <code>Object()</code>，根据参数的不同结果有所不同，如下所示</p>
 <table>
 <thead>
@@ -238,8 +238,7 @@ var _hmt = _hmt || [];
 <p>几个示例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Object</span>.keys(<span class="hljs-literal">null</span>)   <span class="hljs-comment">// TypeError</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.keys(<span class="hljs-literal">true</span>)   <span class="hljs-comment">// []</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.keys(<span class="hljs-string">'abc'</span>)  <span class="hljs-comment">// ['0', '1', '2']</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="EnumerableOwnPropertyNames-obj-‘key’"><a href="#EnumerableOwnPropertyNames-obj-‘key’" class="headerlink" title="EnumerableOwnPropertyNames(obj, ‘key’)"></a>EnumerableOwnPropertyNames(obj, ‘key’)</h2><p>接下来就是获得属性列表</p>
-<p>过程有很多，比较重要的一个是调用对象的内部方法 <code>OwnPropertyKeys</code> 获得对象的 <code>ownKeys</code>，也正是该方法决定了属性的顺序</p>
+<h2 id="EnumerableOwnPropertyNames-obj-key"><a href="#EnumerableOwnPropertyNames-obj-key" class="headerlink" title="EnumerableOwnPropertyNames(obj, key)"></a>EnumerableOwnPropertyNames(obj, key)</h2><p>接下来就是获得属性列表，过程有很多，比较重要的一个是调用对象的内部方法 <code>OwnPropertyKeys</code> 获得对象的 <code>ownKeys</code>，也正是该方法决定了属性的顺序</p>
 <ul>
 <li>声明变量 <code>keys</code> 值为一个空列表（<code>List</code> 类型）</li>
 <li>把每个 <code>Number</code> 类型的属性，按数值大小升序排序，并依次添加到 <code>keys</code> 中</li>
@@ -248,11 +247,10 @@ var _hmt = _hmt || [];
 <li>将 <code>keys</code> 返回（<code>return keys</code>）</li>
 </ul>
 <p>除此之外，还有一点需要补充，如果对象的属性类型是数字，字符与 <code>Symbol</code> 混合的，那么返回顺序永远是数字在前，然后是字符串，最后是 <code>Symbol</code></p>
-<p>不过虽然规定了 <code>Symbol</code>，最终会将 <code>Symbol</code> 类型的属性过滤出去</p>
+<p>不过还有一点需要注意，就是虽然在规范当中规定了 <code>Symbol</code>，但是最终会将 <code>Symbol</code> 类型的属性过滤出去</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> s = <span class="hljs-built_in">Symbol</span>()</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> obj = &#123;</span><br><span class="line">  [s]: <span class="hljs-string">'d'</span>,</span><br><span class="line">  <span class="hljs-number">7</span>: <span class="hljs-string">'a'</span>,</span><br><span class="line">  a: <span class="hljs-string">'7'</span>,</span><br><span class="line">  <span class="hljs-number">10</span>: <span class="hljs-string">'b'</span>,</span><br><span class="line">  b: <span class="hljs-string">'10'</span>,</span><br><span class="line">  <span class="hljs-number">44</span>: <span class="hljs-string">'c'</span>,</span><br><span class="line">  c: <span class="hljs-string">'44'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.keys(obj)  <span class="hljs-comment">// ['7', '10', '44', 'a', 'b', 'c']</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="CreateArrayFromList-nameList"><a href="#CreateArrayFromList-nameList" class="headerlink" title="CreateArrayFromList(nameList)"></a>CreateArrayFromList(nameList)</h2><p>最后一步就是调用 <code>CreateArrayFromList(nameList)</code> 来得到最终的结果</p>
-<p>现在已经得到了一个对象的属性列表，最后一步是将 <code>List</code> 类型的属性列表转换成 <code>Array</code> 类型</p>
+<h2 id="CreateArrayFromList-nameList"><a href="#CreateArrayFromList-nameList" class="headerlink" title="CreateArrayFromList(nameList)"></a>CreateArrayFromList(nameList)</h2><p>最后一步就是调用 <code>CreateArrayFromList(nameList)</code> 来得到最终的结果，现在已经得到了一个对象的属性列表，最后一步是将 <code>List</code> 类型的属性列表转换成 <code>Array</code> 类型</p>
 <ul>
 <li>先声明一个变量 <code>array</code>，值是一个空数组</li>
 <li>循环属性列表，将每个元素添加到 <code>array</code> 中</li>
@@ -380,7 +378,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        139
+                        137
                     </p>
                 </div>
             </div>
@@ -426,9 +424,9 @@ var _hmt = _hmt || [];
         <span class="has-mr-6">1</span>
         <span>ToObject(O)</span>
         </a></li><li>
-        <a class="is-flex" href="#EnumerableOwnPropertyNames-obj-‘key’">
+        <a class="is-flex" href="#EnumerableOwnPropertyNames-obj-key">
         <span class="has-mr-6">2</span>
-        <span>EnumerableOwnPropertyNames(obj, ‘key’)</span>
+        <span>EnumerableOwnPropertyNames(obj, key)</span>
         </a></li><li>
         <a class="is-flex" href="#CreateArrayFromList-nameList">
         <span class="has-mr-6">3</span>
@@ -493,7 +491,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">45</span>
+                <span class="level-item tag">44</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -517,7 +515,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Vue</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">5</span>
+                <span class="level-item tag">4</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/jQuery/">
@@ -539,7 +537,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 16.67px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/Http/" style="font-size: 13.33px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16.67px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 11.67px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 16px;">Angular</a> <a href="/tags/CSS/" style="font-size: 14px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18px;">Essay</a> <a href="/tags/Http/" style="font-size: 12px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16px;">Node.js</a> <a href="/tags/React/" style="font-size: 14px;">React</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
     </div>
 </div>
 
@@ -942,7 +940,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">四月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1008,7 +1006,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1189,7 +1187,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">45</span>
+                        <span class="tag is-grey">44</span>
                     </a>
                 </div>
                 
@@ -1210,7 +1208,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
-                        <span class="tag is-grey">5</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 

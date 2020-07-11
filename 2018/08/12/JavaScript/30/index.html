@@ -16,7 +16,7 @@
 <meta property="og:description" content="最后更新于 2020 年 01 月 05 日  JavaScript 的一大特点就是单线程，这意味着在任何时候只能有一段代码执行，JavaScript 主线程在运行时，会建立一个执行同步代码的栈和执行异步代码的队列 在深入展开之前，我们先来了解一些前置知识，包括单线程执行机制和 JavaScript 中堆和栈的相关概念（建议在阅读本文之前先了解一下 体系结构与操作系统 当中的进程和线程相关概念）">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/30.jpg">
-<meta property="og:updated_time" content="2020-07-05T07:55:09.174Z">
+<meta property="og:updated_time" content="2020-07-11T15:24:13.503Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 并发模型">
 <meta name="twitter:description" content="最后更新于 2020 年 01 月 05 日  JavaScript 的一大特点就是单线程，这意味着在任何时候只能有一段代码执行，JavaScript 主线程在运行时，会建立一个执行同步代码的栈和执行异步代码的队列 在深入展开之前，我们先来了解一些前置知识，包括单线程执行机制和 JavaScript 中堆和栈的相关概念（建议在阅读本文之前先了解一下 体系结构与操作系统 当中的进程和线程相关概念）">
@@ -32,7 +32,7 @@
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="/fontawesome.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
 
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    24 分钟 读完 (大约 3635 个字)
+                    24 分钟 读完 (大约 3650 个字)
                 </span>
                 
                 
@@ -190,7 +190,7 @@ var _hmt = _hmt || [];
 <p>最后更新于 <code>2020</code> 年 <code>01</code> 月 <code>05</code> 日</p>
 </blockquote>
 <p><code>JavaScript</code> 的一大特点就是单线程，这意味着在任何时候只能有一段代码执行，<code>JavaScript</code> 主线程在运行时，会建立一个执行同步代码的栈和执行异步代码的队列</p>
-<p>在深入展开之前，我们先来了解一些前置知识，包括单线程执行机制和 <code>JavaScript</code> 中堆和栈的相关概念（建议在阅读本文之前先了解一下 <a href="http://localhost:4000/2020/01/01/Essay/06/" target="_blank" rel="noopener">体系结构与操作系统</a> 当中的进程和线程相关概念）</p>
+<p>在深入展开之前，我们先来了解一些前置知识，包括单线程执行机制和 <code>JavaScript</code> 中堆和栈的相关概念（建议在阅读本文之前先了解一下 <a href="https://heptaluan.github.io/2020/01/01/Essay/06/" target="_blank" rel="noopener">体系结构与操作系统</a> 当中的进程和线程相关概念）</p>
 <a id="more"></a>
 
 
@@ -219,7 +219,7 @@ var _hmt = _hmt || [];
 <p>简单来说就是一句话，先让页面渲染完，再加载 <code>JavaScript</code></p>
 <blockquote>
 <p>这里有一个需要注意的地方，即 <code>Node.js</code> 的运行机制也是基于事件轮询（<code>event loop</code>）的，但是和浏览器当中的是不一样的</p>
-<p>详细见 <a href="http://localhost:4000/2019/07/05/Node/04/" target="_blank" rel="noopener">Node.js 中的事件轮询机制</a></p>
+<p>详细见 <a href="https://heptaluan.github.io/2019/07/05/Node/04/" target="_blank" rel="noopener">Node.js 中的事件轮询机制</a></p>
 </blockquote>
 <h2 id="JavaScript-中的栈和堆"><a href="#JavaScript-中的栈和堆" class="headerlink" title="JavaScript 中的栈和堆"></a>JavaScript 中的栈和堆</h2><p>首先要先说一下耳熟能详的「堆栈」，要区分数据结构和内存中各自「堆栈」的含义，数据结构中的堆和栈是两种不同的数据项按序排列的数据结构，但是在这里我们主要介绍的是内存中的堆区与栈区</p>
 <h4 id="内存中的堆区与栈区"><a href="#内存中的堆区与栈区" class="headerlink" title="内存中的堆区与栈区"></a>内存中的堆区与栈区</h4><p>在 <code>C</code> 语言中，各个区别如下</p>
@@ -271,7 +271,7 @@ var _hmt = _hmt || [];
 </li>
 </ul>
 <h2 id="Event-Loop"><a href="#Event-Loop" class="headerlink" title="Event Loop"></a>Event Loop</h2><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/14.png" alt></p>
-<p>这里主要介绍两个点，<code>queue</code> 和 <code>callback</code></p>
+<p>关于上图当中的内容，这里主要介绍两个点，即 <code>queue</code> 和 <code>callback</code></p>
 <p>关于 <code>queue</code>，如上文的解释，值得注意的是，除了 <code>IO</code> 设备的事件（比如 <code>load</code>）会被添加到 <code>queue</code> 中，用户操作产生的事件（比如 <code>click</code>，<code>touchmove</code>）同样也会被添加到 <code>queue</code> 中，队列中的这些事件会在主线程的执行栈被清空时被依次读取（队列先进先出，即先被压入队列中的事件会被先执行）</p>
 <p>关于 <code>callback</code>，被主线程挂起来的代码，等主线程执行队列中的事件时，事件对应的 <code>callback</code> 代码就会被执行</p>
 <p>针对上面的并发模型和 <code>JavaScript</code> 的同步异步运行机制，我们可以看到整个流程大致是这样的</p>
@@ -431,7 +431,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        139
+                        137
                     </p>
                 </div>
             </div>
@@ -576,7 +576,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">45</span>
+                <span class="level-item tag">44</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -600,7 +600,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Vue</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">5</span>
+                <span class="level-item tag">4</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/jQuery/">
@@ -622,7 +622,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 16.67px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/Http/" style="font-size: 13.33px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16.67px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 11.67px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 16px;">Angular</a> <a href="/tags/CSS/" style="font-size: 14px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18px;">Essay</a> <a href="/tags/Http/" style="font-size: 12px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16px;">Node.js</a> <a href="/tags/React/" style="font-size: 14px;">React</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
     </div>
 </div>
 
@@ -1025,7 +1025,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">四月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1091,7 +1091,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1272,7 +1272,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">45</span>
+                        <span class="tag is-grey">44</span>
                     </a>
                 </div>
                 
@@ -1293,7 +1293,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
-                        <span class="tag is-grey">5</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 

@@ -16,7 +16,7 @@
 <meta property="og:description" content="要想改变被调用函数的上下文，可以使用 call 或 apply 方法，但如果重复使用就会很不方便，因为每次都要把上下文对象作为参数传递，而且还会使代码变得不直观 针对这种情况，我们可以使用 bind 方法来永久地绑定函数的上下文，使其无论被谁调用，上下文都是固定的">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg">
-<meta property="og:updated_time" content="2020-06-08T08:12:10.186Z">
+<meta property="og:updated_time" content="2020-07-11T15:24:13.497Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Function.prototype.bind()">
 <meta name="twitter:description" content="要想改变被调用函数的上下文，可以使用 call 或 apply 方法，但如果重复使用就会很不方便，因为每次都要把上下文对象作为参数传递，而且还会使代码变得不直观 针对这种情况，我们可以使用 bind 方法来永久地绑定函数的上下文，使其无论被谁调用，上下文都是固定的">
@@ -32,7 +32,7 @@
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="/fontawesome.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
 
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    21 分钟 读完 (大约 3103 个字)
+                    21 分钟 读完 (大约 3105 个字)
                 </span>
                 
                 
@@ -231,7 +231,7 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 由于我们不需要改变它的 this，所以随便传入一个 undefined/null ，但是我们提供了额外的参数 100</span></span><br><span class="line"><span class="hljs-keyword">var</span> func = add.bind(<span class="hljs-literal">null</span>, <span class="hljs-number">100</span>)</span><br><span class="line"></span><br><span class="line">func(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)  <span class="hljs-comment">// 103</span></span><br></pre></td></tr></table></figure>
 
 <p>然后我们拿到这样一个 <code>bind</code> 函数以后，相当于这个 <code>100</code> 就会固定赋值给第一个参数，也就是这里的 <code>a</code> 参数， 然后在调用的时候传入 <code>1</code> 和 <code>2</code> 参数，<code>1</code> 和 <code>2</code> 就会分别给 <code>b</code> 和 <code>c</code>，所以，最后的结果为 <code>103</code></p>
-<p>像这样的使用方式，我们就可以称之为函数的柯里化应用（关于柯里化的详细内容，在闭包章节当中会详细介绍，可以参考 <a href="http://localhost:4000/2017/05/12/JavaScript/14/#%E6%9F%AF%E9%87%8C%E5%8C%96" target="_blank" rel="noopener">函数的柯里化</a>）</p>
+<p>像这样的使用方式，我们就可以称之为函数的柯里化应用（关于柯里化的详细内容，在闭包章节当中会详细介绍，可以参考 <a href="https://heptaluan.github.io/2017/05/12/JavaScript/14/#%E6%9F%AF%E9%87%8C%E5%8C%96" target="_blank" rel="noopener">函数的柯里化</a>）</p>
 <h2 id="bind-与-new"><a href="#bind-与-new" class="headerlink" title="bind 与 new"></a>bind 与 new</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.b = <span class="hljs-number">100</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.a</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> func = foo.bind(&#123; <span class="hljs-attr">a</span>: <span class="hljs-number">1</span> &#125;)</span><br><span class="line"></span><br><span class="line">func()       <span class="hljs-comment">// 1</span></span><br><span class="line"><span class="hljs-keyword">new</span> func()   <span class="hljs-comment">// &#123;b: 100&#125;</span></span><br></pre></td></tr></table></figure>
 
 <p>我们声明了一个全局变量 <code>b</code>，并且把它的值赋为 <code>100</code>，然后返回全局变量 <code>a</code>，这样我们直接调用的话，那么 <code>this</code> 就会指向 <code>bind</code> 这样的一个参数，所以 <code>return this.a</code> 就会返回 <code>1</code></p>
@@ -400,7 +400,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        139
+                        137
                     </p>
                 </div>
             </div>
@@ -529,7 +529,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">45</span>
+                <span class="level-item tag">44</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -553,7 +553,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Vue</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">5</span>
+                <span class="level-item tag">4</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/jQuery/">
@@ -575,7 +575,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 16.67px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/Http/" style="font-size: 13.33px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16.67px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 11.67px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 16px;">Angular</a> <a href="/tags/CSS/" style="font-size: 14px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18px;">Essay</a> <a href="/tags/Http/" style="font-size: 12px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16px;">Node.js</a> <a href="/tags/React/" style="font-size: 14px;">React</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
     </div>
 </div>
 
@@ -978,7 +978,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">四月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1044,7 +1044,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1225,7 +1225,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">45</span>
+                        <span class="tag is-grey">44</span>
                     </a>
                 </div>
                 
@@ -1246,7 +1246,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
-                        <span class="tag is-grey">5</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 

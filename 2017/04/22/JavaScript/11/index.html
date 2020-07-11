@@ -16,7 +16,7 @@
 <meta property="og:description" content="在展开之前，我们先来看看下面这个实例 123456var myObject = &amp;#123;  a: undefined&amp;#125;myObject.a // undefined  myObject.b // undefined">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/11.jpg">
-<meta property="og:updated_time" content="2020-07-04T15:33:32.529Z">
+<meta property="og:updated_time" content="2020-07-11T15:24:13.496Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的遍历和枚举">
 <meta name="twitter:description" content="在展开之前，我们先来看看下面这个实例 123456var myObject = &amp;#123;  a: undefined&amp;#125;myObject.a // undefined  myObject.b // undefined">
@@ -32,7 +32,7 @@
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="/fontawesome.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
 
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    10 分钟 读完 (大约 1510 个字)
+                    10 分钟 读完 (大约 1512 个字)
                 </span>
                 
                 
@@ -239,7 +239,7 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> myObject = &#123;</span><br><span class="line">  a: <span class="hljs-number">2</span>,</span><br><span class="line">  b: <span class="hljs-number">3</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 主要是为了让它不可枚举</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.defineProperty(myObject, <span class="hljs-built_in">Symbol</span>.iterator, &#123;</span><br><span class="line">  enumerable: <span class="hljs-literal">false</span>,</span><br><span class="line">  writable: <span class="hljs-literal">false</span>,</span><br><span class="line">  configurable: <span class="hljs-literal">true</span>,</span><br><span class="line">  value: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> o = <span class="hljs-keyword">this</span></span><br><span class="line">    <span class="hljs-keyword">var</span> idx = <span class="hljs-number">0</span></span><br><span class="line">    <span class="hljs-keyword">var</span> ks = <span class="hljs-built_in">Object</span>.keys(o)</span><br><span class="line">    <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">      next: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">          value: o[ks[idx++]],</span><br><span class="line">          done: (idx &gt; ks.length)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 手动遍历 myObject </span></span><br><span class="line"><span class="hljs-keyword">var</span> it = myObject[<span class="hljs-built_in">Symbol</span>.iterator]()</span><br><span class="line">it.next()  <span class="hljs-comment">// &#123; value: 2, done: false &#125;  </span></span><br><span class="line">it.next()  <span class="hljs-comment">// &#123; value: 3, done: false &#125;  </span></span><br><span class="line">it.next()  <span class="hljs-comment">// &#123; value: undefined, done: true &#125; </span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 用 for..of 遍历 myObject </span></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> v <span class="hljs-keyword">of</span> myObject) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(v)</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-comment">// 2</span></span><br><span class="line"><span class="hljs-comment">// 3</span></span><br></pre></td></tr></table></figure>
 
 <p><code>for-of</code> 循环每次调用 <code>myObject</code> 迭代器对象的 <code>next()</code> 方法时，内部的指针都会向前移动并返回对象属性列表的下一个值（需要注意在遍历对象属性或者值的时候的顺序）</p>
-<p>关于对象的遍历顺序问题可以参考 <a href="http://localhost:4000/2019/03/16/JavaScript/32/" target="_blank" rel="noopener">为什么 Object.keys 的返回值会自动排序</a></p>
+<p>关于对象的遍历顺序问题可以参考 <a href="https://heptaluan.github.io/2019/03/16/JavaScript/32/" target="_blank" rel="noopener">为什么 Object.keys 的返回值会自动排序</a></p>
 
         </div>
         
@@ -350,7 +350,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        139
+                        137
                     </p>
                 </div>
             </div>
@@ -455,7 +455,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">45</span>
+                <span class="level-item tag">44</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -479,7 +479,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Vue</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">5</span>
+                <span class="level-item tag">4</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/jQuery/">
@@ -501,7 +501,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 16.67px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/Http/" style="font-size: 13.33px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16.67px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 11.67px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 16px;">Angular</a> <a href="/tags/CSS/" style="font-size: 14px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18px;">Essay</a> <a href="/tags/Http/" style="font-size: 12px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16px;">Node.js</a> <a href="/tags/React/" style="font-size: 14px;">React</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
     </div>
 </div>
 
@@ -904,7 +904,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">四月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -970,7 +970,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1151,7 +1151,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">45</span>
+                        <span class="tag is-grey">44</span>
                     </a>
                 </div>
                 
@@ -1172,7 +1172,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
-                        <span class="tag is-grey">5</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 
