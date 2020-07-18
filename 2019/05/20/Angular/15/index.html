@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="在正式展开之前，我们先来看看 WebSocket 和 Socket.IO">
+    <meta name="description" content="在正式展开之前，我们先来看看 WebSocket 和 Socket.IO 的相关内容">
 <meta name="keywords" content="Angular">
 <meta property="og:type" content="article">
 <meta property="og:title" content="在 Angular 当中使用 WebSocket">
 <meta property="og:url" content="http://yoursite.com/2019/05/20/Angular/15/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="在正式展开之前，我们先来看看 WebSocket 和 Socket.IO">
+<meta property="og:description" content="在正式展开之前，我们先来看看 WebSocket 和 Socket.IO 的相关内容">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/15.jpg">
-<meta property="og:updated_time" content="2020-01-21T07:46:33.212Z">
+<meta property="og:updated_time" content="2020-07-18T14:54:33.906Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在 Angular 当中使用 WebSocket">
-<meta name="twitter:description" content="在正式展开之前，我们先来看看 WebSocket 和 Socket.IO">
+<meta name="twitter:description" content="在正式展开之前，我们先来看看 WebSocket 和 Socket.IO 的相关内容">
 <meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/15.jpg">
 
 
@@ -32,7 +32,7 @@
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
-<link rel="stylesheet" href="/fontawesome.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
 
@@ -139,7 +139,7 @@ var _hmt = _hmt || [];
                 
                 
                 <a class="navbar-item search" title="搜索" href="javascript:;">
-                    <i class="fas fa-search"></i>
+                    <i class="fa fa-search"></i>
                 </a>
                 
             </div>
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    8 分钟 读完 (大约 1172 个字)
+                    8 分钟 读完 (大约 1187 个字)
                 </span>
                 
                 
@@ -186,32 +186,25 @@ var _hmt = _hmt || [];
             
         </h1>
         <div class="content">
-            <p>在正式展开之前，我们先来看看 <code>WebSocket</code> 和 <code>Socket.IO</code></p>
+            <p>在正式展开之前，我们先来看看 <code>WebSocket</code> 和 <code>Socket.IO</code> 的相关内容</p>
 <a id="more"></a>
 
-<h2 id="WebSocket"><a href="#WebSocket" class="headerlink" title="WebSocket"></a>WebSocket</h2><p><code>WebSocket</code> 是 <code>HTML5</code> 新增的协议，它的目的是在浏览器和服务器之间建立一个不受限的双向通信的通道，比如说服务器可以在任意时刻发送消息给浏览器</p>
-<p><code>Websocket</code> 协议本质上是一个基于 <code>TCP</code> 的协议，它由通信协议和编程 <code>API</code> 组成，<code>WebSocket</code> 能够在浏览器和服务器之间建立双向连接，以基于事件的方式，赋予浏览器事实通信的能力</p>
-<p>既然是双向通信，就意味着服务器端和客户端可以同时发送并响应请求，而不再像 <code>http</code> 的请求和响应</p>
-<p>为了建立一个 <code>WebSocket</code> 连接，客户端浏览器首先要向服务器发起一个 <code>http</code> 请求，这个请求和通常的 <code>http</code> 请求不同，包含了一些附加头信息，其中附加头信息 <code>&#39;Upgrade: WebSocket&#39;</code> 表明这是一个申请协议升级的 <code>http</code> 请求</p>
+<h2 id="WebSocket"><a href="#WebSocket" class="headerlink" title="WebSocket"></a>WebSocket</h2><p><code>WebSocket</code> 是 <code>HTML5</code> 新增的协议，它的目的是在浏览器和服务器之间建立一个不受限的双向通信的通道，比如说服务器可以在任意时刻发送消息给浏览器，<code>Websocket</code> 协议本质上是一个基于 <code>TCP</code> 的协议，它由通信协议和编程 <code>API</code> 组成，<code>WebSocket</code> 能够在浏览器和服务器之间建立双向连接，以基于事件的方式，赋予浏览器事实通信的能力</p>
+<p>既然是双向通信，就意味着服务器端和客户端可以同时发送并响应请求，而不再像 <code>http</code> 的请求和响应，为了建立一个 <code>WebSocket</code> 连接，客户端浏览器首先要向服务器发起一个 <code>http</code> 请求，这个请求和通常的 <code>http</code> 请求不同，包含了一些附加头信息，其中附加头信息 <code>Upgrade: WebSocket</code> 表明这是一个申请协议升级的 <code>http</code> 请求</p>
 <p>服务器端解析这些附加的头信息然后产生应答信息返回给客户端，客户端和服务器端的 <code>WebSocket</code> 连接就建立起来了，双方就可以通过这个连接通道自由的传递信息，并且这个连接会持续存在直到客户端或者服务器端的某一方主动的关闭连接</p>
-<h2 id="WebSocket-API"><a href="#WebSocket-API" class="headerlink" title="WebSocket API"></a>WebSocket API</h2><p>一个简单的实例</p>
-<p>大致流程为：打开一个连接，为连接创建事件监听器，断开连接，消息时间，发送消息返回到服务器，关闭连接</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 创建一个 Socket 实例</span></span><br><span class="line"><span class="hljs-keyword">var</span> socket = <span class="hljs-keyword">new</span> WebSocket(<span class="hljs-string">'ws://localhost:8000'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 打开 Socket</span></span><br><span class="line">socket.onopen = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 发送一个初始化消息</span></span><br><span class="line">  socket.send(<span class="hljs-string">'socket init'</span>)</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 监听消息</span></span><br><span class="line">  socket.onmessage = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Message listener'</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 监听 socket 的关闭</span></span><br><span class="line">  socket.onclose = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'closed'</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 关闭</span></span><br><span class="line">  socket.close()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="WebSocket-API"><a href="#WebSocket-API" class="headerlink" title="WebSocket API"></a>WebSocket API</h2><p>一个简单的实例，大致流程为打开一个连接，为连接创建事件监听器，断开连接，消息时间，发送消息返回到服务器，关闭连接</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> socket = <span class="hljs-keyword">new</span> WebSocket(<span class="hljs-string">'ws://localhost:8000'</span>)  <span class="hljs-comment">// 创建一个 Socket 实例</span></span><br><span class="line">socket.onopen = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>&#123;                 <span class="hljs-comment">// 打开 Socket</span></span><br><span class="line">  socket.send(<span class="hljs-string">'socket init'</span>)                       <span class="hljs-comment">// 发送一个初始化消息</span></span><br><span class="line">  socket.onmessage = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>&#123;            <span class="hljs-comment">// 监听消息</span></span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Message listener'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  socket.onclose = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>&#123;              <span class="hljs-comment">// 监听 socket 的关闭</span></span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'closed'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  socket.close()                                   <span class="hljs-comment">// 关闭</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li><p><code>ws</code> 表示 <code>WebSocket</code> 协议，参数为 <code>url</code>（以 <code>ws</code> 开头）</p>
-</li>
-<li><p><code>onopen</code>，<code>onclose</code>，<code>onmessage</code> 方法把事件连接到 <code>Socket</code> 实例上</p>
-</li>
-<li><p><code>onmessage</code> 事件提供了一个 <code>data</code> 属性，它可以包含消息的 <code>body</code> 部分（消息的 <code>body</code> 部分必须为一个字符串，可以进行序列化或者反序列化，以便传递更多的数据）</p>
-</li>
+<li><code>ws</code> 表示 <code>WebSocket</code> 协议，参数为 <code>url</code>（以 <code>ws</code> 开头）</li>
+<li><code>onopen</code>，<code>onclose</code>，<code>onmessage</code> 方法把事件连接到 <code>Socket</code> 实例上</li>
+<li><code>onmessage</code> 事件提供了一个 <code>data</code> 属性，它可以包含消息的 <code>body</code> 部分（消息的 <code>body</code> 部分必须为一个字符串，可以进行序列化或者反序列化，以便传递更多的数据）</li>
 </ul>
-<h2 id="Socket-IO"><a href="#Socket-IO" class="headerlink" title="Socket.IO"></a>Socket.IO</h2><p><code>Socket.IO</code> 是 <code>Node.js</code> 当中的一个模块，它是通过 <code>WebSocket</code> 进行通信的一种简单方式</p>
-<p><code>Socket.IO</code> 使用检测功能来判断是否建立 <code>WebSocket</code> 连接，或者是 <code>Ajax long-polling</code> 连接，或 <code>Flash</code> 等，可快速创建实时的应用程序</p>
-<p>一个简单的示例，客户端 <code>index.html</code></p>
+<h2 id="Socket-IO"><a href="#Socket-IO" class="headerlink" title="Socket.IO"></a>Socket.IO</h2><p><code>Socket.IO</code> 是 <code>Node.js</code> 当中的一个模块，它是通过 <code>WebSocket</code> 进行通信的一种简单方式，<code>Socket.IO</code> 使用检测功能来判断是否建立 <code>WebSocket</code> 连接，或者是 <code>Ajax long-polling</code> 连接，或 <code>Flash</code> 等，可快速创建实时的应用程序，下面是一个简单的示例</p>
+<p>客户端 <code>index.html</code> 如下</p>
 <figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">&lt;!DOCTYPE html&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">'en'</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">'UTF-8'</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>Socket.io<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>I Am Socket.IO<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">'./socket.io.js'</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span></span><br><span class="line"><span class="hljs-javascript">    <span class="hljs-keyword">var</span> socket=io.connect(<span class="hljs-string">'ws://localhost:8000'</span>)</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>服务端 <code>index.js</code></p>
+<p>服务端 <code>index.js</code> 如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> http = <span class="hljs-built_in">require</span>(<span class="hljs-string">'http'</span>)</span><br><span class="line"><span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> sever = http.createServer(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>&#123;</span><br><span class="line">  fs.readFile(<span class="hljs-string">'./index.html'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, data</span>) </span>&#123;</span><br><span class="line">    res.writeHead(<span class="hljs-number">200</span>, &#123; <span class="hljs-string">'Content-Type'</span>: <span class="hljs-string">'text/html'</span> &#125;)</span><br><span class="line">    res.end(data, <span class="hljs-string">'utf-8'</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;).listen(<span class="hljs-number">3000</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 为了在服务器上加入 Socket.io 的功能，必须将 Socket.IO 库包括进来，而后附加到服务器上</span></span><br><span class="line"><span class="hljs-keyword">var</span> io = <span class="hljs-built_in">require</span>(<span class="hljs-string">'socket.io'</span>).listen(sever)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 在启动了服务器的 Socket.io 之后，用于初始化</span></span><br><span class="line">io.socket.on(<span class="hljs-string">'connection'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">socket</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'user conneted'</span>)</span><br><span class="line">  socket.on(<span class="hljs-string">'disconnect'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'user disconnet'</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
 <p>向服务器发送数据到客户端</p>
@@ -226,7 +219,7 @@ var _hmt = _hmt || [];
 <h2 id="在-Angular-项目当中使用-WebSocket"><a href="#在-Angular-项目当中使用-WebSocket" class="headerlink" title="在 Angular 项目当中使用 WebSocket"></a>在 Angular 项目当中使用 WebSocket</h2><p>主要是结合 <code>WebSocket</code> 和 <code>rxjs</code> 两者一起使用</p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// socket.service.ts</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; Injectable &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; Observable &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'rxjs'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">@Injectable</span>()</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> SocketService &#123;</span><br><span class="line"></span><br><span class="line">  ws: WebSocket</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"></span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line">  createObservableSocket(url: <span class="hljs-built_in">string</span>): Observable&lt;<span class="hljs-built_in">any</span>&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">this</span>.ws = <span class="hljs-keyword">new</span> WebSocket(url)</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Observable(</span><br><span class="line">      observer =&gt; &#123;</span><br><span class="line">        <span class="hljs-keyword">this</span>.ws.onmessage = <span class="hljs-function">(<span class="hljs-params">event</span>) =&gt;</span> observer.next(event.data)</span><br><span class="line">        <span class="hljs-keyword">this</span>.ws.onerror = <span class="hljs-function">(<span class="hljs-params">event</span>) =&gt;</span> observer.error(event)</span><br><span class="line">        <span class="hljs-keyword">this</span>.ws.onclose = <span class="hljs-function">(<span class="hljs-params">event</span>) =&gt;</span> observer.complete()</span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>当然别忘了在当前 <code>module</code> 当中进行注册</p>
+<p>当然别忘了在当前 <code>Module</code> 当中进行注册</p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; SocketService &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./header/socket.service'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">@NgModule</span>(&#123;</span><br><span class="line">  declarations: [</span><br><span class="line">    AppComponent,</span><br><span class="line">    ...</span><br><span class="line">  ],</span><br><span class="line">  imports: [</span><br><span class="line">    BrowserModule,</span><br><span class="line">    ...</span><br><span class="line">  ],</span><br><span class="line">  providers: [SocketService],</span><br><span class="line">  bootstrap: [AppComponent]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppModule &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>最后是导入使用</p>
@@ -256,7 +249,7 @@ var _hmt = _hmt || [];
         
         <div class="level-start">
             <a class="level level-item has-link-grey  article-nav-prev" href="/2019/05/27/Angular/10/">
-                <i class="level-item fas fa-chevron-left"></i>
+                <i class="level-item fa fa-chevron-left"></i>
                 <span class="level-item">Angular 中的表单</span>
             </a>
         </div>
@@ -265,7 +258,7 @@ var _hmt = _hmt || [];
         <div class="level-end">
             <a class="level level-item has-link-grey  article-nav-next" href="/2019/05/12/Angular/08/">
                 <span class="level-item">Angular 中的动态加载</span>
-                <i class="level-item fas fa-chevron-right"></i>
+                <i class="level-item fa fa-chevron-right"></i>
             </a>
         </div>
         
@@ -340,7 +333,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        137
+                        136
                     </p>
                 </div>
             </div>
@@ -461,7 +454,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">15</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -499,7 +492,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 16px;">Angular</a> <a href="/tags/CSS/" style="font-size: 14px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18px;">Essay</a> <a href="/tags/Http/" style="font-size: 12px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16px;">Node.js</a> <a href="/tags/React/" style="font-size: 14px;">React</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 16.67px;">Angular</a> <a href="/tags/CSS/" style="font-size: 13.33px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/Http/" style="font-size: 11.67px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 15px;">Node.js</a> <a href="/tags/React/" style="font-size: 13.33px;">React</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
     </div>
 </div>
 
@@ -704,7 +697,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">8</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -1156,7 +1149,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 
@@ -1284,7 +1277,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
 
 <a id="back-to-top" title="回到顶端" href="javascript:;">
-    <i class="fas fa-chevron-up"></i>
+    <i class="fa fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>
 

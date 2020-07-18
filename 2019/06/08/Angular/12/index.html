@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="在之前的文章当中我们简单的介绍了 什么是 rxjs，那么在本章当中，我们就来看看比较常用的三个高阶操作符 关于更多的操作符的详细内容可以参见官方文档 rxjs">
+    <meta name="description" content="在之前的文章当中我们简单的介绍了 什么是 rxjs 以及一些常见的操作符使用场景，那么在本章当中，我们就在之前的基础上来看看另外几个比较常用的高阶操作符，关于更多的操作符的详细内容可以参见官方文档 rxjs">
 <meta name="keywords" content="Angular">
 <meta property="og:type" content="article">
 <meta property="og:title" content="rxjs 中的高阶操作符">
 <meta property="og:url" content="http://yoursite.com/2019/06/08/Angular/12/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="在之前的文章当中我们简单的介绍了 什么是 rxjs，那么在本章当中，我们就来看看比较常用的三个高阶操作符 关于更多的操作符的详细内容可以参见官方文档 rxjs">
+<meta property="og:description" content="在之前的文章当中我们简单的介绍了 什么是 rxjs 以及一些常见的操作符使用场景，那么在本章当中，我们就在之前的基础上来看看另外几个比较常用的高阶操作符，关于更多的操作符的详细内容可以参见官方文档 rxjs">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/12.jpg">
-<meta property="og:updated_time" content="2020-01-21T07:45:44.507Z">
+<meta property="og:updated_time" content="2020-07-18T14:54:33.904Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="rxjs 中的高阶操作符">
-<meta name="twitter:description" content="在之前的文章当中我们简单的介绍了 什么是 rxjs，那么在本章当中，我们就来看看比较常用的三个高阶操作符 关于更多的操作符的详细内容可以参见官方文档 rxjs">
+<meta name="twitter:description" content="在之前的文章当中我们简单的介绍了 什么是 rxjs 以及一些常见的操作符使用场景，那么在本章当中，我们就在之前的基础上来看看另外几个比较常用的高阶操作符，关于更多的操作符的详细内容可以参见官方文档 rxjs">
 <meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/12.jpg">
 
 
@@ -32,7 +32,7 @@
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
-<link rel="stylesheet" href="/fontawesome.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
 
@@ -139,7 +139,7 @@ var _hmt = _hmt || [];
                 
                 
                 <a class="navbar-item search" title="搜索" href="javascript:;">
-                    <i class="fas fa-search"></i>
+                    <i class="fa fa-search"></i>
                 </a>
                 
             </div>
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    17 分钟 读完 (大约 2506 个字)
+                    19 分钟 读完 (大约 2828 个字)
                 </span>
                 
                 
@@ -186,8 +186,7 @@ var _hmt = _hmt || [];
             
         </h1>
         <div class="content">
-            <p>在之前的文章当中我们简单的介绍了 <a href="https://heptaluan.github.io/2019/06/04/Angular/11/" target="_blank" rel="noopener">什么是 rxjs</a>，那么在本章当中，我们就来看看比较常用的三个高阶操作符</p>
-<p>关于更多的操作符的详细内容可以参见官方文档 <a href="http://cn.rx.js.org" target="_blank" rel="noopener">rxjs</a></p>
+            <p>在之前的文章当中我们简单的介绍了 <a href="https://heptaluan.github.io/2019/06/04/Angular/11/" target="_blank" rel="noopener">什么是 rxjs</a> 以及一些常见的操作符使用场景，那么在本章当中，我们就在之前的基础上来看看另外几个比较常用的高阶操作符，关于更多的操作符的详细内容可以参见官方文档 <a href="http://cn.rx.js.org" target="_blank" rel="noopener">rxjs</a></p>
 <a id="more"></a>
 
 
@@ -197,61 +196,45 @@ var _hmt = _hmt || [];
 <p>像这样一层一层的调用不是很好的方法，所以我们可以采用 <code>flatMap</code>（在 <code>rxjs</code> 中是 <code>mergeMap</code> 的别名）</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Rx.Observable</span><br><span class="line">  .fromEvent(a, <span class="hljs-string">'keyup'</span>)</span><br><span class="line">  .pluck(<span class="hljs-string">'target'</span>, <span class="hljs-string">'value'</span>)</span><br><span class="line">  .flatMap(<span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> Rx.Observable.interval(<span class="hljs-number">100</span>))</span><br><span class="line">  .subscribe(<span class="hljs-function"><span class="hljs-params">val</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(val))</span><br></pre></td></tr></table></figure>
 
-<p>每次触发都会从新生成一个新流，而两个新流则是并行，其中的每一个流并没有断开</p>
-<p><code>mergeMap</code> 会保证所有的订阅，保证外层元素所对应的子流的订阅</p>
+<p>这样一来每次触发都会从新生成一个新流，而两个新流则是并行，其中的每一个流并没有断开，<code>mergeMap</code> 会保证所有的订阅，保证外层元素所对应的子流的订阅</p>
 <h2 id="switchMap"><a href="#switchMap" class="headerlink" title="switchMap"></a>switchMap</h2><p>与 <code>flatMap</code> 有些不同，它会断开之前的流，转而从新生成一个新流</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Rx.Observable</span><br><span class="line">  .fromEvent(a, <span class="hljs-string">'keyup'</span>)</span><br><span class="line">  .pluck(<span class="hljs-string">'target'</span>, <span class="hljs-string">'value'</span>)</span><br><span class="line">  .switchMap(<span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> Rx.Observable.interval(<span class="hljs-number">1000</span>))</span><br><span class="line">  .subscribe(<span class="hljs-function"><span class="hljs-params">val</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(val))</span><br></pre></td></tr></table></figure>
 
 <p>一旦有新的外层元素进来，它就会抛弃掉这个元素之前的外层元素所关联的子元素</p>
-<h2 id="count"><a href="#count" class="headerlink" title="count"></a>count</h2><p>计算源的发送数量，并当源完成时发出该数值</p>
-<p>简单来说就是：<strong>将流中的数据做一个统计，然后输出出来（最后也是一个值），也就是告知之前的任务已经全部完成了</strong></p>
-<p>比如一个删除列表的操作</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">del(project: Project): Observable&lt;Project&gt; &#123;</span><br><span class="line">  <span class="hljs-comment">// 用 mergeMap 的原因是因为如果在删除过程中有新的 id 进来，原有的删除操作还是需要继续做的</span></span><br><span class="line">  <span class="hljs-comment">// 而且新的删除操作也会操作，即所有外层元素的流进来以后，它对应的子流全部都要保持住</span></span><br><span class="line">  <span class="hljs-keyword">const</span> delTasks$ = Observable.from(project.list)</span><br><span class="line">    .mergeMap(<span class="hljs-function"><span class="hljs-params">id</span> =&gt;</span> <span class="hljs-keyword">this</span>.http.delete(url))</span><br><span class="line">    .count()</span><br><span class="line">  <span class="hljs-comment">// 汇总以后不用去关心其外层的流，利用 switchMap 执行删除操作</span></span><br><span class="line">  <span class="hljs-comment">// 因为最后希望返回一个 project 对象，所以使用 mapTo 进行转换一下</span></span><br><span class="line">  <span class="hljs-keyword">return</span> delTasks$.switchMap(<span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> <span class="hljs-keyword">this</span>.http.delete(url))</span><br><span class="line">  .mapTo(project)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="count"><a href="#count" class="headerlink" title="count"></a>count</h2><p>这个操作符简单来说就是用来计算源的发送数量，并当源完成时发出该数值，可以简单的理解为将流中的数据做一个统计，然后输出出来（最后也是一个值），也就是告知之前的任务已经全部完成了，比如我们有一个删除列表的操作</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">del(project: Project): Observable&lt;Project&gt; &#123;</span><br><span class="line">  <span class="hljs-comment">// 用 mergeMap 的原因是因为如果在删除过程中有新的 id 进来，原有的删除操作还是需要继续做的，而且新的删除操作也会操作，即所有外层元素的流进来以后，它对应的子流全部都要保持住</span></span><br><span class="line">  <span class="hljs-keyword">const</span> delTasks$ = Observable.from(project.list)</span><br><span class="line">    .mergeMap(<span class="hljs-function"><span class="hljs-params">id</span> =&gt;</span> <span class="hljs-keyword">this</span>.http.delete(url))</span><br><span class="line">    .count()</span><br><span class="line">  <span class="hljs-comment">// 汇总以后不用去关心其外层的流，利用 switchMap 执行删除操作，因为最后希望返回一个 project 对象，所以使用 mapTo 进行转换一下</span></span><br><span class="line">  <span class="hljs-keyword">return</span> delTasks$.switchMap(<span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> <span class="hljs-keyword">this</span>.http.delete(url))</span><br><span class="line">  .mapTo(project)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ...</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="Observable-的冷和热"><a href="#Observable-的冷和热" class="headerlink" title="Observable 的冷和热"></a>Observable 的冷和热</h2><p>简单来说，两者的区别可以分为一个为看视频，一个为看电视直播</p>
-<p>虽然都是同样的内容，但是视频每次都必须需要从头开始看，这就是冷的 <code>Observable</code></p>
-<p>而电视直播，无论合适进来，看到的都是同样的内容，这就是热的 <code>Observable</code></p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 冷的 Observable</span></span><br><span class="line"><span class="hljs-keyword">const</span> count$ = Rx.Observable.interval(<span class="hljs-number">1000</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> sub1 = count$.subscribe(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(v))</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> sub2 = count$.subscribe(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(v))</span><br><span class="line">&#125;, <span class="hljs-number">2000</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="Observable-的冷和热"><a href="#Observable-的冷和热" class="headerlink" title="Observable 的冷和热"></a>Observable 的冷和热</h2><p>冷和热的概念可能不太好理解，不过这里我们换一个角度来看待这个问题，我们可以将两者的区别分为一个是看视频，一个是看电视直播，虽然都是同样的内容，但是视频每次都必须需要从头开始看，这就是冷的 <code>Observable</code>，而电视直播，无论合适进来，看到的都是同样的内容，这就是热的 <code>Observable</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 冷的 Observable</span></span><br><span class="line"><span class="hljs-keyword">const</span> count$ = Rx.Observable.interval(<span class="hljs-number">1000</span>)</span><br><span class="line"><span class="hljs-keyword">const</span> sub1 = count$.subscribe(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(v))</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> sub2 = count$.subscribe(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(v))</span><br><span class="line">&#125;, <span class="hljs-number">2000</span>)</span><br></pre></td></tr></table></figure>
 
 <p>每次有新的流进来，都是从头开始计算，下面来看看热的</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 热的 Observable，添加上 share() 即可</span></span><br><span class="line"><span class="hljs-keyword">const</span> count$ = Rx.Observable.interval(<span class="hljs-number">1000</span>).share()</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> sub1 = count$.subscribe(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(v))</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> sub2 = count$.subscribe(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(v))</span><br><span class="line">&#125;, <span class="hljs-number">2000</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 热的 Observable，添加上 share() 即可</span></span><br><span class="line"><span class="hljs-keyword">const</span> count$ = Rx.Observable.interval(<span class="hljs-number">1000</span>).share()</span><br><span class="line"><span class="hljs-keyword">const</span> sub1 = count$.subscribe(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(v))</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> sub2 = count$.subscribe(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(v))</span><br><span class="line">&#125;, <span class="hljs-number">2000</span>)</span><br></pre></td></tr></table></figure>
 
 <p>可以发现，后进来的流会将之前的全部抛弃掉，直接从进来时候的流的位置跟着往下走</p>
-<h2 id="Subject"><a href="#Subject" class="headerlink" title="Subject"></a>Subject</h2><p><code>Subject</code> 其实是观察者模式的实现，所以当观察者订阅 <code>Subject</code> 对象时，<code>Subject</code> 对象会把订阅者添加到观察者列表中</p>
-<p>每当有 <code>Subject</code> 对象接收到新值时，它就会遍历观察者列表，依次调用观察者内部的 <code>next()</code> 方法，把值一一送出</p>
-<p><code>Subject</code> 既是 <code>Observable</code> 对象，又是 <code>Observer</code> 对象，是一个特殊的对象，一方面可以作为流的组成也就是输出的一方，另一方可以作为流的观察一方即接收的一方</p>
-<p>当有新消息时，<code>Subject</code> 会对内部的 <code>observers</code> 列表进行组播 (<code>multicast</code>)</p>
-<p><code>Subject</code> 之所以具有 <code>Observable</code> 中的所有方法，是因为 <code>Subject</code> 类继承了 <code>Observable</code> 类，在 <code>Subject</code> 类中有五个重要的方法</p>
+<h2 id="Subject"><a href="#Subject" class="headerlink" title="Subject"></a>Subject</h2><p><code>Subject</code> 既是 <code>Observable</code> 对象，又是 <code>Observer</code> 对象，是一个特殊的对象，一方面可以作为流的组成也就是输出的一方，另一方可以作为流的观察一方即接收的一方</p>
+<p>这个操作符也是平常开发过程当中使用较多的，<code>Subject</code> 其实是观察者模式的实现，所以当观察者订阅 <code>Subject</code> 对象时，<code>Subject</code> 对象会把订阅者添加到观察者列表中，每当有 <code>Subject</code> 对象接收到新值时，它就会遍历观察者列表，依次调用观察者内部的 <code>next()</code> 方法，把值一一送出</p>
+<p>当有新消息时，<code>Subject</code> 会对内部的 <code>observers</code> 列表进行组播（<code>multicast</code>），<code>Subject</code> 之所以具有 <code>Observable</code> 中的所有方法，是因为 <code>Subject</code> 类继承了 <code>Observable</code> 类，在 <code>Subject</code> 类中有五个重要的方法</p>
 <ul>
-<li><p><code>next</code> – 每当 <code>Subject</code> 对象接收到新值的时候，<code>next</code> 方法会被调用</p>
-</li>
-<li><p><code>error</code> – 运行中出现异常，<code>error</code> 方法会被调用</p>
-</li>
-<li><p><code>complete</code> – <code>Subject</code> 订阅的 <code>Observable</code> 对象结束后，<code>complete</code> 方法会被调用</p>
-</li>
-<li><p><code>subscribe</code> – 添加观察者</p>
-</li>
-<li><p><code>unsubscribe</code> – 取消订阅 (设置终止标识符、清空观察者列表)</p>
-</li>
+<li><code>next</code>，每当 <code>Subject</code> 对象接收到新值的时候，<code>next</code> 方法会被调用</li>
+<li><code>error</code>，运行中出现异常，<code>error</code> 方法会被调用</li>
+<li><code>complete</code>，<code>Subject</code> 订阅的 <code>Observable</code> 对象结束后，<code>complete</code> 方法会被调用</li>
+<li><code>subscribe</code>，添加观察者</li>
+<li><code>unsubscribe</code>，取消订阅 (设置终止标识符、清空观察者列表)</li>
 </ul>
 <p>因为其同时实现了两个接口，在一些特殊的情景下会非常有用，下面是两个延伸方法</p>
 <ul>
-<li><p><code>ReplaySubject</code> 两者相差不多，<code>Replay</code> 会保留最新的 <code>N</code> 个值</p>
-</li>
-<li><p><code>BehaviorSubject</code> 与上面使用方法一致，不过是一种特殊形式，会保留最新的一个值</p>
-</li>
+<li><code>ReplaySubject</code> 两者相差不多，<code>Replay</code> 会保留最新的 <code>N</code> 个值</li>
+<li><code>BehaviorSubject</code> 与上面使用方法一致，不过是一种特殊形式，会保留最新的一个值</li>
 </ul>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 调整一下上面的示例，这种情况下依然是一种冷的 Observable</span></span><br><span class="line"><span class="hljs-keyword">const</span> counter$ = Rx.Observable.interval(<span class="hljs-number">1000</span>).take(<span class="hljs-number">5</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> observer1 = &#123;</span><br><span class="line">  next: <span class="hljs-function">(<span class="hljs-params">v</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`v1 &gt;&gt; <span class="hljs-subst">$&#123;v&#125;</span>`</span>),</span><br><span class="line">  error: <span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(err),</span><br><span class="line">  complete: <span class="hljs-function">(<span class="hljs-params">_</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Completed -`</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> observer2 = &#123;</span><br><span class="line">  next: <span class="hljs-function">(<span class="hljs-params">v</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`v2 &gt;&gt; <span class="hljs-subst">$&#123;v&#125;</span>`</span>),</span><br><span class="line">  error: <span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(err),</span><br><span class="line">  complete: <span class="hljs-function">(<span class="hljs-params">_</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Completed -`</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">counter$.subscribe(observer1)</span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  counter$.subscribe(observer2)</span><br><span class="line">&#125;, <span class="hljs-number">2000</span>)</span><br></pre></td></tr></table></figure>
 
-<p>可以发现，此时的输出结果是一样的</p>
-<p>但是此时面临的情况为，需要执行两次 <code>subscribe()</code> 操作，而有时的场景为定义好的序列应该会在什么时刻来进行触发，只需要执行一次操作，两个序列都会执行，所以在这种情况下就可以使用 <code>Subject</code></p>
+<p>可以发现，此时的输出结果是一样的，但是此时面临的情况为，需要执行两次 <code>subscribe()</code> 操作，而有时的场景为定义好的序列应该会在什么时刻来进行触发，只需要执行一次操作，两个序列都会执行，所以在这种情况下就可以使用 <code>Subject</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 利用 subject 来进行中转，这种情况下成为了热的 Observable</span></span><br><span class="line"><span class="hljs-keyword">const</span> counter$ = Rx.Observable.interval(<span class="hljs-number">1000</span>).take(<span class="hljs-number">5</span>)</span><br><span class="line"><span class="hljs-keyword">const</span> subject = <span class="hljs-keyword">new</span> Rx.Subject()</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> observer1 = &#123;</span><br><span class="line">  next: <span class="hljs-function">(<span class="hljs-params">v</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`v1 &gt;&gt; <span class="hljs-subst">$&#123;v&#125;</span>`</span>),</span><br><span class="line">  error: <span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(err),</span><br><span class="line">  complete: <span class="hljs-function">(<span class="hljs-params">_</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Completed -`</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> observer2 = &#123;</span><br><span class="line">  next: <span class="hljs-function">(<span class="hljs-params">v</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`v2 &gt;&gt; <span class="hljs-subst">$&#123;v&#125;</span>`</span>),</span><br><span class="line">  error: <span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(err),</span><br><span class="line">  complete: <span class="hljs-function">(<span class="hljs-params">_</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Completed -`</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">subject.subscribe(observer1)</span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  subject.subscribe(observer2)</span><br><span class="line">&#125;, <span class="hljs-number">2000</span>)</span><br><span class="line"></span><br><span class="line">counter$.subscribe(subject)</span><br></pre></td></tr></table></figure>
 
 <h4 id="subject-next"><a href="#subject-next" class="headerlink" title="subject.next()"></a>subject.next()</h4><p>可以往流中推送两个新值</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">subject.next(<span class="hljs-number">10</span>)</span><br><span class="line">subject.next(<span class="hljs-number">11</span>)</span><br><span class="line">subject.subscribe(observer1)</span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  subject.subscribe(observer2)</span><br><span class="line">&#125;, <span class="hljs-number">2000</span>)</span><br><span class="line"></span><br><span class="line">counter$.subscribe(subject)</span><br></pre></td></tr></table></figure>
 
-<p>但是需要注意的是，添加的位置很重要，比如上面这样，与之前的输出是一样的，流中的数据没有改变</p>
-<p>这时因为在推送新值的时候，还没有进行订阅</p>
+<p>但是需要注意的是，添加的位置很重要，比如上面这样，与之前的输出是一样的，流中的数据没有改变，这是因为在推送新值的时候，还没有进行订阅</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 调整为这样即可</span></span><br><span class="line">subject.subscribe(observer1)</span><br><span class="line">subject.next(<span class="hljs-number">10</span>)</span><br><span class="line">subject.next(<span class="hljs-number">11</span>)</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  subject.subscribe(observer2)</span><br><span class="line">&#125;, <span class="hljs-number">2000</span>)</span><br><span class="line"></span><br><span class="line">counter$.subscribe(subject)</span><br></pre></td></tr></table></figure>
 
 <p>可以看到第一个流中就有推送的新值存在了，但是第二个流中是没有新值的，因为在第二个流开始订阅的时候，推送新值的时间点已经过去了</p>
@@ -259,15 +242,14 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> subject = <span class="hljs-keyword">new</span> Rx.ReplaySubject(<span class="hljs-number">2</span>)</span><br><span class="line">subject.next(<span class="hljs-number">10</span>)</span><br><span class="line">subject.next(<span class="hljs-number">11</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ...</span></span><br><span class="line"><span class="hljs-comment">// v1 &gt;&gt; 10</span></span><br><span class="line"><span class="hljs-comment">// v1 &gt;&gt; 11</span></span><br><span class="line"><span class="hljs-comment">// v1 &gt;&gt; 0</span></span><br><span class="line"><span class="hljs-comment">// v2 &gt;&gt; 11</span></span><br><span class="line"><span class="hljs-comment">// v2 &gt;&gt; 0</span></span><br><span class="line"><span class="hljs-comment">// v1 &gt;&gt; 1</span></span><br><span class="line"><span class="hljs-comment">// v2 &gt;&gt; 1</span></span><br><span class="line"><span class="hljs-comment">// v1 &gt;&gt; 2</span></span><br><span class="line"><span class="hljs-comment">// v2 &gt;&gt; 2</span></span><br><span class="line"><span class="hljs-comment">// v1 &gt;&gt; 3</span></span><br><span class="line"><span class="hljs-comment">// v2 &gt;&gt; 3</span></span><br><span class="line"><span class="hljs-comment">// v1 &gt;&gt; 4</span></span><br><span class="line"><span class="hljs-comment">// v2 &gt;&gt; 4</span></span><br><span class="line"><span class="hljs-comment">// Completed -</span></span><br><span class="line"><span class="hljs-comment">// Completed -</span></span><br></pre></td></tr></table></figure>
 
 <p>可以发现，第一个流重播的为 <code>10</code> 和 <code>11</code>，而第二个流重播的则是 <code>11</code> 和 <code>0</code>，因为当第二个流开始重播的时候发现前两个的输出分别为 <code>11</code> 和 <code>0</code></p>
-<h4 id="Rx-BehaviorSubject"><a href="#Rx-BehaviorSubject" class="headerlink" title="Rx.BehaviorSubject()"></a>Rx.BehaviorSubject()</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> subject = <span class="hljs-keyword">new</span> Rx.BehaviorSubject()</span><br><span class="line">subject.next(<span class="hljs-number">10</span>)</span><br><span class="line">subject.next(<span class="hljs-number">11</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="Rx-BehaviorSubject"><a href="#Rx-BehaviorSubject" class="headerlink" title="Rx.BehaviorSubject()"></a>Rx.BehaviorSubject()</h4><p>与 <code>ReplaySubject()</code> 不同的是，<code>BehaviorSubject()</code> 只会记住最新的值</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> subject = <span class="hljs-keyword">new</span> Rx.BehaviorSubject()</span><br><span class="line">subject.next(<span class="hljs-number">10</span>)</span><br><span class="line">subject.next(<span class="hljs-number">11</span>)</span><br></pre></td></tr></table></figure>
 
-<p>而 <code>BehaviorSubject()</code> 只会记住最新的值</p>
-<p>一个示例</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 使用 BehaviorSubject 去存储，因为其总是可以记住上一次的一个最新值</span></span><br><span class="line">private _dragData = <span class="hljs-keyword">new</span> BehaviorSubject&lt;DragData&gt;(<span class="hljs-literal">null</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 在开始拖拽的时候，把流中新增一个 data 元素，把这个最新值 next 出去</span></span><br><span class="line">setDragData(data: DragData) &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>._dragData.next(data)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 当放到否个区域的时候，可以得到这个 Observable，所以取值的时候就会取到最新的 data</span></span><br><span class="line"><span class="hljs-comment">// 尽管在拖拽的过程中值已经发射完了，但是依然可以得到上一次发射之后最新的一个值</span></span><br><span class="line"><span class="hljs-comment">// this._dragData.asObservable() 的作用是将 Subject 转换成 Observable</span></span><br><span class="line">getDragData(): Observable&lt;DragData&gt; &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._dragData.asObservable()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 清空的时候将一个 null 放到这个流中</span></span><br><span class="line"><span class="hljs-comment">// 可以保证在其他误接收的地方会发现这是一个 null，即没有这个值</span></span><br><span class="line">clearDragData() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>._dragData.next(<span class="hljs-literal">null</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面是一个示例</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 使用 BehaviorSubject 去存储，因为其总是可以记住上一次的一个最新值</span></span><br><span class="line">private _dragData = <span class="hljs-keyword">new</span> BehaviorSubject&lt;DragData&gt;(<span class="hljs-literal">null</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 在开始拖拽的时候，把流中新增一个 data 元素，把这个最新值 next 出去</span></span><br><span class="line">setDragData(data: DragData) &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>._dragData.next(data)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 当放到否个区域的时候，可以得到这个 Observable，所以取值的时候就会取到最新的 data，尽管在拖拽的过程中值已经发射完了，但是依然可以得到上一次发射之后最新的一个值</span></span><br><span class="line"><span class="hljs-comment">// this._dragData.asObservable() 的作用是将 Subject 转换成 Observable</span></span><br><span class="line">getDragData(): Observable&lt;DragData&gt; &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._dragData.asObservable()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 清空的时候将一个 null 放到这个流中，可以保证在其他误接收的地方会发现这是一个 null，即没有这个值</span></span><br><span class="line">clearDragData() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>._dragData.next(<span class="hljs-literal">null</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="Async-Pipe"><a href="#Async-Pipe" class="headerlink" title="Async Pipe"></a>Async Pipe</h4><p>在常规编程中，如果得到一个 <code>Observable</code> 数组，在页面当中是没有办法去直接使用，需要去 <code>Subscribe</code> 一下</p>
-<p>然后声明一个成员的本地变量，用来得到返回的数据，然后在用于页面渲染</p>
-<p>但是有了 <code>Async Pipe</code> 上面这些操作都不需要了，这样在页面当中就可以直接使用 <code>Observable</code>，并且不需要去取消订阅</p>
+<h4 id="Async-Pipe"><a href="#Async-Pipe" class="headerlink" title="Async Pipe"></a>Async Pipe</h4><p>在常规编程中，如果得到一个 <code>Observable</code> 数组，在页面当中是没有办法去直接使用，需要去 <code>Subscribe</code> 一下，然后赋予给声明的本地变量，用来得到返回的数据，最后再用于页面渲染</p>
+<p>但是有了 <code>Async Pipe</code> 以后，上面这些操作都不需要了，可以直接在页面当中直接使用 <code>Observable</code>，并且不需要去取消订阅</p>
 <figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">md-option</span></span></span><br><span class="line"><span class="hljs-tag">  *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">'let item of memberRestlts$ | async'</span></span></span><br><span class="line"><span class="hljs-tag">  [<span class="hljs-attr">value</span>]=<span class="hljs-string">'item'</span></span></span><br><span class="line"><span class="hljs-tag">  (<span class="hljs-attr">onSelectionChange</span>)=<span class="hljs-string">'handleMembersSelection(item)'</span></span></span><br><span class="line"><span class="hljs-tag">&gt;</span>&#123;&#123;item.email&#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">md-option</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">this</span>.memberRestlts$ = <span class="hljs-keyword">this</span>.form.get(<span class="hljs-string">'memberSearch'</span>).valueChanges</span><br><span class="line">  .debounceTime(<span class="hljs-number">300</span>)</span><br><span class="line">  .distinctUntilChanged()</span><br><span class="line">  .filter(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> s &amp;&amp; s.length &gt; <span class="hljs-number">1</span>)</span><br><span class="line">  .switchMap(<span class="hljs-function"><span class="hljs-params">str</span> =&gt;</span> <span class="hljs-keyword">this</span>.service$.serachUsers(str))</span><br></pre></td></tr></table></figure>
@@ -276,7 +258,11 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 直接定义一个流</span></span><br><span class="line">memberRestlts$: Observable&lt;User[]&gt;</span><br></pre></td></tr></table></figure>
 
 <p>然后让本地这个流等于我们组合后的流，然后在 <code>html</code> 模版当中便可以直接使用，别忘了加上 <code>| async</code></p>
-<h2 id="一些需要手动取消订阅释放资源的场景"><a href="#一些需要手动取消订阅释放资源的场景" class="headerlink" title="一些需要手动取消订阅释放资源的场景"></a>一些需要手动取消订阅释放资源的场景</h2><h4 id="表单当中的场景"><a href="#表单当中的场景" class="headerlink" title="表单当中的场景"></a>表单当中的场景</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ngOnInit() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.form = <span class="hljs-keyword">new</span> FormGroup(&#123;...&#125;)</span><br><span class="line">  <span class="hljs-comment">// 监听表单值的变化</span></span><br><span class="line">  <span class="hljs-keyword">this</span>.valueChanges  = <span class="hljs-keyword">this</span>.form.valueChanges.subscribe(<span class="hljs-built_in">console</span>.log)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ngOnDestroy() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.valueChanges.unsubscribe()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="取消订阅释放资源"><a href="#取消订阅释放资源" class="headerlink" title="取消订阅释放资源"></a>取消订阅释放资源</h2><p>在 <code>Angular</code> 当中，我们如果使用了数据流的话，一般会在使用完毕后在 <code>ngOnDestroy()</code> 生命周期当中去销毁这个流以节约性能，如下</p>
+<figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">getUserInfoSubscription = <span class="hljs-keyword">new</span> Subscription()</span><br><span class="line"></span><br><span class="line">ngOnInit() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.getUserInfoSubscription.add(<span class="hljs-keyword">this</span>._store.select(fromRoot.getUserInfo).filter(<span class="hljs-function"><span class="hljs-params">user</span> =&gt;</span> !!user).subscribe(<span class="hljs-function"><span class="hljs-params">user</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// ...</span></span><br><span class="line">  &#125;))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ngOnDestroy(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.getUserInfoSubscription.unsubscribe()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ...</span></span><br></pre></td></tr></table></figure>
+
+<p>但是又如上文我们提到过的 <code>Async Pipe</code>，它又是不需要我们手动的去取消订阅，所以下面我们就来看一些需要我们手动的去取消订阅释放资源和不需要我们去手动操作的实际使用场景</p>
+<h2 id="需要手动取消订阅释放资源的场景"><a href="#需要手动取消订阅释放资源的场景" class="headerlink" title="需要手动取消订阅释放资源的场景"></a>需要手动取消订阅释放资源的场景</h2><h4 id="表单当中的场景"><a href="#表单当中的场景" class="headerlink" title="表单当中的场景"></a>表单当中的场景</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">ngOnInit() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.form = <span class="hljs-keyword">new</span> FormGroup(&#123;...&#125;)</span><br><span class="line">  <span class="hljs-comment">// 监听表单值的变化</span></span><br><span class="line">  <span class="hljs-keyword">this</span>.valueChanges  = <span class="hljs-keyword">this</span>.form.valueChanges.subscribe(<span class="hljs-built_in">console</span>.log)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ngOnDestroy() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.valueChanges.unsubscribe()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h4 id="路由当中的场景"><a href="#路由当中的场景" class="headerlink" title="路由当中的场景"></a>路由当中的场景</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ngOnInit() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.route.params.subscribe(<span class="hljs-built_in">console</span>.log)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ngOnDestroy() &#123;</span><br><span class="line">  <span class="hljs-comment">// 手动执行取消订阅的操作</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -286,14 +272,13 @@ var _hmt = _hmt || [];
 
 <h4 id="Redux-Store"><a href="#Redux-Store" class="headerlink" title="Redux Store"></a>Redux Store</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">constructor</span>(private store: Store) &#123; &#125;</span><br><span class="line"></span><br><span class="line">todos: Subscription</span><br><span class="line"></span><br><span class="line">ngOnInit() &#123;</span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * select(key : string) &#123;</span></span><br><span class="line"><span class="hljs-comment">   *   return this.map(state =&gt; state[key]).distinctUntilChanged()</span></span><br><span class="line"><span class="hljs-comment">   * &#125;</span></span><br><span class="line"><span class="hljs-comment">  */</span></span><br><span class="line">  <span class="hljs-keyword">this</span>.todos = <span class="hljs-keyword">this</span>.store.select(<span class="hljs-string">'todos'</span>).subscribe(<span class="hljs-built_in">console</span>.log)  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ngOnDestroy() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.todos.unsubscribe()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="无需手动释放资源场景"><a href="#无需手动释放资源场景" class="headerlink" title="无需手动释放资源场景"></a>无需手动释放资源场景</h4><ul>
-<li><p><code>AsyncPipe</code></p>
+<h2 id="无需手动释放资源场景"><a href="#无需手动释放资源场景" class="headerlink" title="无需手动释放资源场景"></a>无需手动释放资源场景</h2><p>简单来说主要分为以下两种，所以大部分情况下还是需要我们手动的去取消订阅释放资源</p>
 <ul>
+<li><code>AsyncPipe</code><ul>
 <li>当组件销毁的时候，<code>async</code> 管道会自动执行取消订阅操作，进而避免内存泄</li>
 </ul>
 </li>
-<li><p><code>@HostListener</code></p>
-<ul>
+<li><code>@HostListener</code><ul>
 <li>如果使用 <code>@HostListener</code> 装饰器，添加事件监听时，我们无法手动取消订阅</li>
 </ul>
 </li>
@@ -330,7 +315,7 @@ var _hmt = _hmt || [];
         
         <div class="level-start">
             <a class="level level-item has-link-grey  article-nav-prev" href="/2019/06/22/Angular/14/">
-                <i class="level-item fas fa-chevron-left"></i>
+                <i class="level-item fa fa-chevron-left"></i>
                 <span class="level-item">Angular 属性绑定 [] 和 {{}} 的差异</span>
             </a>
         </div>
@@ -339,7 +324,7 @@ var _hmt = _hmt || [];
         <div class="level-end">
             <a class="level level-item has-link-grey  article-nav-next" href="/2019/06/05/React/03/">
                 <span class="level-item">Redux 源码初探</span>
-                <i class="level-item fas fa-chevron-right"></i>
+                <i class="level-item fa fa-chevron-right"></i>
             </a>
         </div>
         
@@ -414,7 +399,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        137
+                        136
                     </p>
                 </div>
             </div>
@@ -492,36 +477,40 @@ var _hmt = _hmt || [];
         <span class="has-mr-6">5.4</span>
         <span>Async Pipe</span>
         </a></li></ul></li><li>
-        <a class="is-flex" href="#一些需要手动取消订阅释放资源的场景">
+        <a class="is-flex" href="#取消订阅释放资源">
         <span class="has-mr-6">6</span>
-        <span>一些需要手动取消订阅释放资源的场景</span>
+        <span>取消订阅释放资源</span>
+        </a></li><li>
+        <a class="is-flex" href="#需要手动取消订阅释放资源的场景">
+        <span class="has-mr-6">7</span>
+        <span>需要手动取消订阅释放资源的场景</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#表单当中的场景">
-        <span class="has-mr-6">6.1</span>
+        <span class="has-mr-6">7.1</span>
         <span>表单当中的场景</span>
         </a></li><li>
         <a class="is-flex" href="#路由当中的场景">
-        <span class="has-mr-6">6.2</span>
+        <span class="has-mr-6">7.2</span>
         <span>路由当中的场景</span>
         </a></li><li>
         <a class="is-flex" href="#Renderer-服务">
-        <span class="has-mr-6">6.3</span>
+        <span class="has-mr-6">7.3</span>
         <span>Renderer 服务</span>
         </a></li><li>
         <a class="is-flex" href="#interval-amp-fromEvent">
-        <span class="has-mr-6">6.4</span>
+        <span class="has-mr-6">7.4</span>
         <span>interval() &amp; fromEvent()</span>
         </a></li><li>
         <a class="is-flex" href="#Redux-Store">
-        <span class="has-mr-6">6.5</span>
+        <span class="has-mr-6">7.5</span>
         <span>Redux Store</span>
-        </a></li><li>
+        </a></li></ul></li><li>
         <a class="is-flex" href="#无需手动释放资源场景">
-        <span class="has-mr-6">6.6</span>
+        <span class="has-mr-6">8</span>
         <span>无需手动释放资源场景</span>
-        </a></li><li>
+        </a><ul class="menu-list"><li>
         <a class="is-flex" href="#Finite-Observable">
-        <span class="has-mr-6">6.7</span>
+        <span class="has-mr-6">8.1</span>
         <span>Finite Observable</span>
         </a></li></ul></li></ul>
         </div>
@@ -587,7 +576,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">15</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -625,7 +614,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 16px;">Angular</a> <a href="/tags/CSS/" style="font-size: 14px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18px;">Essay</a> <a href="/tags/Http/" style="font-size: 12px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16px;">Node.js</a> <a href="/tags/React/" style="font-size: 14px;">React</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 16.67px;">Angular</a> <a href="/tags/CSS/" style="font-size: 13.33px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/Http/" style="font-size: 11.67px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 15px;">Node.js</a> <a href="/tags/React/" style="font-size: 13.33px;">React</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
     </div>
 </div>
 
@@ -830,7 +819,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">8</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -1282,7 +1271,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 
@@ -1410,7 +1399,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
 
 <a id="back-to-top" title="回到顶端" href="javascript:;">
-    <i class="fas fa-chevron-up"></i>
+    <i class="fa fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>
 

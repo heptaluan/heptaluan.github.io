@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="在正式展开渲染机制相关概念之前，我们先来看一个在开发当中可能会遇到的问题">
+    <meta name="description" content="在正式展开浏览器渲染机制相关概念之前，我们先来看一个在平常开发过程中可能会遇到，又与其关联十分紧密的 FOUC，那么什么是 FOUC 呢？">
 <meta name="keywords" content="JavaScript">
 <meta property="og:type" content="article">
 <meta property="og:title" content="浏览器的渲染机制">
 <meta property="og:url" content="http://yoursite.com/2019/07/07/JavaScript/37/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="在正式展开渲染机制相关概念之前，我们先来看一个在开发当中可能会遇到的问题">
+<meta property="og:description" content="在正式展开浏览器渲染机制相关概念之前，我们先来看一个在平常开发过程中可能会遇到，又与其关联十分紧密的 FOUC，那么什么是 FOUC 呢？">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/37.jpg">
-<meta property="og:updated_time" content="2020-01-08T13:45:37.356Z">
+<meta property="og:updated_time" content="2020-07-18T14:54:33.913Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浏览器的渲染机制">
-<meta name="twitter:description" content="在正式展开渲染机制相关概念之前，我们先来看一个在开发当中可能会遇到的问题">
+<meta name="twitter:description" content="在正式展开浏览器渲染机制相关概念之前，我们先来看一个在平常开发过程中可能会遇到，又与其关联十分紧密的 FOUC，那么什么是 FOUC 呢？">
 <meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/37.jpg">
 
 
@@ -32,7 +32,7 @@
 
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
-<link rel="stylesheet" href="/fontawesome.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
 
@@ -139,7 +139,7 @@ var _hmt = _hmt || [];
                 
                 
                 <a class="navbar-item search" title="搜索" href="javascript:;">
-                    <i class="fas fa-search"></i>
+                    <i class="fa fa-search"></i>
                 </a>
                 
             </div>
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    15 分钟 读完 (大约 2224 个字)
+                    15 分钟 读完 (大约 2317 个字)
                 </span>
                 
                 
@@ -186,93 +186,87 @@ var _hmt = _hmt || [];
             
         </h1>
         <div class="content">
-            <p>在正式展开渲染机制相关概念之前，我们先来看一个在开发当中可能会遇到的问题</p>
+            <p>在正式展开浏览器渲染机制相关概念之前，我们先来看一个在平常开发过程中可能会遇到，又与其关联十分紧密的 <code>FOUC</code>，那么什么是 <code>FOUC</code> 呢？</p>
 <a id="more"></a>
 
-<h2 id="什么是-FOUC？"><a href="#什么是-FOUC？" class="headerlink" title="什么是 FOUC？"></a>什么是 FOUC？</h2><p>在页面加载解析时，文档结构表（<code>html</code>）一般会优于样式表（<code>CSS</code>）渲染</p>
-<p>这时候渲染出来的是没有样式的页面，然后当浏览器解析到样式表的时候，又结合样式表重新渲染了一遍文档，这时候页面就添加了样式，而前后两次的页面变换会出现一瞬间的闪烁</p>
-<p>这种现象称之为<strong>文档样式短暂失效</strong>（<code>Flash of Unstyled Content</code>），简称为 <code>FOUC</code></p>
+<h2 id="什么是-FOUC？"><a href="#什么是-FOUC？" class="headerlink" title="什么是 FOUC？"></a>什么是 FOUC？</h2><p>我们都知道，在页面加载解析时，文档结构表（<code>html</code>）一般会优于样式表（<code>CSS</code>）渲染，这时候渲染出来的是没有样式的页面，然后当浏览器解析到样式表的时候，又结合样式表重新渲染了一遍文档，这时候页面就添加了样式，而前后两次的页面变换会出现一瞬间的闪烁，这种现象称之为 <strong>文档样式短暂失效</strong>（<code>Flash of Unstyled Content</code>），简称为 <code>FOUC</code></p>
 <p>当然，这跟浏览器的渲染有关，不同浏览器的有不同的渲染机制，这并不是 <code>BUG</code>，有的浏览器会采用白屏来处理，而有的又会使用 <code>FOUC</code> 无样式内容闪烁</p>
-<h2 id="页面解析和页面渲染"><a href="#页面解析和页面渲染" class="headerlink" title="页面解析和页面渲染"></a>页面解析和页面渲染</h2><p>大家都听说过 <code>script</code> 会阻塞 <code>html</code> 页面解析，而 <code>link</code> 则不会，结果也确实是这样的，<code>style</code>，<code>link</code> 等样式资源的下载、解析确实不会阻塞页面的解析，但它们会阻塞页面的渲染</p>
-<p>来看看两者的区别</p>
-<ul>
-<li><p>页面解析 - 阻塞 <code>html</code> 页面解析，<code>html</code> 页面会被继续下载，但阻塞点后面的标签不会被解析，<code>img</code>，<code>link</code> 等不会发请求获取外部资源</p>
-</li>
-<li><p>页面渲染 - 阻塞 <code>html</code> 页面渲染，<code>html</code> 页面会被继续下载，阻塞点后面的标签会继续被解析，<code>img</code>，<code>link</code> 等会继续发送请求获取外部资源，但不会合成 <code>Rendering Tree</code> 或不会触发页面渲染，也不会执行 <code>JavaScript</code> 代码</p>
-</li>
-</ul>
 <h2 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h2><p>现在我们知道 <code>FOUC</code> 是由于页面采用临时样式来渲染页面而导致的，那有什么方案可以解决呢？</p>
-<p>第一种方式是确保样式表最先渲染即可，比如 <code>CSS</code> 样式表添加到 <code>head</code> 标签中，使用 <code>link</code> 标签将样式表放在顶部，防止白屏问题意外出现，将 <code>JavaScript</code> 放在底部</p>
-<blockquote>
-<p>这是因为脚本会阻塞其后组件的下载，进而影响到后面内容的呈现</p>
-</blockquote>
+<p>一般常见的有两种解决方式，第一种方式是确保样式表最先渲染即可，比如 <code>CSS</code> 样式表添加到 <code>head</code> 标签中，使用 <code>link</code> 标签将样式表放在顶部，防止白屏问题意外出现，将 <code>JavaScript</code> 放在底部，这是因为脚本会阻塞其后组件的下载，进而影响到后面内容的呈现</p>
 <p>另外一种方式可以先隐藏 <code>body</code>，然后当样式资源加载完成后再显示 <code>body</code></p>
-<h2 id="渲染机制"><a href="#渲染机制" class="headerlink" title="渲染机制"></a>渲染机制</h2><p>节选自 <a href="https://developers.google.com/web/fundamentals/performance/critical-rendering-path/?hl=en" target="_blank" rel="noopener">Critical Rendering Path</a></p>
-<p>想要理清楚为什么会这样，我们需要先来了解一下 <code>Web</code> 浏览器的渲染机制，简单来说有以下几个步骤</p>
-<p>1、解析 <code>html</code> 标签, 构建 <code>DOM</code> 树（<code>Document Object Model</code>，浏览器将 <code>html</code> 解析成树形的数据结构，简称 <code>DOM</code>）</p>
-<p>2、解析 <code>CSS</code> 标签, 构建 <code>CSSOM</code> 树（<code>CSS Object Model</code>，浏览器将 <code>CSS</code> 代码解析成树形的数据结构，见下方）</p>
+<h2 id="页面解析和页面渲染"><a href="#页面解析和页面渲染" class="headerlink" title="页面解析和页面渲染"></a>页面解析和页面渲染</h2><p>大家都听说过 <code>script</code> 会阻塞 <code>html</code> 页面解析，而 <code>link</code> 则不会，结果也确实是这样的，<code>style</code> 和 <code>link</code> 等样式资源的下载、解析确实不会阻塞页面的解析，但它们会阻塞页面的渲染，我们来看看两者的区别</p>
+<ul>
+<li>页面解析，阻塞 <code>html</code> 页面解析，<code>html</code> 页面会被继续下载，但阻塞点后面的标签不会被解析，<code>img</code>，<code>link</code> 等不会发请求获取外部资源</li>
+<li>页面渲染，阻塞 <code>html</code> 页面渲染，<code>html</code> 页面会被继续下载，阻塞点后面的标签会继续被解析，<code>img</code>，<code>link</code> 等会继续发送请求获取外部资源，但不会合成 <code>Rendering Tree</code> 或不会触发页面渲染，也不会执行 <code>JavaScript</code> 代码</li>
+</ul>
+<h2 id="渲染机制"><a href="#渲染机制" class="headerlink" title="渲染机制"></a>渲染机制</h2><p>节选自 <a href="https://developers.google.com/web/fundamentals/performance/critical-rendering-path/?hl=en" target="_blank" rel="noopener">Critical Rendering Path</a>，想要理清楚为什么会这样，我们需要先来了解一下 <code>Web</code> 浏览器的渲染机制，简单来说有以下几个步骤</p>
+<ol>
+<li>解析 <code>html</code> 标签, 构建 <code>DOM</code> 树（<code>Document Object Model</code>，浏览器将 <code>html</code> 解析成树形的数据结构，简称 <code>DOM</code>）</li>
+<li>解析 <code>CSS</code> 标签, 构建 <code>CSSOM</code> 树（<code>CSS Object Model</code>，浏览器将 <code>CSS</code> 代码解析成树形的数据结构，见下方）</li>
+</ol>
 <p><code>DOM</code> 和 <code>CSSOM</code> 都是以 <code>Bytes ==&gt; characters ==&gt; tokens ==&gt; nodes ==&gt; object model</code> 这样的方式生成最终的数据</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/38.png" alt></p>
 <blockquote>
-<p><code>DOM</code> 树的构建过程是一个深度遍历过程：当前节点的所有子节点都构建好后才会去构建当前节点的下一个兄弟节点</p>
+<p><code>DOM</code> 树的构建过程是一个深度遍历过程，当前节点的所有子节点都构建好后才会去构建当前节点的下一个兄弟节点</p>
 </blockquote>
-<p>3、把 <code>DOM</code> 和 <code>CSSOM</code> 组合成 渲染树（<code>render tree</code>）</p>
+<ol start="3">
+<li>把 <code>DOM</code> 和 <code>CSSOM</code> 组合成 渲染树（<code>render tree</code>）</li>
+</ol>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/39.png" alt></p>
-<p>4、在渲染树的基础上进行布局, 计算每个节点的几何结构</p>
-<p>5、把每个节点绘制到屏幕上（<code>painting</code>）</p>
+<ol start="4">
+<li>在渲染树的基础上进行布局, 计算每个节点的几何结构</li>
+<li>把每个节点绘制到屏幕上（<code>painting</code>）</li>
+</ol>
 <p><code>Render Tree</code> 和 <code>DOM</code> 一样，以多叉树的形式保存了每个节点的 <code>CSS</code> 属性、节点本身属性、以及节点的孩子节点</p>
 <blockquote>
-<p><code>display: none</code> 的节点不会被加入 <code>Render Tree</code>，而 <code>visibility: hidden</code> 则会，所以如果某个节点最开始是不显示的，设为 <code>display: none</code> 是更优的</p>
+<p>这里有一个比较特殊的情况，就是 <code>display: none</code> 的节点不会被加入 <code>Render Tree</code>，而 <code>visibility: hidden</code> 则会，所以如果某个节点最开始是不显示的，设为 <code>display: none</code> 是更优的</p>
 </blockquote>
-<h2 id="浏览器的渲染过程"><a href="#浏览器的渲染过程" class="headerlink" title="浏览器的渲染过程"></a>浏览器的渲染过程</h2><p>1、<code>Create/Update DOM And request css/image/js</code>：浏览器请求到 <code>html</code> 代码后，在生成 <code>DOM</code> 的最开始阶段（应该是 <code>Bytes → characters</code> 后），并行发起 <code>CSS</code>、图片、<code>JavaScript</code> 的请求，无论他们是否在 <code>HEAD</code> 里</p>
+<h2 id="浏览器的渲染过程"><a href="#浏览器的渲染过程" class="headerlink" title="浏览器的渲染过程"></a>浏览器的渲染过程</h2><p>可以分为以下五个步骤</p>
+<ol>
+<li><code>Create/Update DOM And request css/image/js</code>，浏览器请求到 <code>html</code> 代码后，在生成 <code>DOM</code> 的最开始阶段（应该是 <code>Bytes → characters</code> 后），并行发起 <code>CSS</code>、图片、<code>JavaScript</code> 的请求，无论他们是否在 <code>HEAD</code> 里</li>
+</ol>
 <blockquote>
-<p>注意：发起 <code>JavaScript</code> 文件的下载 <code>request</code> 并不需要 <code>DOM</code> 处理到那个 <code>script</code>节点</p>
+<p>注意注意的是发起 <code>JavaScript</code> 文件的下载 <code>request</code>，并不需要 <code>DOM</code> 处理到那个 <code>script</code> 节点</p>
 </blockquote>
-<p>2、<code>Create/Update Render CSSOM</code>：<code>CSS</code> 文件下载完成，开始构建 <code>CSSOM</code></p>
-<p>3、<code>Create/Update Render Tree</code>：所有 <code>CSS</code> 文件下载完成，<code>CSSOM</code> 构建结束后，和 <code>DOM</code> 一起生成 <code>Render Tree</code></p>
-<p>4、<code>Layout</code>：有了 <code>Render Tree</code>，浏览器已经能知道网页中有哪些节点、各个节点的 <code>CSS</code> 定义以及他们的从属关系，下一步操作称之为 <code>Layout</code>，顾名思义就是计算出每个节点在屏幕中的位置</p>
-<p>5、<code>Painting</code>：<code>Layout</code> 后，浏览器已经知道了哪些节点要显示（<code>which nodes are visible</code>）、每个节点的 <code>CSS</code> 属性是什么（<code>their computed styles</code>）、每个节点在屏幕中的位置是哪里（<code>geometry</code>），就进入了最后一步：<code>Painting</code>，按照算出来的规则，通过显卡，把内容画到屏幕上</p>
-<p>以上五个步骤前三个步骤之所有使用 <code>&#39;Create/Update&#39;</code> 是因为 <code>DOM</code>、<code>CSSOM</code>、<code>Render Tree</code> 都可能在第一次 <code>Painting</code> 后又被更新多次，比如 <code>JavaScript</code> 修改了 <code>DOM</code> 或者 <code>CSS</code> 属性</p>
-<p><code>Layout</code> 和 <code>Painting</code> 也会被重复执行，除了 <code>DOM</code>、<code>CSSOM</code> 更新的原因外，图片下载完成后也需要调用 <code>Layout</code> 和 <code>Painting</code> 来更新网页</p>
-<h2 id="关于-CSSOM"><a href="#关于-CSSOM" class="headerlink" title="关于 CSSOM"></a>关于 CSSOM</h2><p><code>CSSOM</code> 是 <code>CSS Object Model</code> 的缩写</p>
-<p>大体上来说，<code>CSSOM</code> 是一个建立在 <code>Web</code> 页面上的 <code>CSS</code> 样式的映射，它和 <code>DOM</code> 类似，但是只针对 <code>CSS</code> 而不是 <code>html</code>，浏览器将 <code>DOM</code> 和 <code>CSSOM</code> 结合来渲染 <code>Web</code> 页面</p>
+<ol start="2">
+<li><p><code>Create/Update Render CSSOM</code>，<code>CSS</code> 文件下载完成，开始构建 <code>CSSOM</code></p>
+</li>
+<li><p><code>Create/Update Render Tree</code>，所有 <code>CSS</code> 文件下载完成，<code>CSSOM</code> 构建结束后，和 <code>DOM</code> 一起生成 <code>Render Tree</code></p>
+</li>
+<li><p><code>Layout</code>，有了 <code>Render Tree</code>，浏览器已经能知道网页中有哪些节点、各个节点的 <code>CSS</code> 定义以及他们的从属关系，下一步操作称之为 <code>Layout</code>，顾名思义就是计算出每个节点在屏幕中的位置</p>
+</li>
+<li><p><code>Painting</code>，<code>Layout</code> 后，浏览器已经知道了哪些节点要显示（<code>which nodes are visible</code>）、每个节点的 <code>CSS</code> 属性是什么（<code>their computed styles</code>）、每个节点在屏幕中的位置是哪里（<code>geometry</code>），就进入了最后一步 <code>Painting</code>，按照算出来的规则，通过显卡，把内容画到屏幕上</p>
+</li>
+</ol>
+<p>以上五个步骤前三个步骤之所有使用 <code>Create/Update</code> 是因为 <code>DOM</code>、<code>CSSOM</code>、<code>Render Tree</code> 都可能在第一次 <code>Painting</code> 后又被更新多次，比如 <code>JavaScript</code> 修改了 <code>DOM</code> 或者 <code>CSS</code> 属性，<code>Layout</code> 和 <code>Painting</code> 也会被重复执行，除了 <code>DOM</code>、<code>CSSOM</code> 更新的原因外，图片下载完成后也需要调用 <code>Layout</code> 和 <code>Painting</code> 来更新网页</p>
+<h2 id="关于-CSSOM"><a href="#关于-CSSOM" class="headerlink" title="关于 CSSOM"></a>关于 CSSOM</h2><p><code>CSSOM</code> 是 <code>CSS Object Model</code> 的缩写，大体上来说，<code>CSSOM</code> 是一个建立在 <code>Web</code> 页面上的 <code>CSS</code> 样式的映射，它和 <code>DOM</code> 类似，但是只针对 <code>CSS</code> 而不是 <code>html</code>，浏览器将 <code>DOM</code> 和 <code>CSSOM</code> 结合来渲染 <code>Web</code> 页面</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/35.png" alt></p>
-<h4 id="CSSOM是做什么的"><a href="#CSSOM是做什么的" class="headerlink" title="CSSOM是做什么的"></a>CSSOM是做什么的</h4><p><code>CSSOM</code> 将样式表中的规则映射到页面对应的元素上</p>
-<p>虽然 <code>CSSOM</code> 采取了复杂的措施来做这件事，但是 <code>CSSOM</code> 最终的功能还是将样式映射到它们应该对应的元素上去</p>
-<p>更确切地说，<code>CSSOM</code> 识别 <code>tokens</code> 并把这些 <code>tokens</code> 转换成一个树结构上的对应的结点，所有结点以及它们所关联的页面中的样式就是所谓的 <code>CSS Object Model</code></p>
+<h4 id="CSSOM是做什么的"><a href="#CSSOM是做什么的" class="headerlink" title="CSSOM是做什么的"></a>CSSOM是做什么的</h4><p><code>CSSOM</code> 将样式表中的规则映射到页面对应的元素上，虽然 <code>CSSOM</code> 采取了复杂的措施来做这件事，但是 <code>CSSOM</code> 最终的功能还是将样式映射到它们应该对应的元素上去，更确切地说，<code>CSSOM</code> 识别 <code>tokens</code> 并把这些 <code>tokens</code> 转换成一个树结构上的对应的结点，所有结点以及它们所关联的页面中的样式就是所谓的 <code>CSS Object Model</code></p>
 <p>从上面的渲染机制可以看出，<code>CSSOM</code> 对于 <code>Web</code> 页面的展示起着重要作用</p>
 <h4 id="使用CSSOM"><a href="#使用CSSOM" class="headerlink" title="使用CSSOM"></a>使用CSSOM</h4><p>一个好消息就是你不必为了优化你的 <code>Web</code> 页面而去了解 <code>CSSOM</code> 是怎样工作的，这里有几个关于 <code>CSSOM</code> 的关键点你需要知道，利用这些关键点可以优化页面的加载速度</p>
 <ul>
-<li><p><code>CSSOM</code> 阻止任何东西渲染</p>
-</li>
-<li><p><code>CSSOM</code> 在加载一个新页面时必须重新构建</p>
-</li>
-<li><p>页面中 <code>CSS</code> 的加载和页面中 <code>JavaScript</code> 的加载是有关系的</p>
-</li>
+<li><code>CSSOM</code> 阻止任何东西渲染</li>
+<li><code>CSSOM</code> 在加载一个新页面时必须重新构建</li>
+<li>页面中 <code>CSS</code> 的加载和页面中 <code>JavaScript</code> 的加载是有关系的</li>
 </ul>
+<p>下面我们就分别来看看以上三种情况</p>
 <ol>
 <li><code>CSSOM</code> 阻止任何东西渲染</li>
 </ol>
-<p>所有的 <code>CSS</code> 都是阻塞渲染的（意味着在 <code>CSS</code> 没处理好之前所有东西都不会展示）</p>
-<p>具体的原因是，如果浏览器在 <code>CSS</code> 检查之前展示了页面，那么每个页面都是没有样式的，等一会之后又突然有了样式，整个页面的体验就会很糟糕</p>
+<p>所有的 <code>CSS</code> 都是阻塞渲染的（意味着在 <code>CSS</code> 没处理好之前所有东西都不会展示），具体的原因是如果浏览器在 <code>CSS</code> 检查之前展示了页面，那么每个页面都是没有样式的，等一会之后又突然有了样式，整个页面的体验就会很糟糕</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/36.png" alt></p>
 <p>由于 <code>CSSOM</code> 被用作创建 <code>render tree</code>，那么如果不能高效的利用 <code>CSS</code> 会有一些严重的后果，而主要的后果就是你的页面在加载时白屏</p>
 <ol start="2">
 <li><code>CSSOM</code> 在加载一个新页面时必须重新构建</li>
 </ol>
-<p>这意味着即使你的 <code>CSS</code> 文件被缓存了，也并不意味着这个已经构建好了的 <code>CSSOM</code> 可以应用到每一个页面</p>
-<p>当用户跳到你的另一个页面时（即使浏览器缓存了所有需要的 <code>CSS</code>），<code>CSSOM</code> 也必须重新构建一遍</p>
-<p>也就是说，如果你的 <code>CSS</code> 文件写得很蹩脚，或者体积很大，这也会对你页面加载产生负面的影响</p>
+<p>这意味着即使你的 <code>CSS</code> 文件被缓存了，也并不意味着这个已经构建好了的 <code>CSSOM</code> 可以应用到每一个页面，当用户跳到你的另一个页面时（即使浏览器缓存了所有需要的 <code>CSS</code>），<code>CSSOM</code> 也必须重新构建一遍，也就是说，如果你的 <code>CSS</code> 文件写得很蹩脚，或者体积很大，这也会对你页面加载产生负面的影响</p>
 <ol start="3">
 <li>页面中 <code>CSS</code> 的加载和页面中 <code>JavaScript</code> 的加载是有关系的</li>
 </ol>
-<p><code>JavaScript</code> 的加载可能会阻塞 <code>CSSOM</code> 的构建</p>
-<p>简单来说，<code>CSSOM</code> 是展示任何东西的必需品，在 <code>CSSOM</code> 构建之前，所有东西都不会展示</p>
+<p><code>JavaScript</code> 的加载可能会阻塞 <code>CSSOM</code> 的构建，简单来说，<code>CSSOM</code> 是展示任何东西的必需品，在 <code>CSSOM</code> 构建之前，所有东西都不会展示</p>
 <ul>
-<li><p>如果你阻塞了 <code>CSSOM</code> 的构建，<code>CSSOM</code> 的构建就会消耗更长的时间，这就意味着页面的渲染也需要更长的时间</p>
-</li>
-<li><p>如果你的 <code>JavaScript</code> 阻塞了 <code>CSSOM</code> 的构建，你的用户就会面对更长时间的白屏</p>
-</li>
+<li>如果你阻塞了 <code>CSSOM</code> 的构建，<code>CSSOM</code> 的构建就会消耗更长的时间，这就意味着页面的渲染也需要更长的时间</li>
+<li>如果你的 <code>JavaScript</code> 阻塞了 <code>CSSOM</code> 的构建，你的用户就会面对更长时间的白屏</li>
 </ul>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://juejin.im/entry/58f867045c497d0058e2ff3a" target="_blank" rel="noopener">解秘 FOUC</a></p>
 <p><a href="https://varvy.com/performance/cssom.html" target="_blank" rel="noopener">CSSOM 介绍</a></p>
@@ -302,7 +296,7 @@ var _hmt = _hmt || [];
         
         <div class="level-start">
             <a class="level level-item has-link-grey  article-nav-prev" href="/2019/07/11/Angular/13/">
-                <i class="level-item fas fa-chevron-left"></i>
+                <i class="level-item fa fa-chevron-left"></i>
                 <span class="level-item">Angular 中传递参数的几种方式</span>
             </a>
         </div>
@@ -311,7 +305,7 @@ var _hmt = _hmt || [];
         <div class="level-end">
             <a class="level level-item has-link-grey  article-nav-next" href="/2019/07/05/Node/04/">
                 <span class="level-item">Node.js 中的事件轮询机制</span>
-                <i class="level-item fas fa-chevron-right"></i>
+                <i class="level-item fa fa-chevron-right"></i>
             </a>
         </div>
         
@@ -386,7 +380,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        137
+                        136
                     </p>
                 </div>
             </div>
@@ -432,13 +426,13 @@ var _hmt = _hmt || [];
         <span class="has-mr-6">1</span>
         <span>什么是 FOUC？</span>
         </a></li><li>
-        <a class="is-flex" href="#页面解析和页面渲染">
-        <span class="has-mr-6">2</span>
-        <span>页面解析和页面渲染</span>
-        </a></li><li>
         <a class="is-flex" href="#解决办法">
-        <span class="has-mr-6">3</span>
+        <span class="has-mr-6">2</span>
         <span>解决办法</span>
+        </a></li><li>
+        <a class="is-flex" href="#页面解析和页面渲染">
+        <span class="has-mr-6">3</span>
+        <span>页面解析和页面渲染</span>
         </a></li><li>
         <a class="is-flex" href="#渲染机制">
         <span class="has-mr-6">4</span>
@@ -527,7 +521,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">15</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -565,7 +559,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 16px;">Angular</a> <a href="/tags/CSS/" style="font-size: 14px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18px;">Essay</a> <a href="/tags/Http/" style="font-size: 12px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16px;">Node.js</a> <a href="/tags/React/" style="font-size: 14px;">React</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 16.67px;">Angular</a> <a href="/tags/CSS/" style="font-size: 13.33px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/Http/" style="font-size: 11.67px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 15px;">Node.js</a> <a href="/tags/React/" style="font-size: 13.33px;">React</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
     </div>
 </div>
 
@@ -770,7 +764,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">8</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -1222,7 +1216,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 
@@ -1350,7 +1344,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
 
 <a id="back-to-top" title="回到顶端" href="javascript:;">
-    <i class="fas fa-chevron-up"></i>
+    <i class="fa fa-chevron-up"></i>
 </a>
 <script src="/js/back-to-top.js" defer></script>
 
