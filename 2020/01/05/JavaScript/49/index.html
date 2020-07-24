@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="关于防抖和节流，是一个老生常提的话题了，随便在网上搜一搜，都可以找到现成可以使用的函数 但是现成的函数的功能都是已经比较完善的了，我们并不清楚它如何或者为什么要这样设计，所以我们今天就来深入的了解一下这两个方法 主要参考的是 Lodash 当中的 _.throttle 和 _.debounce 两个方法">
+    <meta name="description" content="关于防抖和节流，是一个老生常提的话题了，随便在网上搜一搜，都可以找到现成可以使用的函数，但是现成的函数的功能实现的都是已经比较完善的了，我们并不清楚它如何或者为什么要这样设计，所以我们今天就从头开始的来深入的了解一下这两个方法 主要参考的是 Lodash 当中的 _.throttle 和 _.debounce 两个方法">
 <meta name="keywords" content="JavaScript">
 <meta property="og:type" content="article">
 <meta property="og:title" content="函数防抖和节流">
 <meta property="og:url" content="http://yoursite.com/2020/01/05/JavaScript/49/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="关于防抖和节流，是一个老生常提的话题了，随便在网上搜一搜，都可以找到现成可以使用的函数 但是现成的函数的功能都是已经比较完善的了，我们并不清楚它如何或者为什么要这样设计，所以我们今天就来深入的了解一下这两个方法 主要参考的是 Lodash 当中的 _.throttle 和 _.debounce 两个方法">
+<meta property="og:description" content="关于防抖和节流，是一个老生常提的话题了，随便在网上搜一搜，都可以找到现成可以使用的函数，但是现成的函数的功能实现的都是已经比较完善的了，我们并不清楚它如何或者为什么要这样设计，所以我们今天就从头开始的来深入的了解一下这两个方法 主要参考的是 Lodash 当中的 _.throttle 和 _.debounce 两个方法">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/49.jpg">
-<meta property="og:updated_time" content="2020-01-09T15:19:59.130Z">
+<meta property="og:updated_time" content="2020-07-24T14:58:38.805Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="函数防抖和节流">
-<meta name="twitter:description" content="关于防抖和节流，是一个老生常提的话题了，随便在网上搜一搜，都可以找到现成可以使用的函数 但是现成的函数的功能都是已经比较完善的了，我们并不清楚它如何或者为什么要这样设计，所以我们今天就来深入的了解一下这两个方法 主要参考的是 Lodash 当中的 _.throttle 和 _.debounce 两个方法">
+<meta name="twitter:description" content="关于防抖和节流，是一个老生常提的话题了，随便在网上搜一搜，都可以找到现成可以使用的函数，但是现成的函数的功能实现的都是已经比较完善的了，我们并不清楚它如何或者为什么要这样设计，所以我们今天就从头开始的来深入的了解一下这两个方法 主要参考的是 Lodash 当中的 _.throttle 和 _.debounce 两个方法">
 <meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/49.jpg">
 
 
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    16 分钟 读完 (大约 2436 个字)
+                    17 分钟 读完 (大约 2486 个字)
                 </span>
                 
                 
@@ -186,20 +186,15 @@ var _hmt = _hmt || [];
             
         </h1>
         <div class="content">
-            <p>关于防抖和节流，是一个老生常提的话题了，随便在网上搜一搜，都可以找到现成可以使用的函数</p>
-<p>但是现成的函数的功能都是已经比较完善的了，我们并不清楚它如何或者为什么要这样设计，所以我们今天就来深入的了解一下这两个方法</p>
+            <p>关于防抖和节流，是一个老生常提的话题了，随便在网上搜一搜，都可以找到现成可以使用的函数，但是现成的函数的功能实现的都是已经比较完善的了，我们并不清楚它如何或者为什么要这样设计，所以我们今天就从头开始的来深入的了解一下这两个方法</p>
 <p>主要参考的是 <a href="https://www.html.cn/doc/lodash/" target="_blank" rel="noopener">Lodash</a> 当中的 <code>_.throttle</code> 和 <code>_.debounce</code> 两个方法</p>
 <a id="more"></a>
 
 
-<h2 id="什么是防抖和节流"><a href="#什么是防抖和节流" class="headerlink" title="什么是防抖和节流"></a>什么是防抖和节流</h2><p>我们可以使用一个现实中常见的例子来进行举例</p>
-<p>比如使用电梯运送策略来说明这两个方法，比如每天上班大厦底下的电梯，把电梯完成一次运送，类比为一次函数的执行和响应</p>
-<p>假设电梯有两种运行策略 <code>throttle</code> 和 <code>debounce</code> ，超时设定为 <code>15</code> 秒，不考虑容量限制</p>
+<h2 id="什么是防抖和节流"><a href="#什么是防抖和节流" class="headerlink" title="什么是防抖和节流"></a>什么是防抖和节流</h2><p>我们可以使用一个现实中常见的例子来进行举例，比如使用电梯运送策略来说明这两个方法，比如每天上班大厦底下的电梯，把电梯完成一次运送，类比为一次函数的执行和响应，假设电梯有两种运行策略 <code>throttle</code> 和 <code>debounce</code> ，超时设定为 <code>15</code> 秒，不考虑容量限制</p>
 <ul>
-<li><p><code>throttle</code> 策略的电梯，保证如果电梯第一个人进来后，<code>15</code> 秒后准时运送一次，不等待，如果没有人，则待机</p>
-</li>
-<li><p><code>debounce</code> 策略的电梯，如果电梯里有人进来，等待 <code>15</code> 秒，如果有人进来，<code>15</code> 秒等待重新计时，直到 <code>15</code> 秒超时，开始运送</p>
-</li>
+<li><code>throttle</code> 策略的电梯，保证如果电梯第一个人进来后，<code>15</code> 秒后准时运送一次，不等待，如果没有人，则待机</li>
+<li><code>debounce</code> 策略的电梯，如果电梯里有人进来，等待 <code>15</code> 秒，如果有人进来，<code>15</code> 秒等待重新计时，直到 <code>15</code> 秒超时，开始运送</li>
 </ul>
 <blockquote>
 <p>但是有一点需要注意，当然你也可以采用箭头函数等一些 <code>ES6</code> 当中的方式来进行实现，但是本文大部分都是采用 <code>ES5</code> 的方式来进行介绍，主要是以介绍原理为主</p>
@@ -208,22 +203,20 @@ var _hmt = _hmt || [];
 <h2 id="debounce"><a href="#debounce" class="headerlink" title="debounce"></a>debounce</h2><p>防抖即 <code>debounce</code>，根据我们之前的思路，我们可以迅速的实现我们的第一版代码</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 第一版</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">debounce</span>(<span class="hljs-params">fn, wait</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> timer</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    clearTimeout(timer)</span><br><span class="line">    timer = setTimeout(fn, wait)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>但是如果去使用以后会发现，<code>this</code> 是指向 <code>window</code> 对象的，所以我们需要将 <code>this</code> 指向正确的对象</p>
-<p>在这里，我们可以使用一个变量来保存当前的 <code>this</code></p>
+<p>运行以后可以发现，是存在问题的，函数当中的 <code>this</code> 是指向 <code>window</code> 对象的，所以我们需要将 <code>this</code> 指向正确的对象，所以针对于这种情况，我们可以使用一个变量来保存当前的 <code>this</code></p>
 <blockquote>
-<p>注意：这里如果使用了箭头函数则直接传递 <code>this</code> 即可，因为箭头函数会从自己的作用域链的上一层继承 <code>this</code></p>
+<p>注意，这里如果使用了箭头函数则直接传递 <code>this</code> 即可，因为箭头函数会从自己的作用域链的上一层继承 <code>this</code></p>
 </blockquote>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 第二版</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">debounce</span>(<span class="hljs-params">fn, wait</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> timer</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span></span><br><span class="line">    clearTimeout(timer)</span><br><span class="line">    timer = setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">      fn.apply(that)</span><br><span class="line">    &#125;, wait)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>但是现在依然是有问题的，因为我们传入的 <code>fn</code> 是有可能携带参数的，所以我们需要将其补上</p>
+<p>但是现在依然是存在一定问题的，因为我们传入的 <code>fn</code> 是有可能携带参数的，所以我们需要将其补上，也就有了下面的第三版</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 第三版</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">debounce</span>(<span class="hljs-params">fn, wait</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> timer</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// 注意保存 arguments，防止 setTimeout 当中获取不到参数</span></span><br><span class="line">    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>, args = <span class="hljs-built_in">arguments</span></span><br><span class="line">    clearTimeout(timer)</span><br><span class="line">    timer = setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">      fn.apply(that, args)</span><br><span class="line">    &#125;, wait)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>目前为止，我们已经完成了一个较为完善的方法，但是现在的需求有所变化，我们不希望非要等到事件停止触发后才执行我们的函数，而是希望可以在开始的时候立刻执行函数，然后等到停止触发 <code>wait</code> 秒后，才可以重新触发执行</p>
-<p>所以针对这种情况，我们添加一个 <code>immediate</code> 参数判断是否是立刻执行</p>
-<p>如果 <code>immediate</code> 参数传递为 <code>true</code>，则每隔 <code>wait</code> 秒后才会再次执行</p>
+<p>所以针对这种情况，我们添加一个 <code>immediate</code> 参数判断是否是立刻执行，如果 <code>immediate</code> 参数传递为 <code>true</code>，则每隔 <code>wait</code> 秒后才会再次执行</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 第四版</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">debounce</span>(<span class="hljs-params">fn, wait, immediate</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> timer</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>, args = <span class="hljs-built_in">arguments</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (timer) clearTimeout(timer)</span><br><span class="line">    <span class="hljs-keyword">if</span> (immediate) &#123;</span><br><span class="line">      <span class="hljs-comment">// 如果已经执行过，便不再执行</span></span><br><span class="line">      <span class="hljs-keyword">var</span> callNow = !timer              <span class="hljs-comment">// ==&gt; 第一点</span></span><br><span class="line">      timer = setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;  <span class="hljs-comment">// ==&gt; 第二点</span></span><br><span class="line">        timer = <span class="hljs-literal">null</span></span><br><span class="line">      &#125;, wait)</span><br><span class="line">      <span class="hljs-keyword">if</span> (callNow) fn.apply(that, args)</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      timer = setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">        fn.apply(that, args)</span><br><span class="line">      &#125;, wait)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>关于文中的两点需要注意的地方，第一点</p>
+<p>关于文中标注的两点需要注意的地方，第一点</p>
 <ul>
 <li><code>timer</code> 是闭包变量，初始化时是 <code>undefined</code>，<code>setTimeout</code> 返回的是定时器的 <code>id</code> ，一个大于 <code>0</code> 的数字，而 <code>clearTimeout</code> 不会改变 <code>timer</code> 的值</li>
 <li>若 <code>timer</code> 经历过赋值，即执行过 <code>setTimeout</code>，则 <code>!timer</code> 为假，所以也就不再执行</li>
@@ -232,27 +225,20 @@ var _hmt = _hmt || [];
 <blockquote>
 <p>Pass true for the immediate argument to cause debounce to trigger the function on the leading instead of the trailing edge of the wait interval. Useful in circumstances like preventing accidental double-clicks on a “submit” button from firing a second time.</p>
 </blockquote>
-<p>我们在之前考虑到了我们传入的函数 <code>fn</code> 是可能带有参数的，但是同样的，它也有可能会有返回值的</p>
-<p>但是当 <code>immediate</code> 为 <code>false</code> 的时候，因为使用了 <code>setTimeout</code>，我们将 <code>fn.apply(that, arguments)</code> 的返回值 <code>return</code> 的时候，值将会一直是 <code>undefined</code></p>
-<p>所以我们只在 <code>immediate</code> 为 <code>true</code> 的时候返回函数的执行结果，所以直接定义一个 <code>result</code> 进行接收以后在返回即可</p>
+<p>我们在之前考虑到了我们传入的函数 <code>fn</code> 是可能带有参数的，但是同样的，它也有可能会有返回值的，但是当 <code>immediate</code> 为 <code>false</code> 的时候，因为使用了 <code>setTimeout</code>，我们将 <code>fn.apply(that, arguments)</code> 的返回值 <code>return</code> 的时候，值将会一直是 <code>undefined</code>，所以我们只在 <code>immediate</code> 为 <code>true</code> 的时候返回函数的执行结果，所以直接定义一个 <code>result</code> 进行接收以后在返回即可</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 第五版</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">debounce</span>(<span class="hljs-params">fn, wait, immediate</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> timer, result</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>, args = <span class="hljs-built_in">arguments</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (timer) clearTimeout(timer)</span><br><span class="line">    <span class="hljs-keyword">if</span> (immediate) &#123;</span><br><span class="line">      <span class="hljs-keyword">var</span> callNow = !timer</span><br><span class="line">      timer = setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">        timer = <span class="hljs-literal">null</span></span><br><span class="line">      &#125;, wait)</span><br><span class="line">      <span class="hljs-keyword">if</span> (callNow) result = fn.apply(that, args)</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      timer = setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">        fn.apply(that, args)</span><br><span class="line">      &#125;, wait)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> result</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>最后，我们再来考虑一点小需求，即我们希望可以取消 <code>debounce</code> 函数，比如我们设定了 <code>debounce</code> 的时间间隔是 <code>10</code> 秒钟，<code>immediate</code> 为 <code>true</code></p>
-<p>这样一来，只有等待 <code>10</code> 秒后才能重新触发事件，所以我们希望有一个按钮，点击后可以取消防抖，这样再去触发，就可以又立刻执行</p>
-<p>所以我们可以使用一个函数将 <code>return</code> 的部分包裹起来，然后给它添加一个取消的句柄即可</p>
+<p>最后，我们再来考虑一点小需求，即我们希望可以取消 <code>debounce</code> 函数，比如我们设定了 <code>debounce</code> 的时间间隔是 <code>10</code> 秒钟，<code>immediate</code> 为 <code>true</code>，这样一来，只有等待 <code>10</code> 秒后才能重新触发事件，所以我们希望有一个按钮，点击后可以取消防抖，这样再去触发，就可以又立刻执行，所以我们可以使用一个函数将 <code>return</code> 的部分包裹起来，然后给它添加一个取消的句柄即可</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 第六版</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">debounce</span>(<span class="hljs-params">fn, wait, immediate</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> timer, result</span><br><span class="line">  <span class="hljs-keyword">var</span> debounced = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>, args = <span class="hljs-built_in">arguments</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (timer) clearTimeout(timer)</span><br><span class="line">    <span class="hljs-keyword">if</span> (immediate) &#123;</span><br><span class="line">      <span class="hljs-keyword">var</span> callNow = !timer</span><br><span class="line">      timer = setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">        timer = <span class="hljs-literal">null</span></span><br><span class="line">      &#125;, wait)</span><br><span class="line">      <span class="hljs-keyword">if</span> (callNow) result = fn.apply(that, args)</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      timer = setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">        fn.apply(that, args)</span><br><span class="line">      &#125;, wait)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> result</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  debounced.cancel = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    clearTimeout(timer)</span><br><span class="line">    timer = <span class="hljs-literal">null</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> debounced</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>可以使用下面的代码来进行测试</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> mousemove = debounce(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(e)</span><br><span class="line">&#125;, <span class="hljs-number">300</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 绑定监听</span></span><br><span class="line"><span class="hljs-built_in">document</span>.addEventListener(<span class="hljs-string">'mousemove'</span>, mousemove)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 关于取消按钮的用法，因为我们的 debounce 返回的是一个函数</span></span><br><span class="line"><span class="hljs-keyword">var</span> hanle = debounce(log, <span class="hljs-number">10000</span>, <span class="hljs-literal">true</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 如果想取消的话，直接调用 cancel() 方法即可</span></span><br><span class="line">btn.addEventListener(<span class="hljs-string">'click'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  hanle.cancel()</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
 <p>至此我们就已经完整实现了一个 <code>debounce</code> 函数，防抖看完之后，我们再来看看节流</p>
-<h2 id="throttle"><a href="#throttle" class="headerlink" title="throttle"></a>throttle</h2><p>同样的逻辑，我们这次采用 <code>throttle</code> 策略来进行实现，基本逻辑如下</p>
-<p>我们使用时间戳来进行记录，当触发事件的时候，我们取出当前的时间戳，然后减去之前的时间戳</p>
-<p>如果大于设置的时间周期，就执行函数，然后更新时间戳为当前的时间戳，如果小于就不执行</p>
+<h2 id="throttle"><a href="#throttle" class="headerlink" title="throttle"></a>throttle</h2><p>同样的逻辑，我们这次采用 <code>throttle</code> 策略来进行实现，基本逻辑如下，我们使用时间戳来进行记录，当触发事件的时候，我们取出当前的时间戳，然后减去之前的时间戳，如果大于设置的时间周期，就执行函数，然后更新时间戳为当前的时间戳，如果小于就不执行</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 第一版</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">throttle</span>(<span class="hljs-params">fn, wait</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> prev = <span class="hljs-number">0</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span></span><br><span class="line">    <span class="hljs-keyword">var</span> now = +<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>()</span><br><span class="line">    <span class="hljs-keyword">if</span> (now - prev &gt;= wait) &#123;</span><br><span class="line">      fn.apply(that, <span class="hljs-built_in">arguments</span>)</span><br><span class="line">      prev = now</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>上面是使用记录时间戳的方式来实现的，下面我们就来看看使用定时器的版本</p>
-<p>当触发事件的时候，我们设置一个定时器，再触发事件的时候，如果定时器存在，就不执行，直到定时器执行，然后执行函数，清空定时器，这样就可以设置下个定时器</p>
+<p>上面是使用记录时间戳的方式来实现的，下面我们就来看看使用定时器的版本，当触发事件的时候，我们设置一个定时器，再触发事件的时候，如果定时器存在，就不执行，直到定时器执行，然后执行函数，清空定时器，这样就可以设置下个定时器</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 第二版</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">throttle</span>(<span class="hljs-params">fn, wait</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> timer</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (!timer) &#123;</span><br><span class="line">      timer = setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">        timer = <span class="hljs-literal">null</span></span><br><span class="line">        fn.apply(that, <span class="hljs-built_in">arguments</span>)</span><br><span class="line">      &#125;, wait)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>可以发现，虽然在实现上很类似我们上面第三版的 <code>debounce</code>，但是它们的原理是有所不同的，先抛开这些，我们来对比一下上面两种实现方式</p>
@@ -574,7 +560,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/05/26/Essay/30/" class="media-left">
+            <a href="/2020/07/02/Essay/30/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/30.jpg" alt="排序算法">
                 </p>
@@ -582,8 +568,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-25T16:00:00.000Z">2020-05-26</time></div>
-                    <a href="/2020/05/26/Essay/30/" class="has-link-black-ter is-size-6">排序算法</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-01T16:00:00.000Z">2020-07-02</time></div>
+                    <a href="/2020/07/02/Essay/30/" class="has-link-black-ter is-size-6">排序算法</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -593,7 +579,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/05/15/Essay/29/" class="media-left">
+            <a href="/2020/06/22/Essay/29/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/29.jpg" alt="散列表查找">
                 </p>
@@ -601,8 +587,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-14T16:00:00.000Z">2020-05-15</time></div>
-                    <a href="/2020/05/15/Essay/29/" class="has-link-black-ter is-size-6">散列表查找</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-21T16:00:00.000Z">2020-06-22</time></div>
+                    <a href="/2020/06/22/Essay/29/" class="has-link-black-ter is-size-6">散列表查找</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -612,7 +598,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/05/03/Essay/28/" class="media-left">
+            <a href="/2020/06/18/Essay/28/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/28.jpg" alt="平衡二叉排序树">
                 </p>
@@ -620,8 +606,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-02T16:00:00.000Z">2020-05-03</time></div>
-                    <a href="/2020/05/03/Essay/28/" class="has-link-black-ter is-size-6">平衡二叉排序树</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-17T16:00:00.000Z">2020-06-18</time></div>
+                    <a href="/2020/06/18/Essay/28/" class="has-link-black-ter is-size-6">平衡二叉排序树</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -631,7 +617,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/04/27/Essay/27/" class="media-left">
+            <a href="/2020/06/12/Essay/27/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/27.jpg" alt="二叉排序树">
                 </p>
@@ -639,8 +625,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-26T16:00:00.000Z">2020-04-27</time></div>
-                    <a href="/2020/04/27/Essay/27/" class="has-link-black-ter is-size-6">二叉排序树</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-11T16:00:00.000Z">2020-06-12</time></div>
+                    <a href="/2020/06/12/Essay/27/" class="has-link-black-ter is-size-6">二叉排序树</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -650,7 +636,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/04/25/Essay/26/" class="media-left">
+            <a href="/2020/05/25/Essay/26/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/26.jpg" alt="查找算法">
                 </p>
@@ -658,8 +644,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-04-24T16:00:00.000Z">2020-04-25</time></div>
-                    <a href="/2020/04/25/Essay/26/" class="has-link-black-ter is-size-6">查找算法</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-24T16:00:00.000Z">2020-05-25</time></div>
+                    <a href="/2020/05/25/Essay/26/" class="has-link-black-ter is-size-6">查找算法</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -680,6 +666,28 @@ var _hmt = _hmt || [];
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/archives/2020/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2020/05/">
                 <span class="level-start">
                     <span class="level-item">五月 2020</span>
@@ -696,7 +704,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">四月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -707,7 +715,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">三月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -718,7 +726,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">二月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
