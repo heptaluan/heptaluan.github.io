@@ -16,7 +16,7 @@
 <meta property="og:description" content="在之前的 二叉树 章节当中，我们介绍了二叉树的定义以及性质，所以本章我们就重点来看看二叉树遍历的相关内容">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg">
-<meta property="og:updated_time" content="2020-07-24T14:58:38.790Z">
+<meta property="og:updated_time" content="2020-08-02T13:25:06.557Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="二叉树的遍历">
 <meta name="twitter:description" content="在之前的 二叉树 章节当中，我们介绍了二叉树的定义以及性质，所以本章我们就重点来看看二叉树遍历的相关内容">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    9 分钟 读完 (大约 1307 个字)
+                    9 分钟 读完 (大约 1352 个字)
                 </span>
                 
                 
@@ -186,7 +186,7 @@ var _hmt = _hmt || [];
             
         </h1>
         <div class="content">
-            <p>在之前的 <a href="http://localhost:4000/2020/03/22/Essay/16/" target="_blank" rel="noopener">二叉树</a> 章节当中，我们介绍了二叉树的定义以及性质，所以本章我们就重点来看看二叉树遍历的相关内容</p>
+            <p>在之前的 <a href="https://heptaluan.github.io/2020/03/22/Essay/16/" target="_blank" rel="noopener">二叉树</a> 章节当中，我们介绍了二叉树的定义以及性质，所以本章我们就重点来看看二叉树遍历的相关内容</p>
 <a id="more"></a>
 
 <h2 id="二叉树的遍历"><a href="#二叉树的遍历" class="headerlink" title="二叉树的遍历"></a>二叉树的遍历</h2><p>二叉树的遍历（<code>traversing binary tree</code>）是指从根结点出发，按照某种次序依次访问二叉树中所有结点，使得每个结点被访问一次且仅被访问一次的遍历方式，这里需要注意上文提及的两个概念 <strong>某种次序依次访问</strong> 和 <strong>访问一次且仅被访问一次</strong></p>
@@ -218,11 +218,11 @@ var _hmt = _hmt || [];
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/17-05.png" alt></p>
 <p>遍历的顺序为 <code>A ==&gt; B ==&gt; C ==&gt; D ==&gt; E ==&gt; F ==&gt; G ==&gt; H ==&gt; I ==&gt; J ==&gt; K</code></p>
 <h2 id="二叉树的建立和遍历"><a href="#二叉树的建立和遍历" class="headerlink" title="二叉树的建立和遍历"></a>二叉树的建立和遍历</h2><p>我们直接来看如何用代码进行实现</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 首先创建一个类来表示二叉查找树，它的内部有一个 Node 类，用来创建节点</span></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Node</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(key) &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.key = key</span><br><span class="line">    <span class="hljs-keyword">this</span>.left = <span class="hljs-literal">null</span></span><br><span class="line">    <span class="hljs-keyword">this</span>.right = <span class="hljs-literal">null</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BinaryTree</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.root = <span class="hljs-literal">null</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 插入数据</span></span><br><span class="line">  insert(key) &#123;</span><br><span class="line">    <span class="hljs-comment">// 传入需要插入的 key 值，它会自动初始化为左右节点为 null 的一个新节点</span></span><br><span class="line">    <span class="hljs-keyword">var</span> newNode = <span class="hljs-keyword">new</span> Node(key)</span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.root == <span class="hljs-literal">null</span>) &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.root = newNode</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">var</span> current = <span class="hljs-keyword">this</span>.root</span><br><span class="line">      <span class="hljs-comment">// 通过循环来找到新添加节点的合适位置</span></span><br><span class="line">      <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (key &lt; current.key) &#123;</span><br><span class="line">          <span class="hljs-keyword">if</span> (current.left) &#123;</span><br><span class="line">            current = current.left</span><br><span class="line">          &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">            current.left = newNode</span><br><span class="line">            <span class="hljs-keyword">break</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (key &gt; current.key) &#123;</span><br><span class="line">          <span class="hljs-keyword">if</span> (current.right) &#123;</span><br><span class="line">            current = current.right</span><br><span class="line">          &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">            current.right = newNode</span><br><span class="line">            <span class="hljs-keyword">break</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 中序遍历</span></span><br><span class="line">  centerSort(node) &#123;</span><br><span class="line">    <span class="hljs-comment">// 检查传入的 node 是否为 null，如果不为空，就继续递归调用自身检查 node 的 left、right 节点</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (node) &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.centerSort(node.left)</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(node.key)</span><br><span class="line">      <span class="hljs-keyword">this</span>.centerSort(node.right)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 前序遍历</span></span><br><span class="line">  prevSort(node) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (node) &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(node.key)</span><br><span class="line">      <span class="hljs-keyword">this</span>.prevSort(node.left)</span><br><span class="line">      <span class="hljs-keyword">this</span>.prevSort(node.right)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 后续遍历</span></span><br><span class="line">  nextSort(node) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (node) &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.nextSort(node.left)</span><br><span class="line">      <span class="hljs-keyword">this</span>.nextSort(node.right)</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(node.key)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> arr = [<span class="hljs-number">13</span>, <span class="hljs-number">21</span>, <span class="hljs-number">15</span>, <span class="hljs-number">29</span>, <span class="hljs-number">3</span>, <span class="hljs-number">55</span>]</span><br><span class="line"><span class="hljs-keyword">var</span> bst = <span class="hljs-keyword">new</span> BinaryTree()</span><br><span class="line"></span><br><span class="line">arr.map(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> &#123;</span><br><span class="line">  bst.insert(item)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">bst.centerSort(bst.root)</span><br><span class="line"><span class="hljs-comment">// bst.prevSort(bst.root)</span></span><br><span class="line"><span class="hljs-comment">// bst.nextSort(bst.root)</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 首先创建一个类来表示二叉树，它的内部有一个 Node 类，用来创建节点</span></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Node</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(key) &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.key = key</span><br><span class="line">    <span class="hljs-keyword">this</span>.left = <span class="hljs-literal">null</span></span><br><span class="line">    <span class="hljs-keyword">this</span>.right = <span class="hljs-literal">null</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BinaryTree</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.root = <span class="hljs-literal">null</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 插入数据</span></span><br><span class="line">  insert(key) &#123;</span><br><span class="line">    <span class="hljs-comment">// 传入需要插入的 key 值，它会自动初始化为左右节点为 null 的一个新节点</span></span><br><span class="line">    <span class="hljs-keyword">var</span> newNode = <span class="hljs-keyword">new</span> Node(key)</span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.root == <span class="hljs-literal">null</span>) &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.root = newNode</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">var</span> current = <span class="hljs-keyword">this</span>.root</span><br><span class="line">      <span class="hljs-comment">// 通过循环来找到新添加节点的合适位置</span></span><br><span class="line">      <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (key &lt; current.key) &#123;</span><br><span class="line">          <span class="hljs-keyword">if</span> (current.left) &#123;</span><br><span class="line">            current = current.left</span><br><span class="line">          &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">            current.left = newNode</span><br><span class="line">            <span class="hljs-keyword">break</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (key &gt; current.key) &#123;</span><br><span class="line">          <span class="hljs-keyword">if</span> (current.right) &#123;</span><br><span class="line">            current = current.right</span><br><span class="line">          &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">            current.right = newNode</span><br><span class="line">            <span class="hljs-keyword">break</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 中序遍历</span></span><br><span class="line">  centerSort(node) &#123;</span><br><span class="line">    <span class="hljs-comment">// 检查传入的 node 是否为 null，如果不为空，就继续递归调用自身检查 node 的 left、right 节点</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (node) &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.centerSort(node.left)</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(node.key)</span><br><span class="line">      <span class="hljs-keyword">this</span>.centerSort(node.right)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 前序遍历</span></span><br><span class="line">  prevSort(node) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (node) &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(node.key)</span><br><span class="line">      <span class="hljs-keyword">this</span>.prevSort(node.left)</span><br><span class="line">      <span class="hljs-keyword">this</span>.prevSort(node.right)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 后续遍历</span></span><br><span class="line">  nextSort(node) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (node) &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.nextSort(node.left)</span><br><span class="line">      <span class="hljs-keyword">this</span>.nextSort(node.right)</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(node.key)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> arr = [<span class="hljs-number">13</span>, <span class="hljs-number">21</span>, <span class="hljs-number">15</span>, <span class="hljs-number">29</span>, <span class="hljs-number">3</span>, <span class="hljs-number">55</span>]</span><br><span class="line"><span class="hljs-keyword">var</span> bst = <span class="hljs-keyword">new</span> BinaryTree()</span><br><span class="line"></span><br><span class="line">arr.map(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> &#123;</span><br><span class="line">  bst.insert(item)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">bst.centerSort(bst.root)</span><br><span class="line"><span class="hljs-comment">// bst.prevSort(bst.root)</span></span><br><span class="line"><span class="hljs-comment">// bst.nextSort(bst.root)</span></span><br></pre></td></tr></table></figure>
 
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/17-06.png" alt></p>
-<p>我们通过上面的方式实现了对二叉树的节点插入，和三种遍历方法，同时我们很明显可以看到，在二叉树当中，最左侧的节点的值是最小的，而最右侧的节点的值是最大的，所以二叉查找树可以很方便的拿到其中的最大值和最小值</p>
-<p>另外可以发现，我们也并没有涉及到比如在二叉树当中查找给定的值，亦或者删除否个给定的值的操作，关于这些内容我们会在后面的二叉查找树当中来进行介绍</p>
+<p>我们通过上面的方式实现了对二叉树的节点插入，和三种遍历方法，同时我们很明显可以看到，在二叉树当中，最左侧的节点的值是最小的，而最右侧的节点的值是最大的，而这些内容对于我们在后面将要介绍到的 <a href="https://heptaluan.github.io/2020/06/12/Essay/27/" target="_blank" rel="noopener">二叉排序树</a> 有很大帮助，因为我们可以借住二叉查找树很方便的拿到其中的最大值和最小值</p>
+<p>另外可以发现，我们也并没有涉及到比如在二叉树当中查找给定的值，亦或者删除某个给定的值的操作，关于这些内容我们会在后面的 <a href="https://heptaluan.github.io/2020/06/12/Essay/27/" target="_blank" rel="noopener">二叉排序树</a> 当中重点来进行介绍</p>
 
         </div>
         
@@ -333,7 +333,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        136
+                        140
                     </p>
                 </div>
             </div>
@@ -430,7 +430,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">12</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -454,7 +454,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">44</span>
+                <span class="level-item tag">45</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -500,7 +500,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 16.67px;">Angular</a> <a href="/tags/CSS/" style="font-size: 13.33px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/Http/" style="font-size: 11.67px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 15px;">Node.js</a> <a href="/tags/React/" style="font-size: 13.33px;">React</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 17.14px;">Angular</a> <a href="/tags/CSS/" style="font-size: 14.29px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.57px;">Essay</a> <a href="/tags/Http/" style="font-size: 11.43px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 15.71px;">Node.js</a> <a href="/tags/React/" style="font-size: 12.86px;">React</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
     </div>
 </div>
 
@@ -514,6 +514,25 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/07/17/JavaScript/52/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/52.jpg" alt="JavaScript 中的位运算符">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-16T16:00:00.000Z">2020-07-17</time></div>
+                    <a href="/2020/07/17/JavaScript/52/" class="has-link-black-ter is-size-6">JavaScript 中的位运算符</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -591,25 +610,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/05/25/Essay/26/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/26.jpg" alt="查找算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-24T16:00:00.000Z">2020-05-25</time></div>
-                    <a href="/2020/05/25/Essay/26/" class="has-link-black-ter is-size-6">查找算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -628,7 +628,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">七月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -837,7 +837,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -848,7 +848,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1151,7 +1151,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
@@ -1172,7 +1172,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">44</span>
+                        <span class="tag is-grey">45</span>
                     </a>
                 </div>
                 
