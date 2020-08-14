@@ -16,7 +16,7 @@
 <meta property="og:description" content="this 是 JavaScript 语言的一个关键字它代表函数运行时，自动生成的一个内部对象，只能在函数内部使用 随着函数使用场合的不同，this 的值会发生变化，但是有一个总的原则，那就是 this 指向的是，调用函数的那个对象">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/22.jpg">
-<meta property="og:updated_time" content="2020-07-01T03:49:59.135Z">
+<meta property="og:updated_time" content="2020-08-14T03:56:48.068Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的 this">
 <meta name="twitter:description" content="this 是 JavaScript 语言的一个关键字它代表函数运行时，自动生成的一个内部对象，只能在函数内部使用 随着函数使用场合的不同，this 的值会发生变化，但是有一个总的原则，那就是 this 指向的是，调用函数的那个对象">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    37 分钟 读完 (大约 5600 个字)
+                    37 分钟 读完 (大约 5516 个字)
                 </span>
                 
                 
@@ -226,9 +226,6 @@ var _hmt = _hmt || [];
 </ul>
 <p>这时 <code>this</code> 就指这个新对象， 如果不使用 <code>new</code> 调用，则和普通函数一样</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">C</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.a = <span class="hljs-number">37</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> o = <span class="hljs-keyword">new</span> C()</span><br><span class="line"><span class="hljs-built_in">console</span>.log(o.a)   <span class="hljs-comment">// 37</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">C2</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.a = <span class="hljs-number">37</span></span><br><span class="line">  <span class="hljs-keyword">return</span> &#123; <span class="hljs-attr">a</span>: <span class="hljs-number">38</span> &#125; <span class="hljs-comment">// 手动的设置了返回对象，与 this 绑定的默认对象被取消</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">o = <span class="hljs-keyword">new</span> C2()</span><br><span class="line"><span class="hljs-built_in">console</span>.log(o.a)   <span class="hljs-comment">// 38</span></span><br></pre></td></tr></table></figure>
-
-<p>我们从上面可以得知，在 <code>new</code> 调用的过程当中会依次执行一些操作，所以我们可以使用一个函数来模拟这种行为，也是就是模拟 <code>new</code> 的实现，如下</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/* new Constructor */</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">new</span> (<span class="hljs-params">f</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> n = &#123; <span class="hljs-string">'__prop__'</span>: f.prototype &#125;  <span class="hljs-comment">/* step1 */</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    f.apply(n, <span class="hljs-built_in">arguments</span>)              <span class="hljs-comment">/* step2 */</span></span><br><span class="line">    <span class="hljs-keyword">return</span> n                           <span class="hljs-comment">/* step3 */</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h4 id="使用-apply-或-call-调用"><a href="#使用-apply-或-call-调用" class="headerlink" title="使用 apply 或 call 调用"></a>使用 apply 或 call 调用</h4><p><code>apply()</code> 是函数对象的一个方法，它的作用是改变函数的调用对象，它的第一个参数就表示改变后的调用这个函数的对象，因此 <code>this</code> 指的就是这第一个参数</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Point</span>(<span class="hljs-params">x, y</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.x = x</span><br><span class="line">  <span class="hljs-keyword">this</span>.y = y</span><br><span class="line">  <span class="hljs-keyword">this</span>.moveTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.x = x</span><br><span class="line">    <span class="hljs-keyword">this</span>.y = y</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> p1 = <span class="hljs-keyword">new</span> Point(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>)</span><br><span class="line"><span class="hljs-keyword">var</span> p2 = &#123; <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">0</span> &#125;</span><br><span class="line"></span><br><span class="line">p1.moveTo(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>)</span><br><span class="line">p1.moveTo.apply(p2, [<span class="hljs-number">10</span>, <span class="hljs-number">10</span>])</span><br></pre></td></tr></table></figure>
@@ -614,7 +611,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        143
+                        147
                     </p>
                 </div>
             </div>
@@ -624,7 +621,7 @@ var _hmt = _hmt || [];
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        11
                     </p>
                 </div>
             </div>
@@ -634,7 +631,7 @@ var _hmt = _hmt || [];
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        11
                     </p>
                 </div>
             </div>
@@ -799,7 +796,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">15</span>
+                <span class="level-item tag">16</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -808,6 +805,14 @@ var _hmt = _hmt || [];
             </span>
             <span class="level-end">
                 <span class="level-item tag">28</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/HTML/">
+            <span class="level-start">
+                <span class="level-item">HTML</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTTP/">
@@ -831,7 +836,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">45</span>
+                <span class="level-item tag">47</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -877,7 +882,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 17.14px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15.71px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.57px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Http/" style="font-size: 12.86px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 15.71px;">Node.js</a> <a href="/tags/React/" style="font-size: 14.29px;">React</a> <a href="/tags/Vue/" style="font-size: 11.43px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.43px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 17.14px;">Angular</a> <a href="/tags/CSS/" style="font-size: 17.14px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.57px;">Essay</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/HTTP/" style="font-size: 10px;">HTTP</a> <a href="/tags/Http/" style="font-size: 12.86px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 15.71px;">Node.js</a> <a href="/tags/React/" style="font-size: 14.29px;">React</a> <a href="/tags/Vue/" style="font-size: 11.43px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.43px;">jQuery</a>
     </div>
 </div>
 
@@ -891,6 +896,63 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/08/02/JavaScript/53/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/53.jpg" alt="JavaScript 知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-01T16:00:00.000Z">2020-08-02</time></div>
+                    <a href="/2020/08/02/JavaScript/53/" class="has-link-black-ter is-size-6">JavaScript 知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/07/29/CSS/19/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/19.jpg" alt="CSS 知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-28T16:00:00.000Z">2020-07-29</time></div>
+                    <a href="/2020/07/29/CSS/19/" class="has-link-black-ter is-size-6">CSS 知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/CSS/">CSS</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/07/25/HTML/01/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/01.jpg" alt="HTML 知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-24T16:00:00.000Z">2020-07-25</time></div>
+                    <a href="/2020/07/25/HTML/01/" class="has-link-black-ter is-size-6">HTML 知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/HTML/">HTML</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -930,63 +992,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/06/22/Essay/29/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/29.jpg" alt="散列表查找">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-21T16:00:00.000Z">2020-06-22</time></div>
-                    <a href="/2020/06/22/Essay/29/" class="has-link-black-ter is-size-6">散列表查找</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/06/18/Essay/28/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/28.jpg" alt="平衡二叉排序树">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-17T16:00:00.000Z">2020-06-18</time></div>
-                    <a href="/2020/06/18/Essay/28/" class="has-link-black-ter is-size-6">平衡二叉排序树</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/06/12/Essay/27/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/27.jpg" alt="二叉排序树">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-11T16:00:00.000Z">2020-06-12</time></div>
-                    <a href="/2020/06/12/Essay/27/" class="has-link-black-ter is-size-6">二叉排序树</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1000,12 +1005,23 @@ var _hmt = _hmt || [];
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/archives/2020/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2020/07/">
                 <span class="level-start">
                     <span class="level-item">七月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1412,7 +1428,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">六月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1528,7 +1544,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">15</span>
+                        <span class="tag is-grey">16</span>
                     </a>
                 </div>
                 
@@ -1536,6 +1552,13 @@ var _hmt = _hmt || [];
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
                         <span class="tag is-grey">28</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/HTML/">
+                        <span class="tag">HTML</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -1556,7 +1579,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">45</span>
+                        <span class="tag is-grey">47</span>
                     </a>
                 </div>
                 
