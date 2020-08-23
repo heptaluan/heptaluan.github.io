@@ -65,17 +65,5 @@ var _hmt = _hmt || [];
 
   // 导航添加新开
   $('.navbar-start .navbar-item').last().attr('target', '_blank')
-<<<<<<< HEAD
   
-=======
-
-  // 移动端图片处理
-  if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent) || /(Android)/i.test(navigator.userAgent)) {
-    $('.article .gallery-item img').css('max-width', '100%')
-  } else {
-    $('.article .gallery-item img').css('max-width', '600px')
-    $('.article .gallery-item img').css('max-height', '350px')
-  }
-
->>>>>>> d5db0492743e1b68c33711eba5dfa63743cdc4b3
 })(jQuery);
