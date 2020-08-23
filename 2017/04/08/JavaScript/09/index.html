@@ -16,7 +16,7 @@
 <meta property="og:description" content="我们首先先来看一张图，如下">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg">
-<meta property="og:updated_time" content="2020-07-04T15:33:32.528Z">
+<meta property="og:updated_time" content="2020-08-23T14:25:49.037Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的原型和原型对象">
 <meta name="twitter:description" content="我们首先先来看一张图，如下">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    22 分钟 读完 (大约 3367 个字)
+                    21 分钟 读完 (大约 3162 个字)
                 </span>
                 
                 
@@ -190,8 +190,7 @@ var _hmt = _hmt || [];
 <a id="more"></a>
 
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/34.png" alt></p>
-<p>关于 <code>JavaScript</code> 中的原型，本质上来说其实就是 <code>prototype</code>、<code>__proto__</code> 和 <code>constructor</code> 的三者之间的关系</p>
-<p>上图第一眼看上去感觉十分复杂，但是其实说的也就是两句话的事，如下</p>
+<p>关于 <code>JavaScript</code> 中的原型，本质上来说其实就是 <code>prototype</code>、<code>__proto__</code> 和 <code>constructor</code> 的三者之间的关系，上图第一眼看上去感觉十分复杂，但是其实说的也就是两句话的事，如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Foo</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"><span class="hljs-keyword">var</span> f1 = <span class="hljs-keyword">new</span> Foo()</span><br></pre></td></tr></table></figure>
 
 <p>下面我们就来逐一分析他们之间的关系</p>
@@ -217,24 +216,15 @@ var _hmt = _hmt || [];
 <p>看下面一段代码</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Foo</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">Foo.prototype.constructor === Foo  <span class="hljs-comment">// true </span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-keyword">new</span> Foo()</span><br><span class="line">a.constructor === Foo  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
 
-<p>看起来 <code>a.constructor === Foo</code> 为 <code>true</code> 则意味着 <code>a</code> 确实有一个指向 <code>Foo</code> 的 <code>.constructor</code> 属性，但是事实不是这样</p>
-<p>实际上，<code>.constructor</code> 引用同样被委托给了 <code>Foo.prototype</code>，而 <code>Foo.prototype.constructor</code> 默认指向 <code>Foo</code></p>
-<p><code>Foo.prototype</code> 的 <code>.constructor</code> 属性只是 <code>Foo</code> 函数在声明时的默认属性</p>
-<p>如果你创建了一个新对象并替换了函数默认的 <code>.prototype</code> 对象引用，那么新对象并不会自动获得 <code>.constructor</code> 属性</p>
-<p>思考下面的代码</p>
+<p>看起来 <code>a.constructor === Foo</code> 为 <code>true</code> 则意味着 <code>a</code> 确实有一个指向 <code>Foo</code> 的 <code>.constructor</code> 属性，但是事实不是这样，实际上，<code>.constructor</code> 引用同样被委托给了 <code>Foo.prototype</code>，而 <code>Foo.prototype.constructor</code> 默认指向 <code>Foo</code>，<code>Foo.prototype</code> 的 <code>.constructor</code> 属性只是 <code>Foo</code> 函数在声明时的默认属性</p>
+<p>如果你创建了一个新对象并替换了函数默认的 <code>.prototype</code> 对象引用，那么新对象并不会自动获得 <code>.constructor</code> 属性，思考下面的代码</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Foo</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line">Foo.prototype = &#123;&#125;         <span class="hljs-comment">// 创建一个新原型对象，这个操作相当于重写了函数的原型，不推荐这么操作</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> a1 = <span class="hljs-keyword">new</span> Foo()</span><br><span class="line"></span><br><span class="line">a1.constructor === Foo     <span class="hljs-comment">// false </span></span><br><span class="line">a1.constructor === <span class="hljs-built_in">Object</span>  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
 
-<p><code>a1</code> 并没有 <code>.constructor</code> 属性，所以它会委托 <code>prototype</code> 链上的 <code>Foo.prototype</code>，但是这个对象也没有 <code>.constructor</code> 属性（不过默认的 <code>Foo.prototype</code> 对象有这个属性）</p>
-<p>所以它会继续委托，这次会委托给委托链顶端的 <code>Object.prototype</code>，这个对象有 <code>.constructor</code> 属性，指向内置的 <code>Object()</code> 函数</p>
-<p>当然，你可以给 <code>Foo.prototype</code> 添加一个 <code>.constructor</code> 属性，不过这需要手动添加一个符合正常行为的不可枚举的属性</p>
+<p><code>a1</code> 并没有 <code>.constructor</code> 属性，所以它会委托 <code>prototype</code> 链上的 <code>Foo.prototype</code>，但是这个对象也没有 <code>.constructor</code> 属性（不过默认的 <code>Foo.prototype</code> 对象有这个属性），所以它会继续委托，这次会委托给委托链顶端的 <code>Object.prototype</code>，这个对象有 <code>.constructor</code> 属性，指向内置的 <code>Object()</code> 函数，当然，你可以给 <code>Foo.prototype</code> 添加一个 <code>.constructor</code> 属性，不过这需要手动添加一个符合正常行为的不可枚举的属性</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Foo</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 创建一个新原型对象</span></span><br><span class="line">Foo.prototype = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 需要在 Foo.prototype 上修复丢失的 .constructor 属性 </span></span><br><span class="line"><span class="hljs-comment">// 新对象属性起到 Foo.prototype 的作用 </span></span><br><span class="line"><span class="hljs-built_in">Object</span>.defineProperty(Foo.prototype, <span class="hljs-string">'constructor'</span>, &#123;</span><br><span class="line">  enumerable: <span class="hljs-literal">false</span>,</span><br><span class="line">  writable: <span class="hljs-literal">true</span>,</span><br><span class="line">  configurable: <span class="hljs-literal">true</span>,</span><br><span class="line">  <span class="hljs-comment">// 让 .constructor 指向 Foo</span></span><br><span class="line">  value: Foo</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
-<p>实际上，对象的 <code>.constructor</code> 会默认指向一个函数，这个函数可以通过对象的 <code>.prototype</code> 引用</p>
-<p><code>.constructor</code> 并不是一个不可变属性，它是不可枚举（参见上面的代码）的，但是它的值是可写的（可以被修改）</p>
-<p>此外，你可以给任意 <code>prototype</code> 链中的任意对象添加一个名为 <code>constructor</code> 的属性或者对其进行修改，你可以任意对其赋值</p>
-<p>所以这是一个非常不可靠并且不安全的引用，通常来说要尽量避免使用这些引用</p>
-<p>但是有的时候，为了将实例的构造器的原型对象暴露出来，比如写了一个插件，别人得到的都是你实例化后的对象</p>
-<p>如果想扩展下对象，就可以用 <code>instance.constructor.prototype</code> 去修改或扩展原型对象</p>
+<p>实际上，对象的 <code>.constructor</code> 会默认指向一个函数，这个函数可以通过对象的 <code>.prototype</code> 引用，<code>.constructor</code> 并不是一个不可变属性，它是不可枚举（参见上面的代码）的，但是它的值是可写的（可以被修改），此外，你可以给任意 <code>prototype</code> 链中的任意对象添加一个名为 <code>constructor</code> 的属性或者对其进行修改，你可以任意对其赋值</p>
+<p>所以这是一个非常不可靠并且不安全的引用，通常来说要尽量避免使用这些引用，但是有的时候，为了将实例的构造器的原型对象暴露出来，比如写了一个插件，别人得到的都是你实例化后的对象，如果想扩展下对象，就可以用 <code>instance.constructor.prototype</code> 去修改或扩展原型对象</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a, b</span><br><span class="line">(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">A</span>(<span class="hljs-params">arg1, arg2</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.a = <span class="hljs-number">1</span></span><br><span class="line">    <span class="hljs-keyword">this</span>.b = <span class="hljs-number">2</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  A.prototype.log = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.a)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  a = <span class="hljs-keyword">new</span> A()</span><br><span class="line">  b = <span class="hljs-keyword">new</span> A()</span><br><span class="line">&#125;)()</span><br><span class="line"></span><br><span class="line">a.log()  <span class="hljs-comment">// 1</span></span><br><span class="line">b.log()  <span class="hljs-comment">// 1</span></span><br></pre></td></tr></table></figure>
 
 <p>因为 <code>A</code> 在闭包里，所以现在我们是不能直接访问 <code>A</code> 的，那如果我们想给类 <code>A</code> 增加新方法，那么就可以通过访问 <code>constructor</code> 就可以了</p>
@@ -249,19 +239,15 @@ var _hmt = _hmt || [];
 <h2 id="实例与原型"><a href="#实例与原型" class="headerlink" title="实例与原型"></a>实例与原型</h2><p>当读取实例的属性时，如果找不到，就会查找与对象关联的原型中的属性，如果还查不到，就去找原型的原型，以此类推，一直找到最顶层为止</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Foo</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line">Foo.prototype.name = <span class="hljs-string">'zhangsan'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> f1 = <span class="hljs-keyword">new</span> Foo</span><br><span class="line">f1.name = <span class="hljs-string">'lisi'</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(f1.name)  <span class="hljs-comment">// lisi</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">delete</span> f1.name</span><br><span class="line"><span class="hljs-built_in">console</span>.log(f1.name)  <span class="hljs-comment">// zhangsan</span></span><br></pre></td></tr></table></figure>
 
-<p>在上面的例子中，我们给实例对象 <code>f1</code> 添加了 <code>name</code> 属性，当我们打印 <code>f1.name</code> 的时候，结果自然为 <code>lisi</code></p>
-<p>但是当我们删除了 <code>f1</code> 的 <code>name</code> 属性时，再次读取 <code>f1.name</code> 的时候，就会发现在 <code>f1</code> 对象中已经找不到 <code>name</code> 属性了，所以就会从 <code>f1</code> 的原型，也就是 <code>f1.__proto__</code> 对应的 <code>Foo.prototype</code> 当中去进行查找，所幸的是我们找到了 <code>name</code> 属性，结果为 <code>zhangsan</code></p>
+<p>在上面的例子中，我们给实例对象 <code>f1</code> 添加了 <code>name</code> 属性，当我们打印 <code>f1.name</code> 的时候，结果自然为 <code>lisi</code>，但是当我们删除了 <code>f1</code> 的 <code>name</code> 属性时，再次读取 <code>f1.name</code> 的时候，就会发现在 <code>f1</code> 对象中已经找不到 <code>name</code> 属性了，所以就会从 <code>f1</code> 的原型，也就是 <code>f1.__proto__</code> 对应的 <code>Foo.prototype</code> 当中去进行查找，所幸的是我们找到了 <code>name</code> 属性，结果为 <code>zhangsan</code></p>
 <p>但是万一还没有找到呢？原型的原型又是什么呢？</p>
 <h2 id="原型的原型"><a href="#原型的原型" class="headerlink" title="原型的原型"></a>原型的原型</h2><p>在前面，我们已经讲了原型也是一个对象，既然是对象，我们就可以用最原始的方式创建它，那就是</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> obj = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Object</span>()</span><br><span class="line">obj.name = <span class="hljs-string">'zhangsan'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(obj.name)  <span class="hljs-comment">// zhangsan</span></span><br></pre></td></tr></table></figure>
 
-<p>其实原型对象就是通过 <code>Object</code> 构造函数生成的，结合之前所讲，实例的 <code>__proto__</code> 指向构造函数的 <code>prototype</code></p>
-<p>那 <code>Object.prototype</code> 的原型又是指向哪里的呢？我们可以打印一下</p>
+<p>其实原型对象就是通过 <code>Object</code> 构造函数生成的，结合之前所讲，实例的 <code>__proto__</code> 指向构造函数的 <code>prototype</code>，那 <code>Object.prototype</code> 的原型又是指向哪里的呢？我们可以打印一下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Object</span>.prototype.__proto__           <span class="hljs-comment">// null</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.prototype.__proto__ === <span class="hljs-literal">null</span>  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
 
-<p><code>null</code> 表示没有对象，即该处不应该有值</p>
-<p>所以 <code>Object.prototype.__proto__</code> 的值为 <code>null</code> 跟 <code>Object.prototype</code> 没有原型，其实表达了一个意思</p>
-<p>所以查找属性的时候查到 <code>Object.prototype</code> 就可以停止查找了，这也就是开头部分的图片当中所表达的这个意思</p>
+<p><code>null</code> 表示没有对象，即该处不应该有值，所以 <code>Object.prototype.__proto__</code> 的值为 <code>null</code> 跟 <code>Object.prototype</code> 没有原型，其实表达了一个意思，所以查找属性的时候查到 <code>Object.prototype</code> 就可以停止查找了，这也就是开头部分的图片当中所表达的这个意思</p>
 <p>来看下面这个示例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = &#123;</span><br><span class="line">  x: <span class="hljs-number">1</span>,</span><br><span class="line">  y: &#123; <span class="hljs-attr">z</span>: <span class="hljs-number">2</span> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> b = &#123;&#125;</span><br><span class="line">b.__proto__ = a</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// a 和 b 都是对象（通过new Object() 生成，这里是简写）</span></span><br><span class="line"><span class="hljs-comment">// 所以 a.__proto__ === b.__proto__ 是相等的（都是指向 Object.prototype）</span></span><br><span class="line"><span class="hljs-comment">// 所以在查找 b.x 的时候先去 b 查看，发现是空对象（&#123;&#125;），所以 b.x 是不存在的</span></span><br><span class="line"><span class="hljs-comment">// 然后原则上应该去 Object.prototype 上查找，但是现在把 b.__proto__ 从新指回了 a，所以应该就去 a 上查找</span></span><br><span class="line"><span class="hljs-comment">// 所以 b.x 为 1，b.y 为 &#123; z: 2 &#125;</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(a.x)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(b.x)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 然后把 b.x 重新赋值为 22</span></span><br><span class="line"><span class="hljs-comment">// 因为是基本类型，所以 a.x 是不变的</span></span><br><span class="line">b.x = <span class="hljs-number">22</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(a.x)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(b.x)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 这个同上面那个类似</span></span><br><span class="line"><span class="hljs-comment">// 但是由于是引用类型，所以 a.y 和 b.y 指向的都是同一个地址</span></span><br><span class="line"><span class="hljs-comment">// 其中一个变化的话自然会引起另外一个变化</span></span><br><span class="line">b.y.z = <span class="hljs-number">33</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(a.y.z)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(b.y.z)</span><br></pre></td></tr></table></figure>
 
@@ -271,50 +257,30 @@ var _hmt = _hmt || [];
 <h2 id="基于原型的一个实例"><a href="#基于原型的一个实例" class="headerlink" title="基于原型的一个实例"></a>基于原型的一个实例</h2><p>最后我们来看一个具体的实例和它的几个变种方式来巩固一下之前的知识点，如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">obj</span>(<span class="hljs-params">name</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (name) &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.name = name</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">obj.prototype.name = <span class="hljs-string">'name2'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> a = obj(<span class="hljs-string">'name1'</span>)</span><br><span class="line"><span class="hljs-keyword">var</span> b = <span class="hljs-keyword">new</span> obj</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(a.name)       <span class="hljs-comment">// name1</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">window</span>.name)  <span class="hljs-comment">// name1</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(b.name)       <span class="hljs-comment">// name2</span></span><br></pre></td></tr></table></figure>
 
-<p>一般函数直接调用，默认 <code>this</code> 指向全局 <code>window/global</code></p>
-<p>通过 <code>obj(&#39;name1&#39;)</code> 调用，返回 <code>this</code> 引用，并传递给 <code>a</code>，此时 <code>a</code> 等于 <code>window</code> 对象，即可输出 <code>name</code> 值</p>
-<p><code>new</code> 操作，在没有参数的情况下 <code>new obj</code> 等价于 <code>new obj()</code> ，实例化一个对象，这时 <code>this</code> 指向 <code>obj</code>，要拿到 <code>b.name</code> 的值，需要保证 <code>name</code> 属性存在</p>
-<p>属性查找原则是先查找当前实例有没有属性，如果有就直接使用，如果没有，就到原型上去找，在没有就接着原型链一步一步往上</p>
-<p>这里为了和 <code>a.name</code> 作属性区别，使用了 <code>if (name)</code> 有条件的构建 <code>this</code> 的属性 <code>name</code></p>
-<p>所以，现在 <code>name</code> 属性提供给 <code>a</code> 使用，原型上的 <code>name</code> 提供给 <code>b</code> 使用</p>
+<p>一般函数直接调用，默认 <code>this</code> 指向全局 <code>window/global</code>，通过 <code>obj(&#39;name1&#39;)</code> 调用，返回 <code>this</code> 引用，并传递给 <code>a</code>，此时 <code>a</code> 等于 <code>window</code> 对象，即可输出 <code>name</code> 值，<code>new</code> 操作，在没有参数的情况下 <code>new obj</code> 等价于 <code>new obj()</code> ，实例化一个对象，这时 <code>this</code> 指向 <code>obj</code>，要拿到 <code>b.name</code> 的值，需要保证 <code>name</code> 属性存在</p>
+<p>属性查找原则是先查找当前实例有没有属性，如果有就直接使用，如果没有，就到原型上去找，在没有就接着原型链一步一步往上，这里为了和 <code>a.name</code> 作属性区别，使用了 <code>if (name)</code> 有条件的构建 <code>this</code> 的属性 <code>name</code>，所以，现在 <code>name</code> 属性提供给 <code>a</code> 使用，原型上的 <code>name</code> 提供给 <code>b</code> 使用</p>
 <h4 id="实例变体一"><a href="#实例变体一" class="headerlink" title="实例变体一"></a>实例变体一</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 去掉 if 判断</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">obj</span>(<span class="hljs-params">name</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// if(name) &#123;</span></span><br><span class="line">    <span class="hljs-keyword">this</span>.name = name</span><br><span class="line">  <span class="hljs-comment">// &#125;</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">obj.prototype.name = <span class="hljs-string">'name2'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> a = obj(<span class="hljs-string">'name1'</span>)</span><br><span class="line"><span class="hljs-keyword">var</span> b = <span class="hljs-keyword">new</span> obj</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(a.name)        <span class="hljs-comment">// name1</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">window</span>.name)   <span class="hljs-comment">// name1</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(b.name)        <span class="hljs-comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 这时，b 实例已经有属性 name，但是参数 name 是为 undefined 的（因为没有传递参数）</span></span><br><span class="line"><span class="hljs-comment">// 所以这时可以把 this.name 属性删掉，这样就能去原型找 name 了</span></span><br><span class="line"><span class="hljs-keyword">delete</span> b.name</span><br><span class="line"><span class="hljs-built_in">console</span>.log(b.name)        <span class="hljs-comment">// name2</span></span><br></pre></td></tr></table></figure>
 
 <h4 id="实例变体二-试试传个参数"><a href="#实例变体二-试试传个参数" class="headerlink" title="实例变体二 试试传个参数"></a>实例变体二 试试传个参数</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">obj</span>(<span class="hljs-params">name</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.name = name</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">obj.prototype.name = <span class="hljs-string">'name2'</span></span><br><span class="line"><span class="hljs-keyword">var</span> a = obj(<span class="hljs-string">'name1'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> b = <span class="hljs-keyword">new</span> obj(<span class="hljs-string">'myname'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(a.name)        <span class="hljs-comment">// name1</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-built_in">window</span>.name)   <span class="hljs-comment">// name1</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(b.name)        <span class="hljs-comment">// myname</span></span><br></pre></td></tr></table></figure>
 
-<h4 id="this-指向问题"><a href="#this-指向问题" class="headerlink" title="this 指向问题"></a>this 指向问题</h4><p>笼统的说，都是指向了构造函数，但实际上是指向了实例化的对象，我们可以通过模拟 <code>new</code> 操作的过程来进行了解，如下</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/* new Constructor */</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">new</span> (<span class="hljs-params">f</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> n = &#123; <span class="hljs-string">'__prop__'</span>: f.prototype &#125;  <span class="hljs-comment">/* step1 */</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    f.apply(n, <span class="hljs-built_in">arguments</span>)              <span class="hljs-comment">/* step2 */</span></span><br><span class="line">    <span class="hljs-keyword">return</span> n                           <span class="hljs-comment">/* step3 */</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>其实 <code>new</code> 一个构造函数的过程是，先创建一个空对象，然后该对象自然有了 <code>this</code>，然后产生一个继承的过程（为该函数添加一个 <code>__peoto__</code> 属性，指向构造函数的原型）</p>
-<p>这样一来，自然而然空对象就具有了构造函数的所有属性，最后在通过 <code>apply</code> 之类的方式调用构造函数，把环境指向原先的空对象，达到模拟调用构造函数产生一个新对象的目的</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>记住以下几点</p>
 <ol>
-<li><p>函数（<code>Function</code> 也是函数）是 <code>new Function</code> 的结果，所以函数可以作为实例对象，其构造函数是 <code>Function()</code>，原型对象是 <code>Function.prototype</code></p>
-</li>
-<li><p>对象（函数也是对象）是 <code>new Object</code> 的结果，所以对象可以作为实例对象，其构造函数是 <code>Object()</code>，原型对象是 <code>Object.prototype</code></p>
-</li>
-<li><p><code>Object.prototype</code> 的原型对象是 <code>null</code></p>
-</li>
-<li><p><code>__proto__</code> 是每个对象都有的一个属性，而 <code>prototype</code> 是函数才会有的属性</p>
-</li>
-<li><p><code>__proto__</code> 指向的是构造该对象的构造函数的原型，而 <code>prototype</code> 指向的，是以当前函数作为构造函数构造出来的对象的原型对象</p>
-</li>
-<li><p><code>__proto__</code> 并不存在于你正在使用的对象中，实际上，它和其他的常用函数（<code>toString()</code>、<code>isPrototypeOf()</code>，等等）一样，存在于内置的 <code>Object.prototype</code> 中（它们是不可枚举的）</p>
-</li>
-<li><p><code>__proto__</code> 看起来很像一个属性，但是实际上它更像一个 <code>getter/setter</code></p>
-</li>
-<li><p><code>__proto__</code> 的实现大致上是类似下面这样的</p>
-</li>
+<li>函数（<code>Function</code> 也是函数）是 <code>new Function</code> 的结果，所以函数可以作为实例对象，其构造函数是 <code>Function()</code>，原型对象是 <code>Function.prototype</code></li>
+<li>对象（函数也是对象）是 <code>new Object</code> 的结果，所以对象可以作为实例对象，其构造函数是 <code>Object()</code>，原型对象是 <code>Object.prototype</code></li>
+<li><code>Object.prototype</code> 的原型对象是 <code>null</code></li>
+<li><code>__proto__</code> 是每个对象都有的一个属性，而 <code>prototype</code> 是函数才会有的属性</li>
+<li><code>__proto__</code> 指向的是构造该对象的构造函数的原型，而 <code>prototype</code> 指向的，是以当前函数作为构造函数构造出来的对象的原型对象</li>
+<li><code>__proto__</code> 并不存在于你正在使用的对象中，实际上，它和其他的常用函数（<code>toString()</code>、<code>isPrototypeOf()</code>，等等）一样，存在于内置的 <code>Object.prototype</code> 中（它们是不可枚举的）</li>
+<li><code>__proto__</code> 看起来很像一个属性，但是实际上它更像一个 <code>getter/setter</code></li>
+<li><code>__proto__</code> 的实现大致上是类似下面这样的</li>
 </ol>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Object</span>.defineProperty(<span class="hljs-built_in">Object</span>.prototype, <span class="hljs-string">'__proto__'</span>, &#123;</span><br><span class="line">  <span class="hljs-keyword">get</span>: function () &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.getPrototypeOf(<span class="hljs-keyword">this</span>)</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-keyword">set</span>: function (o) &#123;</span><br><span class="line">    <span class="hljs-comment">// ES6 中的 setPrototypeOf() </span></span><br><span class="line">    <span class="hljs-built_in">Object</span>.setPrototypeOf(<span class="hljs-keyword">this</span>, o)</span><br><span class="line">    <span class="hljs-keyword">return</span> o</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
 <p>明确以下三点</p>
 <ol>
-<li><p>通过 <code>Function.prototype.bind</code> 方法构造出来的函数是个例外，它没有 <code>prototype</code> 属性</p>
-</li>
-<li><p><code>Object.prototype</code> 这个对象，它的 <code>__proto__</code> 指向的是 <code>null</code></p>
-</li>
-<li><p>通过 <code>Object.create(null)</code> 创建出来的对象没有 <code>__proto__</code>，如下</p>
-</li>
+<li>通过 <code>Function.prototype.bind</code> 方法构造出来的函数是个例外，它没有 <code>prototype</code> 属性</li>
+<li><code>Object.prototype</code> 这个对象，它的 <code>__proto__</code> 指向的是 <code>null</code></li>
+<li>通过 <code>Object.create(null)</code> 创建出来的对象没有 <code>__proto__</code>，如下</li>
 </ol>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> obj = <span class="hljs-built_in">Object</span>.create(<span class="hljs-literal">null</span>)</span><br><span class="line"></span><br><span class="line">obj.__proto__   <span class="hljs-comment">// undefined</span></span><br></pre></td></tr></table></figure>
 
@@ -434,7 +400,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        140
+                        155
                     </p>
                 </div>
             </div>
@@ -444,7 +410,7 @@ var _hmt = _hmt || [];
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        9
+                        10
                     </p>
                 </div>
             </div>
@@ -454,7 +420,7 @@ var _hmt = _hmt || [];
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        9
+                        10
                     </p>
                 </div>
             </div>
@@ -515,10 +481,6 @@ var _hmt = _hmt || [];
         <a class="is-flex" href="#实例变体二-试试传个参数">
         <span class="has-mr-6">8.2</span>
         <span>实例变体二 试试传个参数</span>
-        </a></li><li>
-        <a class="is-flex" href="#this-指向问题">
-        <span class="has-mr-6">8.3</span>
-        <span>this 指向问题</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#总结">
         <span class="has-mr-6">9</span>
@@ -559,7 +521,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">12</span>
+                <span class="level-item tag">16</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -567,15 +529,23 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">28</span>
+                <span class="level-item tag">30</span>
             </span>
         </a></li><li>
-        <a class="level is-marginless" href="/categories/Http/">
+        <a class="level is-marginless" href="/categories/HTML/">
             <span class="level-start">
-                <span class="level-item">Http</span>
+                <span class="level-item">HTML</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">7</span>
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/HTTP/">
+            <span class="level-start">
+                <span class="level-item">HTTP</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">9</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -583,7 +553,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">45</span>
+                <span class="level-item tag">49</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -591,7 +561,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">15</span>
+                <span class="level-item tag">16</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -599,7 +569,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">React</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">10</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Vue/">
@@ -629,7 +599,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 17.14px;">Angular</a> <a href="/tags/CSS/" style="font-size: 14.29px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.57px;">Essay</a> <a href="/tags/Http/" style="font-size: 11.43px;">Http</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 15.71px;">Node.js</a> <a href="/tags/React/" style="font-size: 12.86px;">React</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 10px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 16.67px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16.67px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/HTTP/" style="font-size: 13.33px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16.67px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 11.67px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.67px;">jQuery</a>
     </div>
 </div>
 
@@ -646,94 +616,94 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/07/17/JavaScript/52/" class="media-left">
+            <a href="/2020/08/23/Node/00/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/52.jpg" alt="JavaScript 中的位运算符">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-16T16:00:00.000Z">2020-07-17</time></div>
-                    <a href="/2020/07/17/JavaScript/52/" class="has-link-black-ter is-size-6">JavaScript 中的位运算符</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
+                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/22/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
+                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/17/HTTP/09/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
+                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/16/HTTP/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/JavaScript/55/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/07/02/Essay/30/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/30.jpg" alt="排序算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-01T16:00:00.000Z">2020-07-02</time></div>
-                    <a href="/2020/07/02/Essay/30/" class="has-link-black-ter is-size-6">排序算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/06/22/Essay/29/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/29.jpg" alt="散列表查找">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-21T16:00:00.000Z">2020-06-22</time></div>
-                    <a href="/2020/06/22/Essay/29/" class="has-link-black-ter is-size-6">散列表查找</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/06/18/Essay/28/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/28.jpg" alt="平衡二叉排序树">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-17T16:00:00.000Z">2020-06-18</time></div>
-                    <a href="/2020/06/18/Essay/28/" class="has-link-black-ter is-size-6">平衡二叉排序树</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/06/12/Essay/27/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/27.jpg" alt="二叉排序树">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-06-11T16:00:00.000Z">2020-06-12</time></div>
-                    <a href="/2020/06/12/Essay/27/" class="has-link-black-ter is-size-6">二叉排序树</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
                 </div>
             </div>
@@ -752,12 +722,23 @@ var _hmt = _hmt || [];
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/archives/2020/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2020/07/">
                 <span class="level-start">
                     <span class="level-item">七月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -768,7 +749,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">六月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -922,7 +903,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">四月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -944,7 +925,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">二月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -955,7 +936,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1164,7 +1145,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">六月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1280,42 +1261,49 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">12</span>
+                        <span class="tag is-grey">16</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">28</span>
+                        <span class="tag is-grey">30</span>
                     </a>
                 </div>
                 
                 <div class="control">
-                    <a class="tags has-addons" href="/tags/Http/">
-                        <span class="tag">Http</span>
-                        <span class="tag is-grey">7</span>
+                    <a class="tags has-addons" href="/tags/HTML/">
+                        <span class="tag">HTML</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/HTTP/">
+                        <span class="tag">HTTP</span>
+                        <span class="tag is-grey">9</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">45</span>
+                        <span class="tag is-grey">49</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">15</span>
+                        <span class="tag is-grey">16</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/React/">
                         <span class="tag">React</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">10</span>
                     </a>
                 </div>
                 
