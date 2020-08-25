@@ -16,7 +16,7 @@
 <meta property="og:description" content="JavaScript 中的 call() 和 apply() 方法主要是用来扩充函数的作用域和改变 this 的指向（改变被调用函数的上下文），它们都接收两个参数">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/27.jpg">
-<meta property="og:updated_time" content="2020-08-23T14:25:49.042Z">
+<meta property="og:updated_time" content="2020-08-25T07:04:43.626Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的 call 和 apply">
 <meta name="twitter:description" content="JavaScript 中的 call() 和 apply() 方法主要是用来扩充函数的作用域和改变 this 的指向（改变被调用函数的上下文），它们都接收两个参数">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    35 分钟 读完 (大约 5275 个字)
+                    35 分钟 读完 (大约 5280 个字)
                 </span>
                 
                 
@@ -188,7 +188,6 @@ var _hmt = _hmt || [];
         <div class="content">
             <p><code>JavaScript</code> 中的 <code>call()</code> 和 <code>apply()</code> 方法主要是用来扩充函数的作用域和改变 <code>this</code> 的指向（改变被调用函数的上下文），它们都接收两个参数</p>
 <a id="more"></a>
-
 
 <ul>
 <li><code>apply()</code> 方法，第一个参数是作用域，第二个是参数数组，其中第二个参数可以是数组实例，也可以是 <code>arguments</code> 对象</li>
@@ -288,8 +287,7 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.initialize.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这个 <code>function</code> 方法是用来做构造函数的，使用 <code>function</code> 构造对象时，会让构造出来的对象的 <code>initialize</code> 方法执行 <code>apply()</code> 方法，<code>function</code> 中的第一个 <code>this</code> 是指用 <code>new</code> 调用构造函数之后生成的对象，也就是前面的 <code>a</code>，那么第二个 <code>this</code> 也当然应该是指同一个对象</p>
-<p><code>this</code> 调用 <code>initialize</code> 方法，参数是 <code>arguments</code> 对象（参数的数组对象），在构造函数执行时，对象 <code>a</code> 就会去执行 <code>initialize</code> 方法来初始化 <code>arguments</code> 作为 <code>create</code> 返回的构造函数的实参数组，传递给方法 <code>apply</code>，在调用 <code>initialize</code> 时作为参数传递给初始化函数 <code>initialize</code></p>
-<p>那么在 <code>var a = new A(&#39;hello&#39;)</code> 的时候 <code>&#39;hello&#39;</code> 就是实参数组（虽然只有一个字符串），传递给方法 <code>apply</code>，然后在调用 <code>initialize</code> 的时候作为参数传递给初始化函数 <code>initialize</code></p>
+<p><code>this</code> 调用 <code>initialize</code> 方法，参数是 <code>arguments</code> 对象（参数的数组对象），在构造函数执行时，对象 <code>a</code> 就会去执行 <code>initialize</code> 方法来初始化 <code>arguments</code> 作为 <code>create</code> 返回的构造函数的实参数组，传递给方法 <code>apply</code>，在调用 <code>initialize</code> 时作为参数传递给初始化函数 <code>initialize</code>，那么在 <code>var a = new A(&#39;hello&#39;)</code> 的时候 <code>&#39;hello&#39;</code> 就是实参数组（虽然只有一个字符串），传递给方法 <code>apply</code>，然后在调用 <code>initialize</code> 的时候作为参数传递给初始化函数 <code>initialize</code></p>
 <p>下面是一个与其类似的的实际使用场景</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">+<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Circle</span>(<span class="hljs-params">nRadius, sMessage</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.init.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  Circle.prototype = &#123;</span><br><span class="line">    init: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">nRadius, sMessage</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.nR = nRadius</span><br><span class="line">      <span class="hljs-keyword">this</span>.sMessage = sMessage</span><br><span class="line">    &#125;,</span><br><span class="line">    PI: <span class="hljs-number">3.14</span>,</span><br><span class="line">    fnGetArea: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.sMessage + <span class="hljs-string">': '</span> + <span class="hljs-keyword">this</span>.PI * <span class="hljs-keyword">this</span>.nR * <span class="hljs-keyword">this</span>.nR</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">var</span> c = <span class="hljs-keyword">new</span> Circle(<span class="hljs-number">5</span>, <span class="hljs-string">'构造初始化 面积'</span>)</span><br><span class="line">  alert(c.fnGetArea())  <span class="hljs-comment">//构造初始化 面积: 78.5</span></span><br><span class="line">&#125;()</span><br></pre></td></tr></table></figure>
 
@@ -301,8 +299,7 @@ var _hmt = _hmt || [];
 <p><code>Function.apply()</code> 是 <code>JavaScript</code> 的一个 <code>OOP</code> 特性，一般用来模拟继承和扩展 <code>this</code> 的用途，<code>xx.apply</code> 是一个调用函数的方法，其参数为 <code>apply(Function, Args)</code>，<code>Function</code> 为要调用的方法，<code>Args</code> 是参数列表，当 <code>Function</code> 为 <code>null</code> 时，默认为上文，即</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Math</span>.max.apply(<span class="hljs-literal">null</span>, arr)</span><br></pre></td></tr></table></figure>
 
-<p>下面我们再来看几种其他方法来求取数组中的最大值或者最小值，可以与上面的方法可以进行一下对比</p>
-<p>第一种，比较原始的方法，即使用循环来进行比对</p>
+<p>下面我们再来看几种其他方法来求取数组中的最大值或者最小值，可以与上面的方法可以进行一下对比，第一种，比较原始的方法，即使用循环来进行比对</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">7</span>, <span class="hljs-number">9</span>, <span class="hljs-number">11</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">6</span>, <span class="hljs-number">8</span>, <span class="hljs-number">10</span>]</span><br><span class="line"><span class="hljs-keyword">var</span> result = arr[<span class="hljs-number">0</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">1</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">  result = <span class="hljs-built_in">Math</span>.max(result, arr[i])</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(result)</span><br></pre></td></tr></table></figure>
 
 <p>第二种，也是现在使用较多的，即在 <code>ES6</code> 以后，我们可以使用 <code>...</code> 运算符来简化操作</p>
@@ -314,8 +311,7 @@ var _hmt = _hmt || [];
 <p>第四种，使用排序，因为我们进行过排序，那么最大值就是最后一个值，但是这个方法是存在缺陷的，因为 <code>sort()</code> 返回的结果不一定准确</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">7</span>, <span class="hljs-number">9</span>, <span class="hljs-number">11</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">6</span>, <span class="hljs-number">8</span>, <span class="hljs-number">10</span>]</span><br><span class="line"></span><br><span class="line">arr.sort(<span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> a - b</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(arr[arr.length - <span class="hljs-number">1</span>])</span><br></pre></td></tr></table></figure>
 
-<h2 id="Array-prototype-slice-call-arguments-0"><a href="#Array-prototype-slice-call-arguments-0" class="headerlink" title="Array.prototype.slice.call(arguments, 0)"></a>Array.prototype.slice.call(arguments, 0)</h2><p>在平常开发过程当中，我们经常会在一些第三方库等地方会看到类似 <code>Array.prototype.slice.call(arguments, 0)</code> 这样的写法，其实这个方法的本质作用就是 <strong>把类数组对象转换成一个真正的数组</strong>，这里主要涉及到 <code>slice()</code> 方法和 <code>call()</code> 方法，我们先来简单的了解一下 <code>slice()</code> 方法</p>
-<p>在数组和字符串当中都有这个 <code>slice</code> 方法，这个方法的作用是截取一段数据</p>
+<h2 id="Array-prototype-slice-call-arguments-0"><a href="#Array-prototype-slice-call-arguments-0" class="headerlink" title="Array.prototype.slice.call(arguments, 0)"></a>Array.prototype.slice.call(arguments, 0)</h2><p>在平常开发过程当中，我们经常会在一些第三方库等地方会看到类似 <code>Array.prototype.slice.call(arguments, 0)</code> 这样的写法，其实这个方法的本质作用就是 <strong>把类数组对象转换成一个真正的数组</strong>，这里主要涉及到 <code>slice()</code> 方法和 <code>call()</code> 方法，我们先来简单的了解一下 <code>slice()</code> 方法，在数组和字符串当中都有这个 <code>slice</code> 方法，这个方法的作用是截取一段数据</p>
 <ul>
 <li>在数组中，该方法的返回值是 <strong>包含</strong> 截取元素的组成的数组</li>
 <li>在字符串中，该方法的返回值是 <strong>包含</strong> 截取字符串组成的字符串</li>
@@ -352,8 +348,7 @@ var _hmt = _hmt || [];
 </blockquote>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = &#123; </span><br><span class="line">  length: <span class="hljs-number">2</span>, </span><br><span class="line">  <span class="hljs-number">0</span>: <span class="hljs-string">'first'</span>, </span><br><span class="line">  <span class="hljs-number">1</span>: <span class="hljs-string">'second'</span> </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Array</span>.prototype.slice.call(a)  <span class="hljs-comment">// ['first', 'second']</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> a = &#123; </span><br><span class="line">  length: <span class="hljs-number">2</span> </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Array</span>.prototype.slice.call(a)  <span class="hljs-comment">// [undefined, undefined]</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="call-和-apply-哪个速度更快一些"><a href="#call-和-apply-哪个速度更快一些" class="headerlink" title="call 和 apply 哪个速度更快一些"></a>call 和 apply 哪个速度更快一些</h2><p>最后我们在来看一个有趣的问题，那就是 <code>call</code> 和 <code>apply</code> 哪个速度更快一些，通常来说，<code>call</code> 是要比 <code>apply</code> 快一些的，至于为什么，这就要看它们在被调用之后发生了什么</p>
-<p>关于发生了什么我们可以通过查询规范来进行了解，可以见 <a href="http://yanhaijing.com/es5/#322" target="_blank" rel="noopener">15.3.4.3 Function.prototype.apply (thisArg, argArray)</a> 和 <a href="http://yanhaijing.com/es5/#323" target="_blank" rel="noopener">15.3.4.4 Function.prototype.call(thisArg, arg1, arg2 …)</a>，两者对比如下</p>
+<h2 id="call-和-apply-哪个速度更快一些"><a href="#call-和-apply-哪个速度更快一些" class="headerlink" title="call 和 apply 哪个速度更快一些"></a>call 和 apply 哪个速度更快一些</h2><p>最后我们在来看一个有趣的问题，那就是 <code>call</code> 和 <code>apply</code> 哪个速度更快一些，通常来说，<code>call</code> 是要比 <code>apply</code> 快一些的，至于为什么，这就要看它们在被调用之后发生了什么，关于发生了什么我们可以通过查询规范来进行了解，可以见 <a href="http://yanhaijing.com/es5/#322" target="_blank" rel="noopener">15.3.4.3 Function.prototype.apply (thisArg, argArray)</a> 和 <a href="http://yanhaijing.com/es5/#323" target="_blank" rel="noopener">15.3.4.4 Function.prototype.call(thisArg, arg1, arg2 …)</a>，两者对比如下</p>
 <h4 id="Function-prototype-apply-thisArg-argArray"><a href="#Function-prototype-apply-thisArg-argArray" class="headerlink" title="Function.prototype.apply (thisArg, argArray)"></a>Function.prototype.apply (thisArg, argArray)</h4><ol>
 <li>如果 <code>IsCallable(Function)</code> 为 <code>false</code>，即 <code>Function</code> 不可以被调用，则抛出一个 <code>TypeError</code> 异常</li>
 <li>如果 <code>argArray</code> 为 <code>null</code> 或未定义，则返回调用 <code>Function</code> 的 <code>[[Call]]</code> 内部方法的结果，提供 <code>thisArg</code> 和一个空数组作为参数</li>
@@ -377,8 +372,7 @@ var _hmt = _hmt || [];
 <li>如果使用超过一个参数调用此方法，则以从 <code>arg1</code> 开始的从左到右的顺序将每个参数附加为 <code>argList</code> 的最后一个元素</li>
 <li>返回调用 <code>func</code> 的 <code>[[Call]]</code> 内部方法的结果，提供 <code>thisArg</code> 作为该值，<code>argList</code> 作为参数列表</li>
 </ul>
-<p>经过对比，可以很明显的发现，<code>call</code> 的执行步骤要比 <code>apply</code> 少的多，这是因为 <code>apply</code> 中定义的参数格式（数组），使得被调用之后需要做更多的事，需要将给定的参数格式改变（步骤 <code>8</code> 中所示）， 同时也有一些对参数的检查（步骤 <code>2</code>），而在 <code>call</code> 中却是不必要的</p>
-<p>另外在 <code>apply</code> 中不管有多少个参数，都会执行循环，也就是步骤 <code>6</code> 到 <code>8</code>，而在 <code>call</code> 中也就是对应步骤 <code>3</code> ，是有需要才会被执行</p>
+<p>经过对比，可以很明显的发现，<code>call</code> 的执行步骤要比 <code>apply</code> 少的多，这是因为 <code>apply</code> 中定义的参数格式（数组），使得被调用之后需要做更多的事，需要将给定的参数格式改变（步骤 <code>8</code> 中所示）， 同时也有一些对参数的检查（步骤 <code>2</code>），而在 <code>call</code> 中却是不必要的，另外在 <code>apply</code> 中不管有多少个参数，都会执行循环，也就是步骤 <code>6</code> 到 <code>8</code>，而在 <code>call</code> 中也就是对应步骤 <code>3</code> ，是有需要才会被执行</p>
 
         </div>
         
@@ -489,7 +483,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -614,7 +608,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -630,7 +624,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -638,7 +632,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -701,35 +695,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -739,7 +714,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -747,8 +760,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -758,7 +771,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -766,29 +779,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -944,7 +938,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1109,7 +1103,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1164,7 +1158,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1353,7 +1347,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1367,14 +1361,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

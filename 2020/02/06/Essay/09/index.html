@@ -16,7 +16,7 @@
 <meta property="og:description" content="我们在之前的章节当中介绍过了 线性表（单链表），对于单链表而言，由于每个结点只存储了向后的指针，到了尾部标识就停止了向后链的操作（也就是 NULL，空指针），所以说按照这样的方式，只能索引后继结点而不能索引前驱结点，所引起的问题也是显而易见的，比如如果不从头结点出发，就无法访问到全部结点，遇到这种情况，我们就可以采用我们今天将要介绍到的循环链表">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg">
-<meta property="og:updated_time" content="2020-08-02T13:25:06.553Z">
+<meta property="og:updated_time" content="2020-08-25T02:19:07.433Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="循环链表">
 <meta name="twitter:description" content="我们在之前的章节当中介绍过了 线性表（单链表），对于单链表而言，由于每个结点只存储了向后的指针，到了尾部标识就停止了向后链的操作（也就是 NULL，空指针），所以说按照这样的方式，只能索引后继结点而不能索引前驱结点，所引起的问题也是显而易见的，比如如果不从头结点出发，就无法访问到全部结点，遇到这种情况，我们就可以采用我们今天将要介绍到的循环链表">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    16 分钟 读完 (大约 2452 个字)
+                    16 分钟 读完 (大约 2454 个字)
                 </span>
                 
                 
@@ -201,7 +201,9 @@ var _hmt = _hmt || [];
 
 <p>在下面的约瑟夫问题当中我们可以看到具体的应用</p>
 <h2 id="约瑟夫问题"><a href="#约瑟夫问题" class="headerlink" title="约瑟夫问题"></a>约瑟夫问题</h2><p>下面我们来看一个比较近经典的问题，约瑟夫问题，问题是这样的</p>
+<blockquote>
 <p>据说在罗马人占领乔塔帕特后，<code>39</code> 个犹太人与约瑟夫及他的朋友躲到一个洞中，<code>39</code> 个犹太人决定宁愿死也不要被敌人抓到，于是决定了一个自杀方式，<code>41</code> 个人排成一个圆圈，由第 <code>1</code> 个人开始报数，每报数到第 <code>3</code> 人该人就必须自杀，然后再由下一个重新报数，直到所有人都自杀身亡为止，然而约瑟夫和他的朋友并不想遵从，约瑟夫要他的朋友先假装遵从，他将朋友与自己安排在第 <code>16</code> 个与第 <code>31</code> 个位置，于是逃过了这场死亡游戏</p>
+</blockquote>
 <p>看到这个问题我们首先想到的是要用到循环链表，还有就是要计算链表中有多少个元素，这两点很重要，再有就是找到当前节点和在链表中向前移动 <code>m</code> 个节点，其实简单来说就是在初始化链表的时候我们定义一个当前节点，将它赋值为头节点 <code>this.currentNode = this.head</code>，这样在移动节点的时候就可以用它指向下一个节点，向前移动节点的时候有个地方需要注意，如果当前移动到头节点上需要再向前移动一个节点 <code>this.currentNode.next.next</code></p>
 <p>下面我们来看如何实现</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * 使用循环链表实现解决约瑟夫环问题</span></span><br><span class="line"><span class="hljs-comment"> * @param element </span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 链表结点</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Node</span>(<span class="hljs-params">element</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.element = element</span><br><span class="line">  <span class="hljs-keyword">this</span>.next = <span class="hljs-literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 定义链表类</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">LList</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.head = <span class="hljs-keyword">new</span> Node(<span class="hljs-string">'head'</span>)</span><br><span class="line">  <span class="hljs-keyword">this</span>.find = find</span><br><span class="line">  <span class="hljs-keyword">this</span>.insert = insert</span><br><span class="line">  <span class="hljs-keyword">this</span>.remove = remove</span><br><span class="line">  <span class="hljs-keyword">this</span>.findPrev = findPrev</span><br><span class="line">  <span class="hljs-keyword">this</span>.display = display</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 在之前链表的基础上新增</span></span><br><span class="line">  <span class="hljs-keyword">this</span>.head.next = <span class="hljs-keyword">this</span>.head</span><br><span class="line">  <span class="hljs-keyword">this</span>.currentNode = <span class="hljs-keyword">this</span>.head</span><br><span class="line">  <span class="hljs-keyword">this</span>.advance = advance  <span class="hljs-comment">// 从链表当前结点向前移动 n 个结点</span></span><br><span class="line">  <span class="hljs-keyword">this</span>.count = count      <span class="hljs-comment">// 当前链表中有多少个元素</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 查找结点</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">find</span>(<span class="hljs-params">item</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> currNode = <span class="hljs-keyword">this</span>.head</span><br><span class="line">  <span class="hljs-keyword">while</span> (currNode.element != item) &#123;</span><br><span class="line">    currNode = currNode.next</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> currNode</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 插入结点</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">insert</span>(<span class="hljs-params">newElement, item</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> newNode = <span class="hljs-keyword">new</span> Node(newElement)</span><br><span class="line">  <span class="hljs-keyword">var</span> current = <span class="hljs-keyword">this</span>.find(item)</span><br><span class="line">  newNode.next = current.next</span><br><span class="line">  current.next = newNode</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 查找当前结点的上一个结点</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">findPrev</span>(<span class="hljs-params">item</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> currNode = <span class="hljs-keyword">this</span>.head</span><br><span class="line">  <span class="hljs-keyword">while</span> (!(currNode.next == <span class="hljs-literal">null</span>) &amp;&amp; (currNode.next.element != item)) &#123;</span><br><span class="line">    currNode = currNode.next</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> currNode</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 删除结点</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">remove</span>(<span class="hljs-params">item</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> prevNode = <span class="hljs-keyword">this</span>.findPrev(item)</span><br><span class="line">  <span class="hljs-keyword">if</span> (prevNode.next !== <span class="hljs-literal">null</span>) &#123;</span><br><span class="line">    prevNode.next = prevNode.next.next</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 向前移动 n 个结点</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">advance</span>(<span class="hljs-params">n</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">while</span> (n &gt; <span class="hljs-number">0</span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.currentNode.next.element == <span class="hljs-string">'head'</span>) &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.currentNode = <span class="hljs-keyword">this</span>.currentNode.next.next</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.currentNode = <span class="hljs-keyword">this</span>.currentNode.next</span><br><span class="line">    &#125;</span><br><span class="line">    n--</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 当前链表中有多少个元素</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">count</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> node = <span class="hljs-keyword">this</span>.head</span><br><span class="line">  <span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span></span><br><span class="line">  <span class="hljs-keyword">while</span> (!(node.next.element == <span class="hljs-string">'head'</span>)) &#123;</span><br><span class="line">    node = node.next</span><br><span class="line">    i++</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> i</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 输出所有结点</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">display</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> currNode = <span class="hljs-keyword">this</span>.head</span><br><span class="line">  <span class="hljs-keyword">while</span> (!(currNode.next == <span class="hljs-literal">null</span>) &amp;&amp; !(currNode.next.element == <span class="hljs-string">'head'</span>)) &#123;</span><br><span class="line">    <span class="hljs-built_in">document</span>.write(currNode.next.element + <span class="hljs-string">'&amp;nbsp'</span>)</span><br><span class="line">    currNode = currNode.next</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> llist = <span class="hljs-keyword">new</span> LList()</span><br><span class="line"></span><br><span class="line">llist.insert(<span class="hljs-string">'1'</span>, <span class="hljs-string">'head'</span>)</span><br><span class="line">llist.insert(<span class="hljs-string">'2'</span>, <span class="hljs-string">'1'</span>)</span><br><span class="line">llist.insert(<span class="hljs-string">'3'</span>, <span class="hljs-string">'2'</span>)</span><br><span class="line">llist.insert(<span class="hljs-string">'4'</span>, <span class="hljs-string">'3'</span>)</span><br><span class="line">llist.insert(<span class="hljs-string">'5'</span>, <span class="hljs-string">'4'</span>)</span><br><span class="line">llist.insert(<span class="hljs-string">'6'</span>, <span class="hljs-string">'5'</span>)</span><br><span class="line">llist.insert(<span class="hljs-string">'7'</span>, <span class="hljs-string">'6'</span>)</span><br><span class="line">llist.insert(<span class="hljs-string">'8'</span>, <span class="hljs-string">'7'</span>)</span><br><span class="line">llist.insert(<span class="hljs-string">'9'</span>, <span class="hljs-string">'8'</span>)</span><br><span class="line">llist.insert(<span class="hljs-string">'10'</span>, <span class="hljs-string">'9'</span>)</span><br><span class="line"></span><br><span class="line">llist.display()</span><br><span class="line"><span class="hljs-built_in">document</span>.write(<span class="hljs-string">'&lt;br&gt;'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> n = <span class="hljs-number">3</span></span><br><span class="line"><span class="hljs-keyword">while</span> (llist.count() &gt; <span class="hljs-number">2</span>) &#123;</span><br><span class="line">  llist.advance(n)</span><br><span class="line">  llist.remove(llist.currentNode.element)</span><br><span class="line">  llist.display()</span><br><span class="line">  <span class="hljs-built_in">document</span>.write(<span class="hljs-string">'&lt;br&gt;'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -209,15 +211,13 @@ var _hmt = _hmt || [];
 <p>最终结果如下</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/09-02.png" alt></p>
 <p>我们假设只有十个人，所以一个站在队伍的第四位，一个站在队伍的第十位，到最后会只剩下他们两个人</p>
-<h2 id="循环链表的特点"><a href="#循环链表的特点" class="headerlink" title="循环链表的特点"></a>循环链表的特点</h2><p>在单链表中，我们有了头结点时，我们可以用 <code>O(1)</code> 的时间访问第一个结点，但对于要访问最后一个结点，我们必须要挨个向下索引，所以需要 <code>O(n)</code> 的时间，如果使用循环链表的话，用 <code>O(1)</code> 的时间就可以由链表指针访问到最后一个结点，可以参考开头部分的单循环链表示意图</p>
-<p>但是在此之前，我们先来稍微的调整一下，不再和开头的时候一样，而是采用指向终端结点的尾指针来表示循环链表，此时查找开始结点和终端结点都很方便了</p>
+<h2 id="循环链表的特点"><a href="#循环链表的特点" class="headerlink" title="循环链表的特点"></a>循环链表的特点</h2><p>在单链表中，我们有了头结点时，我们可以用 <code>O(1)</code> 的时间访问第一个结点，但对于要访问最后一个结点，我们必须要挨个向下索引，所以需要 <code>O(n)</code> 的时间，如果使用循环链表的话，用 <code>O(1)</code> 的时间就可以由链表指针访问到最后一个结点，可以参考开头部分的单循环链表示意图，但是在此之前，我们先来稍微的调整一下，不再和开头的时候一样，而是采用指向终端结点的尾指针来表示循环链表，此时查找开始结点和终端结点都很方便了</p>
 <p>如下图</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/09-03.png" alt></p>
 <p>但是相对应的，我们的判断条件也需要相对的调整一下，即判断是否为空链表的条件应该调整为判断 <code>rear</code> 是否等于 <code>rear -&gt; next</code>，循环链表的特点是无须增加存储量，仅对链接方式稍作改变，即可使得表处理更加方便灵活</p>
 <h2 id="判断链表中是否有环"><a href="#判断链表中是否有环" class="headerlink" title="判断链表中是否有环"></a>判断链表中是否有环</h2><p>我们来看一个在平常当中经常会遇到的关于循环链表的问题，那就是如何判断链表中是否有环，有环的定义是，链表的尾节点指向了链表中的某个节点，如下图所示</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/09-04.png" alt></p>
-<p>我们可以发现在第六个位置的指针是指向第三个位置的，那么我们如何判断这种情况呢？下面我们就来尝试一下</p>
-<p>链表的生成还是使用我们之前的代码，不过是简化过的，只保留几个最基本的方法方便我们测试就行，如下</p>
+<p>我们可以发现在第六个位置的指针是指向第三个位置的，那么我们如何判断这种情况呢？下面我们就来尝试一下，链表的生成还是使用我们之前的代码，不过是简化过的，只保留几个最基本的方法方便我们测试就行，如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Node</span>(<span class="hljs-params">element</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.element = element</span><br><span class="line">  <span class="hljs-keyword">this</span>.next = <span class="hljs-literal">null</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 定义链表类</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">LList</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.head = <span class="hljs-keyword">new</span> Node(<span class="hljs-string">'head'</span>)</span><br><span class="line">  <span class="hljs-keyword">this</span>.find = find</span><br><span class="line">  <span class="hljs-keyword">this</span>.insert = insert</span><br><span class="line">  <span class="hljs-keyword">this</span>.getHead = getHead</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 循环列表，添加一个访问标记，用于判断是否存在环</span></span><br><span class="line">  <span class="hljs-keyword">this</span>.head.next = <span class="hljs-keyword">this</span>.head</span><br><span class="line">  <span class="hljs-keyword">this</span>.flag = <span class="hljs-number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 查找结点</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">find</span>(<span class="hljs-params">item</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> currNode = <span class="hljs-keyword">this</span>.head</span><br><span class="line">  <span class="hljs-keyword">while</span> (currNode.element != item) &#123;</span><br><span class="line">    currNode = currNode.next</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> currNode</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 插入结点</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">insert</span>(<span class="hljs-params">newElement, item</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> newNode = <span class="hljs-keyword">new</span> Node(newElement)</span><br><span class="line">  <span class="hljs-keyword">var</span> current = <span class="hljs-keyword">this</span>.find(item)</span><br><span class="line">  newNode.next = current.next</span><br><span class="line">  current.next = newNode</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 获取头结点</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getHead</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.head</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> llist = <span class="hljs-keyword">new</span> LList()</span><br><span class="line"></span><br><span class="line">llist.insert(<span class="hljs-string">'1'</span>, <span class="hljs-string">'head'</span>)</span><br><span class="line">llist.insert(<span class="hljs-string">'2'</span>, <span class="hljs-string">'1'</span>)</span><br><span class="line">llist.insert(<span class="hljs-string">'3'</span>, <span class="hljs-string">'2'</span>)</span><br><span class="line">llist.insert(<span class="hljs-string">'4'</span>, <span class="hljs-string">'3'</span>)</span><br><span class="line">llist.insert(<span class="hljs-string">'5'</span>, <span class="hljs-string">'4'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 生成环</span></span><br><span class="line">llist.find(<span class="hljs-string">'5'</span>).next = llist.find(<span class="hljs-string">'2'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 获取头结点</span></span><br><span class="line"><span class="hljs-keyword">var</span> list = llist.getHead()</span><br></pre></td></tr></table></figure>
 
 <p>有了链表以后，我们就可以来看看如何判断链表中是否有环，主要有三种方式，我们一个一个来看</p>
@@ -350,7 +350,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -459,7 +459,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -475,7 +475,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -483,7 +483,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -546,35 +546,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -584,7 +565,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -592,8 +611,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -603,7 +622,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -611,29 +630,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -789,7 +789,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -954,7 +954,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1009,7 +1009,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1198,7 +1198,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1212,14 +1212,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

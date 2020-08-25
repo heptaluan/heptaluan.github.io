@@ -16,7 +16,7 @@
 <meta property="og:description" content="之前我们介绍过了在平常经常会遇到的 查找算法，今天我们就在来看看另一类比较常见而且非常重要的算法，那就是 排序算法，排序算法在所有的算法当中应该算是应用最为广泛的一类算法">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/30.jpg">
-<meta property="og:updated_time" content="2020-08-02T13:25:06.566Z">
+<meta property="og:updated_time" content="2020-08-25T03:05:40.444Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="排序算法">
 <meta name="twitter:description" content="之前我们介绍过了在平常经常会遇到的 查找算法，今天我们就在来看看另一类比较常见而且非常重要的算法，那就是 排序算法，排序算法在所有的算法当中应该算是应用最为广泛的一类算法">
@@ -190,7 +190,10 @@ var _hmt = _hmt || [];
 <a id="more"></a>
 
 
-<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>我们先来看官方定义，假设含有 <code>n</code> 个记录的序列为 <code>{ r1, r2 ... rn }</code>，其相应的关键字分别为 <code>{ k1, k2 ... kn }</code>，需确定 <code>1, 2 ... n</code> 的一种排列 <code>p1, p2 ... pn</code>，使其相应的关键字满足 <code>kp1 &lt;= kp2 &lt;= ... &lt;= kpn</code> 非递减（或非递增）关系，即使得序列成为一个按关键字有序的序列 <code>{ rp1, rp2 ... rpn }</code>，这样的操作就称为排序</p>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>我们先来看官方定义</p>
+<blockquote>
+<p>假设含有 <code>n</code> 个记录的序列为 <code>{ r1, r2 ... rn }</code>，其相应的关键字分别为 <code>{ k1, k2 ... kn }</code>，需确定 <code>1, 2 ... n</code> 的一种排列 <code>p1, p2 ... pn</code>，使其相应的关键字满足 <code>kp1 &lt;= kp2 &lt;= ... &lt;= kpn</code> 非递减（或非递增）关系，即使得序列成为一个按关键字有序的序列 <code>{ rp1, rp2 ... rpn }</code>，这样的操作就称为排序</p>
+</blockquote>
 <p>其实简单来说，在排序问题中，通常将数据元素称为记录，显然我们输入的是一个记录集合，排序后输出的也是一个记录集合，所以我们可以将排序看成是线性表的一种操作，排序的依据是关键字之间的大小关系，那么对同一记录集合，针对不同的关键字进行排序，可以得到不同序列</p>
 <h2 id="排序的稳定性"><a href="#排序的稳定性" class="headerlink" title="排序的稳定性"></a>排序的稳定性</h2><p>假设 <code>ki = kj（1 &lt;= i &lt;= n, 1 &lt;= j &lt;= n, i != j）</code>，且在排序前的序列中 <code>ri</code> 领先于 <code>rj</code>（即 <code>i &lt; j</code>）</p>
 <ul>
@@ -355,8 +358,7 @@ var _hmt = _hmt || [];
 <p>下面我们来看代码是如何实现的</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 交换两个节点</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">swap</span>(<span class="hljs-params">A, i, j</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> temp = A[i]</span><br><span class="line">  A[i] = A[j]</span><br><span class="line">  A[j] = temp</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 将 i 结点以下的堆整理为大顶堆</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">heapAdjust</span>(<span class="hljs-params">A, i, length</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 当前父节点</span></span><br><span class="line">  <span class="hljs-keyword">let</span> temp = A[i]</span><br><span class="line">  <span class="hljs-comment">// j &lt; length 的目的是对结点 i 以下的结点全部做顺序调整</span></span><br><span class="line">  <span class="hljs-comment">// 这里需要注意，因为 i 是双亲结点，所以对于二叉树来说， 2 * i 表示的是它的左孩子，2 * i + 1 表示的是右孩子</span></span><br><span class="line">  <span class="hljs-comment">// 2 * j 表示指向下一个双亲结点</span></span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">2</span> * i + <span class="hljs-number">1</span>; j &lt; length; j = <span class="hljs-number">2</span> * j + <span class="hljs-number">1</span>) &#123;</span><br><span class="line">    <span class="hljs-comment">// 将 A[i] 取出，整个过程相当于找到 A[i] 应处于的位置</span></span><br><span class="line">    <span class="hljs-comment">// 也就是待调整的双亲</span></span><br><span class="line">    temp = A[i]</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 因为此时 j 是指向双亲的右孩子，所以如果右孩子大于左孩子的话</span></span><br><span class="line">    <span class="hljs-comment">// 小于 length 是确定 j + 1 不是最后一个结点</span></span><br><span class="line">    <span class="hljs-comment">// 简单来说就是，如果右孩子大于左孩子，j 就指向右孩子</span></span><br><span class="line">    <span class="hljs-comment">// 如果左孩子大于右孩子的话，j 还是它自己</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (j + <span class="hljs-number">1</span> &lt; length &amp;&amp; A[j] &lt; A[j + <span class="hljs-number">1</span>]) &#123;</span><br><span class="line">      <span class="hljs-comment">// 指向较大的元素，也就是找到两个孩子中较大的一个，再与父节点比较</span></span><br><span class="line">      j++</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">if</span> (temp &lt; A[j]) &#123;</span><br><span class="line">      <span class="hljs-comment">// 如果父节点小于子节点就执行交换，否则跳出</span></span><br><span class="line">      swap(A, i, j)</span><br><span class="line">      <span class="hljs-comment">// 交换后，temp 的下标变为 j</span></span><br><span class="line">      i = j</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">break</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 堆排序</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">heapSort</span>(<span class="hljs-params">A</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-built_in">Math</span>.floor(A.length / <span class="hljs-number">2</span> - <span class="hljs-number">1</span>); i &gt;= <span class="hljs-number">0</span>; i--) &#123;  <span class="hljs-comment">// 初始化大顶堆，从第一个非叶子结点开始</span></span><br><span class="line">    heapAdjust(A, i, A.length)                               <span class="hljs-comment">// 这里传递的 i 就表示的是双亲结点</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-built_in">Math</span>.floor(A.length - <span class="hljs-number">1</span>); i &gt; <span class="hljs-number">0</span>; i--) &#123;       <span class="hljs-comment">// 排序，每一次 for 循环找出一个当前最大值，数组长度减一</span></span><br><span class="line">    swap(A, <span class="hljs-number">0</span>, i)                                            <span class="hljs-comment">// 根节点与最后一个节点交换</span></span><br><span class="line">    heapAdjust(A, <span class="hljs-number">0</span>, i)                                      <span class="hljs-comment">// 从根节点开始调整，并且最后一个结点已经为当前最大值，不需要再参与比较，所以第三个参数，为 i，即比较到最后一个结点前一个即可</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> arr = [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">4</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">1</span>, <span class="hljs-number">9</span>, <span class="hljs-number">0</span>]</span><br><span class="line">heapSort(arr)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(arr)</span><br></pre></td></tr></table></figure>
 
-<h2 id="计数排序"><a href="#计数排序" class="headerlink" title="计数排序"></a>计数排序</h2><p>计数排序的核心在于将输入的数据值转化为键存储在额外开辟的数组空间中，作为一种线性时间复杂度的排序，计数排序要求输入的数据必须是有确定范围的整数，计数排序是一种稳定的排序算法，计数排序使用一个额外的数组 <code>C</code>，其中第 <code>i</code> 个元素是待排序数组 <code>A</code> 中值等于 <code>i</code> 的元素的个数，然后根据数组 <code>C</code> 来将 <code>A</code> 中的元素排到正确的位置，它只能对整数进行排序</p>
-<p>它的原理是这样的</p>
+<h2 id="计数排序"><a href="#计数排序" class="headerlink" title="计数排序"></a>计数排序</h2><p>计数排序的核心在于将输入的数据值转化为键存储在额外开辟的数组空间中，作为一种线性时间复杂度的排序，计数排序要求输入的数据必须是有确定范围的整数，计数排序是一种稳定的排序算法，计数排序使用一个额外的数组 <code>C</code>，其中第 <code>i</code> 个元素是待排序数组 <code>A</code> 中值等于 <code>i</code> 的元素的个数，然后根据数组 <code>C</code> 来将 <code>A</code> 中的元素排到正确的位置，它只能对整数进行排序，它的原理是这样的</p>
 <ol>
 <li>找出待排序的数组中最大和最小的元素</li>
 <li>统计数组中每个值为 <code>i</code> 的元素出现的次数，存入数组 <code>C</code> 的第 <code>i</code> 项</li>
@@ -531,7 +533,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -664,7 +666,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -680,7 +682,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -688,7 +690,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -751,35 +753,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -789,7 +772,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -797,8 +818,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -808,7 +829,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -816,29 +837,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -994,7 +996,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1159,7 +1161,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1214,7 +1216,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1403,7 +1405,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1417,14 +1419,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

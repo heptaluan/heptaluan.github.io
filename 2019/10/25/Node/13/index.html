@@ -16,7 +16,7 @@
 <meta property="og:description" content="在 上一章 当中，我们简单的介绍了中间件的基本概念，以及洋葱模型，在最后我们也手动实现了一个简单的 compose() 方法，所以本章当中我们就主要手动的来实现一个最基本的 koa.js 框架以及 koa.js 当中一些比较常用的中间件的简单实现，比如 koa-logger 和 koa-static 等">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg">
-<meta property="og:updated_time" content="2020-08-02T13:25:06.572Z">
+<meta property="og:updated_time" content="2020-08-25T08:44:05.840Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="常用中间件的实现">
 <meta name="twitter:description" content="在 上一章 当中，我们简单的介绍了中间件的基本概念，以及洋葱模型，在最后我们也手动实现了一个简单的 compose() 方法，所以本章当中我们就主要手动的来实现一个最基本的 koa.js 框架以及 koa.js 当中一些比较常用的中间件的简单实现，比如 koa-logger 和 koa-static 等">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    25 分钟 读完 (大约 3815 个字)
+                    25 分钟 读完 (大约 3818 个字)
                 </span>
                 
                 
@@ -216,8 +216,7 @@ var _hmt = _hmt || [];
 <p>然后来稍微的测试一下我们上面定义的服务</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> WebServer = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./index'</span>)</span><br><span class="line"><span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> WebServer()</span><br><span class="line"></span><br><span class="line">app.use(<span class="hljs-function"><span class="hljs-params">ctx</span> =&gt;</span> &#123;</span><br><span class="line">  ctx.res.write(<span class="hljs-string">'hello world 1 \n'</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.use(<span class="hljs-function"><span class="hljs-params">ctx</span> =&gt;</span> &#123;</span><br><span class="line">  ctx.res.write(<span class="hljs-string">'hello world 2 \n'</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.use(<span class="hljs-function"><span class="hljs-params">ctx</span> =&gt;</span> &#123;</span><br><span class="line">  ctx.res.write(<span class="hljs-string">'hello world 3 \n'</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.listen(<span class="hljs-number">3000</span>, _ =&gt; &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`app is running at port 3000`</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
-<p>发现是可以正常使用的，但是这里面有一个问题，就是我们在处理中间件队列的时候，底层使用的是回调嵌套去处理的，但是中间件越多，回调嵌套越深，代码的可读性和可扩展性就很差，所以我们就可以考虑将我们的 <code>handleRequest</code> 方法调整为 <code>async/await</code> 方式</p>
-<p>所以在这种情况下，我们就可以使用我们之前已经定义过的 <code>compose()</code> 方法，如下</p>
+<p>发现是可以正常使用的，但是这里面有一个问题，就是我们在处理中间件队列的时候，底层使用的是回调嵌套去处理的，但是中间件越多，回调嵌套越深，代码的可读性和可扩展性就很差，所以我们就可以考虑将我们的 <code>handleRequest</code> 方法调整为 <code>async/await</code> 方式，所以在这种情况下，我们就可以使用我们之前已经定义过的 <code>compose()</code> 方法，如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> handleRequest = <span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> context = <span class="hljs-keyword">this</span>.createContext(req, res)</span><br><span class="line">  <span class="hljs-keyword">let</span> middleware = <span class="hljs-keyword">this</span>.middleware</span><br><span class="line">  <span class="hljs-comment">// 执行中间件</span></span><br><span class="line">  compose(middleware)(context).catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> <span class="hljs-keyword">this</span>.onerror(err))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">return</span> handleRequest</span><br></pre></td></tr></table></figure>
 
 <p>下面是整合后的代码</p>
@@ -252,8 +251,7 @@ var _hmt = _hmt || [];
 <p>使用如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> send = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./send'</span>)</span><br><span class="line"><span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">'koa'</span>)</span><br><span class="line"><span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Koa()</span><br><span class="line"></span><br><span class="line">app.use(<span class="hljs-keyword">async</span> ctx =&gt; &#123;</span><br><span class="line">  <span class="hljs-keyword">await</span> send(ctx, ctx.path, &#123; <span class="hljs-attr">root</span>: <span class="hljs-string">`<span class="hljs-subst">$&#123;__dirname&#125;</span>/public`</span> &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.listen(<span class="hljs-number">3000</span>)</span><br></pre></td></tr></table></figure>
 
-<h2 id="koa-static"><a href="#koa-static" class="headerlink" title="koa-static"></a>koa-static</h2><p>之前我们简单的介绍了 <code>koa-send</code> 这个中间件，但是这个中间件平常使用的较少，因为 <code>koa.js</code> 官方对 <code>koa-send</code> 进行了二次封装，推出了我们所熟知的 <code>koa-static</code> 中间件，目标是用于做静态服务器或者项目静态资源管理</p>
-<p>当然，还是主要依赖我们之前已经实现的 <code>koa-send</code> 这个中间件，因为需要它的静态文件读取过程，我们先来简单的梳理一下实现流程</p>
+<h2 id="koa-static"><a href="#koa-static" class="headerlink" title="koa-static"></a>koa-static</h2><p>之前我们简单的介绍了 <code>koa-send</code> 这个中间件，但是这个中间件平常使用的较少，因为 <code>koa.js</code> 官方对 <code>koa-send</code> 进行了二次封装，推出了我们所熟知的 <code>koa-static</code> 中间件，目标是用于做静态服务器或者项目静态资源管理，当然，还是主要依赖我们之前已经实现的 <code>koa-send</code> 这个中间件，因为需要它的静态文件读取过程，我们先来简单的梳理一下实现流程</p>
 <ul>
 <li>配置静态资源绝对目录地址</li>
 <li>判断是否支持等待其他请求</li>
@@ -265,8 +263,7 @@ var _hmt = _hmt || [];
 <p>使用如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>)</span><br><span class="line"><span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">'koa'</span>)</span><br><span class="line"><span class="hljs-keyword">const</span> statics = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./static'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Koa()</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> root = path.join(__dirname, <span class="hljs-string">'./public'</span>)</span><br><span class="line">app.use(statics(&#123; root &#125;))</span><br><span class="line"></span><br><span class="line">app.listen(<span class="hljs-number">3000</span>)</span><br></pre></td></tr></table></figure>
 
-<h2 id="koa-view"><a href="#koa-view" class="headerlink" title="koa-view"></a>koa-view</h2><p>这一个中间件，在官方当中比较有代表性的是 <code>koa-ejs</code> 中间件，它实现了代理上下文（<code>context</code>），即把渲染的方法挂载在 <code>koa</code> 实例 <code>app</code> 的 <code>app.context</code> 属性中，所以这里我们就简单的实现一个模版渲染中间件来模仿 <code>koa-ejs</code> 的基本能力</p>
-<p>老规矩，简单的梳理一下实现流程</p>
+<h2 id="koa-view"><a href="#koa-view" class="headerlink" title="koa-view"></a>koa-view</h2><p>这一个中间件，在官方当中比较有代表性的是 <code>koa-ejs</code> 中间件，它实现了代理上下文（<code>context</code>），即把渲染的方法挂载在 <code>koa</code> 实例 <code>app</code> 的 <code>app.context</code> 属性中，所以这里我们就简单的实现一个模版渲染中间件来模仿 <code>koa-ejs</code> 的基本能力，老规矩，简单的梳理一下实现流程</p>
 <ul>
 <li>初始化一个 <code>koa</code> 实例（<code>let app = new Koa()</code>）</li>
 <li>将需要的属性或者方法 <code>view</code> 挂载在 <code>app.context</code> 上（<code>app.context.view</code>）</li>
@@ -328,9 +325,11 @@ var _hmt = _hmt || [];
 <p>测试一下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> Koa = <span class="hljs-built_in">require</span>(<span class="hljs-string">'koa'</span>)</span><br><span class="line"><span class="hljs-keyword">const</span> Router = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./router'</span>)</span><br><span class="line"><span class="hljs-keyword">const</span> app = <span class="hljs-keyword">new</span> Koa()</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 初始化路由实例</span></span><br><span class="line"><span class="hljs-keyword">const</span> router = <span class="hljs-keyword">new</span> Router()</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 注册路由请求信息缓存到实例中</span></span><br><span class="line">router.get(<span class="hljs-string">'/index'</span>, <span class="hljs-keyword">async</span> ctx =&gt; &#123; ctx.body = <span class="hljs-string">'index page'</span> &#125;)</span><br><span class="line">router.get(<span class="hljs-string">'/post'</span>, <span class="hljs-keyword">async</span> ctx =&gt; &#123; ctx.body = <span class="hljs-string">'post page'</span> &#125;)</span><br><span class="line">router.get(<span class="hljs-string">'/list'</span>, <span class="hljs-keyword">async</span> ctx =&gt; &#123; ctx.body = <span class="hljs-string">'list page'</span> &#125;)</span><br><span class="line">router.get(<span class="hljs-string">'/item'</span>, <span class="hljs-keyword">async</span> ctx =&gt; &#123; ctx.body = <span class="hljs-string">'item page'</span> &#125;)</span><br><span class="line"></span><br><span class="line">app.use(router.routes())</span><br><span class="line"></span><br><span class="line">app.use(<span class="hljs-keyword">async</span> ctx =&gt; &#123;</span><br><span class="line">  ctx.body = <span class="hljs-string">'404'</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.listen(<span class="hljs-number">3000</span>)</span><br></pre></td></tr></table></figure>
 
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://github.com/koajs/send/blob/master/index.js" target="_blank" rel="noopener">koajs/send</a></p>
-<p><a href="https://github.com/koajs/bodyparser" target="_blank" rel="noopener">koajs/bodyparser</a></p>
-<p><a href="https://juejin.im/post/5ad466d25188253edd4d898a#heading-12" target="_blank" rel="noopener">Koa：核心探秘与入坑指北</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://github.com/koajs/send/blob/master/index.js" target="_blank" rel="noopener">koajs/send</a></li>
+<li><a href="https://github.com/koajs/bodyparser" target="_blank" rel="noopener">koajs/bodyparser</a></li>
+<li><a href="https://juejin.im/post/5ad466d25188253edd4d898a#heading-12" target="_blank" rel="noopener">Koa：核心探秘与入坑指北</a></li>
+</ul>
 
         </div>
         
@@ -441,7 +440,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -562,7 +561,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -578,7 +577,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -586,7 +585,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -649,35 +648,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -687,7 +667,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -695,8 +713,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -706,7 +724,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -714,29 +732,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -892,7 +891,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1057,7 +1056,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1112,7 +1111,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1301,7 +1300,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1315,14 +1314,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

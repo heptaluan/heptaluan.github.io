@@ -16,7 +16,7 @@
 <meta property="og:description" content="Node.js 中的 co 模块主要用于 Generator 函数的自动执行，可以使我们以同步的形式编写异步代码">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/02.jpg">
-<meta property="og:updated_time" content="2020-07-11T15:24:13.507Z">
+<meta property="og:updated_time" content="2020-08-25T08:29:38.082Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Node.js 中的 co 模块">
 <meta name="twitter:description" content="Node.js 中的 co 模块主要用于 Generator 函数的自动执行，可以使我们以同步的形式编写异步代码">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    22 分钟 读完 (大约 3325 个字)
+                    22 分钟 读完 (大约 3327 个字)
                 </span>
                 
                 
@@ -225,15 +225,13 @@ var _hmt = _hmt || [];
 <h2 id="co"><a href="#co" class="headerlink" title="co"></a>co</h2><p>源码实现如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// co 的核心代码如下</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">co</span>(<span class="hljs-params">gen</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 保持当前函数的上下文</span></span><br><span class="line">  <span class="hljs-keyword">var</span> ctx = <span class="hljs-keyword">this</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 截取 co 输入的参数，剔除 arguments 中的第一个参数，即 gen 对象，剩余参数作为 gen 的入参</span></span><br><span class="line">  <span class="hljs-keyword">var</span> args = slice.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">1</span>)</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// co 函数整个的返回值是一个 promise 实例，包装了传递的 generator 函数内所有 promise 的执行</span></span><br><span class="line">  <span class="hljs-comment">// 这也是它为什么可以使用 then 和 catch 的根源</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">resolve, reject</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 判断传入的 gen 是否为函数，如果是则执行，将结果赋值给 gen 对象</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> gen === <span class="hljs-string">'function'</span>) gen = gen.apply(ctx, args);</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 根据 generator 函数执行结果是否存在 next 字段，判断 gen 是否为 generator 迭代器对象</span></span><br><span class="line">    <span class="hljs-comment">// 若不是，则调用 resolve 返回最外层的 promise 对象状态</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (!gen || <span class="hljs-keyword">typeof</span> gen.next !== <span class="hljs-string">'function'</span>) <span class="hljs-keyword">return</span> resolve(gen);</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 如果是 generator 迭代器对象，开始控制 gen.next() 方法的调用</span></span><br><span class="line">    <span class="hljs-comment">// 调用入口函数，成功方法</span></span><br><span class="line">    onFulfilled();</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 入口函数，将传递进来的 generator 函数执行到第一个 yield 处来开启第一次的异步调用</span></span><br><span class="line">    <span class="hljs-comment">// 另外也用作内部使用，作为 resolve 方法，处理异步结果，并继续调用下一个 promise</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onFulfilled</span>(<span class="hljs-params">res</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">var</span> ret;</span><br><span class="line">      <span class="hljs-keyword">try</span> &#123;</span><br><span class="line">        <span class="hljs-comment">// res 为此次调用的 Peomise 结果</span></span><br><span class="line">        <span class="hljs-comment">// 利用 generator 函数的特性，调用 next() 方法的参数，会作为 yield 的返回值</span></span><br><span class="line">        <span class="hljs-comment">// 并将异步操作的结果返回给 ret.value</span></span><br><span class="line">        ret = gen.next(res);</span><br><span class="line">      &#125; <span class="hljs-keyword">catch</span> (e) &#123;</span><br><span class="line">        <span class="hljs-comment">// 如果发生错误，则把 Peomise 状态指为 rejected，并且把错误结果返回出去</span></span><br><span class="line">        <span class="hljs-keyword">return</span> reject(e);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="hljs-comment">// 将 generator 函数执行 next() 后的结果再次传入 next() 方法，实现串行调用</span></span><br><span class="line">      next(ret);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 上面的 onFulfilled 函数作为内部的成功方法，下面这个则作为失败方法</span></span><br><span class="line">    <span class="hljs-comment">// 实现和上面类似</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">onRejected</span>(<span class="hljs-params">err</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">var</span> ret;</span><br><span class="line">      <span class="hljs-keyword">try</span> &#123;</span><br><span class="line">        ret = gen.throw(err);</span><br><span class="line">      &#125; <span class="hljs-keyword">catch</span> (e) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> reject(e);</span><br><span class="line">      &#125;</span><br><span class="line">      next(ret);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 首先需要明确，generator 函数在执行完毕后会返回 &#123; done: true, value: undefined &#125;</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">next</span>(<span class="hljs-params">ret</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">      <span class="hljs-comment">// 如果执行完成，直接调用 resolve 把 promise 置为成功状态</span></span><br><span class="line">      <span class="hljs-keyword">if</span> (ret.done) <span class="hljs-keyword">return</span> resolve(ret.value);</span><br><span class="line"></span><br><span class="line">      <span class="hljs-comment">// 然后把 yield 的值（ret.value）转换成 promise（ctx 为上面保存的 this）</span></span><br><span class="line">      <span class="hljs-comment">// 支持 promise，generator，generatorFunction，array，object</span></span><br><span class="line">      <span class="hljs-keyword">var</span> value = toPromise.call(ctx, ret.value);</span><br><span class="line"></span><br><span class="line">      <span class="hljs-comment">// 成功转换就可以直接给新的 promise 添加 onFulfilled, onRejected</span></span><br><span class="line">      <span class="hljs-comment">// 当新的 promise 状态变成结束态（成功或失败），就会调用对应的回调，整个 next 链路就执行下去了</span></span><br><span class="line"></span><br><span class="line">      <span class="hljs-comment">// 之所以可以一直 next() 下去，这是因为上面的 ret.value 是一个 Peomise 对象</span></span><br><span class="line">      <span class="hljs-comment">// 当 return value.then(onFulfilled, onRejected) 以后，意味着又要去执行上面的 onFulfilled 了</span></span><br><span class="line">      <span class="hljs-comment">// 然后会在 onFulfilled 里面再次去调用 next(ret)</span></span><br><span class="line">      <span class="hljs-comment">// 这样就会一直循环下去，直到完成整个链的操作</span></span><br><span class="line"></span><br><span class="line">      <span class="hljs-keyword">if</span> (value &amp;&amp; isPromise(value)) <span class="hljs-keyword">return</span> value.then(onFulfilled, onRejected);</span><br><span class="line"></span><br><span class="line">      <span class="hljs-comment">// 如果以上情况都没发生，则参数为非 thunk 函数和 promise 对象</span></span><br><span class="line">      <span class="hljs-comment">// 那么就将 promise 对象的状态改为 rejected，从而终止执行</span></span><br><span class="line">      <span class="hljs-keyword">return</span> onRejected(<span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">'You may only yield a function, promise, generator, array, or object, '</span></span><br><span class="line">        + <span class="hljs-string">'but the following object was passed: "'</span> + <span class="hljs-built_in">String</span>(ret.value) + <span class="hljs-string">'"'</span>));</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>核心代码入口是 <code>onFulfilled</code>，无论如何第一次的 <code>next(ret)</code> 是一定要执行的，因为 <code>generator</code> 必须要 <code>next()</code> 一下的</p>
-<p>但是 <code>co</code> 实际上有两种调用方式，分为有参数和无参数的，很明显以上是无参数的 <code>generator</code> 执行器，那么有参数的 <code>wrap</code> 呢？<code>co</code> 为我们提供了简单的包装</p>
+<p>核心代码入口是 <code>onFulfilled</code>，无论如何第一次的 <code>next(ret)</code> 是一定要执行的，因为 <code>generator</code> 必须要 <code>next()</code> 一下的，但是 <code>co</code> 实际上有两种调用方式，分为有参数和无参数的，很明显以上是无参数的 <code>generator</code> 执行器，那么有参数的 <code>wrap</code> 呢？<code>co</code> 为我们提供了简单的包装</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 为有参数的 generator 调用，提供简单包装</span></span><br><span class="line">co.wrap = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">fn</span>) </span>&#123;</span><br><span class="line">  createPromise.__generatorFunction__ = fn;</span><br><span class="line">  <span class="hljs-keyword">return</span> createPromise;</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createPromise</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// 把 arguments 给 fn 当参数</span></span><br><span class="line">    <span class="hljs-keyword">return</span> co.call(<span class="hljs-keyword">this</span>, fn.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 <p>通过 <code>call</code> 和 <code>apply</code> 的组合使用来传递 <code>arguments</code></p>
 <h2 id="辅助函数"><a href="#辅助函数" class="headerlink" title="辅助函数"></a>辅助函数</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 将传入的参数对象转换为 Promise 对象</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">toPromise</span>(<span class="hljs-params">obj</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (!obj) <span class="hljs-keyword">return</span> obj;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 如果 obj 已经是 Promise 对象，则直接返回</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (isPromise(obj)) <span class="hljs-keyword">return</span> obj;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 如果 generator 是函数或对象，则直接把 obj 作为参数传入 co 函数，并返回</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (isGeneratorFunction(obj) || isGenerator(obj)) <span class="hljs-keyword">return</span> co.call(<span class="hljs-keyword">this</span>, obj);</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 如果 obj 是函数，则直接视为符合 thunk 规范的函数直接转换为 Promise</span></span><br><span class="line">  <span class="hljs-comment">// 关于 thunk 函数可以参考 阮一峰老师的 Thunk 函数的含义和用法</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-string">'function'</span> == <span class="hljs-keyword">typeof</span> obj) <span class="hljs-keyword">return</span> thunkToPromise.call(<span class="hljs-keyword">this</span>, obj);</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 如果是数组，把数组中每个元素转化为内部 Promise，然后使用 Promise.all 并行计算</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(obj)) <span class="hljs-keyword">return</span> arrayToPromise.call(<span class="hljs-keyword">this</span>, obj);</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 如果是对象，则遍历对象中的每个 key 对应的 value，然后使用 Promise.all 并行计算</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (isObject(obj)) <span class="hljs-keyword">return</span> objectToPromise.call(<span class="hljs-keyword">this</span>, obj);</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 最后返回</span></span><br><span class="line">  <span class="hljs-keyword">return</span> obj;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 这里的 obj 为数组</span></span><br><span class="line"><span class="hljs-comment">// 所以使用 Array.map 方法，分别对数组中的每一个元素递归执行 toPromise 方法</span></span><br><span class="line"><span class="hljs-comment">// 再利用 Promise.all 方法，在所有给定的可迭代完成时执行 resolve（或者第一个代码失败）并返回结果</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">arrayToPromise</span>(<span class="hljs-params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.all(obj.map(toPromise, <span class="hljs-keyword">this</span>));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// thunk 转为 promise</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">thunkToPromise</span>(<span class="hljs-params">fn</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> ctx = <span class="hljs-keyword">this</span>;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">resolve, reject</span>) </span>&#123;</span><br><span class="line">    fn.call(ctx, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, res</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">return</span> reject(err);</span><br><span class="line">      <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length &gt; <span class="hljs-number">2</span>) res = slice.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">1</span>);</span><br><span class="line">      resolve(res);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 这里的 obj 为对象</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">objectToPromise</span>(<span class="hljs-params">obj</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// results 是将用于返回的对象，使用和 obj 相同的构造函数</span></span><br><span class="line">  <span class="hljs-keyword">var</span> results = <span class="hljs-keyword">new</span> obj.constructor();</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// Object.keys 方法用于返回对象的所有的属性名</span></span><br><span class="line">  <span class="hljs-keyword">var</span> keys = <span class="hljs-built_in">Object</span>.keys(obj);</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">//  用于保存所有对象属性的 Promise 的数组</span></span><br><span class="line">  <span class="hljs-keyword">var</span> promises = [];</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 利用 for 循环来实现并行的异步调用</span></span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; keys.length; i++) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">var</span> key = keys[i];</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 转换为 Promise 对象</span></span><br><span class="line">    <span class="hljs-keyword">var</span> promise = toPromise.call(<span class="hljs-keyword">this</span>, obj[key]);</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 如果是 promise 对象，直接调用 defer 函数，添加到 promises 数组中，否则直接将结果返回给 result[key]</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (promise &amp;&amp; isPromise(promise)) defer(promise, key);</span><br><span class="line">    <span class="hljs-keyword">else</span> results[key] = obj[key];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 将 Promise 数组传入 Promise.all，待 defer 函数中 results 对象的属性都赋值完毕后，返回最终的 results 对象</span></span><br><span class="line">  <span class="hljs-comment">// 使得后续调用的 then() 可以获得此处的 results</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.all(promises).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> results;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// key 对应的元素成功转化为 Promise 对象后，调用 Promise 的 resovle 方法</span></span><br><span class="line">  <span class="hljs-comment">// 以便在 results 中获取每个 Promise 对象成功执行后的结果</span></span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">defer</span>(<span class="hljs-params">promise, key</span>) </span>&#123;</span><br><span class="line">    results[key] = <span class="hljs-literal">undefined</span>;</span><br><span class="line">    promises.push(promise.then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">res</span>) </span>&#123;</span><br><span class="line">      results[key] = res;</span><br><span class="line">    &#125;));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>经过上面这些步骤，我们可以得到 <code>yield</code> 后面只能是 <strong>函数、Promise 对象、Generator 函数、Generator 迭代器对象、数组（元素仅限之前的 4 类）和 Object（对应 value 仅限定之前的 4 类）</strong></p>
-<p>现在可以把 <code>co</code> 串行调用 <code>generator</code> 函数中 <code>yield</code> 的过程总结如下</p>
+<p>经过上面这些步骤，我们可以得到 <code>yield</code> 后面只能是 <strong>函数、Promise 对象、Generator 函数、Generator 迭代器对象、数组（元素仅限之前的 4 类）和 Object（对应 value 仅限定之前的 4 类）</strong>，现在可以把 <code>co</code> 串行调用 <code>generator</code> 函数中 <code>yield</code> 的过程总结如下</p>
 <ul>
 <li>首先进入最外层的 <code>promise</code></li>
 <li>通过入口 <code>onFilfilled()</code> 方法，将 <code>generator</code> 函数运行至第一个 <code>yield</code> 处，执行该 <code>yield</code> 后边的异步操作，并将结果传入 <code>next</code> 方法<ul>
@@ -286,11 +284,13 @@ function run(gen) {
 
 
 
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.npmjs.com/package/co" target="_blank" rel="noopener">co</a></p>
-<p><a href="https://cnodejs.org/topic/576bdffa889605241796f7d9" target="_blank" rel="noopener">co 4.6源码解析</a></p>
-<p><a href="https://nswbmw.github.io/N-club/1/1.3.html" target="_blank" rel="noopener">Thunk 函数的含义和用法</a></p>
-<p><a href="http://www.ruanyifeng.com/blog/2015/05/thunk.html" target="_blank" rel="noopener">co 和 koa</a></p>
-<p><a href="https://segmentfault.com/a/1190000002732081" target="_blank" rel="noopener">异步流程控制：7 行代码学会 co 模块</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://www.npmjs.com/package/co" target="_blank" rel="noopener">co</a></li>
+<li><a href="https://cnodejs.org/topic/576bdffa889605241796f7d9" target="_blank" rel="noopener">co 4.6源码解析</a></li>
+<li><a href="https://nswbmw.github.io/N-club/1/1.3.html" target="_blank" rel="noopener">Thunk 函数的含义和用法</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2015/05/thunk.html" target="_blank" rel="noopener">co 和 koa</a></li>
+<li><a href="https://segmentfault.com/a/1190000002732081" target="_blank" rel="noopener">异步流程控制：7 行代码学会 co 模块</a></li>
+</ul>
 
         </div>
         
@@ -401,7 +401,7 @@ function run(gen) {
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -506,7 +506,7 @@ function run(gen) {
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -522,7 +522,7 @@ function run(gen) {
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -530,7 +530,7 @@ function run(gen) {
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -593,35 +593,16 @@ function run(gen) {
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -631,7 +612,45 @@ function run(gen) {
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -639,8 +658,8 @@ function run(gen) {
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -650,7 +669,7 @@ function run(gen) {
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -658,29 +677,10 @@ function run(gen) {
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -836,7 +836,7 @@ function run(gen) {
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1001,7 +1001,7 @@ function run(gen) {
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1056,7 +1056,7 @@ function run(gen) {
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1245,7 +1245,7 @@ function run(gen) {
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1259,14 +1259,14 @@ function run(gen) {
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

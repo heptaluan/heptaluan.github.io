@@ -16,7 +16,7 @@
 <meta property="og:description" content="官方的说法是，Promise 是一个对象，它代表了一个异步操作的最终完成或者失败，但是关于 Promise 到底是一个什么样的东西，我们还需要从为什么要使用它来看起">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/26.jpg">
-<meta property="og:updated_time" content="2020-07-11T15:24:13.500Z">
+<meta property="og:updated_time" content="2020-08-25T07:03:32.124Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的 Promise">
 <meta name="twitter:description" content="官方的说法是，Promise 是一个对象，它代表了一个异步操作的最终完成或者失败，但是关于 Promise 到底是一个什么样的东西，我们还需要从为什么要使用它来看起">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    16 分钟 读完 (大约 2467 个字)
+                    17 分钟 读完 (大约 2486 个字)
                 </span>
                 
                 
@@ -190,8 +190,7 @@ var _hmt = _hmt || [];
 <a id="more"></a>
 
 
-<h2 id="为什么要使用-Promise"><a href="#为什么要使用-Promise" class="headerlink" title="为什么要使用 Promise"></a>为什么要使用 Promise</h2><p>首先我们在接触一个新东西的时候，需要知道我们为什么要使用它，关于 <code>Promise</code> 这个东西，我们可以先来看下面这个示例</p>
-<p>示例很简单，就是读取当前目录下的 <code>1.txt</code> 这个文件，然后在控制台输出这个文件内容</p>
+<h2 id="为什么要使用-Promise"><a href="#为什么要使用-Promise" class="headerlink" title="为什么要使用 Promise"></a>为什么要使用 Promise</h2><p>首先我们在接触一个新东西的时候，需要知道我们为什么要使用它，关于 <code>Promise</code> 这个东西，我们可以先来看下面这个示例，示例很简单，就是读取当前目录下的 <code>1.txt</code> 这个文件，然后在控制台输出这个文件内容</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>)</span><br><span class="line"></span><br><span class="line">fs.readFile(<span class="hljs-string">'1.txt'</span>, <span class="hljs-string">'utf8'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, data</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(data)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
 <p>看起来很简单，然后我们现在再进一步，读取两个文件，然后在控制台分别输出这两个文件内容</p>
@@ -200,8 +199,7 @@ var _hmt = _hmt || [];
 <p>要是读取更多的文件呢？</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>)</span><br><span class="line">fs.readFile(<span class="hljs-string">'1.txt'</span>, <span class="hljs-string">'utf8'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, data</span>) </span>&#123;</span><br><span class="line">  fs.readFile(<span class="hljs-string">'2.txt'</span>, <span class="hljs-string">'utf8'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, data</span>) </span>&#123;</span><br><span class="line">    fs.readFile(<span class="hljs-string">'3.txt'</span>, <span class="hljs-string">'utf8'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, data</span>) </span>&#123;</span><br><span class="line">      fs.readFile(<span class="hljs-string">'4.txt'</span>, <span class="hljs-string">'utf8'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, data</span>) </span>&#123;</span><br><span class="line">        <span class="hljs-comment">// ...</span></span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
-<p>这就是传说中的 <code>callback hell</code>，其实也不止单单的嵌套和缩进的问题，比如在之中存在大量的逻辑判断，可想而知，如果遇到问题排查起来会是多么痛苦的一件事情</p>
-<p>所以在这种情况之下，我们就可以考虑来使用 <code>Promise</code> 来解决这样的问题</p>
+<p>这就是传说中的 <code>callback hell</code>，其实也不止单单的嵌套和缩进的问题，比如在之中存在大量的逻辑判断，可想而知，如果遇到问题排查起来会是多么痛苦的一件事情，所以在这种情况之下，我们就可以考虑来使用 <code>Promise</code> 来解决这样的问题</p>
 <h2 id="Promise"><a href="#Promise" class="headerlink" title="Promise"></a>Promise</h2><p>那么什么是 <code>Promise</code> 呢？首先它是一个对象，它和 <code>JavaScript</code> 普通的对象没什么区别，同时它也是一种规范，跟异步操作约定了统一的接口，表示一个异步操作的最终结果，以同步的方式来写代码，执行的操作是异步的，但又保证程序执行的顺序是同步的，可以总结为以下这些特点</p>
 <ul>
 <li>只有三种状态，未完成，完成（<code>fulfilled</code>）和失败（<code>rejected</code>）</li>
@@ -209,14 +207,10 @@ var _hmt = _hmt || [];
 <li>状态转换只发生一次</li>
 <li>状态转换完成后就是外部 <strong>不可变</strong> 的值，我们可以安全地把这个值传递给第三方，并确信它不会被有意无意的修改（特别是对于多方查看同一个 <code>Promise</code> 状态转换的情况）</li>
 </ul>
-<p><code>Promise</code> 有一个 <code>then</code> 方法，<code>then</code> 方法可以接受 <code>3</code> 个函数作为参数</p>
-<p>前两个函数对应 <code>Promise</code> 的两种状态 <code>fulfilled</code>，<code>rejected</code> 的回调函数，第三个函数用于处理进度信息（<code>.then()</code> 总是返回一个新的 <code>Promise</code>）</p>
-<p>下面我们就来看看如何使用 <code>Promise</code> 来改写我们之前的读取文件的示例</p>
+<p><code>Promise</code> 有一个 <code>then</code> 方法，<code>then</code> 方法可以接受 <code>3</code> 个函数作为参数，前两个函数对应 <code>Promise</code> 的两种状态 <code>fulfilled</code>，<code>rejected</code> 的回调函数，第三个函数用于处理进度信息（<code>.then()</code> 总是返回一个新的 <code>Promise</code>），下面我们就来看看如何使用 <code>Promise</code> 来改写我们之前的读取文件的示例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">readFile</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">resolve, reject</span>) </span>&#123;</span><br><span class="line">    fs.readFile(<span class="hljs-string">'1.txt'</span>, <span class="hljs-string">'utf-8'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, data</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (err) &#123;</span><br><span class="line">        reject(err)</span><br><span class="line">      &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">        resolve(data)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">readFile().then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(data)</span><br><span class="line">&#125;).catch(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(err)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
-<p>我们将其封装成了一个 <code>readFile()</code> 的函数，在调用了之后使用 <code>then</code> 方法来接收它的成功和失败的回调，是不是看上去清爽很多</p>
-<p>其实关于 <code>Promise</code> 的最基本的概念就是这些，如果想要了解更多相关内容，可以参考 <a href="http://es6.ruanyifeng.com/#docs/promise" target="_blank" rel="noopener">《ECMAScript 6 入门》</a> 当中的 <code>Promise</code> 章节</p>
-<p>我们本章主要是来看一些 <code>Promise</code> 在实际应用上涉及到的一些内容</p>
+<p>我们将其封装成了一个 <code>readFile()</code> 的函数，在调用了之后使用 <code>then</code> 方法来接收它的成功和失败的回调，是不是看上去清爽很多，其实关于 <code>Promise</code> 的最基本的概念就是这些，如果想要了解更多相关内容，可以参考 <a href="http://es6.ruanyifeng.com/#docs/promise" target="_blank" rel="noopener">《ECMAScript 6 入门》</a> 当中的 <code>Promise</code> 章节，我们本章主要是来看一些 <code>Promise</code> 在实际应用上涉及到的一些内容</p>
 <h2 id="红绿灯问题"><a href="#红绿灯问题" class="headerlink" title="红绿灯问题"></a>红绿灯问题</h2><p>一个经典的题目，黄灯一秒亮一次，绿灯两秒亮一次，红灯三秒亮一次，如何让三个灯不断交替重复亮灯？，三个亮灯函数已经存在</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">red</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'red'</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">green</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'green'</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">yellow</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'yellow'</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -228,8 +222,8 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(code, millisec)</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li><code>code</code>     必需，要调用的函数后要执行的 <code>JavaScript</code> 代码串</li>
-<li><code>millisec</code> 必需，在执行代码前需等待的毫秒数</li>
+<li><code>code</code>，必需，要调用的函数后要执行的 <code>JavaScript</code> 代码串</li>
+<li><code>millisec</code>，必需，在执行代码前需等待的毫秒数</li>
 </ul>
 <blockquote>
 <p>需要注意的是，<code>setTimeout()</code> 只执行 <code>code</code> 一次，如果要多次调用，请使用 <code>setInterval()</code> 或者让 <code>code</code> 自身再次调用 <code>setTimeout()</code></p>
@@ -238,8 +232,7 @@ var _hmt = _hmt || [];
 <h2 id="Promise-和-setTimeout"><a href="#Promise-和-setTimeout" class="headerlink" title="Promise 和 setTimeout"></a>Promise 和 setTimeout</h2><p>先来看下面这个示例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">1</span>)</span><br><span class="line">&#125;, <span class="hljs-number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">resolve</span>) </span>&#123;</span><br><span class="line">  resolve()</span><br><span class="line">&#125;).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">2</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
-<p>执行结果依次为 <code>2</code> 和 <code>1</code>，至于为什么会这样，简单来说，<code>Promise</code> 的任务会在当前事件循环末尾中执行，而 <code>setTimeout</code> 中的任务是在下一次事件循环执行，所以 <code>Promise</code> 的执行顺序是高于 <code>setTimeout</code> 的</p>
-<p>至于原因，则是因为在 <code>ES6</code> 当中，有一个新的概念建立在 <strong>事件循环队列</strong> 之上，叫做 <strong>任务队列</strong></p>
+<p>执行结果依次为 <code>2</code> 和 <code>1</code>，至于为什么会这样，简单来说，<code>Promise</code> 的任务会在当前事件循环末尾中执行，而 <code>setTimeout</code> 中的任务是在下一次事件循环执行，所以 <code>Promise</code> 的执行顺序是高于 <code>setTimeout</code> 的，至于原因，则是因为在 <code>ES6</code> 当中，有一个新的概念建立在 <strong>事件循环队列</strong> 之上，叫做 <strong>任务队列</strong></p>
 <p>简单的理解就是，它是挂在事件循环队列的每个 <code>tick</code> 之后的一个队列，在事件循环的每个 <code>tick</code> 中，可能出现的异步动作不会导致一个完整的新事件添加到事件循环队列中，而会在当前 <code>tick</code> 的任务队列末尾添加一个项目（任务）</p>
 <p>一个任务可能引起更多任务被添加到同一个队列末尾，所以，理论上说，任务循环可能无限循环（一个任务总是添加另一个任务，以此类推），进而导致程序的无限循环，无法转移到下一个事件循环 <code>tick</code>，从概念上看，这和代码中的无限循环（类似 <code>while(true)</code>）的体验几乎是一样的</p>
 <h2 id="经典案例"><a href="#经典案例" class="headerlink" title="经典案例"></a>经典案例</h2><p>最后我们在来看一个综合案例加深一下印象</p>
@@ -253,23 +246,19 @@ var _hmt = _hmt || [];
 <li>如果修改成六这样，立即执行函数会立即执行，所以会立即输出 <code>0 - 4</code> 而不会延迟</li>
 <li>最后两个有些复杂，但是原理是类似的</li>
 </ol>
-<p>都被改写成了 <code>Promise</code>，但是首先需要明确的是，<code>Promise</code> 的任务会在当前事件循环末尾中执行，而 <code>setTimeout</code> 中的任务是在下一次事件循环执行</p>
-<p>首先是一个 <code>setTimeout</code>，所以其中的任务是会在下一次事件循环中才会执行，因此开始肯定不会输出 <code>1</code>，然后是一个 <code>Promise</code>，里面的函数是会立即执行的，所以首先输出 <code>2</code> 和 <code>3</code></p>
-<p>这里需要注意的是，<code>Promise</code> 的 <code>then</code> 应当会放到当前 <code>tick</code> 的最后，但是还是在当前 <code>tick</code> 中（而不是下一次事件循环），所以会先输出 <code>5</code> 然后才会输出 <code>4</code>，最后轮到下一个 <code>tick</code> 才会输出 <code>1</code>，所以结果为 <code>2 3 5 4 1</code></p>
-<p>至于最后一个，和第七个的原理是一样的，结果为 <code>2 3 5 4 1 6</code></p>
+<p>都被改写成了 <code>Promise</code>，但是首先需要明确的是，<code>Promise</code> 的任务会在当前事件循环末尾中执行，而 <code>setTimeout</code> 中的任务是在下一次事件循环执行，首先是一个 <code>setTimeout</code>，所以其中的任务是会在下一次事件循环中才会执行，因此开始肯定不会输出 <code>1</code>，然后是一个 <code>Promise</code>，里面的函数是会立即执行的，所以首先输出 <code>2</code> 和 <code>3</code></p>
+<p>这里需要注意的是，<code>Promise</code> 的 <code>then</code> 应当会放到当前 <code>tick</code> 的最后，但是还是在当前 <code>tick</code> 中（而不是下一次事件循环），所以会先输出 <code>5</code> 然后才会输出 <code>4</code>，最后轮到下一个 <code>tick</code> 才会输出 <code>1</code>，所以结果为 <code>2 3 5 4 1</code>，至于最后一个，和第七个的原理是一样的，结果为 <code>2 3 5 4 1 6</code></p>
 <p>关于 <code>Promise</code> 与 <code>setTimeout</code> 执行顺序的关系可以参考 <a href="https://www.zhihu.com/question/36972010" target="_blank" rel="noopener">Promise 的队列与 setTimeout 的队列有何关联？</a></p>
-<h2 id="Promises-A-规范"><a href="#Promises-A-规范" class="headerlink" title="Promises/A+ 规范"></a>Promises/A+ 规范</h2><p><code>Promise</code> 代表一个异步操作的最终结果，主要通过 <code>Promise</code> 的 <code>then</code> 方法订阅其最终结果的处理回调函数，和订阅因某原因无法成功获取最终结果的处理回调函数</p>
-<p>更对详细内容可以参考 <a href="https://promisesaplus.com/" target="_blank" rel="noopener">Promises/A+</a></p>
-<p>这里简单的总结一下 <code>A</code> 与 <code>A+</code> 的不同点</p>
+<h2 id="Promises-A-规范"><a href="#Promises-A-规范" class="headerlink" title="Promises/A+ 规范"></a>Promises/A+ 规范</h2><p><code>Promise</code> 代表一个异步操作的最终结果，主要通过 <code>Promise</code> 的 <code>then</code> 方法订阅其最终结果的处理回调函数，和订阅因某原因无法成功获取最终结果的处理回调函数，更对详细内容可以参考 <a href="https://promisesaplus.com/" target="_blank" rel="noopener">Promises/A+</a>，我们在这里只简单的总结一下 <code>A</code> 与 <code>A+</code> 的不同点</p>
 <ul>
 <li><code>A+</code> 规范通过术语 <code>thenable</code> 来区分 <code>Promise</code> 对象</li>
 <li><code>A+</code> 定义 <code>onFulfilled</code> 和 <code>onRejectd</code> 必须是作为函数来调用，而且调用过程必须是异步的</li>
 <li><code>A+</code> 严格定义了 <code>then</code> 方法链式调用时，<code>onFulfilled/onRejectd</code> 的调用顺序</li>
 </ul>
-<h2 id="Promises-当中的-finally"><a href="#Promises-当中的-finally" class="headerlink" title="Promises 当中的 finally"></a>Promises 当中的 finally</h2><p>今天看到了一个问题，说是怎么让一个函数无论 <code>Promise</code> 对象成功和失败都能被调用？在这种情况下，就要用到 <code>finally()</code> 这个方法了</p>
-<p><code>finally()</code> 方法返回一个 <code>Promise</code>，在 <code>Promise</code> 执行结束时，无论结果是 <code>fulfilled</code> 或者是 <code>rejected</code>，在执行 <code>then()</code> 和 <code>catch()</code> 后，都会执行 <code>finally</code> 指定的回调函数</p>
-<p>这为指定执行完 <code>Promise</code> 后，无论结果是 <code>fulfilled</code> 还是 <code>rejected</code> 都需要执行的代码提供了一种方式，避免同样的语句需要在 <code>then()</code> 和 <code>catch()</code> 中各写一次的情况</p>
+<h2 id="Promises-当中的-finally"><a href="#Promises-当中的-finally" class="headerlink" title="Promises 当中的 finally"></a>Promises 当中的 finally</h2><p>今天看到了一个问题，说是怎么让一个函数无论 <code>Promise</code> 对象成功和失败都能被调用？在这种情况下，就要用到 <code>finally()</code> 这个方法了，<code>finally()</code> 方法返回一个 <code>Promise</code>，在 <code>Promise</code> 执行结束时，无论结果是 <code>fulfilled</code> 或者是 <code>rejected</code>，在执行 <code>then()</code> 和 <code>catch()</code> 后，都会执行 <code>finally</code> 指定的回调函数，这为指定执行完 <code>Promise</code> 后，无论结果是 <code>fulfilled</code> 还是 <code>rejected</code> 都需要执行的代码提供了一种方式，避免同样的语句需要在 <code>then()</code> 和 <code>catch()</code> 中各写一次的情况</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-string">'success'</span>).then(<span class="hljs-function"><span class="hljs-params">result</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'then: '</span>, result)</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve(result)</span><br><span class="line">&#125;).catch(<span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.error(<span class="hljs-string">'catch: '</span>, err)</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.reject(err)</span><br><span class="line">&#125;).finally(<span class="hljs-function"><span class="hljs-params">result</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.info(<span class="hljs-string">'finally: '</span>, result)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// then: success</span></span><br><span class="line"><span class="hljs-comment">// finally: undefined</span></span><br><span class="line"><span class="hljs-comment">// Promise &#123;&lt;resolved&gt;: 'success'&#125;</span></span><br></pre></td></tr></table></figure>
+
+
         </div>
         
         <div class="level is-size-7 is-uppercase">
@@ -379,7 +368,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -492,7 +481,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -508,7 +497,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -516,7 +505,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -579,35 +568,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -617,7 +587,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -625,8 +633,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -636,7 +644,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -644,29 +652,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -822,7 +811,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -987,7 +976,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1042,7 +1031,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1231,7 +1220,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1245,14 +1234,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

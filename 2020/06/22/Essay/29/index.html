@@ -16,7 +16,7 @@
 <meta property="og:description" content="之前我们在 查找算法 的章节当中介绍了一些比较常见的查找算法，比如对于数组 a[]，如果我们要在其中查找 key 关键字的记录，可以使用顺序表查找的方式，一个一个挨着排查，也可以使用有序表的一些查找方式，比如二分，插值等 但是如果序列是无序的呢，针对于无序序列，我们之前也介绍过了 二叉排序树 的方式来进行查找，但是二叉排序树的生成过程比较复杂，那么有没有一种针对不太复杂的无序序列，使用起来更为简便">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/29.jpg">
-<meta property="og:updated_time" content="2020-08-02T13:25:06.565Z">
+<meta property="og:updated_time" content="2020-08-25T03:04:01.366Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="散列表查找">
 <meta name="twitter:description" content="之前我们在 查找算法 的章节当中介绍了一些比较常见的查找算法，比如对于数组 a[]，如果我们要在其中查找 key 关键字的记录，可以使用顺序表查找的方式，一个一个挨着排查，也可以使用有序表的一些查找方式，比如二分，插值等 但是如果序列是无序的呢，针对于无序序列，我们之前也介绍过了 二叉排序树 的方式来进行查找，但是二叉排序树的生成过程比较复杂，那么有没有一种针对不太复杂的无序序列，使用起来更为简便">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    27 分钟 读完 (大约 4098 个字)
+                    27 分钟 读完 (大约 4101 个字)
                 </span>
                 
                 
@@ -208,8 +208,7 @@ var _hmt = _hmt || [];
 <h4 id="数字分析法"><a href="#数字分析法" class="headerlink" title="数字分析法"></a>数字分析法</h4><p>数字分析法通常适合处理 <strong>关键字位数比较大</strong> 的情况，例如我们现在要存储某家公司员工登记表，如果用手机号作为关键字，那么我们发现 <strong>抽取</strong> 后面的四位数字作为散列地址是不错的选择</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/29-03.png" alt></p>
 <h4 id="平方取中法"><a href="#平方取中法" class="headerlink" title="平方取中法"></a>平方取中法</h4><p>平方取中法是将 <strong>关键字平方</strong> 之后取中间若干位数字作为散列地址，比如 <code>1234^2 = 1522756</code> 的，所以我们可以考虑使用 <code>227</code> 来作为关键字</p>
-<h4 id="折叠法"><a href="#折叠法" class="headerlink" title="折叠法"></a>折叠法</h4><p>折叠法是将关键字从左到右分割成位数相等的几部分，然后将这几部分叠加求和，并按散列表表长取后几位作为散列地址</p>
-<p>比如我们的关键字是 <code>9876543210</code> 的话，我们就可以将其分割成为相等的几部分（位数如果不够可以使用 <code>0</code> 来进行填充），也就是 <code>987，654，321，000</code>，然后把这几部分进行相加，它们的结果是 <code>1962</code>，所以我们就可以采用 <code>962</code> 来作为关键字</p>
+<h4 id="折叠法"><a href="#折叠法" class="headerlink" title="折叠法"></a>折叠法</h4><p>折叠法是将关键字从左到右分割成位数相等的几部分，然后将这几部分叠加求和，并按散列表表长取后几位作为散列地址，比如我们的关键字是 <code>9876543210</code> 的话，我们就可以将其分割成为相等的几部分（位数如果不够可以使用 <code>0</code> 来进行填充），也就是 <code>987，654，321，000</code>，然后把这几部分进行相加，它们的结果是 <code>1962</code>，所以我们就可以采用 <code>962</code> 来作为关键字</p>
 <h4 id="除留余数法"><a href="#除留余数法" class="headerlink" title="除留余数法"></a>除留余数法</h4><p>需要注意的是，这个方法也是 <strong>最常用</strong> 的构造散列函数方法，对于散列表长为 <code>m</code> 的散列函数计算公式为</p>
 <figure class="highlight console hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f(key) = key mod p（p &lt;= m，mod 是取模的意思）</span><br></pre></td></tr></table></figure>
 
@@ -259,11 +258,12 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">put</span>(<span class="hljs-params">data</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> pos = <span class="hljs-keyword">this</span>.simpleHash(data);</span><br><span class="line">  <span class="hljs-keyword">this</span>.table[pos] = data</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">showDistro</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> n = <span class="hljs-number">0</span></span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.table.length; ++i) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.table[i] != <span class="hljs-literal">undefined</span>) &#123;</span><br><span class="line">      print(i + <span class="hljs-string">': '</span> + <span class="hljs-keyword">this</span>.table[i])</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>但是使用比较简单的散列函数时，它的数据并不是均匀分布的，而是向数组的两端集中，并且数据很大概率将会产生碰撞而不会全部显示出来，所以这里我们也可以采用另外一种方式，那就是 <strong>霍纳算法</strong></p>
+<blockquote>
 <p>霍纳算法是一种比较好的散列函数算法，计算时仍然先计算字符串中各字符的 <code>ASCII</code> 码值，不过求和时每次要乘以一个质数，为了避免碰撞，首先要确保散列表中用来存储数据的数组其大小是个质数，这一点和计算散列值时使用的取余运算有关，数组的长度应该在 <code>100</code> 以上，这是为了让数据在散列表中分布得更加均匀</p>
+</blockquote>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">betterHash</span>(<span class="hljs-params">string, arr</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 质数</span></span><br><span class="line">  <span class="hljs-keyword">const</span> H = <span class="hljs-number">37</span></span><br><span class="line">  <span class="hljs-keyword">var</span> total = <span class="hljs-number">0</span></span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; string.length; ++i) &#123;</span><br><span class="line">    total += H * total + string.charCodeAt(i)</span><br><span class="line">  &#125;</span><br><span class="line">  total = total % arr.length</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-built_in">parseInt</span>(total)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 接受键和数据作为参数的 put() 方法</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">put</span>(<span class="hljs-params">key, data</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 使用霍纳算法</span></span><br><span class="line">  <span class="hljs-keyword">var</span> pos = <span class="hljs-keyword">this</span>.betterHash(key)</span><br><span class="line">  <span class="hljs-keyword">this</span>.table[pos] = data</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 读取存储在散列表中的数据</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">get</span>(<span class="hljs-params">key</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.table[<span class="hljs-keyword">this</span>.betterHash(key)]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="碰撞处理"><a href="#碰撞处理" class="headerlink" title="碰撞处理"></a>碰撞处理</h4><p>当散列函数对于不同的输入产生同样的散列值时，就产生了碰撞，这里我们主要来看两种碰撞解决办法 <strong>开链法</strong> 和 <strong>线性探测法</strong></p>
-<p>关于开链法，当碰撞发生时，仍然将键存储到通过散列算法产生的索引位置上，但实际上每个数组元素又是一个新的数据结构，比如另一个数组，这样就能存储多个键了（即用二维数组实现）</p>
+<h4 id="碰撞处理"><a href="#碰撞处理" class="headerlink" title="碰撞处理"></a>碰撞处理</h4><p>当散列函数对于不同的输入产生同样的散列值时，就产生了碰撞，这里我们主要来看两种碰撞解决办法 <strong>开链法</strong> 和 <strong>线性探测法</strong>，关于开链法，当碰撞发生时，仍然将键存储到通过散列算法产生的索引位置上，但实际上每个数组元素又是一个新的数据结构，比如另一个数组，这样就能存储多个键了（即用二维数组实现）</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/29-12.png" alt></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 创建二维数组</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">buildChains</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-keyword">this</span>.table.length; ++i) &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.table[i] = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Array</span>()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -273,8 +273,7 @@ var _hmt = _hmt || [];
 <p>新的 <code>get()</code> 方法先对键值散列，根据散列后的值找到散列表中相应的位置，然后搜索该位置上的链，直到找到键值，如果找到，就将紧跟在键值后面的数据返回</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">get</span>(<span class="hljs-params">key</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> index = <span class="hljs-number">0</span></span><br><span class="line">  <span class="hljs-keyword">var</span> pos = <span class="hljs-keyword">this</span>.betterHash(key)</span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.table[pos][index] == key) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.table[pos][index + <span class="hljs-number">1</span>]</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">while</span> (<span class="hljs-keyword">this</span>.table[pos][index] != key) &#123;</span><br><span class="line">      index += <span class="hljs-number">2</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.table[pos][index + <span class="hljs-number">1</span>]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>最后我们再来看下 <strong>线性探测法</strong>，线性探测法隶属于一种更一般化的散列技术，也就是 <strong>开放寻址散列</strong>，当发生碰撞时，线性探测法检查散列表中的下一个位置是否为空，如果为空，就将数据存入该位置，如果不为空，则继续检查下一个位置，直到找到一个空的位置为止</p>
-<p>关于选择哪种实现方式</p>
+<p>最后我们再来看下 <strong>线性探测法</strong>，线性探测法隶属于一种更一般化的散列技术，也就是 <strong>开放寻址散列</strong>，当发生碰撞时，线性探测法检查散列表中的下一个位置是否为空，如果为空，就将数据存入该位置，如果不为空，则继续检查下一个位置，直到找到一个空的位置为止，关于选择哪种实现方式</p>
 <ul>
 <li>当存储数据使用的数组特别大时，选择线性探测法要比开链法好</li>
 <li>如果数组的大小是待存储数据个数的 <code>1.5</code> 倍，那就使用开链法</li>
@@ -393,7 +392,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -546,7 +545,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -562,7 +561,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -570,7 +569,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -633,35 +632,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -671,7 +651,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -679,8 +697,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -690,7 +708,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -698,29 +716,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -876,7 +875,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1041,7 +1040,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1096,7 +1095,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1285,7 +1284,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1299,14 +1298,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

@@ -16,7 +16,7 @@
 <meta property="og:description" content="今天在网上看到的一道面试题，感觉可以从中引申出不少问题，所以在此特意记录一下">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/38.jpg">
-<meta property="og:updated_time" content="2020-07-05T06:57:56.808Z">
+<meta property="og:updated_time" content="2020-08-25T07:35:00.758Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在列表中插入 3 个，30 个，300 个 li，并绑定事件">
 <meta name="twitter:description" content="今天在网上看到的一道面试题，感觉可以从中引申出不少问题，所以在此特意记录一下">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    5 分钟 读完 (大约 720 个字)
+                    5 分钟 读完 (大约 725 个字)
                 </span>
                 
                 
@@ -193,22 +193,19 @@ var _hmt = _hmt || [];
 <h2 id="动态插入-3-个-li，并且绑定事件"><a href="#动态插入-3-个-li，并且绑定事件" class="headerlink" title="动态插入 3 个 li，并且绑定事件"></a>动态插入 3 个 li，并且绑定事件</h2><p>题目如标题一样，第一感觉，我们可以直接使用循环创建三个 <code>li</code> 元素，并且绑定事件之后插入到 <code>body</code> 当中</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">3</span>; i++) &#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> item = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'li'</span>)</span><br><span class="line">  item.innerText = i + <span class="hljs-number">1</span></span><br><span class="line">  item.addEventListener(<span class="hljs-string">'click'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    alert(<span class="hljs-keyword">this</span>.innerText)</span><br><span class="line">  &#125;, <span class="hljs-literal">false</span>)</span><br><span class="line">  <span class="hljs-built_in">document</span>.body.appendChild(item)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="动态插入-30-个-li，并且绑定事件"><a href="#动态插入-30-个-li，并且绑定事件" class="headerlink" title="动态插入 30 个 li，并且绑定事件"></a>动态插入 30 个 li，并且绑定事件</h2><p>现在变成了插入 <code>30</code> 个 <code>li</code>，数据量不算太大，用 <code>for</code> 循环直接生成勉强也可以完成任务</p>
-<p>这个时候我们可以针对绑定事件的方式稍微优化一下，即将绑定方式换成使用事件委托的方式，而不是在绑定到 <code>li</code> 之上</p>
+<h2 id="动态插入-30-个-li，并且绑定事件"><a href="#动态插入-30-个-li，并且绑定事件" class="headerlink" title="动态插入 30 个 li，并且绑定事件"></a>动态插入 30 个 li，并且绑定事件</h2><p>现在变成了插入 <code>30</code> 个 <code>li</code>，数据量不算太大，用 <code>for</code> 循环直接生成勉强也可以完成任务，这个时候我们可以针对绑定事件的方式稍微优化一下，即将绑定方式换成使用事件委托的方式，而不是在绑定到 <code>li</code> 之上</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> el = <span class="hljs-built_in">document</span>.body</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">30</span>; i++) &#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> item = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'li'</span>)</span><br><span class="line">  item.innerText = i + <span class="hljs-number">1</span></span><br><span class="line">  el.appendChild(item)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">el.addEventListener(<span class="hljs-string">'click'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (e.target.tagName === <span class="hljs-string">'LI'</span>) &#123;</span><br><span class="line">    alert(e.target.innerHTML)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;, <span class="hljs-literal">false</span>)</span><br></pre></td></tr></table></figure>
 
-<h2 id="动态插入-300-个-li，并且绑定事件"><a href="#动态插入-300-个-li，并且绑定事件" class="headerlink" title="动态插入 300 个 li，并且绑定事件"></a>动态插入 300 个 li，并且绑定事件</h2><p>当数据量变的很大的时候，如果依然使用 <code>for</code> 循环一次性生成的话，可能会引起性能上面的问题，这个时候就可以采用 <code>documentFragment + requestAnimationFrame</code> 的方式来分批次插入数据</p>
-<p>主要目的是减少 <code>DOM</code> 操作次数、缩短循环时间，每次插入的时机是在页面重新渲染之前</p>
+<h2 id="动态插入-300-个-li，并且绑定事件"><a href="#动态插入-300-个-li，并且绑定事件" class="headerlink" title="动态插入 300 个 li，并且绑定事件"></a>动态插入 300 个 li，并且绑定事件</h2><p>当数据量变的很大的时候，如果依然使用 <code>for</code> 循环一次性生成的话，可能会引起性能上面的问题，这个时候就可以采用 <code>documentFragment + requestAnimationFrame</code> 的方式来分批次插入数据，主要目的是减少 <code>DOM</code> 操作次数、缩短循环时间，每次插入的时机是在页面重新渲染之前</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 获取容器元素</span></span><br><span class="line"><span class="hljs-keyword">const</span> el = <span class="hljs-built_in">document</span>.body</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 生成总数</span></span><br><span class="line"><span class="hljs-keyword">const</span> total = <span class="hljs-number">300</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 每次插入多少</span></span><br><span class="line"><span class="hljs-keyword">const</span> listSize = <span class="hljs-number">4</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 分多少次插入</span></span><br><span class="line"><span class="hljs-keyword">const</span> listCount = total / listSize</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 已经完成的批次</span></span><br><span class="line"><span class="hljs-keyword">let</span> listDone = <span class="hljs-number">0</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">appendItems</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> fragment = <span class="hljs-built_in">document</span>.createDocumentFragment()</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; listSize; i++) &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> item = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'li'</span>)</span><br><span class="line">    item.innerText = (listSize * listDone + i) + <span class="hljs-number">1</span></span><br><span class="line">    fragment.appendChild(item)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 每批次只修改一次 DOM</span></span><br><span class="line">  el.appendChild(fragment)</span><br><span class="line"></span><br><span class="line">  listDone += <span class="hljs-number">1</span></span><br><span class="line">  listAppend()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">listAppend</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (listDone &lt; listCount) &#123;</span><br><span class="line">    <span class="hljs-comment">// 这个的作用可以见文章下方</span></span><br><span class="line">    <span class="hljs-built_in">window</span>.requestAnimationFrame(appendItems)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 初始化</span></span><br><span class="line">listAppend()</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 事件绑定</span></span><br><span class="line">el.addEventListener(<span class="hljs-string">'click'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (e.target.tagName.toUpperCase() === <span class="hljs-string">'LI'</span>) &#123;</span><br><span class="line">    alert(e.target.innerHTML)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;, <span class="hljs-literal">false</span>)</span><br></pre></td></tr></table></figure>
 
-<h2 id="window-requestAnimationFrame"><a href="#window-requestAnimationFrame" class="headerlink" title="window.requestAnimationFrame()"></a>window.requestAnimationFrame()</h2><p><code>requestAnimationFrame</code> 是浏览器用于定时循环操作的一个接口，类似于 <code>setTimeout</code>，主要用途是按帧对网页进行重绘</p>
-<p>设置这个 <code>API</code> 的目的是为了让各种网页动画效果能够有一个统一的刷新机制，从而节省系统资源，提高系统性能，改善视觉效果</p>
-<p>代码中使用这个 <code>API</code>，就是告诉浏览器希望执行一个动画，让浏览器在下一个动画帧安排一次网页重绘</p>
-<p>使用一个回调函数作为参数，这个回调函数会在浏览器重绘之前调用，语法如下</p>
+<h2 id="window-requestAnimationFrame"><a href="#window-requestAnimationFrame" class="headerlink" title="window.requestAnimationFrame()"></a>window.requestAnimationFrame()</h2><p><code>requestAnimationFrame</code> 是浏览器用于定时循环操作的一个接口，类似于 <code>setTimeout</code>，主要用途是按帧对网页进行重绘，设置这个 <code>API</code> 的目的是为了让各种网页动画效果能够有一个统一的刷新机制，从而节省系统资源，提高系统性能，改善视觉效果，代码中使用这个 <code>API</code>，就是告诉浏览器希望执行一个动画，让浏览器在下一个动画帧安排一次网页重绘，使用一个回调函数作为参数，这个回调函数会在浏览器重绘之前调用，语法如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id = <span class="hljs-built_in">window</span>.requestAnimationFrame(callback)</span><br></pre></td></tr></table></figure>
 
 <p>它会返回一个 <code>id</code> 结果，主要是用于传递给 <code>window.cancelAnimationFrame(id)</code> 来取消重绘</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame" target="_blank" rel="noopener">window.requestAnimationFrame</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame" target="_blank" rel="noopener">window.requestAnimationFrame</a></li>
+</ul>
 
         </div>
         
@@ -319,7 +316,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -420,7 +417,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -436,7 +433,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -444,7 +441,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -507,35 +504,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -545,7 +523,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -553,8 +569,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -564,7 +580,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -572,29 +588,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -750,7 +747,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -915,7 +912,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -970,7 +967,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1159,7 +1156,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1173,14 +1170,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

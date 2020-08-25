@@ -16,7 +16,7 @@
 <meta property="og:description" content="本篇主要介绍 Angular 当中的动态加载相关内容">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg">
-<meta property="og:updated_time" content="2020-07-18T14:54:33.901Z">
+<meta property="og:updated_time" content="2020-08-24T09:51:51.572Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular 中的动态加载">
 <meta name="twitter:description" content="本篇主要介绍 Angular 当中的动态加载相关内容">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    20 分钟 读完 (大约 3046 个字)
+                    20 分钟 读完 (大约 3040 个字)
                 </span>
                 
                 
@@ -221,17 +221,14 @@ var _hmt = _hmt || [];
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">@NgModule</span>(&#123;</span><br><span class="line">  declarations: [</span><br><span class="line">    AppComponent,</span><br><span class="line">    DynamicCompComponent,</span><br><span class="line">    Child11Component</span><br><span class="line">  ],</span><br><span class="line">  imports: [</span><br><span class="line">    BrowserModule</span><br><span class="line">  ],</span><br><span class="line">  providers: [],</span><br><span class="line">  bootstrap: [AppComponent],</span><br><span class="line">  entryComponents: [Child11Component]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppModule &#123; &#125;</span><br></pre></td></tr></table></figure>
 
 <p>也就是说对于此处声明的组件，<code>Angular</code> 都会创建一个 <code>ComponentFactory</code> 并将其存储在 <code>ComponentFactoryResolve</code> 中，也就是动态加载必须的步骤</p>
-<h2 id="动态加载还未创建的组件"><a href="#动态加载还未创建的组件" class="headerlink" title="动态加载还未创建的组件"></a>动态加载还未创建的组件</h2><p>在上面我们实现了对于已经创建好的组件的动态加载，那么如果是还未创建的组件呢？</p>
-<p>其实简单来说这种情况就是我们需要 <strong>动态创建不存在的组件</strong> 而不是已经声明的组件，不过这种情况一般很少遇见，但是如果遇到可以考虑使用 <code>Compiler</code>，它作用就是用于在运行的时候运行 <code>Angular</code> 编译器来创建 <code>ComponentFactory</code> 的服务，然后可以使用它来创建和呈现组件实例</p>
+<h2 id="动态加载还未创建的组件"><a href="#动态加载还未创建的组件" class="headerlink" title="动态加载还未创建的组件"></a>动态加载还未创建的组件</h2><p>在上面我们实现了对于已经创建好的组件的动态加载，那么如果是还未创建的组件呢？其实简单来说这种情况就是我们需要 <strong>动态创建不存在的组件</strong> 而不是已经声明的组件，不过这种情况一般很少遇见，但是如果遇到可以考虑使用 <code>Compiler</code>，它作用就是用于在运行的时候运行 <code>Angular</code> 编译器来创建 <code>ComponentFactory</code> 的服务，然后可以使用它来创建和呈现组件实例</p>
 <p>我们知道，容器创建和呈现组件的函数需要一个 <code>ComponentFactory</code>，而 <code>Compiler</code> 能够在运行的时候动态创建一个 <code>ComponentFactory</code>，而有了 <code>ComponentFactory</code> 以后，我们就可以使用上面的方式来进行动态加载了，下面是一个简单的示例</p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 首先引入 Compiler</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; Compiler &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 然后在构造函数当中进行注入</span></span><br><span class="line"><span class="hljs-keyword">constructor</span>(<span class="hljs-params"></span></span><br><span class="line"><span class="hljs-params">  <span class="hljs-keyword">private</span> cp: Compiler</span></span><br><span class="line"><span class="hljs-params"></span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 在创建的时候就不再是指定组件了而是模块，容器的呈现还是一样，直接 createComponent</span></span><br><span class="line"><span class="hljs-keyword">this</span>.comp1 = <span class="hljs-keyword">this</span>.dyncomp.createComponent(<span class="hljs-keyword">this</span>.createModule())</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 新增一个 createModule 函数</span></span><br><span class="line">createModule() &#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 通过 Component 和 NgModule 修饰器动态创建新的组件和模块</span></span><br><span class="line">  <span class="hljs-meta">@Component</span>(&#123;</span><br><span class="line">    template: <span class="hljs-string">'动态组件'</span></span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">class</span> DynamicCom &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-meta">@NgModule</span>(&#123;</span><br><span class="line">    declarations: [</span><br><span class="line">      DynamicCom</span><br><span class="line">    ]</span><br><span class="line">  &#125;)</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">class</span> DynamicModule &#123; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 然后调用 Compiler 的 compileModuleAndAllComponentsSync 方法获取一个新的 ComponentFactory</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.cp.compileModuleAndAllComponentsSync(DynamicModule).componentFactories</span><br><span class="line">    .find(<span class="hljs-function"><span class="hljs-params">comFac</span> =&gt;</span> comFac.componentType === DynamicCom)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="引申出来的问题"><a href="#引申出来的问题" class="headerlink" title="引申出来的问题"></a>引申出来的问题</h2><p>在实际开发过程当中，通常的情况下我们不可能仅仅创建了一个动态组件就丢在那里不管它了，一般来说都会有数据的传递，比如要进行更新之类的操作，那么这里就可能会遇到在创建动态组件后，调用 <code>componentRef.instance</code> 后发现不能更新界面数据</p>
-<p>下面就是我们尝试在动态组件创建了以后，使用动态组件的实例 <code>componentRef.instance</code> 去改变动态组件的属性，如下</p>
+<h2 id="引申出来的问题"><a href="#引申出来的问题" class="headerlink" title="引申出来的问题"></a>引申出来的问题</h2><p>在实际开发过程当中，通常的情况下我们不可能仅仅创建了一个动态组件就丢在那里不管它了，一般来说都会有数据的传递，比如要进行更新之类的操作，那么这里就可能会遇到在创建动态组件后，调用 <code>componentRef.instance</code> 后发现不能更新界面数据，下面就是我们尝试在动态组件创建了以后，使用动态组件的实例 <code>componentRef.instance</code> 去改变动态组件的属性，如下</p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">componentRef.instance.name = <span class="hljs-string">'123'</span></span><br></pre></td></tr></table></figure>
 
-<p>运行以后可以发现，界面上绑定的 <code>name</code> 属性并不会更新，但是控制台输出发现其中的 <code>name</code> 已经变更，并且如果是在动态组件当中使用函数，可以改变 <code>name</code> 属性的值，并且 <code>name</code> 属性也是可是实时更新，但是如果使用的是 <code>componentRef</code>，这样数据实时更新就不会起作用了</p>
-<p>在这种情况下，有两种解决方法，一种是使用 <code>setTimeout</code>，可以解决问题，但是并不怎么优雅</p>
+<p>运行以后可以发现，界面上绑定的 <code>name</code> 属性并不会更新，但是控制台输出发现其中的 <code>name</code> 已经变更，并且如果是在动态组件当中使用函数，可以改变 <code>name</code> 属性的值，并且 <code>name</code> 属性也是可是实时更新，但是如果使用的是 <code>componentRef</code>，这样数据实时更新就不会起作用了，在这种情况下，有两种解决方法，一种是使用 <code>setTimeout</code>，可以解决问题，但是并不怎么优雅</p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Component</span>(&#123;</span><br><span class="line">  template: <span class="hljs-string">`</span></span><br><span class="line"><span class="hljs-string">    我是测试模板 &#123;&#123;data&#125;&#125;</span></span><br><span class="line"><span class="hljs-string">  `</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> CustomComponent <span class="hljs-keyword">implements</span> OnInit &#123;</span><br><span class="line">  <span class="hljs-meta">@Input</span>() <span class="hljs-keyword">public</span> data: <span class="hljs-built_in">string</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">public</span> ngOnInit() &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.data)</span><br><span class="line">    setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.data)</span><br><span class="line">    &#125;, <span class="hljs-number">3000</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ----------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> HomeComponent <span class="hljs-keyword">implements</span> OnInit &#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"></span></span><br><span class="line"><span class="hljs-params">    <span class="hljs-keyword">private</span> viewContainerRef: ViewContainerRef,</span></span><br><span class="line"><span class="hljs-params">    <span class="hljs-keyword">private</span> cfr: ComponentFactoryResolver</span></span><br><span class="line"><span class="hljs-params">  </span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">public</span> ngOnInit() &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> factory = <span class="hljs-keyword">this</span>.cfr.resolveComponentFactory(CustomComponent)</span><br><span class="line">    <span class="hljs-keyword">let</span> componentRef = <span class="hljs-keyword">this</span>.viewContainerRef.createComponent(factory)</span><br><span class="line">    componentRef.instance.data = <span class="hljs-string">'hello'</span></span><br><span class="line">    setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      componentRef.instance.data = <span class="hljs-string">'bye'</span></span><br><span class="line">    &#125;, <span class="hljs-number">2000</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>第二种解决方式可以采用官方提供的 <code>changeDetectorRef.markForCheck()</code> 来解决这个问题，即手动去触发检测更新，详细见 <a href="https://angular.io/api/core/ChangeDetectorRef" target="_blank" rel="noopener">ChangeDetectorRef</a></p>
@@ -242,26 +239,22 @@ var _hmt = _hmt || [];
 <li>如何与动态添加后的组件进行通信</li>
 </ul>
 <p>下面我们就一个一个来进行了解</p>
-<h2 id="使用指令来指定宿主对象"><a href="#使用指令来指定宿主对象" class="headerlink" title="使用指令来指定宿主对象"></a>使用指令来指定宿主对象</h2><p>在 <code>Angular</code> 中，我们通常需要一个宿主（<code>Host</code>）来给动态加载的组件提供一个容器，这个宿主在 <code>Angular</code> 中就是 <code>ng-template</code>，我们需要找到组件中的容器，并且将目标组件加载到这个宿主中，就需要通过创建一个指令（<code>Directive</code>）来对容器进行标记</p>
-<p>先来看看模版文件</p>
+<h2 id="使用指令来指定宿主对象"><a href="#使用指令来指定宿主对象" class="headerlink" title="使用指令来指定宿主对象"></a>使用指令来指定宿主对象</h2><p>在 <code>Angular</code> 中，我们通常需要一个宿主（<code>Host</code>）来给动态加载的组件提供一个容器，这个宿主在 <code>Angular</code> 中就是 <code>ng-template</code>，我们需要找到组件中的容器，并且将目标组件加载到这个宿主中，就需要通过创建一个指令（<code>Directive</code>）来对容器进行标记，先来看看模版文件</p>
 <figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">&lt;!-- app.component.html --&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span></span><br><span class="line">  &#123;&#123;title&#125;&#125;</span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span> <span class="hljs-attr">dl-host</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">ng-template</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>然后我们添加一个用于标记这个属性的指令 <code>dl-host.directive</code></p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// dl-host.directive.ts</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; Directive, ViewContainerRef &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">@Directive</span>(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'[dl-host]'</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> DlHostDirective &#123;</span><br><span class="line">  <span class="hljs-comment">// 在这里注入了一个 ViewContainerRef 的服务</span></span><br><span class="line">  <span class="hljs-comment">// 它的作用就是为组件提供容器，并且提供了一系列的管理这些组件的方法</span></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">public</span> viewContainerRef: ViewContainerRef</span>) &#123; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这样一来，我们就可以在 <code>app.component</code> 中通过 <code>@ViewChild</code> 获取到 <code>dl-host</code> 的实例，因此进而获取到其中的 <code>ViewContainerRef</code>，另外，我们还需要为 <code>ViewContainerRef</code> 提供需要创建组件 <code>A</code> 的工厂，所以还需要在 <code>app.component</code> 中注入一个工厂生成器 <code>ComponentFactoryResolver</code>，并且在 <code>app.module</code> 中将需要生成的组件注册为一个 <code>@NgModule.entryComponent</code></p>
-<p>关于 <code>@NgModule.entryComponent</code> 可以参考之前的介绍</p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// app.comonent.ts</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; Component, ViewChild, ComponentFactoryResolver &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; DlHostDirective &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./dl-host.directive'</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; AComponent &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./a/a.component'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'app-root'</span>,</span><br><span class="line">  templateUrl: <span class="hljs-string">'./app.component.html'</span>,</span><br><span class="line">  styleUrls: [<span class="hljs-string">'./app.component.css'</span>]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent &#123;</span><br><span class="line"></span><br><span class="line">  title = <span class="hljs-string">'app works!'</span></span><br><span class="line">  <span class="hljs-meta">@ViewChild</span>(DlHostDirective) dlHost: DlHostDirective</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> componentFactoryResolver: ComponentFactoryResolver</span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line">  ngAfterViewInit() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.dlHost.viewContainerRef.createComponent(</span><br><span class="line">      <span class="hljs-keyword">this</span>.componentFactoryResolver.resolveComponentFactory(AComponent)</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>下面是模块内容</p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// app.module.ts</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; BrowserModule &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser'</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; NgModule &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; AppComponent &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.component'</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; AComponent &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./a/a.component'</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; DlHostDirective &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./dl-host.directive'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">@NgModule</span>(&#123;</span><br><span class="line">  declarations: [AppComponent, AComponent, DlHostDirective],</span><br><span class="line">  imports: [BrowserModule, FormsModule, HttpModule],</span><br><span class="line">  <span class="hljs-comment">// 动态加载的组件需要在这里进行注册</span></span><br><span class="line">  entryComponents: [AComponent],</span><br><span class="line">  providers: [],</span><br><span class="line">  bootstrap: [AppComponent]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppModule &#123; &#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="如何动态添加宿主"><a href="#如何动态添加宿主" class="headerlink" title="如何动态添加宿主"></a>如何动态添加宿主</h2><p>我们不可能在每一个需要动态添加组件的时候提供一个宿主组件，因为我们甚至都不会知道一个组件会在哪儿被创建出来并且被添加到页面中，就比如一个模态窗口，你希望在你需要使用的时候就能打开，而并非受限与宿主，在这种需求的前提下，我们就需要动态添加一个宿主到组件中，所以现在我们可以将 <code>app.component</code> 作为宿主的载体，但是并不提供宿主的显式声明，而是由我们动态去生成宿主</p>
-<p>先将 <code>app.component</code> 还原</p>
+<h2 id="如何动态添加宿主"><a href="#如何动态添加宿主" class="headerlink" title="如何动态添加宿主"></a>如何动态添加宿主</h2><p>我们不可能在每一个需要动态添加组件的时候提供一个宿主组件，因为我们甚至都不会知道一个组件会在哪儿被创建出来并且被添加到页面中，就比如一个模态窗口，你希望在你需要使用的时候就能打开，而并非受限与宿主，在这种需求的前提下，我们就需要动态添加一个宿主到组件中，所以现在我们可以将 <code>app.component</code> 作为宿主的载体，但是并不提供宿主的显式声明，而是由我们动态去生成宿主，我们先将 <code>app.component</code> 还原</p>
 <figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">&lt;!-- app.component.html --&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span></span><br><span class="line">  &#123;&#123;title&#125;&#125;</span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>然后我们需要往 <code>DOM</code> 中注入一个节点，例如一个 <code>div</code> 节点作为页面上的宿主，再通过工厂生成一个 <code>AComponent</code> 并将这个组件的根节点添加到宿主上</p>
-<p>在这种情况下我们需要通过工厂直接创建组件，而不是在使用 <code>ComponentContanerRef</code></p>
+<p>然后我们需要往 <code>DOM</code> 中注入一个节点，例如一个 <code>div</code> 节点作为页面上的宿主，再通过工厂生成一个 <code>AComponent</code> 并将这个组件的根节点添加到宿主上，在这种情况下我们需要通过工厂直接创建组件，而不是在使用 <code>ComponentContanerRef</code></p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// app.comonent.ts</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123;</span><br><span class="line">  Component, ComponentFactoryResolver, Injector, ElementRef,</span><br><span class="line">  ComponentRef, AfterViewInit, OnDestroy</span><br><span class="line">&#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; AComponent &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./a/a.component'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'app-root'</span>,</span><br><span class="line">  templateUrl: <span class="hljs-string">'./app.component.html'</span>,</span><br><span class="line">  styleUrls: [<span class="hljs-string">'./app.component.css'</span>]</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent <span class="hljs-keyword">implements</span> OnDestroy &#123;</span><br><span class="line">  title = <span class="hljs-string">'app works!'</span></span><br><span class="line">  component: ComponentRef&lt;AComponent&gt;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"></span></span><br><span class="line"><span class="hljs-params">    <span class="hljs-keyword">private</span> componentFactoryResolver: ComponentFactoryResolver,</span></span><br><span class="line"><span class="hljs-params">    <span class="hljs-keyword">private</span> elementRef: ElementRef,</span></span><br><span class="line"><span class="hljs-params">    <span class="hljs-keyword">private</span> injector: Injector</span></span><br><span class="line"><span class="hljs-params">  </span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.component = <span class="hljs-keyword">this</span>.componentFactoryResolver</span><br><span class="line">      .resolveComponentFactory(AComponent)</span><br><span class="line">      .create(<span class="hljs-keyword">this</span>.injector)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ngAfterViewInit() &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> host = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'div'</span>)</span><br><span class="line">    host.appendChild((<span class="hljs-keyword">this</span>.component.hostView <span class="hljs-keyword">as</span> <span class="hljs-built_in">any</span>).rootNodes[<span class="hljs-number">0</span>])</span><br><span class="line">    <span class="hljs-keyword">this</span>.elementRef.nativeElement.appendChild(host)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ngOnDestroy() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.component.destroy()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这种手动添加 <code>DOM</code> 的方式会有一个问题，那就是无法对数据进行脏检查，如果修改了 <code>a.component.ts</code> 是不会触发更新的，所以我们需要手动的去通知应用处理这个组件的视图，对这个组件进行脏检查</p>
@@ -386,7 +379,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -499,7 +492,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -515,7 +508,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -523,7 +516,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -586,35 +579,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -624,7 +598,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -632,8 +644,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -643,7 +655,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -651,29 +663,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -829,7 +822,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -994,7 +987,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1049,7 +1042,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1238,7 +1231,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1252,14 +1245,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

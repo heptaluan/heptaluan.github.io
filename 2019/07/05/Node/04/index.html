@@ -16,7 +16,7 @@
 <meta property="og:description" content="本文主要借助 libuv 来简单的了解一下 Node.js 中的事件轮询机制相关概念，注意与浏览器中的 event loop 区分开来，下面我们就先来看看什么是 libuv  关于浏览器中的 event loop 详细可见 JavaScript 并发模型">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/04.jpg">
-<meta property="og:updated_time" content="2020-07-18T14:54:33.918Z">
+<meta property="og:updated_time" content="2020-08-25T08:31:49.900Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Node.js 中的事件轮询机制">
 <meta name="twitter:description" content="本文主要借助 libuv 来简单的了解一下 Node.js 中的事件轮询机制相关概念，注意与浏览器中的 event loop 区分开来，下面我们就先来看看什么是 libuv  关于浏览器中的 event loop 详细可见 JavaScript 并发模型">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    16 分钟 读完 (大约 2377 个字)
+                    16 分钟 读完 (大约 2381 个字)
                 </span>
                 
                 
@@ -193,11 +193,9 @@ var _hmt = _hmt || [];
 <a id="more"></a>
 
 
-<h2 id="libuv"><a href="#libuv" class="headerlink" title="libuv"></a>libuv</h2><p><code>libuv</code> 是一个高性能的，事件驱动的 <code>I/O</code> 库，并且提供了跨平台（如 <code>windows</code>, <code>linux</code>）的 <code>API</code>，如果想要参考更为详细的内容可以参考 <a href="https://github.com/nikhilm/uvbook" target="_blank" rel="noopener">An Introduction to libuv</a>，中文教程可以参考 <a href="https://github.com/luohaha/Chinese-uvbook" target="_blank" rel="noopener">Libuv 的中文教程</a>，下面我们就正式的来看看 <code>libuv</code></p>
-<p><code>libuv</code> 的 <a href="http://docs.libuv.org/en/v1.x/design.html" target="_blank" rel="noopener">官方文档</a> 在阐述其架构的时候有这么一张图，如下</p>
+<h2 id="libuv"><a href="#libuv" class="headerlink" title="libuv"></a>libuv</h2><p><code>libuv</code> 是一个高性能的，事件驱动的 <code>I/O</code> 库，并且提供了跨平台（如 <code>windows</code>, <code>linux</code>）的 <code>API</code>，如果想要参考更为详细的内容可以参考 <a href="https://github.com/nikhilm/uvbook" target="_blank" rel="noopener">An Introduction to libuv</a>，中文教程可以参考 <a href="https://github.com/luohaha/Chinese-uvbook" target="_blank" rel="noopener">Libuv 的中文教程</a>，下面我们就正式的来看看 <code>libuv</code>，<code>libuv</code> 的 <a href="http://docs.libuv.org/en/v1.x/design.html" target="_blank" rel="noopener">官方文档</a> 在阐述其架构的时候有这么一张图，如下</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/node/04.png" alt></p>
-<p>仅仅凭着这么一张图并不能让我们对其内部机制理解得透彻，简单来说，在 <code>Node.js</code> 里面 <code>V8</code> 充当的角色更多的是语法解析层面，另外它还充当了 <code>JavaScript</code> 和 <code>C/C++</code> 的桥梁</p>
-<p>但是我们都知道 <code>Node.js</code> 中一切皆可异步，但这并不是通过 <code>V8</code> 来实现的，充当这个角色的其实就是 <code>libuv</code>，比如一个简单的 <code>JavaScript</code> 异步代码，使用 <code>setTimeout</code> 就可以实现</p>
+<p>仅仅凭着这么一张图并不能让我们对其内部机制理解得透彻，简单来说，在 <code>Node.js</code> 里面 <code>V8</code> 充当的角色更多的是语法解析层面，另外它还充当了 <code>JavaScript</code> 和 <code>C/C++</code> 的桥梁，但是我们都知道 <code>Node.js</code> 中一切皆可异步，但这并不是通过 <code>V8</code> 来实现的，充当这个角色的其实就是 <code>libuv</code>，比如一个简单的 <code>JavaScript</code> 异步代码，使用 <code>setTimeout</code> 就可以实现</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'timeout 0'</span>) &#125;, <span class="hljs-number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'outter'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// outter</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// timeout 0</span></span><br></pre></td></tr></table></figure>
 
 <p>想要深挖为什么会出现这样的结果，要首先来研究一下 <code>libuv</code> 的事件轮询机制</p>
@@ -206,8 +204,7 @@ var _hmt = _hmt || [];
 <p>再次强调，<code>Node.js</code> 和浏览器的 <code>event loop</code> 是两个有明确区分的事物，不能混为一谈</p>
 </blockquote>
 <p>简单来讲，<code>Node.js</code> 的 <code>event</code> 是基于 <code>libuv</code>，而浏览器的 <code>event loop</code> 则在 <a href="https://html.spec.whatwg.org/multipage/webappapis.html#event-loops" target="_blank" rel="noopener">HTML 5</a> 的规范中明确定义，<code>libuv</code> 已经对 <code>event loop</code> 作出了实现，而 <code>HTML 5</code> 规范中只是定义了浏览器中 <code>event loop</code> 的模型，具体实现留给了浏览器厂商</p>
-<p>在 <code>libuv</code> 中，有一个句柄（<code>handle</code>）的概念，每个句柄中存储数据和回调函数之类的信息，句柄在使用前要添加到对应的队列（<code>queue</code>）或者堆（<code>heap</code>）中，其实只有定时器句柄使用了 <a href="https://zh.wikipedia.org/wiki/%E6%9C%80%E5%A4%A7%E2%80%94%E6%9C%80%E5%B0%8F%E5%A0%86" target="_blank" rel="noopener">最小堆</a> 的数据结构，其他句柄使用队列的数据结构进行存储</p>
-<p><code>libuv</code> 在进行每一次事件轮询的时候都会从每个类型的句柄中，取出关联的队列或者堆结构进行处理，流程图如下所示</p>
+<p>在 <code>libuv</code> 中，有一个句柄（<code>handle</code>）的概念，每个句柄中存储数据和回调函数之类的信息，句柄在使用前要添加到对应的队列（<code>queue</code>）或者堆（<code>heap</code>）中，其实只有定时器句柄使用了 <a href="https://zh.wikipedia.org/wiki/%E6%9C%80%E5%A4%A7%E2%80%94%E6%9C%80%E5%B0%8F%E5%A0%86" target="_blank" rel="noopener">最小堆</a> 的数据结构，其他句柄使用队列的数据结构进行存储，<code>libuv</code> 在进行每一次事件轮询的时候都会从每个类型的句柄中，取出关联的队列或者堆结构进行处理，流程图如下所示</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/node/05.png" alt></p>
 <p><code>Node.js</code> 的 <code>event loop</code> 分为六个阶段，每个阶段的作用如下</p>
 <ul>
@@ -221,8 +218,7 @@ var _hmt = _hmt || [];
 <p>如果想要具体了解其内部执行流程，可以参考这篇文章中的 <a href="https://cnodejs.org/topic/5a9108d78d6e16e56bb80882" target="_blank" rel="noopener">源码解析部分</a>，我们这里只是简单介绍一下其执行的流程，上面的图片可以简化成下面的流程</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">   ┌───────────────────────┐</span><br><span class="line">┌─&gt;│        timers       │</span><br><span class="line">│  └──────────┬────────────┘</span><br><span class="line">│  ┌──────────┴────────────┐</span><br><span class="line">│  │     I/O callbacks   │</span><br><span class="line">│  └──────────┬────────────┘</span><br><span class="line">│  ┌──────────┴────────────┐</span><br><span class="line">│  │     idle, prepare   │</span><br><span class="line">│  └──────────┬────────────┘      ┌────────────────┐</span><br><span class="line">│  ┌──────────┴────────────┐      │   incoming:   │</span><br><span class="line">│  │         poll        │&lt;──────┤  connections, │</span><br><span class="line">│  └──────────┬────────────┘      │   data, etc.  │</span><br><span class="line">│  ┌──────────┴────────────┐      └────────────────┘</span><br><span class="line">│  │        check        │</span><br><span class="line">│  └──────────┬────────────┘</span><br><span class="line">│  ┌──────────┴────────────┐</span><br><span class="line">└──┤    close callbacks  │</span><br><span class="line">   └───────────────────────┘</span><br></pre></td></tr></table></figure>
 
-<p><code>event loop</code> 的每一次循环都需要依次经过上述的阶段，每个阶段都有自己的 <code>callback</code> 队列，每当进入某个阶段，都会从所属的队列中取出 <code>callback</code> 来执行，当队列为空或者被执行 <code>callback</code> 的数量达到系统的最大数量时，进入下一阶段</p>
-<p>这六个阶段都执行完毕称为一轮循环，下面我们来分类查看</p>
+<p><code>event loop</code> 的每一次循环都需要依次经过上述的阶段，每个阶段都有自己的 <code>callback</code> 队列，每当进入某个阶段，都会从所属的队列中取出 <code>callback</code> 来执行，当队列为空或者被执行 <code>callback</code> 的数量达到系统的最大数量时，进入下一阶段，这六个阶段都执行完毕称为一轮循环，下面我们来分类查看</p>
 <h4 id="timers-阶段"><a href="#timers-阶段" class="headerlink" title="timers 阶段"></a>timers 阶段</h4><p>在 <code>timer</code> 阶段其实使用一个最小堆而不是队列来保存所有元素（其实也可以理解，因为 <code>timeout</code> 的 <code>callback</code> 是按照超时时间的顺序来调用的，并不是先进先出的队列逻辑），然后循环取出所有到期的 <code>callback</code> 执行</p>
 <h4 id="I-O-callbacks-阶段"><a href="#I-O-callbacks-阶段" class="headerlink" title="I/O callbacks 阶段"></a>I/O callbacks 阶段</h4><p>根据 <code>libuv</code> 的文档，一些应该在上轮循环 <code>poll</code> 阶段执行的 <code>callback</code>，因为某些原因不能执行，就会被延迟到这一轮的循环的 <code>I/O callbacks</code> 阶段执行，换句话说这个阶段执行的 <code>callbacks</code> 是上轮残留的</p>
 <h4 id="idle-和-prepare-阶段"><a href="#idle-和-prepare-阶段" class="headerlink" title="idle 和 prepare 阶段"></a>idle 和 prepare 阶段</h4><p><code>idle</code> 和 <code>prepare</code> 回调，仅仅在内部使用</p>
@@ -247,10 +243,12 @@ var _hmt = _hmt || [];
 </blockquote>
 <p>该函数在调用的时候传了两个参数，第一个 <code>__filename</code> 是 <code>Node.js</code> 中的一个全局变量，它的值其实是当前执行文件的所在路径，第二个参数是一个回调函数，回调函数中 <code>exists</code> 用来表示当前是否存在，很明显当前这段代码最终打印的结果肯定是 <code>true</code>，当然我们这里更关心的是整个流程处理，下面用一副数据流向图来将上面流程总结一下</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/node/06.png" alt></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://blog.lucode.net/linux/linux-io-overview.html" target="_blank" rel="noopener">Linux IO 概览</a></p>
-<p><a href="https://zhuanlan.zhihu.com/p/35039878" target="_blank" rel="noopener">Libuv 源码阅读</a></p>
-<p><a href="https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/" target="_blank" rel="noopener">The Node.js Event Loop, Timers, and process.nextTick()</a></p>
-<p><a href="https://cnodejs.org/topic/5a9108d78d6e16e56bb80882" target="_blank" rel="noopener">不要混淆 Node.js 和浏览器中的 event loop</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://blog.lucode.net/linux/linux-io-overview.html" target="_blank" rel="noopener">Linux IO 概览</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/35039878" target="_blank" rel="noopener">Libuv 源码阅读</a></li>
+<li><a href="https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/" target="_blank" rel="noopener">The Node.js Event Loop, Timers, and process.nextTick()</a></li>
+<li><a href="https://cnodejs.org/topic/5a9108d78d6e16e56bb80882" target="_blank" rel="noopener">不要混淆 Node.js 和浏览器中的 event loop</a></li>
+</ul>
 
         </div>
         
@@ -361,7 +359,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -482,7 +480,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -498,7 +496,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -506,7 +504,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -569,35 +567,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -607,7 +586,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -615,8 +632,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -626,7 +643,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -634,29 +651,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -812,7 +810,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -977,7 +975,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1032,7 +1030,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1221,7 +1219,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1235,14 +1233,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

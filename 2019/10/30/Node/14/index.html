@@ -16,7 +16,7 @@
 <meta property="og:description" content="在 中间件 和 常用中间件的实现 章节当中，我们简单的介绍了一下中间件和洋葱模型的概念，然后我们手动实现了一个最基本的 koa.js 框架，最后又看了一些比较常用的中间件，所以在本章当中，我们就来深入的了解一下 koa.js 的源码，看看它与我们手动实现的版本有什么区别">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg">
-<meta property="og:updated_time" content="2020-08-02T13:25:06.573Z">
+<meta property="og:updated_time" content="2020-08-25T08:45:46.376Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Koa.js 源码解析">
 <meta name="twitter:description" content="在 中间件 和 常用中间件的实现 章节当中，我们简单的介绍了一下中间件和洋葱模型的概念，然后我们手动实现了一个最基本的 koa.js 框架，最后又看了一些比较常用的中间件，所以在本章当中，我们就来深入的了解一下 koa.js 的源码，看看它与我们手动实现的版本有什么区别">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    28 分钟 读完 (大约 4131 个字)
+                    28 分钟 读完 (大约 4134 个字)
                 </span>
                 
                 
@@ -228,8 +228,10 @@ var _hmt = _hmt || [];
 <li><code>koa.js</code> 中 <code>protocol</code> 属性会先使用 <code>tlsSocket.encrypted</code> 属性来判断是否是 <code>https</code> 协议，如果是则直接返回 <code>https</code></li>
 </ul>
 <p>关于此部分内容想了解更多的可以参考下面两个链接</p>
-<p><a href="https://www.yuque.com/egg/nodejs/coopsc" target="_blank" rel="noopener">科普文：如何伪造和获取用户真实 IP ？</a></p>
-<p><code>egg.js</code> 提供的 <a href="https://eggjs.org/zh-cn/tutorials/proxy.html" target="_blank" rel="noopener">前置代理模式</a></p>
+<ul>
+<li><a href="https://www.yuque.com/egg/nodejs/coopsc" target="_blank" rel="noopener">科普文：如何伪造和获取用户真实 IP ？</a></li>
+<li><code>egg.js</code> 提供的 <a href="https://eggjs.org/zh-cn/tutorials/proxy.html" target="_blank" rel="noopener">前置代理模式</a></li>
+</ul>
 <p>接下来我们再来看注册中间件使用的 <code>use()</code> 方法</p>
 <h2 id="注册中间件"><a href="#注册中间件" class="headerlink" title="注册中间件"></a>注册中间件</h2><p>在实例化一个对象以后，接下来使用 <code>use()</code> 方法来注册一个中间件，其实就是简单的 <code>push</code> 到自身的 <code>mideware</code> 这个数组中</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">use(fn) &#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (isGeneratorFunction(fn)) &#123;</span><br><span class="line">    <span class="hljs-comment">// 兼容 koa v1 的 generator 写法</span></span><br><span class="line">    fn = convert(fn)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">this</span>.middleware.push(fn)</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -245,8 +247,7 @@ var _hmt = _hmt || [];
 <h4 id="compose-this-middleware"><a href="#compose-this-middleware" class="headerlink" title="compose(this.middleware)"></a>compose(this.middleware)</h4><p>洋葱模型实现的核心</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * Compose `middleware` returning a fully valid middleware comprised of all those which are passed.</span></span><br><span class="line"><span class="hljs-comment"> *</span></span><br><span class="line"><span class="hljs-comment"> * @param &#123;Array&#125; middleware</span></span><br><span class="line"><span class="hljs-comment"> * @return &#123;Function&#125;</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">compose</span>(<span class="hljs-params">middleware</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 参数校验</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(middleware)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">'Middleware stack must be an array!'</span>)</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> fn <span class="hljs-keyword">of</span> middleware) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> fn !== <span class="hljs-string">'function'</span>) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">'Middleware must be composed of functions!'</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;Object&#125; context</span></span><br><span class="line"><span class="hljs-comment">   * @return &#123;Promise&#125;</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">context, next</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// last called middleware #</span></span><br><span class="line">    <span class="hljs-keyword">let</span> index = <span class="hljs-number">-1</span></span><br><span class="line">    <span class="hljs-keyword">return</span> dispatch(<span class="hljs-number">0</span>)</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">dispatch</span>(<span class="hljs-params">i</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (i &lt;= index) <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.reject(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'next() called multiple times'</span>))</span><br><span class="line">      index = i</span><br><span class="line">      <span class="hljs-keyword">let</span> fn = middleware[i]</span><br><span class="line">      <span class="hljs-keyword">if</span> (i === middleware.length) fn = next</span><br><span class="line">      <span class="hljs-keyword">if</span> (!fn) <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve()</span><br><span class="line">      <span class="hljs-keyword">try</span> &#123;</span><br><span class="line">        <span class="hljs-comment">// 执行下一个中间件逻辑，并将 next 参数设置为 dispatch(i + 1)</span></span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve(fn(context, dispatch.bind(<span class="hljs-literal">null</span>, i + <span class="hljs-number">1</span>)))</span><br><span class="line">      &#125; <span class="hljs-keyword">catch</span> (err) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.reject(err)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>之前我们已经手动的实现了一个简化版本的了，这里就不详细展开了，可以参考之前的洋葱模型的实现章节</p>
-<p>这里主要介绍其中两行代码</p>
+<p>之前我们已经手动的实现了一个简化版本的了，这里就不详细展开了，可以参考之前的洋葱模型的实现章节，这里主要介绍其中两行代码</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">if</span> (i === middleware.length) fn = next</span><br><span class="line"><span class="hljs-keyword">if</span> (!fn) <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve()</span><br></pre></td></tr></table></figure>
 
 <p>在我们调用 <code>fnMiddleware</code> 是可以传入两个参数的，第二个可选参数表示最终的回调函数，比如</p>
@@ -264,15 +265,13 @@ var _hmt = _hmt || [];
 </ul>
 </li>
 </ul>
-<p>这里有一个小问题，这里明明只是将原生的 <code>req</code> 和 <code>res</code> 赋值给相应的属性，但是 <code>ctx</code> 上不是暴露出来很多属性吗？它们在哪里？</p>
-<p>其实这些东西我们可以通过 <code>request.js</code> 和 <code>response.js</code> 的源码来了解，通过源码可以发现，经过原型链的形式，我们 <code>ctx.request</code> 所能访问属性和方法绝大部分都在其对应的 <code>request</code> 这个简单的对象上面</p>
+<p>这里有一个小问题，这里明明只是将原生的 <code>req</code> 和 <code>res</code> 赋值给相应的属性，但是 <code>ctx</code> 上不是暴露出来很多属性吗？它们在哪里？其实这些东西我们可以通过 <code>request.js</code> 和 <code>response.js</code> 的源码来了解，通过源码可以发现，经过原型链的形式，我们 <code>ctx.request</code> 所能访问属性和方法绝大部分都在其对应的 <code>request</code> 这个简单的对象上面</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// https://github.com/koajs/koa/blob/master/lib/request.js</span></span><br><span class="line"><span class="hljs-built_in">module</span>.exports = &#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * Return request header.</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @return &#123;Object&#125;</span></span><br><span class="line"><span class="hljs-comment">   * @api public</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">get</span> header() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.req.headers</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * Set request header.</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @api public</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">set</span> header(val) &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.req.headers = val</span><br><span class="line">  &#125;,</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>所以当你操作 <code>ctx.request.xx</code> 的时候，其实访问的都是 <code>resquest</code> 这个对象上的属性的赋值器（<code>setter</code>）和取值器（<code>getter</code>）</p>
 <h4 id="handleRequest-ctx-fnMiddleware"><a href="#handleRequest-ctx-fnMiddleware" class="headerlink" title="handleRequest(ctx, fnMiddleware)"></a>handleRequest(ctx, fnMiddleware)</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// fnMiddleware 是经过 compose 包装后的函数</span></span><br><span class="line">handleRequest(ctx, fnMiddleware) &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> res = ctx.res</span><br><span class="line">  res.statusCode = <span class="hljs-number">404</span></span><br><span class="line">  <span class="hljs-keyword">const</span> onerror = <span class="hljs-function"><span class="hljs-params">err</span> =&gt;</span> ctx.onerror(err)</span><br><span class="line">  <span class="hljs-keyword">const</span> handleResponse = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> respond(ctx)</span><br><span class="line">  onFinished(res, onerror)</span><br><span class="line">  <span class="hljs-keyword">return</span> fnMiddleware(ctx).then(handleResponse).catch(onerror)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>这个函数简单来说只是负责执行中间件所有的函数, 并在中间件函数执行结束的时候调用 <code>respond(ctx)</code></p>
-<p>本质上，在执行 <code>fnMiddleware(ctx)</code> 的时候其实就会调用 <code>compose()</code> 方法当中的那个 <code>dispatch(0)</code>，然后开始不断递归，直到中间件流程执行结束，触发 <code>handleResponse</code>，也就是我们这里的 <code>respond(ctx)</code></p>
+<p>这个函数简单来说只是负责执行中间件所有的函数, 并在中间件函数执行结束的时候调用 <code>respond(ctx)</code>，本质上，在执行 <code>fnMiddleware(ctx)</code> 的时候其实就会调用 <code>compose()</code> 方法当中的那个 <code>dispatch(0)</code>，然后开始不断递归，直到中间件流程执行结束，触发 <code>handleResponse</code>，也就是我们这里的 <code>respond(ctx)</code></p>
 <h2 id="对请求的响应处理-respond"><a href="#对请求的响应处理-respond" class="headerlink" title="对请求的响应处理 respond"></a>对请求的响应处理 respond</h2><p>对于 <code>respond()</code> 函数, 其核心就是根据不同类型的数据对 <code>http</code> 的响应头部与响应体 <code>body</code> 做对应的处理</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">respond</span>(<span class="hljs-params">ctx</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// allow bypassing koa</span></span><br><span class="line">  <span class="hljs-comment">// 用于设置自定义的 response 策略</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-literal">false</span> === ctx.respond) <span class="hljs-keyword">return</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// writable 是原生的 response 对象的 writeable 属性，检查是否是可写流</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (!ctx.writable) <span class="hljs-keyword">return</span></span><br><span class="line">  </span><br><span class="line">  <span class="hljs-keyword">const</span> res = ctx.res</span><br><span class="line">  <span class="hljs-keyword">let</span> body = ctx.body</span><br><span class="line">  <span class="hljs-keyword">const</span> code = ctx.status</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// ignore body</span></span><br><span class="line">  <span class="hljs-comment">// 如果响应的 statusCode 是属于 body 为空的类型，例如 204，205，304，将 body 置为 null</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (statuses.empty[code]) &#123;</span><br><span class="line">    <span class="hljs-comment">// strip headers</span></span><br><span class="line">    ctx.body = <span class="hljs-literal">null</span></span><br><span class="line">    <span class="hljs-keyword">return</span> res.end()</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 如果是 HEAD 方法</span></span><br><span class="line">  <span class="hljs-comment">// 需要注意，HEAD 请求不返回 body</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-string">'HEAD'</span> == ctx.method) &#123;</span><br><span class="line">    <span class="hljs-comment">// headersSent 属性 Node 原生的 response 对象上的，用于检查 http 响应头部是否已经被发送</span></span><br><span class="line">    <span class="hljs-comment">// 如果头部未被发送，那么添加 length 头部</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (!res.headersSent &amp;&amp; isJSON(body)) &#123;</span><br><span class="line">      ctx.length = Buffer.byteLength(<span class="hljs-built_in">JSON</span>.stringify(body))</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> res.end()</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// status body</span></span><br><span class="line">  <span class="hljs-comment">// 如果 body 值为空</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-literal">null</span> == body) &#123;</span><br><span class="line">    <span class="hljs-comment">// body 值为 context 中的 message 属性或 code</span></span><br><span class="line">    body = ctx.message || <span class="hljs-built_in">String</span>(code)</span><br><span class="line">    <span class="hljs-comment">// 修改头部的 type 与 length 属性</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (!res.headersSent) &#123;</span><br><span class="line">      ctx.type = <span class="hljs-string">'text'</span></span><br><span class="line">      ctx.length = Buffer.byteLength(body)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> res.end(body)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// responses</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (Buffer.isBuffer(body)) <span class="hljs-keyword">return</span> res.end(body)    <span class="hljs-comment">// 对 body 为 buffer 类型的进行处理</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-string">'string'</span> == <span class="hljs-keyword">typeof</span> body) <span class="hljs-keyword">return</span> res.end(body)  <span class="hljs-comment">// 对 body 为字符串类型的进行处理</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (body <span class="hljs-keyword">instanceof</span> Stream) <span class="hljs-keyword">return</span> body.pipe(res)  <span class="hljs-comment">// 对 body 为流形式的进行处理，流式响应使用 pipe，更好的利用缓存</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// body: json</span></span><br><span class="line">  <span class="hljs-comment">// 对 body 为 json 格式的数据进行处理，（转化为 json 字符串，添加 length 头部信息）</span></span><br><span class="line">  body = <span class="hljs-built_in">JSON</span>.stringify(body)</span><br><span class="line">  <span class="hljs-keyword">if</span> (!res.headersSent) &#123;</span><br><span class="line">    ctx.length = Buffer.byteLength(body)</span><br><span class="line">  &#125;</span><br><span class="line">  res.end(body)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -301,11 +300,12 @@ var _hmt = _hmt || [];
 <p>然后如果判断该请求处理依旧没有结束，也就是 <code>app</code> 注册的 <code>onerror</code> 事件没有结束该请求，则会尝试向客户端产生一个 <code>500</code> 的错误</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> headerSent = <span class="hljs-literal">false</span></span><br><span class="line"><span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.headerSent || !<span class="hljs-keyword">this</span>.writable) &#123;</span><br><span class="line">  headerSent = err.headerSent = <span class="hljs-literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// nothing we can do here other</span></span><br><span class="line"><span class="hljs-comment">// than delegate to the app-level</span></span><br><span class="line"><span class="hljs-comment">// handler and log.</span></span><br><span class="line"><span class="hljs-keyword">if</span> (headerSent) &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// default to 500</span></span><br><span class="line"><span class="hljs-keyword">if</span> (<span class="hljs-string">'number'</span> != <span class="hljs-keyword">typeof</span> err.status || !statuses[err.status]) err.status = <span class="hljs-number">500</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">this</span>.res.end(msg)</span><br></pre></td></tr></table></figure>
 
-<p>总结起来，我们可以在不同的抽象层次上处理错误，比如我们可以在顶层的中间件将所有中间件产生的错误捕获并处理了，这样错误就不会被上层捕获</p>
-<p>我们也可以覆盖 <code>ctx.onerror</code> 的方式来捕获所有的异常，而且可以不触发 <code>app</code> 的 <code>error</code> 事件，最后我们也可以直接监听 <code>app</code> 的 <code>error</code> 事件的方式来处理错误</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://github.com/koajs/koa/tree/master/lib" target="_blank" rel="noopener">koajs/koa</a></p>
-<p><a href="https://github.com/koajs/koa/blob/master/lib/context.js" target="_blank" rel="noopener">context.js</a></p>
-<p><a href="https://zhuanlan.zhihu.com/p/24559011" target="_blank" rel="noopener">十分钟带你看完 KOA 源码</a></p>
+<p>总结起来，我们可以在不同的抽象层次上处理错误，比如我们可以在顶层的中间件将所有中间件产生的错误捕获并处理了，这样错误就不会被上层捕获，我们也可以覆盖 <code>ctx.onerror</code> 的方式来捕获所有的异常，而且可以不触发 <code>app</code> 的 <code>error</code> 事件，最后我们也可以直接监听 <code>app</code> 的 <code>error</code> 事件的方式来处理错误</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://github.com/koajs/koa/tree/master/lib" target="_blank" rel="noopener">koajs/koa</a></li>
+<li><a href="https://github.com/koajs/koa/blob/master/lib/context.js" target="_blank" rel="noopener">context.js</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/24559011" target="_blank" rel="noopener">十分钟带你看完 KOA 源码</a></li>
+</ul>
 
         </div>
         
@@ -416,7 +416,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -549,7 +549,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -565,7 +565,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -573,7 +573,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -636,35 +636,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -674,7 +655,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -682,8 +701,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -693,7 +712,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -701,29 +720,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -879,7 +879,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1044,7 +1044,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1099,7 +1099,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1288,7 +1288,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1302,14 +1302,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

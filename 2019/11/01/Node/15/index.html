@@ -16,7 +16,7 @@
 <meta property="og:description" content="在之前我们已经了解过 Node.js 和 koa.js 的一些相关知识，今天我们来看看如何使用 egg.js 来实现一个接口服务，egg.js 是一个基于 koa.js 框架而实现的框架，所以它应当属于框架之上的框架，它继承了 koa.js 的高性能优点，同时又加入了一些 约束与开发规范，来规避 koa.js 框架本身的开发自由度太高的问题">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/15.jpg">
-<meta property="og:updated_time" content="2020-07-19T14:46:48.330Z">
+<meta property="og:updated_time" content="2020-08-25T08:47:03.073Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Egg.js 实战（实现一个接口服务）">
 <meta name="twitter:description" content="在之前我们已经了解过 Node.js 和 koa.js 的一些相关知识，今天我们来看看如何使用 egg.js 来实现一个接口服务，egg.js 是一个基于 koa.js 框架而实现的框架，所以它应当属于框架之上的框架，它继承了 koa.js 的高性能优点，同时又加入了一些 约束与开发规范，来规避 koa.js 框架本身的开发自由度太高的问题">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    33 分钟 读完 (大约 4879 个字)
+                    33 分钟 读完 (大约 4882 个字)
                 </span>
                 
                 
@@ -189,10 +189,8 @@ var _hmt = _hmt || [];
             <p>在之前我们已经了解过 <code>Node.js</code> 和 <code>koa.js</code> 的一些相关知识，今天我们来看看如何使用 <code>egg.js</code> 来实现一个接口服务，<code>egg.js</code> 是一个基于 <code>koa.js</code> 框架而实现的框架，所以它应当属于框架之上的框架，它继承了 <code>koa.js</code> 的高性能优点，同时又加入了一些 <strong>约束与开发规范</strong>，来规避 <code>koa.js</code> 框架本身的开发自由度太高的问题</p>
 <a id="more"></a>
 
-<p><code>koa.js</code> 是一个比较基层的框架，它本身没有太多约束与规范，自由度非常高，每一个开发者实现自己的服务的时候，代码风格都可以能不太一样，而 <code>egg.js</code> 为了适应企业开发，加了一些开发时的规范与约束，从而解决 <code>koa.js</code> 这种自由度过高而导致不适合企业内使用的缺点，<code>egg.js</code> 便在这种背景下诞生，关于 <code>egg.js</code> 更多的特性</p>
-<p>这里我们只做简单介绍，更多的可以参考官网 <a href="https://eggjs.org/zh-cn/" target="_blank" rel="noopener">egg.js</a></p>
-<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>需求比较简单，只需要实现一个接口服务即可，简单来说就是实现一个连接数据库，查询数据库里的数据并且提供一个 <code>http</code> 接口服务</p>
-<p>下面我们来看看如何实现</p>
+<p><code>koa.js</code> 是一个比较基层的框架，它本身没有太多约束与规范，自由度非常高，每一个开发者实现自己的服务的时候，代码风格都可以能不太一样，而 <code>egg.js</code> 为了适应企业开发，加了一些开发时的规范与约束，从而解决 <code>koa.js</code> 这种自由度过高而导致不适合企业内使用的缺点，<code>egg.js</code> 便在这种背景下诞生，关于 <code>egg.js</code> 更多的特性，这里我们只做简单介绍，更多的可以参考官网 <a href="https://eggjs.org/zh-cn/" target="_blank" rel="noopener">egg.js</a></p>
+<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>需求比较简单，只需要实现一个接口服务即可，简单来说就是实现一个连接数据库，查询数据库里的数据并且提供一个 <code>http</code> 接口服务，下面我们来看看如何实现</p>
 <h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>首先安装 <code>egg.js</code>，根据官方文档提供的方法即可</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ npm init egg --type=simple</span><br><span class="line"></span><br><span class="line">$ npm i</span><br><span class="line"></span><br><span class="line">$ npm run dev</span><br></pre></td></tr></table></figure>
 
@@ -200,7 +198,7 @@ var _hmt = _hmt || [];
 <p>但是这里有一个需要注意的地方，如果想要使用 <code>npm init egg</code> 命令，<code>npm</code> 的版本需要 <code>&gt;= 6.1.0</code></p>
 </blockquote>
 <p>启动成功以后，我们先来建立一张表，用于我们的后续操作，使用的 <code>SQL</code> 如下</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE <span class="hljs-string">`Tab_User_Info`</span> (</span><br><span class="line">  id  INT(<span class="hljs-number">100</span>) AUTO_INCREMENT PRIMARY KEY,</span><br><span class="line">  name  VARCHAR(<span class="hljs-number">50</span>)   NOT NULL COMMENT <span class="hljs-string">'姓名'</span>,</span><br><span class="line">  uid   VARCHAR(<span class="hljs-number">50</span>)    NOT NULL,</span><br><span class="line">  sex tinyint(<span class="hljs-number">2</span>) DEFAULT <span class="hljs-number">1</span> COMMENT <span class="hljs-string">'1男2女'</span>,</span><br><span class="line">  age tinyint(<span class="hljs-number">2</span>) DEFAULT <span class="hljs-number">1</span>,</span><br><span class="line">  description VARCHAR(<span class="hljs-number">50</span>)  DEFAULT NULL,</span><br><span class="line">  <span class="hljs-string">`createdAt`</span> datetime DEFAULT CURRENT_TIMESTAMP,</span><br><span class="line">  <span class="hljs-string">`updatedAt`</span> datetime DEFAULT CURRENT_TIMESTAMP</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT = <span class="hljs-string">'test user'</span>;</span><br><span class="line"></span><br><span class="line">INSERT INTO Tab_User_Info (<span class="hljs-string">`name`</span>, uid, sex, age, description) VALUES</span><br><span class="line">  ( <span class="hljs-string">'zhangsan'</span>, <span class="hljs-string">'uid123'</span>, <span class="hljs-number">1</span>, <span class="hljs-number">24</span>, <span class="hljs-string">'this is boy'</span> ),</span><br><span class="line">  ( <span class="hljs-string">'lisi'</span>, <span class="hljs-string">'uid124'</span>, <span class="hljs-number">2</span>, <span class="hljs-number">24</span>, <span class="hljs-string">'this is girl'</span> ),</span><br><span class="line">  ( <span class="hljs-string">'wangwu'</span>, <span class="hljs-string">'uid125'</span>, <span class="hljs-number">1</span>, <span class="hljs-number">26</span>, <span class="hljs-string">'this is test user'</span> ),</span><br><span class="line">  ( <span class="hljs-string">'zhaoliu'</span>, <span class="hljs-string">'uid126'</span>, <span class="hljs-number">2</span>, <span class="hljs-number">44</span>, <span class="hljs-string">'this is test user5'</span> ),</span><br><span class="line">  ( <span class="hljs-string">'test01'</span>, <span class="hljs-string">'uid127'</span>, <span class="hljs-number">2</span>, <span class="hljs-number">64</span>, <span class="hljs-string">'this is test user4'</span> ),</span><br><span class="line">  ( <span class="hljs-string">'test02'</span>, <span class="hljs-string">'uid128'</span>, <span class="hljs-number">1</span>, <span class="hljs-number">14</span>, <span class="hljs-string">'this is test user2'</span> ),</span><br><span class="line">  ( <span class="hljs-string">'test03'</span>, <span class="hljs-string">'uid129'</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-string">'this is test user9'</span> );</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE <span class="hljs-string">`Tab_User_Info`</span> (</span><br><span class="line">  id  INT(<span class="hljs-number">100</span>) AUTO_INCREMENT PRIMARY KEY,</span><br><span class="line">  name  VARCHAR(<span class="hljs-number">50</span>)   NOT NULL COMMENT <span class="hljs-string">'姓名'</span>,</span><br><span class="line">  uid   VARCHAR(<span class="hljs-number">50</span>)    NOT NULL,</span><br><span class="line">  sex tinyint(<span class="hljs-number">2</span>) DEFAULT <span class="hljs-number">1</span> COMMENT <span class="hljs-string">'1男2女'</span>,</span><br><span class="line">  age tinyint(<span class="hljs-number">2</span>) DEFAULT <span class="hljs-number">1</span>,</span><br><span class="line">  description VARCHAR(<span class="hljs-number">50</span>)  DEFAULT NULL,</span><br><span class="line">  <span class="hljs-string">`createdAt`</span> datetime DEFAULT CURRENT_TIMESTAMP,</span><br><span class="line">  <span class="hljs-string">`updatedAt`</span> datetime DEFAULT CURRENT_TIMESTAMP</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT = <span class="hljs-string">'test user'</span>;</span><br><span class="line"></span><br><span class="line">INSERT INTO Tab_User_Info (<span class="hljs-string">`name`</span>, uid, sex, age, description) VALUES</span><br><span class="line">  (<span class="hljs-string">'zhangsan'</span>, <span class="hljs-string">'uid123'</span>, <span class="hljs-number">1</span>, <span class="hljs-number">24</span>, <span class="hljs-string">'this is boy'</span>),</span><br><span class="line">  (<span class="hljs-string">'lisi'</span>, <span class="hljs-string">'uid124'</span>, <span class="hljs-number">2</span>, <span class="hljs-number">24</span>, <span class="hljs-string">'this is girl'</span>),</span><br><span class="line">  (<span class="hljs-string">'wangwu'</span>, <span class="hljs-string">'uid125'</span>, <span class="hljs-number">1</span>, <span class="hljs-number">26</span>, <span class="hljs-string">'this is test user'</span>),</span><br><span class="line">  (<span class="hljs-string">'zhaoliu'</span>, <span class="hljs-string">'uid126'</span>, <span class="hljs-number">2</span>, <span class="hljs-number">44</span>, <span class="hljs-string">'this is test user5'</span>),</span><br><span class="line">  (<span class="hljs-string">'test01'</span>, <span class="hljs-string">'uid127'</span>, <span class="hljs-number">2</span>, <span class="hljs-number">64</span>, <span class="hljs-string">'this is test user4'</span>),</span><br><span class="line">  (<span class="hljs-string">'test02'</span>, <span class="hljs-string">'uid128'</span>, <span class="hljs-number">1</span>, <span class="hljs-number">14</span>, <span class="hljs-string">'this is test user2'</span>),</span><br><span class="line">  (<span class="hljs-string">'test03'</span>, <span class="hljs-string">'uid129'</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-string">'this is test user9'</span>);</span><br></pre></td></tr></table></figure>
 
 <p>完成后结果如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show databases;</span><br><span class="line">+--------------------+</span><br><span class="line">| Database           |</span><br><span class="line">+--------------------+</span><br><span class="line">| information_schema |</span><br><span class="line">| test               |</span><br><span class="line">+--------------------+</span><br><span class="line"><span class="hljs-number">2</span> rows <span class="hljs-keyword">in</span> <span class="hljs-keyword">set</span> (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; use test;</span><br><span class="line">Database changed</span><br><span class="line"></span><br><span class="line">mysql&gt; show tables;</span><br><span class="line">+----------------+</span><br><span class="line">| Tables_in_test |</span><br><span class="line">+----------------+</span><br><span class="line">| tab_user_info  |</span><br><span class="line">+----------------+</span><br><span class="line">1 row in <span class="hljs-keyword">set</span> (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from tab_user_info;</span><br><span class="line">+----+----------+--------+------+------+--------------------+---------------------+---------------------+</span><br><span class="line">| id | name     | uid    | sex  | age  | description        | createdAt           | updatedAt           |</span><br><span class="line">+----+----------+--------+------+------+--------------------+---------------------+---------------------+</span><br><span class="line">|  1 | zhangsan | uid123 |    1 |   24 | this is boy        | 2019-11-12 17:51:38 | 2019-11-12 17:51:38 |</span><br><span class="line">|  2 | lisi     | uid124 |    2 |   24 | this is girl       | 2019-11-12 17:51:38 | 2019-11-12 17:51:38 |</span><br><span class="line">|  3 | wangwu   | uid125 |    1 |   26 | this is test user  | 2019-11-12 17:51:38 | 2019-11-12 17:51:38 |</span><br><span class="line">|  4 | zhaoliu  | uid126 |    2 |   44 | this is test user5 | 2019-11-12 17:51:38 | 2019-11-12 17:51:38 |</span><br><span class="line">|  5 | test01   | uid127 |    2 |   64 | this is test user4 | 2019-11-12 17:51:38 | 2019-11-12 17:51:38 |</span><br><span class="line">|  6 | test02   | uid128 |    1 |   14 | this is test user2 | 2019-11-12 17:51:38 | 2019-11-12 17:51:38 |</span><br><span class="line">|  7 | test03   | uid129 |    2 |    4 | this is test user9 | 2019-11-12 17:51:38 | 2019-11-12 17:51:38 |</span><br><span class="line">+----+----------+--------+------+------+--------------------+---------------------+---------------------+</span><br><span class="line">7 rows in <span class="hljs-keyword">set</span> (0.00 sec)</span><br></pre></td></tr></table></figure>
@@ -325,13 +323,12 @@ var _hmt = _hmt || [];
 <li><code>cookie</code> 在每次请求时都会带上，当 <code>session</code> 过大时，每次请求都要额外带上庞大的 <code>cookie</code> 信息</li>
 </ul>
 <p>我们只需要设置 <code>app.sessionStore</code> 即可将 <code>session</code> 存储到指定的存储中</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// app.js</span></span><br><span class="line"><span class="hljs-built_in">module</span>.exports = <span class="hljs-function"><span class="hljs-params">app</span> =&gt;</span> &#123;</span><br><span class="line">  app.sessionStore = &#123;</span><br><span class="line">    <span class="hljs-comment">// support promise / async</span></span><br><span class="line">    <span class="hljs-keyword">async</span> <span class="hljs-keyword">get</span>(key) &#123;</span><br><span class="line">      <span class="hljs-comment">// return value</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="hljs-keyword">async</span> <span class="hljs-keyword">set</span>(key, value, maxAge) &#123;</span><br><span class="line">      <span class="hljs-comment">// set key to store</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="hljs-keyword">async</span> destroy(key) &#123;</span><br><span class="line">      <span class="hljs-comment">// destroy key</span></span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// app.js</span></span><br><span class="line"><span class="hljs-built_in">module</span>.exports = <span class="hljs-function"><span class="hljs-params">app</span> =&gt;</span> &#123;</span><br><span class="line">  app.sessionStore = &#123;</span><br><span class="line">    <span class="hljs-comment">// support promise/async</span></span><br><span class="line">    <span class="hljs-keyword">async</span> <span class="hljs-keyword">get</span>(key) &#123;</span><br><span class="line">      <span class="hljs-comment">// return value</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="hljs-keyword">async</span> <span class="hljs-keyword">set</span>(key, value, maxAge) &#123;</span><br><span class="line">      <span class="hljs-comment">// set key to store</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="hljs-keyword">async</span> destroy(key) &#123;</span><br><span class="line">      <span class="hljs-comment">// destroy key</span></span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><code>sessionStore</code> 的实现我们也可以封装到插件中，例如 <code>egg-session-redis</code> 就提供了将 <code>session</code> 存储到 <code>redis</code> 中的能力，在应用层我们只需要引入 <a href="https://github.com/eggjs/egg-redis" target="_blank" rel="noopener">egg-redis</a> 和 <a href="https://github.com/eggjs/egg-session-redis" target="_blank" rel="noopener">egg-session-redis</a> 插件即可</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// plugin.js</span></span><br><span class="line">exports.redis = &#123;</span><br><span class="line">  enable: <span class="hljs-literal">true</span>,</span><br><span class="line">  package: <span class="hljs-string">'egg-redis'</span>,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">exports.sessionRedis = &#123;</span><br><span class="line">  enable: <span class="hljs-literal">true</span>,</span><br><span class="line">  package: <span class="hljs-string">'egg-session-redis'</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>但是需要注意的是，一旦选择了将 <code>session</code> 存入到外部存储中，就意味着系统将强依赖于这个外部存储，当它挂了的时候，就完全无法使用 <code>session</code> 相关的功能了</p>
-<p>因此更推荐只将必要的信息存储在 <code>session</code> 中，保持 <code>session</code> 的精简并使用默认的 <code>cookie</code> 存储，用户级别的缓存不要存储在 <code>session</code> 中</p>
+<p>但是需要注意的是，一旦选择了将 <code>session</code> 存入到外部存储中，就意味着系统将强依赖于这个外部存储，当它挂了的时候，就完全无法使用 <code>session</code> 相关的功能了，因此更推荐只将必要的信息存储在 <code>session</code> 中，保持 <code>session</code> 的精简并使用默认的 <code>cookie</code> 存储，用户级别的缓存不要存储在 <code>session</code> 中</p>
 <h4 id="egg-jwt"><a href="#egg-jwt" class="headerlink" title="egg-jwt"></a>egg-jwt</h4><p>本章节主要介绍使用 <code>egg</code> 验证 <code>token</code> 的过程，首先初始化一个项目，然后安装两个用于我们之后操作所使用的包</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 使用 ts 版本</span></span><br><span class="line">npm init egg --type=ts</span><br><span class="line">npm install </span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 安装跨域包以及 token 的生成以及验证包</span></span><br><span class="line">npm install egg-cors egg-jwt --save</span><br></pre></td></tr></table></figure>
 
@@ -352,6 +349,8 @@ var _hmt = _hmt || [];
 
 <p>最后前端在请求的时候需要在 <code>headers</code> 里面上添加上默认的验证字断 <code>Authorization</code> 就可以了</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">axios(&#123;</span><br><span class="line">  method: <span class="hljs-string">'post'</span>,</span><br><span class="line">  url: <span class="hljs-string">'http://127.0.0.1:7001/admin'</span>,</span><br><span class="line">  data: &#123;</span><br><span class="line">    username: <span class="hljs-string">'admin'</span>,</span><br><span class="line">    lastName: <span class="hljs-string">'123456'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  headers: &#123;</span><br><span class="line">    <span class="hljs-comment">// 切记 token 不要直接发送，要在前面加上 Bearer 字符串和一个空格</span></span><br><span class="line">    <span class="hljs-string">'Authorization'</span>: <span class="hljs-string">`Bearer <span class="hljs-subst">$&#123;token&#125;</span>`</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;).then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(res.data)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
         </div>
         
         <div class="level is-size-7 is-uppercase">
@@ -461,7 +460,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -622,7 +621,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -638,7 +637,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -646,7 +645,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -709,35 +708,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -747,7 +727,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -755,8 +773,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -766,7 +784,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -774,29 +792,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -952,7 +951,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1117,7 +1116,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1172,7 +1171,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1361,7 +1360,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1375,14 +1374,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

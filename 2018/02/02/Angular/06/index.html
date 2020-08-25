@@ -16,7 +16,7 @@
 <meta property="og:description" content="这里会涉及到 Angular 的 ViewEncapsulation，即控制视图的封装模式，主要分为三种，原生（Native）、仿真（Emulated）和无（None）三种">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/06.jpg">
-<meta property="og:updated_time" content="2020-07-11T15:24:13.491Z">
+<meta property="og:updated_time" content="2020-08-24T09:47:21.194Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content=":host 和 ::ng-deep">
 <meta name="twitter:description" content="这里会涉及到 Angular 的 ViewEncapsulation，即控制视图的封装模式，主要分为三种，原生（Native）、仿真（Emulated）和无（None）三种">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    7 分钟 读完 (大约 1064 个字)
+                    7 分钟 读完 (大约 1070 个字)
                 </span>
                 
                 
@@ -215,8 +215,7 @@ var _hmt = _hmt || [];
 </ul>
 </li>
 </ul>
-<p>唯一的区别在于 <code>Shadow DOM</code>，当然其作用是让组件的样式只进不出，换言之即组件内的样式不会影响到外部组件</p>
-<p>三者的表现形成如下，假设基本模版为</p>
+<p>唯一的区别在于 <code>Shadow DOM</code>，当然其作用是让组件的样式只进不出，换言之即组件内的样式不会影响到外部组件，三者的表现形成如下，假设基本模版为</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@Component(&#123;</span><br><span class="line">  template: <span class="hljs-string">`&lt;h1&gt;test&lt;/h1&gt;`</span>,</span><br><span class="line">  styles: [<span class="hljs-string">`h1 &#123; color: #f50; &#125;`</span>],</span><br><span class="line">  encapsulation: ViewEncapsulation.Native</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
 <p>三种方式生成的分别为</p>
@@ -230,18 +229,13 @@ var _hmt = _hmt || [];
 <h2 id="组件样式"><a href="#组件样式" class="headerlink" title="组件样式"></a>组件样式</h2><p>组件样式的封装模式取决于我们对 <code>encapsulation</code> 的配置，当然你可以了在 <code>main.ts</code> 时为所有组件统一设定一种行为模式，例如</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 使用 None 模式</span></span><br><span class="line">platformBrowserDynamic().bootstrapModule(AppModule, &#123;</span><br><span class="line">  defaultEncapsulation: ViewEncapsulation.None</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
-<p>虽然三种模式都有不同的风格，但对于一个组件而言，如果没有统一使用风格，那么在实际项目中则会让我们很头疼，特别是当项目中同时在使用第三方组件库，情况会更为复杂</p>
-<p>比如你在某一个组件当中添加了一个 <code>class</code> 样式</p>
+<p>虽然三种模式都有不同的风格，但对于一个组件而言，如果没有统一使用风格，那么在实际项目中则会让我们很头疼，特别是当项目中同时在使用第三方组件库，情况会更为复杂，比如你在某一个组件当中添加了一个 <code>class</code> 样式</p>
 <figure class="highlight css hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-selector-class">.active-link</span> &#123;</span><br><span class="line">  <span class="hljs-attribute">color</span>: red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>若组件设定为 <code>None</code> 模式，只要该组件出现过一次，并且在未来所有即使不再使用，那么这个样式也会得到保留，所有的添加了这个 <code>class</code> 的元素均会改变</p>
-<p>反之，对于 <code>Shadow</code> 行为，它会为该组件创建一个额外的属性 <code>_ngcontent-c1</code> 来标识（不管是 <code>Native</code>、<code>Emulated</code> 本质是一样的）所设定的样式仅限于当前组件当中</p>
-<p>而 <code>Angular</code> 中即采用 <code>:host</code> 来表示组件自身，所以前面的 <code>CSS</code> 样式可以调整为</p>
+<p>若组件设定为 <code>None</code> 模式，只要该组件出现过一次，并且在未来所有即使不再使用，那么这个样式也会得到保留，所有的添加了这个 <code>class</code> 的元素均会改变，反之，对于 <code>Shadow</code> 行为，它会为该组件创建一个额外的属性 <code>_ngcontent-c1</code> 来标识（不管是 <code>Native</code>、<code>Emulated</code> 本质是一样的）所设定的样式仅限于当前组件当中，而 <code>Angular</code> 中即采用 <code>:host</code> 来表示组件自身，所以前面的 <code>CSS</code> 样式可以调整为</p>
 <figure class="highlight css hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-selector-pseudo">:host</span> <span class="hljs-selector-class">.active-link</span> &#123;</span><br><span class="line">  <span class="hljs-attribute">color</span>: red;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&lt;!<span class="hljs-selector-tag">--</span> 生成的样式为 <span class="hljs-selector-tag">--</span>&gt;</span><br><span class="line"></span><br><span class="line"><span class="hljs-selector-attr">[_nghost-c1]</span> <span class="hljs-selector-class">.active-link</span><span class="hljs-selector-attr">[_ngcontent-c1]</span> &#123;</span><br><span class="line">  <span class="hljs-attribute">color</span>: red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>然而我们会发现，对于第三方组件组件而言，<code>.active-link</code> 是其组件内部某个 <code>HTML</code> 元素的 <code>class</code> 而已，且它有自己的一套组件封装规则</p>
-<p>但我们生成的 <code>CSS</code> 中包括了一个奇怪的字符 <code>[_ngcontent-c1]</code>，最终导致该组件样式无法改变内嵌的第三方组件内容的样式</p>
-<p>在这种情况下，<code>Angular</code> 提供了一种对未来工具更好兼容性的命令 <code>::ng-deep</code> 来强制样式允许侵入子组件</p>
+<p>然而我们会发现，对于第三方组件组件而言，<code>.active-link</code> 是其组件内部某个 <code>HTML</code> 元素的 <code>class</code> 而已，且它有自己的一套组件封装规则，但我们生成的 <code>CSS</code> 中包括了一个奇怪的字符 <code>[_ngcontent-c1]</code>，最终导致该组件样式无法改变内嵌的第三方组件内容的样式，在这种情况下，<code>Angular</code> 提供了一种对未来工具更好兼容性的命令 <code>::ng-deep</code> 来强制样式允许侵入子组件</p>
 <figure class="highlight css hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-selector-pseudo">:host</span> <span class="hljs-selector-pseudo">::ng-deep</span> <span class="hljs-selector-class">.active-link</span> &#123;</span><br><span class="line">  <span class="hljs-attribute">color</span>: red;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&lt;!<span class="hljs-selector-tag">--</span> 生成的样式为 <span class="hljs-selector-tag">--</span>&gt;</span><br><span class="line"></span><br><span class="line"><span class="hljs-selector-attr">[_nghost-c1]</span> <span class="hljs-selector-class">.active-link</span> &#123;</span><br><span class="line">  <span class="hljs-attribute">color</span>: red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>最终的结果就是这个样式只会在这个组件内部当中有效</p>
@@ -355,7 +349,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -452,7 +446,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -468,7 +462,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -476,7 +470,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -539,35 +533,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -577,7 +552,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -585,8 +598,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -596,7 +609,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -604,29 +617,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -782,7 +776,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -947,7 +941,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1002,7 +996,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1191,7 +1185,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1205,14 +1199,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

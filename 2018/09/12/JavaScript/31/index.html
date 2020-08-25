@@ -16,7 +16,7 @@
 <meta property="og:description" content="先来看一看 MDN 上对 Map 和 ForEach 的定义  forEach() 方法对数组的每个元素执行一次提供的函数 map() 方法创建一个新数组，其结果是该数组中的每个元素都调用一个提供的函数后返回的结果">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg">
-<meta property="og:updated_time" content="2020-07-05T08:17:40.541Z">
+<meta property="og:updated_time" content="2020-08-25T07:20:37.307Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的 Map 与 forEach 的对比">
 <meta name="twitter:description" content="先来看一看 MDN 上对 Map 和 ForEach 的定义  forEach() 方法对数组的每个元素执行一次提供的函数 map() 方法创建一个新数组，其结果是该数组中的每个元素都调用一个提供的函数后返回的结果">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    6 分钟 读完 (大约 833 个字)
+                    6 分钟 读完 (大约 835 个字)
                 </span>
                 
                 
@@ -203,15 +203,13 @@ var _hmt = _hmt || [];
 <h2 id="forEach"><a href="#forEach" class="headerlink" title="forEach()"></a>forEach()</h2><p>首先需要注意，<code>forEach()</code> 方法是 <strong>没有返回值</strong> 的，它不会返回执行结果，而是 <code>undefined</code>，也就是说，<code>forEach()</code> 会修改原来的数组，而 <code>map()</code> 方法会得到一个新的数组并返回</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">arr[].forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value, index, array</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
-<p>参数 <code>value</code> 为数组中的当前项，<code>index</code> 当前项的索引，<code>array</code> 原始数组，数组中有几项，那么传递进去的匿名回调函数就需要执行几次</p>
-<p>理论上这个方法是没有返回值的，仅仅是遍历数组中的每一项，不对原来数组进行修改，但是可以自己通过数组的索引来修改原来的数组</p>
+<p>参数 <code>value</code> 为数组中的当前项，<code>index</code> 当前项的索引，<code>array</code> 原始数组，数组中有几项，那么传递进去的匿名回调函数就需要执行几次，理论上这个方法是没有返回值的，仅仅是遍历数组中的每一项，不对原来数组进行修改，但是可以自己通过数组的索引来修改原来的数组</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> ary = [<span class="hljs-number">12</span>, <span class="hljs-number">23</span>, <span class="hljs-number">24</span>, <span class="hljs-number">42</span>, <span class="hljs-number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> res = ary.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, index, input</span>) </span>&#123;</span><br><span class="line">  input[index] = item * <span class="hljs-number">10</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(res)  <span class="hljs-comment">// ==&gt; undefined</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(ary)  <span class="hljs-comment">// ==&gt; 通过数组索引改变了原数组</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="map"><a href="#map" class="headerlink" title="map()"></a>map()</h2><p>是有返回值的，并且可以通过 <code>return</code> 操作符返回出来 </p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">arr[].map(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value, index, array</span>) </span>&#123;</span><br><span class="line">  </span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> xxx</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
-<p>参数 <code>value</code> 为数组中的当前项，<code>index</code> 当前项的索引，<code>array</code> 原始数组，区别在于 <code>map</code> 的回调函数中支持 <code>return</code> 返回值</p>
-<p><code>return</code> 的是什么，相当于把数组中的这一项变为什么，并不影响原来的数组，只是相当于把原数组克隆一份，把克隆的这一份的数组中的对应项改变了</p>
+<p>参数 <code>value</code> 为数组中的当前项，<code>index</code> 当前项的索引，<code>array</code> 原始数组，区别在于 <code>map</code> 的回调函数中支持 <code>return</code> 返回值，<code>return</code> 的是什么，相当于把数组中的这一项变为什么，并不影响原来的数组，只是相当于把原数组克隆一份，把克隆的这一份的数组中的对应项改变了</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> ary = [<span class="hljs-number">12</span>, <span class="hljs-number">23</span>, <span class="hljs-number">24</span>, <span class="hljs-number">42</span>, <span class="hljs-number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> res = ary.map(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, index, input</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> item * <span class="hljs-number">10</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(res)  <span class="hljs-comment">// ==&gt; [120, 230, 240, 420, 10]  原数组拷贝了一份，并进行了修改</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(ary)  <span class="hljs-comment">// ==&gt; [12, 23, 24, 42, 1]       原数组并未发生变化</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="速度对比"><a href="#速度对比" class="headerlink" title="速度对比"></a>速度对比</h2><p>可以使用 <code>jsPref</code> 来进行两者的速度比较，<a href="https://jsperf.com/map-vs-foreach-speed-test" target="_blank" rel="noopener">map-vs-foreach-speed-test</a>，结果如下</p>
@@ -249,16 +247,16 @@ var _hmt = _hmt || [];
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/10/12/CSS/08/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2018/09/12/Vue/05/">
                 <i class="level-item fa fa-chevron-left"></i>
-                <span class="level-item">IE 中的 haslayout</span>
+                <span class="level-item">使用 webpack 来构建 vue 项目</span>
             </a>
         </div>
         
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2018/09/12/Vue/05/">
-                <span class="level-item">使用 webpack 来构建 vue 项目</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/08/25/Vue/04/">
+                <span class="level-item">深入 Vuex</span>
                 <i class="level-item fa fa-chevron-right"></i>
             </a>
         </div>
@@ -334,7 +332,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -435,7 +433,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -451,7 +449,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -459,7 +457,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -522,35 +520,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -560,7 +539,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -568,8 +585,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -579,7 +596,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -587,29 +604,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -765,7 +763,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -930,7 +928,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -985,7 +983,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1174,7 +1172,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1188,14 +1186,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

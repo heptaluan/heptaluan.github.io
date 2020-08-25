@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="如何监听对象和数组的属性改变算是一个老生常谈的问题，一些现有框架当中也都有各自的实现方式，今天我们就来深入的了解一下具体的实现原理 先来看看如何监听对象的属性改变">
+    <meta name="description" content="如何监听对象和数组的属性改变算是一个老生常谈的问题，一些现有框架当中也都有各自的实现方式，今天我们就来深入的了解一下具体的实现原理，先来看看如何监听对象的属性改变">
 <meta name="keywords" content="JavaScript">
 <meta property="og:type" content="article">
 <meta property="og:title" content="如何监听对象和数组的属性改变">
 <meta property="og:url" content="http://yoursite.com/2017/08/29/JavaScript/39/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="如何监听对象和数组的属性改变算是一个老生常谈的问题，一些现有框架当中也都有各自的实现方式，今天我们就来深入的了解一下具体的实现原理 先来看看如何监听对象的属性改变">
+<meta property="og:description" content="如何监听对象和数组的属性改变算是一个老生常谈的问题，一些现有框架当中也都有各自的实现方式，今天我们就来深入的了解一下具体的实现原理，先来看看如何监听对象的属性改变">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/39.jpg">
-<meta property="og:updated_time" content="2020-07-04T15:33:32.537Z">
+<meta property="og:updated_time" content="2020-08-25T07:34:29.755Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何监听对象和数组的属性改变">
-<meta name="twitter:description" content="如何监听对象和数组的属性改变算是一个老生常谈的问题，一些现有框架当中也都有各自的实现方式，今天我们就来深入的了解一下具体的实现原理 先来看看如何监听对象的属性改变">
+<meta name="twitter:description" content="如何监听对象和数组的属性改变算是一个老生常谈的问题，一些现有框架当中也都有各自的实现方式，今天我们就来深入的了解一下具体的实现原理，先来看看如何监听对象的属性改变">
 <meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/39.jpg">
 
 
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    6 分钟 读完 (大约 878 个字)
+                    6 分钟 读完 (大约 881 个字)
                 </span>
                 
                 
@@ -186,8 +186,7 @@ var _hmt = _hmt || [];
             
         </h1>
         <div class="content">
-            <p>如何监听对象和数组的属性改变算是一个老生常谈的问题，一些现有框架当中也都有各自的实现方式，今天我们就来深入的了解一下具体的实现原理</p>
-<p>先来看看如何监听对象的属性改变</p>
+            <p>如何监听对象和数组的属性改变算是一个老生常谈的问题，一些现有框架当中也都有各自的实现方式，今天我们就来深入的了解一下具体的实现原理，先来看看如何监听对象的属性改变</p>
 <a id="more"></a>
 
 
@@ -202,13 +201,10 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> user = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> proxy = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Proxy</span>(user, &#123;</span><br><span class="line">  <span class="hljs-keyword">get</span>(target, property) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> target[property]</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-keyword">set</span>(target, property, value) &#123;</span><br><span class="line">    target[property] = value</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">proxy.name = <span class="hljs-string">'zhangsan'</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(user)</span><br><span class="line"><span class="hljs-comment">// &#123;name: 'zhangsan'&#125;</span></span><br></pre></td></tr></table></figure>
 
 <p>原理都是一样的，都是利用 <code>get/set</code> 来监听对象属性的变化</p>
-<h2 id="监听数组的变化"><a href="#监听数组的变化" class="headerlink" title="监听数组的变化"></a>监听数组的变化</h2><p>监听数组的变化相对来说就没有监听对象那么轻松了，因为没有对应的 <code>get/set</code> 方法来供我们使用</p>
-<p>但是我们可以定义一个新的数组，然后让其继承原生的 <code>Array</code>，然后重写其中我们需要监听的方法即可（<code>pop</code>，<code>push</code> 等），如下是 <code>ES6</code> 当中的实现方式</p>
+<h2 id="监听数组的变化"><a href="#监听数组的变化" class="headerlink" title="监听数组的变化"></a>监听数组的变化</h2><p>监听数组的变化相对来说就没有监听对象那么轻松了，因为没有对应的 <code>get/set</code> 方法来供我们使用，但是我们可以定义一个新的数组，然后让其继承原生的 <code>Array</code>，然后重写其中我们需要监听的方法即可（<code>pop</code>，<code>push</code> 等），如下是 <code>ES6</code> 当中的实现方式</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">NewArray</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Array</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(...args) &#123;</span><br><span class="line">    <span class="hljs-comment">// 调用父类 Array 的 constructor</span></span><br><span class="line">    <span class="hljs-keyword">super</span>(...args)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  push(...args) &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`监听到数组变化`</span>)</span><br><span class="line">    <span class="hljs-comment">// 调用父类方法</span></span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.push(...args)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]</span><br><span class="line"><span class="hljs-keyword">let</span> newArr = <span class="hljs-keyword">new</span> NewArray(...arr)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(newArr)  <span class="hljs-comment">// [1, 2]</span></span><br><span class="line"></span><br><span class="line">newArr.push(<span class="hljs-number">3</span>)       <span class="hljs-comment">// 监听到数组变化</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(newArr)  <span class="hljs-comment">// [1, 2, 3]</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="关于-ES5-以下实现"><a href="#关于-ES5-以下实现" class="headerlink" title="关于 ES5 以下实现"></a>关于 ES5 以下实现</h2><p>上面我们介绍了 <code>ES6</code> 当中的数组监听方法的实现，那么 <code>ES6</code> 以下还能实现吗？</p>
-<p>这里就需要注意了，在 <code>ES5</code> 及以下的 <code>JavaScript</code> 因为无法完美的继承数组，所以虽然可以实现，但是是存在一定缺陷的</p>
-<p>因为 <code>Array</code> 构造函数执行时不会对传进去的 <code>this</code> 做任何处理，不止 <code>Array</code>，<code>String</code>，<code>Number</code>，<code>Regexp</code>，<code>Object</code> 等等 <code>JavaScript</code> 的内置类都不行</p>
+<h2 id="关于-ES5-以下实现"><a href="#关于-ES5-以下实现" class="headerlink" title="关于 ES5 以下实现"></a>关于 ES5 以下实现</h2><p>上面我们介绍了 <code>ES6</code> 当中的数组监听方法的实现，那么 <code>ES6</code> 以下还能实现吗？这里就需要注意了，在 <code>ES5</code> 及以下的 <code>JavaScript</code> 因为无法完美的继承数组，所以虽然可以实现，但是是存在一定缺陷的，因为 <code>Array</code> 构造函数执行时不会对传进去的 <code>this</code> 做任何处理，不止 <code>Array</code>，<code>String</code>，<code>Number</code>，<code>Regexp</code>，<code>Object</code> 等等 <code>JavaScript</code> 的内置类都不行</p>
 <p>数组其响应式的 <code>length</code> 属性以及内部的 <code>[[class]]</code> 属性我们无法在 <code>JavaScript</code> 层面实现，这就导致我们无法去用任何一个对象来模仿一个数组，但是可以使用非标准属性 <code>__proto__</code> 来实现，如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 首先获取 Array 原型</span></span><br><span class="line"><span class="hljs-keyword">const</span> oldMethod = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Array</span>.prototype)</span><br><span class="line"><span class="hljs-keyword">const</span> newMethod = []</span><br><span class="line"></span><br><span class="line">[<span class="hljs-string">'push'</span>, <span class="hljs-string">'pop'</span>, <span class="hljs-string">'shift'</span>, <span class="hljs-string">'unshift'</span>, <span class="hljs-string">'splice'</span>, <span class="hljs-string">'sort'</span>, <span class="hljs-string">'reverse'</span>].forEach(<span class="hljs-function"><span class="hljs-params">method</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// 在 newMethod 上进行方法的重写</span></span><br><span class="line">  <span class="hljs-comment">// 这里需要注意的是重写的方法是定义在 newMethod 的属性上而不是其原型属性（newMethod.__proto__ 没有改变）</span></span><br><span class="line">  newMethod[method] = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`监听到数组的变化`</span>)</span><br><span class="line">    <span class="hljs-keyword">return</span> oldMethod[method].apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> list = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]</span><br><span class="line"><span class="hljs-comment">// 将需要监听的数组的原型指针指向我们重新定义的新对象</span></span><br><span class="line">list.__proto__ = newMethod</span><br><span class="line">list.push(<span class="hljs-number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 如果不设定指向，则默认使用原生的方法</span></span><br><span class="line"><span class="hljs-keyword">let</span> list2 = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]</span><br><span class="line">list2.push(<span class="hljs-number">3</span>)</span><br></pre></td></tr></table></figure>
 
@@ -322,7 +318,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -419,7 +415,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -435,7 +431,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -443,7 +439,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -506,35 +502,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -544,7 +521,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -552,8 +567,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -563,7 +578,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -571,29 +586,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -749,7 +745,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -914,7 +910,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -969,7 +965,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1158,7 +1154,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1172,14 +1168,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

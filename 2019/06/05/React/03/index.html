@@ -16,7 +16,7 @@
 <meta property="og:description" content="在之前的章节当中我们介绍了 Flux 与 Redux 和 Redux、Flux 和 React-Redux 三者之间的区别，这一章我们就深入的来了解一下 redux 的源码结构，先来看看 redux 的源码目录，如下所示 12345678├── utils/│     ├── warning.js      // 控制台显示警告信息├── applyMiddleware.js├── bindAct">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/03.jpg">
-<meta property="og:updated_time" content="2020-08-02T13:25:06.575Z">
+<meta property="og:updated_time" content="2020-08-25T09:10:23.977Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redux 源码初探">
 <meta name="twitter:description" content="在之前的章节当中我们介绍了 Flux 与 Redux 和 Redux、Flux 和 React-Redux 三者之间的区别，这一章我们就深入的来了解一下 redux 的源码结构，先来看看 redux 的源码目录，如下所示 12345678├── utils/│     ├── warning.js      // 控制台显示警告信息├── applyMiddleware.js├── bindAct">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    23 分钟 读完 (大约 3423 个字)
+                    23 分钟 读完 (大约 3426 个字)
                 </span>
                 
                 
@@ -204,9 +204,7 @@ var _hmt = _hmt || [];
 <p>一个比较完整的示例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">func1</span>(<span class="hljs-params">num</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'func1 获得参数 '</span> + num)</span><br><span class="line">  <span class="hljs-keyword">return</span> num + <span class="hljs-number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">func2</span>(<span class="hljs-params">num</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'func2 获得参数 '</span> + num)</span><br><span class="line">  <span class="hljs-keyword">return</span> num + <span class="hljs-number">2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">func3</span>(<span class="hljs-params">num</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'func3 获得参数 '</span> + num)</span><br><span class="line">  <span class="hljs-keyword">return</span> num + <span class="hljs-number">3</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> re1 = func3(func2(func1(<span class="hljs-number">0</span>)))</span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'re1：'</span> + re1)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'==============='</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 使用 redux 提供的 compose() 方法</span></span><br><span class="line"><span class="hljs-keyword">var</span> re2 = Redux.compose(func3, func2, func1)(<span class="hljs-number">0</span>)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'re2：'</span> + re2)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ===============================================</span></span><br><span class="line"><span class="hljs-comment">// 执行结果如下</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// func1 获得参数 0</span></span><br><span class="line"><span class="hljs-comment">// func2 获得参数 1</span></span><br><span class="line"><span class="hljs-comment">// func3 获得参数 3</span></span><br><span class="line"><span class="hljs-comment">// re1：6</span></span><br><span class="line"><span class="hljs-comment">// ===============</span></span><br><span class="line"><span class="hljs-comment">// func1 获得参数 0</span></span><br><span class="line"><span class="hljs-comment">// func2 获得参数 1</span></span><br><span class="line"><span class="hljs-comment">// func3 获得参数 3</span></span><br><span class="line"><span class="hljs-comment">// re2：6</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="combineReducers-reducers"><a href="#combineReducers-reducers" class="headerlink" title="combineReducers(reducers)"></a>combineReducers(reducers)</h2><p>简单来说，这个函数的作用就是通过逐层下分管理对应部分的 <code>state</code>（拆分 <code>state</code>，各个模块管理自己的 <code>state</code>，最后合并）</p>
-<p>因为在 <code>flux</code> 中是根据不同的功能拆分出多个 <code>store</code> 分而治之，而 <code>Redux</code> 只允许应用中有唯一的 <code>store</code>，通过拆分出多个 <code>reducer</code> 分别管理对应的 <code>state</code>，无论是 <code>dispatch</code> 哪个 <code>action</code>，都会流通所有的 <code>reducer</code></p>
-<p>这也是为何 <code>reducer</code> 必须返回其对应的 <code>state</code> 的原因（否则整合状态树时，该 <code>reducer</code> 对应的键值就是 <code>undefined</code>）</p>
+<h2 id="combineReducers-reducers"><a href="#combineReducers-reducers" class="headerlink" title="combineReducers(reducers)"></a>combineReducers(reducers)</h2><p>简单来说，这个函数的作用就是通过逐层下分管理对应部分的 <code>state</code>（拆分 <code>state</code>，各个模块管理自己的 <code>state</code>，最后合并），因为在 <code>flux</code> 中是根据不同的功能拆分出多个 <code>store</code> 分而治之，而 <code>Redux</code> 只允许应用中有唯一的 <code>store</code>，通过拆分出多个 <code>reducer</code> 分别管理对应的 <code>state</code>，无论是 <code>dispatch</code> 哪个 <code>action</code>，都会流通所有的 <code>reducer</code>，这也是为何 <code>reducer</code> 必须返回其对应的 <code>state</code> 的原因（否则整合状态树时，该 <code>reducer</code> 对应的键值就是 <code>undefined</code>）</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">combineReducers</span>(<span class="hljs-params">reducers</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> reducerKeys = <span class="hljs-built_in">Object</span>.keys(reducers)</span><br><span class="line">  <span class="hljs-keyword">var</span> finalReducers = &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; reducerKeys.length; i++) &#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> key = reducerKeys[i]</span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> reducers[key] === <span class="hljs-string">'function'</span>) &#123;</span><br><span class="line">      finalReducers[key] = reducers[key]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">var</span> finalReducerKeys = <span class="hljs-built_in">Object</span>.keys(finalReducers)</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 返回合成后的 reducer</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">combination</span>(<span class="hljs-params">state = &#123;&#125;, action</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> hasChanged = <span class="hljs-literal">false</span></span><br><span class="line">    <span class="hljs-keyword">var</span> nextState = &#123;&#125;</span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; finalReducerKeys.length; i++) &#123;</span><br><span class="line">      <span class="hljs-keyword">var</span> key = finalReducerKeys[i]</span><br><span class="line">      <span class="hljs-keyword">var</span> reducer = finalReducers[key]</span><br><span class="line">      <span class="hljs-keyword">var</span> previousStateForKey = state[key]                         <span class="hljs-comment">// 获取当前子 state</span></span><br><span class="line">      <span class="hljs-keyword">var</span> nextStateForKey = reducer(previousStateForKey, action)   <span class="hljs-comment">// 执行各子 reducer 中获取子 nextState</span></span><br><span class="line">      nextState[key] = nextStateForKey                             <span class="hljs-comment">// 将子 nextState 挂载到对应的键名</span></span><br><span class="line">      hasChanged = hasChanged || nextStateForKey !== previousStateForKey</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> hasChanged ? nextState : state</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="bindActionCreators-actionCreators-dispatch"><a href="#bindActionCreators-actionCreators-dispatch" class="headerlink" title="bindActionCreators(actionCreators, dispatch)"></a>bindActionCreators(actionCreators, dispatch)</h2><p>这个函数主要用于分发 <code>action</code>（比如使用 <code>dispatch(ActionCreator())</code>），实现自动 <code>dispatch</code></p>
@@ -242,9 +240,10 @@ var _hmt = _hmt || [];
 <p>之所以可以这样使用，是因为在 <code>createStore</code> 的源码的开头部分</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createStore</span>(<span class="hljs-params">reducer, preloadedState, enhancer</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> preloadedState === <span class="hljs-string">'function'</span> &amp;&amp; <span class="hljs-keyword">typeof</span> enhancer === <span class="hljs-string">'undefined'</span>) &#123;</span><br><span class="line">    <span class="hljs-comment">// 只传入 reducer 和 Store Enhancer 这两个参数的情况</span></span><br><span class="line">    enhancer = preloadedState</span><br><span class="line">    preloadedState = <span class="hljs-literal">undefined</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> enhancer !== <span class="hljs-string">'undefined'</span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> enhancer !== <span class="hljs-string">'function'</span>) &#123;</span><br><span class="line">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Expected the enhancer to be a function.'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-comment">// 存在 enhancer 就立即执行，返回增强版的 createStore &lt;== 注 (1)</span></span><br><span class="line">    <span class="hljs-keyword">return</span> enhancer(createStore)(reducer, preloadedState)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> reducer !== <span class="hljs-string">'function'</span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Expected the reducer to be a function.'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>如果有多个中间件以及多个增强器（有多个 <code>enhancer</code>），则注 <code>(1)</code> 中的代码会执行多次，生成最终的超级增强版 <code>store</code></p>
-<p>比如上例中 <code>compose</code> 内部的执行顺序示意图</p>
+<p>如果有多个中间件以及多个增强器（有多个 <code>enhancer</code>），则注 <code>(1)</code> 中的代码会执行多次，生成最终的超级增强版 <code>store</code>，比如上例中 <code>compose</code> 内部的执行顺序示意图</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">原 createStore ————————</span><br><span class="line">                      ↓</span><br><span class="line"><span class="hljs-keyword">return</span> enhancer1(createStore)(reducer, preloadedState, enhancer2)</span><br><span class="line">   |</span><br><span class="line">   ├———————— ——&gt; createStore 增强版 <span class="hljs-number">1</span></span><br><span class="line">                       ↓</span><br><span class="line"><span class="hljs-keyword">return</span> enhancer2(createStore1)(reducer, preloadedState, enhancer3)</span><br><span class="line">   |</span><br><span class="line">   ├———————————&gt; createStore 增强版 <span class="hljs-number">1</span> + <span class="hljs-number">2</span></span><br><span class="line">                        ↓</span><br><span class="line"><span class="hljs-keyword">return</span> enhancer3(createStore1 + <span class="hljs-number">2</span>)(reducer, preloadedState, applyMiddleware(m1, m2, m3))</span><br><span class="line">   |</span><br><span class="line">   ├————————————————————————————&gt; createStore 增强版 <span class="hljs-number">1</span> + <span class="hljs-number">2</span> + <span class="hljs-number">3</span></span><br><span class="line">                                        ↓</span><br><span class="line"><span class="hljs-keyword">return</span> appleMiddleware(m1, m2, m3)(createStore1 + <span class="hljs-number">2</span> + <span class="hljs-number">3</span>)(reducer, preloadedState)</span><br><span class="line">   |</span><br><span class="line">   ├——————————————————————————————————&gt; 生成最终增强版 store</span><br></pre></td></tr></table></figure>
+
+
         </div>
         
         <div class="level is-size-7 is-uppercase">
@@ -354,7 +353,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -467,7 +466,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -483,7 +482,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -491,7 +490,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -554,35 +553,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -592,7 +572,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -600,8 +618,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -611,7 +629,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -619,29 +637,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -797,7 +796,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -962,7 +961,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1017,7 +1016,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1206,7 +1205,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1220,14 +1219,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

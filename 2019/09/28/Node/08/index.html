@@ -16,7 +16,7 @@
 <meta property="og:description" content="为了让 Node.js 的文件可以相互调用，Node.js 提供了一个简单的模块系统，模块是 Node.js 应用程序的基本组成部分，文件和模块是一一对应的，换言之，一个 Node.js 文件就是一个模块，这个文件可能是 JavaScript 代码、JSON 或者编译过的 C/C++ 扩展">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg">
-<meta property="og:updated_time" content="2020-08-02T13:25:06.571Z">
+<meta property="og:updated_time" content="2020-08-25T08:41:21.493Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Node.js 中的模块机制">
 <meta name="twitter:description" content="为了让 Node.js 的文件可以相互调用，Node.js 提供了一个简单的模块系统，模块是 Node.js 应用程序的基本组成部分，文件和模块是一一对应的，换言之，一个 Node.js 文件就是一个模块，这个文件可能是 JavaScript 代码、JSON 或者编译过的 C/C++ 扩展">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    32 分钟 读完 (大约 4871 个字)
+                    33 分钟 读完 (大约 4877 个字)
                 </span>
                 
                 
@@ -190,8 +190,7 @@ var _hmt = _hmt || [];
 <a id="more"></a>
 
 
-<h2 id="CommonJS-规范"><a href="#CommonJS-规范" class="headerlink" title="CommonJS 规范"></a>CommonJS 规范</h2><p><code>Node.js</code> 遵循 <a href="http://wiki.commonjs.org/wiki/CommonJS" target="_blank" rel="noopener">CommonJS</a> 规范，该规范的核心思想是允许模块通过 <code>require</code> 方法来同步加载所要依赖的其他模块，然后通过 <code>exports</code> 或 <code>module.exports</code> 来导出需要暴露的接口</p>
-<p><code>CommonJS</code> 规范是为了解决 <code>JavaScript</code> 的作用域问题而定义的模块形式，可以使每个模块它自身的命名空间中执行，下面是一个简单的示例</p>
+<h2 id="CommonJS-规范"><a href="#CommonJS-规范" class="headerlink" title="CommonJS 规范"></a>CommonJS 规范</h2><p><code>Node.js</code> 遵循 <a href="http://wiki.commonjs.org/wiki/CommonJS" target="_blank" rel="noopener">CommonJS</a> 规范，该规范的核心思想是允许模块通过 <code>require</code> 方法来同步加载所要依赖的其他模块，然后通过 <code>exports</code> 或 <code>module.exports</code> 来导出需要暴露的接口，<code>CommonJS</code> 规范是为了解决 <code>JavaScript</code> 的作用域问题而定义的模块形式，可以使每个模块它自身的命名空间中执行，下面是一个简单的示例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// a.js</span></span><br><span class="line"><span class="hljs-built_in">module</span>.exports = <span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> a + b</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// b.js</span></span><br><span class="line"><span class="hljs-keyword">const</span> add = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./a'</span>)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(add(<span class="hljs-number">2</span>, <span class="hljs-number">3</span>))</span><br></pre></td></tr></table></figure>
 
 <p><code>CommonJS</code> 也有浏览器端的实现，其原理是现将所有模块都定义好并通过 <code>id</code> 索引，这样就可以方便的在浏览器环境中解析了，可以参考 <a href="https://github.com/Stuk/require1k" target="_blank" rel="noopener">require1k</a> 和 <a href="https://github.com/ruanyf/tiny-browser-require" target="_blank" rel="noopener">tiny-browser-require</a> 源码</p>
@@ -255,8 +254,7 @@ var _hmt = _hmt || [];
 <p>执行完以上代码，控制台的输出如下，我们忽略掉输出对象中的大部分属性，只保留一些比较重要的，如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">Module &#123; ========================================================&gt; <span class="hljs-built_in">module</span></span><br><span class="line">  id: <span class="hljs-string">'.'</span>,</span><br><span class="line">  exports: &#123;&#125;,</span><br><span class="line">  parent: <span class="hljs-literal">null</span>,</span><br><span class="line">  filename: <span class="hljs-string">'index.js'</span>,</span><br><span class="line">  loaded: <span class="hljs-literal">false</span>,</span><br><span class="line">  children: [],</span><br><span class="line">  <span class="hljs-comment">// 模块查找路径</span></span><br><span class="line">  paths: []</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;&#125; ==============================================================&gt; exports</span><br><span class="line"></span><br><span class="line">/Users/Desktop/test =============================================&gt; __dirname</span><br><span class="line"></span><br><span class="line">/Users/Desktop/test/index.js ====================================&gt; __filename</span><br><span class="line"></span><br><span class="line">&#123; </span><br><span class="line">  [<span class="hljs-built_in">Function</span>: <span class="hljs-built_in">require</span>] ===========================================&gt; <span class="hljs-built_in">require</span></span><br><span class="line">  resolve: &#123; [<span class="hljs-built_in">Function</span>: resolve] paths: [<span class="hljs-built_in">Function</span>: paths] &#125;,</span><br><span class="line">  <span class="hljs-comment">// Module对象</span></span><br><span class="line">  main: Module &#123; ... &#125;,</span><br><span class="line">  extensions: &#123; <span class="hljs-string">'.js'</span>: [<span class="hljs-built_in">Function</span>], <span class="hljs-string">'.json'</span>: [<span class="hljs-built_in">Function</span>], <span class="hljs-string">'.node'</span>: [<span class="hljs-built_in">Function</span>] &#125;,</span><br><span class="line">  cache: &#123; ... &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>通过控制台的输出值，我们可以清楚地看出每个变量的值，在执行代码之前，<code>Node.js</code> 会对要执行的代码进行封装，至于到底是如何封装的，可以见下方 <a href="#require-函数支持导入哪几类文件？">require 函数支持导入哪几类文件？</a></p>
-<p>如下所示</p>
+<p>通过控制台的输出值，我们可以清楚地看出每个变量的值，在执行代码之前，<code>Node.js</code> 会对要执行的代码进行封装，至于到底是如何封装的，可以见下方 <a href="#require-函数支持导入哪几类文件？">require 函数支持导入哪几类文件？</a>，如下所示</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">exports, require, module, __filename, __dirname</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 模块的代码</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
 <p>这里我们就清楚了，模块中的 <code>module</code>、<code>exports</code>、<code>__dirname</code>、<code>__filename</code> 和 <code>require</code> 这些对象都是函数的输入参数，在调用包装后的函数时传入</p>
@@ -266,11 +264,11 @@ var _hmt = _hmt || [];
 <p>可以发现，输出为 <code>true</code>，再看下面这样</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">exports.id = <span class="hljs-number">1</span>                            <span class="hljs-comment">// 方式一，可以正常导出</span></span><br><span class="line">exports = &#123; <span class="hljs-attr">id</span>: <span class="hljs-number">1</span> &#125;                       <span class="hljs-comment">// 方式二，无法正常导出</span></span><br><span class="line"><span class="hljs-built_in">module</span>.exports = &#123; <span class="hljs-attr">id</span>: <span class="hljs-number">1</span> &#125;                <span class="hljs-comment">// 方式三，可以正常导出</span></span><br></pre></td></tr></table></figure>
 
-<p>为什么方式二无法正常导出呢？这里可以参考上面的 <code>module</code> 和 <code>exports</code> 输出的对应值来理解</p>
-<p>如果 <code>module.exports === exports</code> 执行的结果为 <code>true</code>，那么表示模块中的 <code>exports</code> 变量与 <code>module.exports</code> 属性是指向同一个对象，当使用方式二 <code>exports = { id: 1 }</code> 的方式会改变 <code>exports</code> 变量的指向，这时与 <code>module.exports</code> 属性指向不同的变量，而当我们导入某个模块时，是导入 <code>module.exports</code> 属性指向的对象</p>
+<p>为什么方式二无法正常导出呢？这里可以参考上面的 <code>module</code> 和 <code>exports</code> 输出的对应值来理解，如果 <code>module.exports === exports</code> 执行的结果为 <code>true</code>，那么表示模块中的 <code>exports</code> 变量与 <code>module.exports</code> 属性是指向同一个对象，当使用方式二 <code>exports = { id: 1 }</code> 的方式会改变 <code>exports</code> 变量的指向，这时与 <code>module.exports</code> 属性指向不同的变量，而当我们导入某个模块时，是导入 <code>module.exports</code> 属性指向的对象</p>
+<blockquote>
 <p>如果想要深入了解，可以参考之前整理过的一篇文章内容 <a href="https://heptaluan.github.io/2018/06/05/Node/03/" target="_blank" rel="noopener">exports、module.exports 和 export、export default</a>，分析的很详细</p>
-<h2 id="模块之间循环依赖是否会陷入死循环？"><a href="#模块之间循环依赖是否会陷入死循环？" class="headerlink" title="模块之间循环依赖是否会陷入死循环？"></a>模块之间循环依赖是否会陷入死循环？</h2><p>我们先来看看什么是循环依赖，所谓循环依赖就是，当模块 <code>a</code> 执行时需要依赖模块 <code>b</code> 中定义的属性或方法，而在导入模块 <code>b</code> 中，发现模块 <code>b</code> 同时也依赖模块 <code>a</code> 中的属性或方法，即两个模块之间互相依赖，这种现象我们称之为循环依赖</p>
-<p>我们来验证一下</p>
+</blockquote>
+<h2 id="模块之间循环依赖是否会陷入死循环？"><a href="#模块之间循环依赖是否会陷入死循环？" class="headerlink" title="模块之间循环依赖是否会陷入死循环？"></a>模块之间循环依赖是否会陷入死循环？</h2><p>我们先来看看什么是循环依赖，所谓循环依赖就是，当模块 <code>a</code> 执行时需要依赖模块 <code>b</code> 中定义的属性或方法，而在导入模块 <code>b</code> 中，发现模块 <code>b</code> 同时也依赖模块 <code>a</code> 中的属性或方法，即两个模块之间互相依赖，这种现象我们称之为循环依赖，我们来验证一下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// a.js</span></span><br><span class="line">exports.a = <span class="hljs-number">1</span></span><br><span class="line">exports.b = <span class="hljs-number">2</span></span><br><span class="line"><span class="hljs-built_in">require</span>(<span class="hljs-string">'./b'</span>)</span><br><span class="line">exports.c = <span class="hljs-number">3</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// b.js</span></span><br><span class="line"><span class="hljs-keyword">const</span> a = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./a'</span>)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(a)</span><br></pre></td></tr></table></figure>
 
 <p>当在控制台运行 <code>a.js</code> 之后可以发现程序正常运行，并不会出现死循环，但 <strong>只会输出相应模块已加载的部分数据</strong>，如下</p>
@@ -299,8 +297,7 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">exports, require, module, __filename, __dirname</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 模块原始内容</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
 <p>这也就解释了之前的模块中的 <code>exports</code>，<code>require</code>，<code>module</code>，<code>__filename</code> 和 <code>__dirname</code> 来自何方</p>
-<h2 id="require-函数执行的主要流程是什么？"><a href="#require-函数执行的主要流程是什么？" class="headerlink" title="require 函数执行的主要流程是什么？"></a>require 函数执行的主要流程是什么？</h2><p>在之前的章节中我们已经了解到了 <code>require</code> 函数执行的主要流程，其实就是模块加载机制，在加载对应模块前，我们首先需要定位文件的路径，文件的定位是通过 <code>Module</code> 内部的 <code>_resolveFilename()</code> 方法来实现</p>
-<p>简化版的相关的伪代码描述如下</p>
+<h2 id="require-函数执行的主要流程是什么？"><a href="#require-函数执行的主要流程是什么？" class="headerlink" title="require 函数执行的主要流程是什么？"></a>require 函数执行的主要流程是什么？</h2><p>在之前的章节中我们已经了解到了 <code>require</code> 函数执行的主要流程，其实就是模块加载机制，在加载对应模块前，我们首先需要定位文件的路径，文件的定位是通过 <code>Module</code> 内部的 <code>_resolveFilename()</code> 方法来实现，简化版的相关的伪代码描述如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">从 Y 路径的模块 <span class="hljs-built_in">require</span>(X)</span><br><span class="line"><span class="hljs-number">1.</span> 如果 X 是一个核心模块，</span><br><span class="line">  a. 返回核心模块</span><br><span class="line">  b. 结束</span><br><span class="line"><span class="hljs-number">2.</span> 如果 X 是以 <span class="hljs-string">'/'</span> 开头</span><br><span class="line">  a. 设 Y 为文件系统根目录</span><br><span class="line"><span class="hljs-number">3.</span> 如果 X 是以 <span class="hljs-string">'./'</span> 或 <span class="hljs-string">'/'</span> 或 <span class="hljs-string">'../'</span> 开头</span><br><span class="line">  a. 加载文件(Y + X)</span><br><span class="line">  b. 加载目录(Y + X)</span><br><span class="line"><span class="hljs-number">4.</span> 加载Node模块(X, dirname(Y))</span><br><span class="line"><span class="hljs-number">5.</span> 抛出 <span class="hljs-string">"未找到"</span></span><br><span class="line"></span><br><span class="line">加载文件(X)</span><br><span class="line"><span class="hljs-number">1.</span> 如果 X 是一个文件，加载 X 作为 JavaScript 文本，结束</span><br><span class="line"><span class="hljs-number">2.</span> 如果 X.js 是一个文件，加载 X.js 作为 JavaScript 文本，结束</span><br><span class="line"><span class="hljs-number">3.</span> 如果 X.json 是一个文件，解析 X.json 成一个 JavaScript 对象，结束</span><br><span class="line"><span class="hljs-number">4.</span> 如果 X.node 是一个文件，加载 X.node 作为二进制插件，结束</span><br><span class="line"></span><br><span class="line">加载索引(X)</span><br><span class="line"><span class="hljs-number">1.</span> 如果 X/index.js 是一个文件，加载 X/index.js 作为 JavaScript 文本，结束</span><br><span class="line"><span class="hljs-number">3.</span> 如果 X/index.json  是一个文件，解析 X/index.json 成一个 JavaScript 对象，结束</span><br><span class="line"><span class="hljs-number">4.</span> 如果 X/index.node 是一个文件，加载 X/index.node 作为二进制插件，结束</span><br><span class="line"></span><br><span class="line">加载目录(X)</span><br><span class="line"><span class="hljs-number">1.</span> 如果 X/package.json 是一个文件，</span><br><span class="line">  a. 解析 X/package.json，查找 <span class="hljs-string">"main"</span> 字段</span><br><span class="line">  b. let M = X + (json main 字段)</span><br><span class="line">  c. 加载文件(M)</span><br><span class="line">  d. 加载索引(M)</span><br><span class="line"><span class="hljs-number">2.</span> 加载索引(X)</span><br><span class="line"></span><br><span class="line">加载Node模块(X, START)</span><br><span class="line"><span class="hljs-number">1.</span> <span class="hljs-keyword">let</span> DIRS=NODE_MODULES_PATHS(START)</span><br><span class="line"><span class="hljs-number">2.</span> <span class="hljs-keyword">for</span> each DIR <span class="hljs-keyword">in</span> DIRS:</span><br><span class="line">  a. 加载文件(DIR/X)</span><br><span class="line">  b. 加载目录(DIR/X)</span><br><span class="line"></span><br><span class="line">NODE_MODULES_PATHS(START)</span><br><span class="line"><span class="hljs-number">1.</span> <span class="hljs-keyword">let</span> PARTS = path split(START)</span><br><span class="line"><span class="hljs-number">2.</span> <span class="hljs-keyword">let</span> I = count <span class="hljs-keyword">of</span> PARTS - <span class="hljs-number">1</span></span><br><span class="line"><span class="hljs-number">3.</span> <span class="hljs-keyword">let</span> DIRS = []</span><br><span class="line"><span class="hljs-number">4.</span> <span class="hljs-keyword">while</span> I &gt;= <span class="hljs-number">0</span>,</span><br><span class="line">  a. if PARTS[I] = <span class="hljs-string">"node_modules"</span> CONTINUE</span><br><span class="line">  b. DIR = path join(PARTS[<span class="hljs-number">0</span> .. I] + <span class="hljs-string">"node_modules"</span>)</span><br><span class="line">  c. DIRS = DIRS + DIR</span><br><span class="line">  d. let I = I - <span class="hljs-number">1</span></span><br><span class="line"><span class="hljs-number">5.</span> <span class="hljs-keyword">return</span> DIRS</span><br></pre></td></tr></table></figure>
 
 <p>下面就简单的看一下内部的 <code>Module</code> 对象的 <code>require()</code> 方法</p>
@@ -309,12 +306,10 @@ var _hmt = _hmt || [];
 <p>通过源码可以发现，其本质上是调用了 <code>Module._load()</code> 方法</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// Check the cache for the requested file.</span></span><br><span class="line"><span class="hljs-comment">// 1. If a module already exists in the cache: return its exports object.</span></span><br><span class="line"><span class="hljs-comment">// 2. If the module is native: call `NativeModule.require()` with the</span></span><br><span class="line"><span class="hljs-comment">//    filename and return the result.</span></span><br><span class="line"><span class="hljs-comment">// 3. Otherwise, create a new module for the file and save it to the cache.</span></span><br><span class="line"><span class="hljs-comment">//    Then have it load  the file contents before returning its exports</span></span><br><span class="line"><span class="hljs-comment">//    object.</span></span><br><span class="line">Module._load = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">request, parent, isMain</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 解析文件的具体路径</span></span><br><span class="line">  <span class="hljs-keyword">var</span> filename = Module._resolveFilename(request, parent, isMain)</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 优先从缓存中获取</span></span><br><span class="line">  <span class="hljs-keyword">var</span> cachedModule = Module._cache[filename]</span><br><span class="line">  <span class="hljs-keyword">if</span> (cachedModule) &#123;</span><br><span class="line">    updateChildren(parent, cachedModule, <span class="hljs-literal">true</span>)</span><br><span class="line">    <span class="hljs-comment">// 导出模块的 exports 属性</span></span><br><span class="line">    <span class="hljs-keyword">return</span> cachedModule.exports</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 判断是否为 native module，如 fs、http 等</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (NativeModule.nonInternalExists(filename)) &#123;</span><br><span class="line">    debug(<span class="hljs-string">'load native module %s'</span>, request)</span><br><span class="line">    <span class="hljs-keyword">return</span> NativeModule.require(filename)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// Don't call updateChildren(), Module constructor already does.</span></span><br><span class="line">  <span class="hljs-comment">// 创建新的模块对象</span></span><br><span class="line">  <span class="hljs-keyword">var</span> <span class="hljs-built_in">module</span> = <span class="hljs-keyword">new</span> Module(filename, parent)</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (isMain) &#123;</span><br><span class="line">    process.mainModule = <span class="hljs-built_in">module</span></span><br><span class="line">    <span class="hljs-built_in">module</span>.id = <span class="hljs-string">'.'</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 缓存新建的模块</span></span><br><span class="line">  Module._cache[filename] = <span class="hljs-built_in">module</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 尝试进行模块加载</span></span><br><span class="line">  tryModuleLoad(<span class="hljs-built_in">module</span>, filename)</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-built_in">module</span>.exports</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>可以发现，与我们之前的模块加载机制是完全类似的，这里存在一个小问题，模块首次被加载后，会被缓存在 <code>Module._cache</code> 属性中，但有些时候，我们修改了已被缓存的模块，希望其它模块导入时，获取到更新后的内容的话该怎么处理呢？</p>
-<p>针对这种情况，我们可以使用以下方法清除指定缓存的模块，或清理所有已缓存的模块</p>
+<p>可以发现，与我们之前的模块加载机制是完全类似的，这里存在一个小问题，模块首次被加载后，会被缓存在 <code>Module._cache</code> 属性中，但有些时候，我们修改了已被缓存的模块，希望其它模块导入时，获取到更新后的内容的话该怎么处理呢？针对这种情况，我们可以使用以下方法清除指定缓存的模块，或清理所有已缓存的模块</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 删除指定模块的缓存</span></span><br><span class="line"><span class="hljs-keyword">delete</span> <span class="hljs-built_in">require</span>.cache[<span class="hljs-built_in">require</span>.resolve(<span class="hljs-string">'/* 被缓存的模块名称 */'</span>)]</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 删除所有模块的缓存</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.keys(<span class="hljs-built_in">require</span>.cache).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">key</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">delete</span> <span class="hljs-built_in">require</span>.cache[key]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
-<h2 id="Node-js-模块与前端模块的异同"><a href="#Node-js-模块与前端模块的异同" class="headerlink" title="Node.js 模块与前端模块的异同"></a>Node.js 模块与前端模块的异同</h2><p>通常有一些模块可以同时适用于前后端，但是在浏览器端通过 <code>script</code> 标签的载入 <code>JavaScript</code> 文件的方式与 <code>Node.js</code> 不同，<code>Node.js</code> 在载入到最终的执行中，进行了包装，使得每个文件中的变量天然的形成在一个闭包之中，不会污染全局变量</p>
-<p>而浏览器端则通常是裸露的 <code>JavaScript</code> 代码片段，所以为了解决前后端一致性的问题，类库开发者需要将类库代码包装在一个闭包内，比如 <code>underscore</code> 的定义方式</p>
+<h2 id="Node-js-模块与前端模块的异同"><a href="#Node-js-模块与前端模块的异同" class="headerlink" title="Node.js 模块与前端模块的异同"></a>Node.js 模块与前端模块的异同</h2><p>通常有一些模块可以同时适用于前后端，但是在浏览器端通过 <code>script</code> 标签的载入 <code>JavaScript</code> 文件的方式与 <code>Node.js</code> 不同，<code>Node.js</code> 在载入到最终的执行中，进行了包装，使得每个文件中的变量天然的形成在一个闭包之中，不会污染全局变量，而浏览器端则通常是裸露的 <code>JavaScript</code> 代码片段，所以为了解决前后端一致性的问题，类库开发者需要将类库代码包装在一个闭包内，比如 <code>underscore</code> 的定义方式</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// Establish the root object, `window` in the browser, or `global` on the server.</span></span><br><span class="line">  <span class="hljs-keyword">var</span> root = <span class="hljs-keyword">this</span></span><br><span class="line">  <span class="hljs-keyword">var</span> _ = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">obj</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> wrapper(obj)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> exports !== <span class="hljs-string">'undefined'</span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">module</span> !== <span class="hljs-string">'undefined'</span> &amp;&amp; <span class="hljs-built_in">module</span>.exports) &#123;</span><br><span class="line">      exports = <span class="hljs-built_in">module</span>.exports = _</span><br><span class="line">    &#125;</span><br><span class="line">    exports._ = _</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> define === <span class="hljs-string">'function'</span> &amp;&amp; define.amd) &#123;</span><br><span class="line">    <span class="hljs-comment">// Register as a named module with AMD.</span></span><br><span class="line">    define(<span class="hljs-string">'underscore'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> _</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    root[<span class="hljs-string">'_'</span>] = _</span><br><span class="line">  &#125;</span><br><span class="line">&#125;).call(<span class="hljs-keyword">this</span>)</span><br></pre></td></tr></table></figure>
 
 <p>首先，它通过 <code>function</code> 定义构建了一个闭包，将 <code>this</code> 作为上下文对象直接 <code>call</code> 调用，以避免内部变量污染到全局作用域，续而通过判断 <code>exports</code> 是否存在来决定将局部变量 <code>_</code> 绑定给 <code>exports</code>，并且根据 <code>define</code> 变量是否存在，作为处理在实现了 <a href="http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition" target="_blank" rel="noopener">AMD 规范环境</a> 下的使用案例</p>
@@ -327,14 +322,16 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> vm = <span class="hljs-built_in">require</span>(<span class="hljs-string">'vm'</span>)</span><br><span class="line"><span class="hljs-keyword">let</span> localVar = <span class="hljs-string">'initial value'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> vmResult = vm.runInThisContext(<span class="hljs-string">'localVar = "vm";'</span>)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'vmResult:'</span>, vmResult)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'localVar:'</span>, localVar)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> evalResult = <span class="hljs-built_in">eval</span>(<span class="hljs-string">'localVar = "eval";'</span>)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'evalResult:'</span>, evalResult)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'localVar:'</span>, localVar)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// vmResult: 'vm', localVar: 'initial value'</span></span><br><span class="line"><span class="hljs-comment">// evalResult: 'eval', localVar: 'eval'</span></span><br></pre></td></tr></table></figure>
 
 <p>正因 <code>vm.runInThisContext()</code> 无法获取本地作用域，故 <code>localVar</code> 的值不变，相反 <code>eval()</code> 确实能获取本地作用域，所以 <code>localVar</code> 的值被改变了</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://wiki.commonjs.org/wiki/CommonJS" target="_blank" rel="noopener">CommonJS</a></p>
-<p><a href="http://blog.chinaunix.net/uid-26672038-id-4112229.html" target="_blank" rel="noopener">JavaSript 模块规范 - AMD 规范与 CMD 规范介绍</a></p>
-<p><a href="https://zhuanlan.zhihu.com/p/35238127" target="_blank" rel="noopener">结合源码分析 Node.js 模块加载与运行原理</a></p>
-<p><a href="http://nodejs.cn/api/modules.html" target="_blank" rel="noopener">modules</a></p>
-<p><a href="https://juejin.im/post/5c7b6e8bf265da2dd218e6d3" target="_blank" rel="noopener">node模块化之require学习</a></p>
-<p><a href="https://www.jianshu.com/p/4cf16168912e" target="_blank" rel="noopener">Node.js介绍 - 模块化</a></p>
-<p><a href="https://juejin.im/post/597ec55a51882556a234fcef" target="_blank" rel="noopener">exports、module.exports 和 export、export default 到底是咋回事</a></p>
-<p><a href="http://www.alloyteam.com/2015/04/xiang-jie-nodejs-di-vm-mo-kuai/" target="_blank" rel="noopener">Node.js 的 VM 模块</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://wiki.commonjs.org/wiki/CommonJS" target="_blank" rel="noopener">CommonJS</a></li>
+<li><a href="http://blog.chinaunix.net/uid-26672038-id-4112229.html" target="_blank" rel="noopener">JavaSript 模块规范 - AMD 规范与 CMD 规范介绍</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/35238127" target="_blank" rel="noopener">结合源码分析 Node.js 模块加载与运行原理</a></li>
+<li><a href="http://nodejs.cn/api/modules.html" target="_blank" rel="noopener">modules</a></li>
+<li><a href="https://juejin.im/post/5c7b6e8bf265da2dd218e6d3" target="_blank" rel="noopener">node模块化之require学习</a></li>
+<li><a href="https://www.jianshu.com/p/4cf16168912e" target="_blank" rel="noopener">Node.js介绍 - 模块化</a></li>
+<li><a href="https://juejin.im/post/597ec55a51882556a234fcef" target="_blank" rel="noopener">exports、module.exports 和 export、export default 到底是咋回事</a></li>
+<li><a href="http://www.alloyteam.com/2015/04/xiang-jie-nodejs-di-vm-mo-kuai/" target="_blank" rel="noopener">Node.js 的 VM 模块</a></li>
+</ul>
 
         </div>
         
@@ -362,7 +359,7 @@ var _hmt = _hmt || [];
         <div class="level-start">
             <a class="level level-item has-link-grey  article-nav-prev" href="/2019/10/02/Node/09/">
                 <i class="level-item fa fa-chevron-left"></i>
-                <span class="level-item">Node.js 中的 Http 模块</span>
+                <span class="level-item">Node.js 中的 HTTP 模块</span>
             </a>
         </div>
         
@@ -445,7 +442,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -578,7 +575,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -594,7 +591,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -602,7 +599,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -665,35 +662,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -703,7 +681,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -711,8 +727,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -722,7 +738,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -730,29 +746,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -908,7 +905,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1073,7 +1070,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1128,7 +1125,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1317,7 +1314,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1331,14 +1328,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

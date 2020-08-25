@@ -16,7 +16,7 @@
 <meta property="og:description" content="在前文（为什么要使用依赖注入）当中，我们简单的介绍了依赖注入的基本概念和 Angular 当中的一个简单的依赖注入实例，所以在本章，我们就来深入的了解一下 Angular 当中的依赖注入到底是什么东西 其实简单来说，依赖注入（DI）就是一种设计模式，它也是 Angular 的核心，在 Angular 当中我们一般使用 Provider 来描述与 Token 关联的依赖对象的创建方式，创建方式有四种">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/03.jpg">
-<meta property="og:updated_time" content="2020-07-11T15:24:13.490Z">
+<meta property="og:updated_time" content="2020-08-24T09:44:30.316Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular 中的依赖注入">
 <meta name="twitter:description" content="在前文（为什么要使用依赖注入）当中，我们简单的介绍了依赖注入的基本概念和 Angular 当中的一个简单的依赖注入实例，所以在本章，我们就来深入的了解一下 Angular 当中的依赖注入到底是什么东西 其实简单来说，依赖注入（DI）就是一种设计模式，它也是 Angular 的核心，在 Angular 当中我们一般使用 Provider 来描述与 Token 关联的依赖对象的创建方式，创建方式有四种">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    33 分钟 读完 (大约 4959 个字)
+                    33 分钟 读完 (大约 4963 个字)
                 </span>
                 
                 
@@ -235,8 +235,7 @@ var _hmt = _hmt || [];
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> SOME_TOKEN: OpaqueToken = <span class="hljs-keyword">new</span> OpaqueToken(<span class="hljs-string">'SomeToken'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> injector = ReflectiveInjector.resolveAndCreate([</span><br><span class="line">  provide(SOME_TOKEN, &#123; useValue: <span class="hljs-string">'dependency one'</span>, multi: <span class="hljs-literal">true</span> &#125;),</span><br><span class="line">  provide(SOME_TOKEN, &#123; useValue: <span class="hljs-string">'dependency two'</span>, multi: <span class="hljs-literal">true</span> &#125;)</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// dependencies == ['dependency one', 'dependency two']</span></span><br><span class="line"><span class="hljs-keyword">var</span> dependencies = injector.get(SOME_TOKEN)</span><br></pre></td></tr></table></figure>
 
 <p>我们使用 <code>multi: true</code> 来告诉 <code>Angular</code> 的依赖注入系统，我们设置的 <code>provider</code> 是 <code>multi provider</code>，这样一来我们可以使用相同的 <code>token</code> 值来注册不同的 <code>provider</code>，当我们使用对应的 <code>token</code> 去获取依赖项的时候，我们获取的是已注册的依赖对象列表</p>
-<p>至于为什么要使用 <code>multi provider</code> 的原因</p>
-<p>这时因为如果使用同一个 <code>token</code> 去注册 <code>provider</code>，后面注册的 <code>provider</code> 将会覆盖前面已经注册的 <code>probider</code>，此外，<code>Angular</code> 使用 <code>multi provider</code> 这种机制，为我们提供了可插拔的钩子（<code>pluggable hooks</code>）</p>
+<p>至于为什么要使用 <code>multi provider</code> 的原因，这是因为如果使用同一个 <code>token</code> 去注册 <code>provider</code>，后面注册的 <code>provider</code> 将会覆盖前面已经注册的 <code>probider</code>，此外，<code>Angular</code> 使用 <code>multi provider</code> 这种机制，为我们提供了可插拔的钩子（<code>pluggable hooks</code>）</p>
 <blockquote>
 <p>另外需要注意的是 <code>multi provider</code> 是不能和普通的 <code>provider</code> 混用的</p>
 </blockquote>
@@ -263,8 +262,7 @@ var _hmt = _hmt || [];
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Injectable</span>()</span><br><span class="line"><span class="hljs-keyword">class</span> Socket &#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> buffer: Buffer</span>) &#123; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(Buffer)  <span class="hljs-comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">@Injectable</span>()</span><br><span class="line"><span class="hljs-keyword">class</span> Buffer &#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-meta">@Inject</span>(BUFFER_SIZE) <span class="hljs-keyword">private</span> size: <span class="hljs-built_in">Number</span></span>) &#123; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(Buffer)  <span class="hljs-comment">// [Function: Buffer]</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 运行后报错</span></span><br><span class="line"><span class="hljs-comment">// Error: Cannot resolve all parameters for Socket(undefined).</span></span><br><span class="line"><span class="hljs-comment">// Make sure they all have valid type or annotations</span></span><br></pre></td></tr></table></figure>
 
 <p>这时因为我们编写的代码最终都会被转义为 <code>ES5</code> 来运行，所以在编译阶段 <strong>变量声明和函数声明会自动提升，而函数表达式不会自动提升</strong></p>
-<p>如果要解决上面的问题，最简单的处理方式是交换类定义的顺序，或者还可以使用 <code>Angular</code> 提供的 <code>forward reference</code> 特性</p>
-<p><code>Angular</code> 通过引入 <code>forwardRef</code> 让我们可以在使用构造注入的时候，使用尚未定义的依赖对象类型，如果不使用 <code>forwardRef</code> 就会遇到上面那样的问题</p>
+<p>如果要解决上面的问题，最简单的处理方式是交换类定义的顺序，或者还可以使用 <code>Angular</code> 提供的 <code>forward reference</code> 特性，<code>Angular</code> 通过引入 <code>forwardRef</code> 让我们可以在使用构造注入的时候，使用尚未定义的依赖对象类型，如果不使用 <code>forwardRef</code> 就会遇到上面那样的问题</p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; forwardRef &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular2/core'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">@Injectable</span>()</span><br><span class="line"><span class="hljs-keyword">class</span> Socket &#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"></span></span><br><span class="line"><span class="hljs-params">    <span class="hljs-meta">@Inject</span>(forwardRef(() =&gt; Buffer))</span></span><br><span class="line"><span class="hljs-params">    <span class="hljs-keyword">private</span> buffer</span></span><br><span class="line"><span class="hljs-params">  </span>) &#123; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">class</span> Buffer &#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-meta">@Inject</span>(BUFFER_SIZE) <span class="hljs-keyword">private</span> size: <span class="hljs-built_in">Number</span></span>) &#123; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="forwardRef-原理分析"><a href="#forwardRef-原理分析" class="headerlink" title="forwardRef 原理分析"></a>forwardRef 原理分析</h2><p>下面我们来看看 <code>forwardRef</code> 到底做了些什么，如下</p>
@@ -318,13 +316,11 @@ var _hmt = _hmt || [];
 
 <p>这里有一点需要注意，如果多个组件共用这个服务，那么生成的实例都是相同的，因为工厂方法创建的对象是一个单例对象，工厂方法只会在创建第一个对象的时候被调用一次，然后在整个应用当中所有被注入的服务的实例都是同一个对象</p>
 <p>上面的实例中存在两个问题</p>
-<h4 id="第一个问题"><a href="#第一个问题" class="headerlink" title="第一个问题"></a>第一个问题</h4><p>在方法内部，我们手动实例化了一个 <code>new LoggerService()</code>，意味着工厂方法与这个类是一种强耦合的关系，而我们又声明了 <code>LoggerService</code> 的提供器</p>
-<p>所以我们可以采用下面这种方式来解耦，即利用第三个参数 <code>deps</code> 来声明工厂方法所依赖的参数</p>
+<h4 id="第一个问题"><a href="#第一个问题" class="headerlink" title="第一个问题"></a>第一个问题</h4><p>在方法内部，我们手动实例化了一个 <code>new LoggerService()</code>，意味着工厂方法与这个类是一种强耦合的关系，而我们又声明了 <code>LoggerService</code> 的提供器，所以我们可以采用下面这种方式来解耦，即利用第三个参数 <code>deps</code> 来声明工厂方法所依赖的参数</p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@NgModule</span>(&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  providers: [&#123;</span><br><span class="line">    provide: ProductService,</span><br><span class="line">    useFactory: <span class="hljs-function">(<span class="hljs-params">logger： LoggerService</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">let</span> dev = <span class="hljs-built_in">Math</span>.random() &gt; <span class="hljs-number">0.5</span></span><br><span class="line">      <span class="hljs-keyword">if</span> (dev) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ProductService(logger)</span><br><span class="line">      &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> AnotherProductService(logger)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    deps: [LoggerService]</span><br><span class="line">  &#125;, LoggerService]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
 <p>这样一来就不需要我们手动的去实例化（<code>new LoggerService()</code>），这时的 <code>Angular</code> 将会使用 <code>LoggerService</code> 这个提供器来实例化一个 <code>LoggerService</code> 的实例，并将其注入到 <code>ProductService</code> 的工厂方法的参数当中</p>
-<h4 id="第二个问题"><a href="#第二个问题" class="headerlink" title="第二个问题"></a>第二个问题</h4><p>我们是根据一个随机数来决定实例化哪个对象，这样测试是可以的，但是在发布的时候就不适用了，通常在这种情况下，我们可以使用一个变量来决定调用哪个方法</p>
-<p>然后同样的在 <code>deps</code> 当中进行依赖声明，然后在当作参数的时候传递进去</p>
+<h4 id="第二个问题"><a href="#第二个问题" class="headerlink" title="第二个问题"></a>第二个问题</h4><p>我们是根据一个随机数来决定实例化哪个对象，这样测试是可以的，但是在发布的时候就不适用了，通常在这种情况下，我们可以使用一个变量来决定调用哪个方法，然后同样的在 <code>deps</code> 当中进行依赖声明，然后在当作参数的时候传递进去</p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@NgModule</span>(&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  providers: [</span><br><span class="line">    &#123;</span><br><span class="line">      provide: ProductService,</span><br><span class="line">      useFactory: <span class="hljs-function">(<span class="hljs-params">logger： LoggerService, isDev</span>) =&gt;</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (isDev) &#123;</span><br><span class="line">          <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> ProductService(logger)</span><br><span class="line">        &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">          <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> AnotherProductService(logger)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      deps: [LoggerService, <span class="hljs-string">'IS_DEV_ENV'</span>]</span><br><span class="line">    &#125;, </span><br><span class="line">    LoggerService, </span><br><span class="line">    &#123;</span><br><span class="line">      provide: <span class="hljs-string">'IS_DEV_ENV'</span>,</span><br><span class="line">      useValue: <span class="hljs-literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
 <p>同样的，可以不单一的注入一个固定的值，也是可以注入一个对象，方便维护</p>
@@ -453,7 +449,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -610,7 +606,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -626,7 +622,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -634,7 +630,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -697,35 +693,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -735,7 +712,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -743,8 +758,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -754,7 +769,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -762,29 +777,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -940,7 +936,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1105,7 +1101,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1160,7 +1156,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1349,7 +1345,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1363,14 +1359,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

@@ -16,7 +16,7 @@
 <meta property="og:description" content="按照惯例，我们先来看看 IntersectionObserver 到底是个什么东西，MDN 上的介绍的是，IntersectionObserver 接口（从属于 Intersection Observer API），提供了一种异步观察目标元素与其祖先元素或顶级文档视窗（viewport）交叉状态的方法，祖先元素与视窗（viewport）被称为根（root） 当一个 IntersectionObse">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/46.jpg">
-<meta property="og:updated_time" content="2020-07-24T14:58:38.804Z">
+<meta property="og:updated_time" content="2020-08-25T07:40:29.973Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IntersectionObserver">
 <meta name="twitter:description" content="按照惯例，我们先来看看 IntersectionObserver 到底是个什么东西，MDN 上的介绍的是，IntersectionObserver 接口（从属于 Intersection Observer API），提供了一种异步观察目标元素与其祖先元素或顶级文档视窗（viewport）交叉状态的方法，祖先元素与视窗（viewport）被称为根（root） 当一个 IntersectionObse">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    16 分钟 读完 (大约 2408 个字)
+                    16 分钟 读完 (大约 2410 个字)
                 </span>
                 
                 
@@ -262,8 +262,7 @@ var _hmt = _hmt || [];
 
 <p>为了方便理解，可以参考下图</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/42.png" alt></p>
-<p>首先我们先来看看上图当中的蓝线部分，它就是我们定义的 <code>root</code> 元素，我们添加了 <code>rootMargin</code> 属性，将视窗的增大了，虚线就是现在的视窗，所以元素现在也就在视窗里面了，简单来说就是自定义元素进入视窗的距离</p>
-<p>由此可见，<code>root</code> 元素只有在 <code>rootMargin</code> 为空的时候才是绝对的视窗</p>
+<p>首先我们先来看看上图当中的蓝线部分，它就是我们定义的 <code>root</code> 元素，我们添加了 <code>rootMargin</code> 属性，将视窗的增大了，虚线就是现在的视窗，所以元素现在也就在视窗里面了，简单来说就是自定义元素进入视窗的距离，由此可见，<code>root</code> 元素只有在 <code>rootMargin</code> 为空的时候才是绝对的视窗</p>
 <h2 id="实际应用"><a href="#实际应用" class="headerlink" title="实际应用"></a>实际应用</h2><p>在了解完 <code>IntersectionObserver</code> 的相关概念之后，我们来看几个具体的实例，本文所有示例可见 <a href="https://heptaluan.github.io/demos/blog/IntersectionObserver.html" target="_blank" rel="noopener">IntersectionObserver</a></p>
 <h4 id="监听元素"><a href="#监听元素" class="headerlink" title="监听元素"></a>监听元素</h4><p>先来看一个最简单的示例，主要代码如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> box = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'.box'</span>)</span><br><span class="line"><span class="hljs-keyword">let</span> observe = <span class="hljs-keyword">new</span> IntersectionObserver(<span class="hljs-function"><span class="hljs-params">entries</span> =&gt;</span> &#123;</span><br><span class="line">  entries.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> tips = item.isIntersecting ? <span class="hljs-string">`进入`</span> : <span class="hljs-string">`离开`</span></span><br><span class="line">    <span class="hljs-built_in">console</span>.log(tips)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">observe.observe(box)</span><br></pre></td></tr></table></figure>
@@ -300,8 +299,7 @@ var _hmt = _hmt || [];
 
 <p>结果如下</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/50.png" alt></p>
-<h4 id="动画展示"><a href="#动画展示" class="headerlink" title="动画展示"></a>动画展示</h4><p>一个比较常见的效果，即当某个元素或者列表出现的时候就给该元素或者列表加个动画，比如渐变、偏移等，下面我们就来实现看看</p>
-<p>首先是页面布局，跟上面的示例其实差不多，但是这里采用两列，主要 <code>CSS</code> 如下</p>
+<h4 id="动画展示"><a href="#动画展示" class="headerlink" title="动画展示"></a>动画展示</h4><p>一个比较常见的效果，即当某个元素或者列表出现的时候就给该元素或者列表加个动画，比如渐变、偏移等，下面我们就来实现看看，首先是页面布局，跟上面的示例其实差不多，但是这里采用两列，主要 <code>CSS</code> 如下</p>
 <figure class="highlight css hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-selector-tag">li</span><span class="hljs-selector-class">.show</span> &#123;</span><br><span class="line">  <span class="hljs-attribute">animation</span>: left <span class="hljs-number">1s</span> ease;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-selector-tag">li</span><span class="hljs-selector-class">.show</span><span class="hljs-selector-pseudo">:nth-child(2n)</span> &#123;</span><br><span class="line">  <span class="hljs-attribute">animation</span>: right <span class="hljs-number">1s</span> ease;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@<span class="hljs-keyword">keyframes</span> left &#123;</span><br><span class="line">  <span class="hljs-selector-tag">from</span> &#123;</span><br><span class="line">    <span class="hljs-attribute">opacity</span>: <span class="hljs-number">0</span>;</span><br><span class="line">    <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">translate</span>(-40px, 40px);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-selector-tag">to</span> &#123;</span><br><span class="line">    <span class="hljs-attribute">opacity</span>: <span class="hljs-number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@<span class="hljs-keyword">keyframes</span> right &#123;</span><br><span class="line">  <span class="hljs-selector-tag">from</span> &#123;</span><br><span class="line">    <span class="hljs-attribute">opacity</span>: <span class="hljs-number">0</span>;</span><br><span class="line">    <span class="hljs-attribute">transform</span>: <span class="hljs-built_in">translate</span>(40px, 40px);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-selector-tag">to</span> &#123;</span><br><span class="line">    <span class="hljs-attribute">opacity</span>: <span class="hljs-number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>最终效果如下</p>
@@ -309,11 +307,13 @@ var _hmt = _hmt || [];
 <h2 id="兼容性"><a href="#兼容性" class="headerlink" title="兼容性"></a>兼容性</h2><p><code>IntersectionObserver</code> 的兼容性可见下图</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/40.png" alt></p>
 <p>从上图可以发现，<code>IE</code> 是不兼容的，但是官方提供了 <code>polyfill</code>，详细可见 <a href="https://github.com/w3c/IntersectionObserver/tree/master/polyfill" target="_blank" rel="noopener">w3c - IntersectionObserver</a></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/IntersectionObserver" target="_blank" rel="noopener">Intersection Observer</a></p>
-<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API" target="_blank" rel="noopener">Intersection Observer API</a></p>
-<p><a href="http://www.ruanyifeng.com/blog/2016/11/intersectionobserver_api.html" target="_blank" rel="noopener">IntersectionObserver API 使用教程</a></p>
-<p><a href="https://developers.google.com/web/updates/2019/02/intersectionobserver-v2" target="_blank" rel="noopener">Intersection Observer v2</a></p>
-<p><a href="https://wangdoc.com/webapi/intersectionObserver.html" target="_blank" rel="noopener">IntersectionObserver</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/IntersectionObserver" target="_blank" rel="noopener">Intersection Observer</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API" target="_blank" rel="noopener">Intersection Observer API</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2016/11/intersectionobserver_api.html" target="_blank" rel="noopener">IntersectionObserver API 使用教程</a></li>
+<li><a href="https://developers.google.com/web/updates/2019/02/intersectionobserver-v2" target="_blank" rel="noopener">Intersection Observer v2</a></li>
+<li><a href="https://wangdoc.com/webapi/intersectionObserver.html" target="_blank" rel="noopener">IntersectionObserver</a></li>
+</ul>
 
         </div>
         
@@ -339,16 +339,16 @@ var _hmt = _hmt || [];
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/09/27/CSS/12/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/09/22/Node/07/">
                 <i class="level-item fa fa-chevron-left"></i>
-                <span class="level-item">CSS 中一些小技巧汇总</span>
+                <span class="level-item">Node.js 中的 Buffer 模块</span>
             </a>
         </div>
         
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2019/09/22/Node/07/">
-                <span class="level-item">Node.js 中的 Buffer 模块</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/09/12/Node/06/">
+                <span class="level-item">Node.js 中的 EventEmitter 模块</span>
                 <i class="level-item fa fa-chevron-right"></i>
             </a>
         </div>
@@ -424,7 +424,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -561,7 +561,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -577,7 +577,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -585,7 +585,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -648,35 +648,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -686,7 +667,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -694,8 +713,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -705,7 +724,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -713,29 +732,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -891,7 +891,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1056,7 +1056,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1111,7 +1111,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1300,7 +1300,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1314,14 +1314,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

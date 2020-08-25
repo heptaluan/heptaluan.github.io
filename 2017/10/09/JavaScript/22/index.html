@@ -16,7 +16,7 @@
 <meta property="og:description" content="this 是 JavaScript 语言的一个关键字它代表函数运行时，自动生成的一个内部对象，只能在函数内部使用，随着函数使用场合的不同，this 的值会发生变化，但是有一个总的原则，那就是 this 指向的是，调用函数的那个对象">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/22.jpg">
-<meta property="og:updated_time" content="2020-08-23T14:25:49.041Z">
+<meta property="og:updated_time" content="2020-08-25T06:58:46.156Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的 this">
 <meta name="twitter:description" content="this 是 JavaScript 语言的一个关键字它代表函数运行时，自动生成的一个内部对象，只能在函数内部使用，随着函数使用场合的不同，this 的值会发生变化，但是有一个总的原则，那就是 this 指向的是，调用函数的那个对象">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    37 分钟 读完 (大约 5534 个字)
+                    37 分钟 读完 (大约 5540 个字)
                 </span>
                 
                 
@@ -212,8 +212,7 @@ var _hmt = _hmt || [];
 <blockquote>
 <p>一个简单的记忆方法，当函数当中嵌套函数就会形成闭包环境，这时的 <code>this</code> 指向就可能指向 <code>window</code> 了</p>
 </blockquote>
-<h4 id="作为构造函数调用"><a href="#作为构造函数调用" class="headerlink" title="作为构造函数调用"></a>作为构造函数调用</h4><p>所谓构造函数，就是通过这个函数生成一个新对象（<code>object</code>），实际上，它们甚至都不能说是一种特殊的函数类型，它们只是被 <code>new</code> 操作符调用的普通函数而已</p>
-<p>包括内置对象函数在内的所有函数都可以用 <code>new</code> 来调用，这种函数调用被称为构造函数调用，实际上并不存在所谓的构造函数，只有对于函数的构造调用，使用 <code>new</code> 来调用函数，会自动执行以下操作</p>
+<h4 id="作为构造函数调用"><a href="#作为构造函数调用" class="headerlink" title="作为构造函数调用"></a>作为构造函数调用</h4><p>所谓构造函数，就是通过这个函数生成一个新对象（<code>object</code>），实际上，它们甚至都不能说是一种特殊的函数类型，它们只是被 <code>new</code> 操作符调用的普通函数而已，包括内置对象函数在内的所有函数都可以用 <code>new</code> 来调用，这种函数调用被称为构造函数调用，实际上并不存在所谓的构造函数，只有对于函数的构造调用，使用 <code>new</code> 来调用函数，会自动执行以下操作</p>
 <ul>
 <li>创建（或者说构造）一个全新的对象</li>
 <li>这个新对象会被执行 <code>[[原型]]</code> 连接</li>
@@ -226,8 +225,7 @@ var _hmt = _hmt || [];
 <h4 id="使用-apply-或-call-调用"><a href="#使用-apply-或-call-调用" class="headerlink" title="使用 apply 或 call 调用"></a>使用 apply 或 call 调用</h4><p><code>apply()</code> 是函数对象的一个方法，它的作用是改变函数的调用对象，它的第一个参数就表示改变后的调用这个函数的对象，因此 <code>this</code> 指的就是这第一个参数</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Point</span>(<span class="hljs-params">x, y</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.x = x</span><br><span class="line">  <span class="hljs-keyword">this</span>.y = y</span><br><span class="line">  <span class="hljs-keyword">this</span>.moveTo = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x, y</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.x = x</span><br><span class="line">    <span class="hljs-keyword">this</span>.y = y</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> p1 = <span class="hljs-keyword">new</span> Point(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>)</span><br><span class="line"><span class="hljs-keyword">var</span> p2 = &#123; <span class="hljs-attr">x</span>: <span class="hljs-number">0</span>, <span class="hljs-attr">y</span>: <span class="hljs-number">0</span> &#125;</span><br><span class="line"></span><br><span class="line">p1.moveTo(<span class="hljs-number">1</span>, <span class="hljs-number">1</span>)</span><br><span class="line">p1.moveTo.apply(p2, [<span class="hljs-number">10</span>, <span class="hljs-number">10</span>])</span><br></pre></td></tr></table></figure>
 
-<p>在上面的例子中，我们使用构造函数生成了一个对象 <code>p1</code>，该对象同时具有 <code>moveTo</code> 方法，然后使用对象字面量创建了另一个对象 <code>p2</code>，需要注意此时的 <code>p2</code> 是没有 <code>moveTo</code> 这个方法的，但是我们可以使用 <code>apply</code> 来将 <code>p1</code> 的方法应用到 <code>p2</code> 上</p>
-<p>这时候 <code>this</code> 也被绑定到对象 <code>p2</code> 上，另一个方法 <code>call</code> 也具备同样功能，不同的是最后的参数不是作为一个数组统一传入，而是分开传入的</p>
+<p>在上面的例子中，我们使用构造函数生成了一个对象 <code>p1</code>，该对象同时具有 <code>moveTo</code> 方法，然后使用对象字面量创建了另一个对象 <code>p2</code>，需要注意此时的 <code>p2</code> 是没有 <code>moveTo</code> 这个方法的，但是我们可以使用 <code>apply</code> 来将 <code>p1</code> 的方法应用到 <code>p2</code> 上，这时候 <code>this</code> 也被绑定到对象 <code>p2</code> 上，另一个方法 <code>call</code> 也具备同样功能，不同的是最后的参数不是作为一个数组统一传入，而是分开传入的</p>
 <blockquote>
 <p>注意，当使用过程中参数为空时，默认调用全局对象，也就是下面这种情况</p>
 </blockquote>
@@ -272,8 +270,7 @@ var _hmt = _hmt || [];
 <li><code>yield</code> 关键字通常不能在箭头函数中使用（除非是嵌套在允许使用的函数内），因此箭头函数不能用作函数生成器</li>
 </ul>
 <p>下面我们来着重看一下箭头函数当中的 <code>this</code></p>
-<h4 id="没有-this"><a href="#没有-this" class="headerlink" title="没有 this"></a>没有 this</h4><p>箭头函数没有 <code>this</code>，所以需要通过查找作用域链来确定 <code>this</code> 的值，这就意味着如果箭头函数被非箭头函数包含，<code>this</code> 绑定的就是最近一层非箭头函数的 <code>this</code></p>
-<p>简单来说就是，箭头函数不会创建自己的 <code>this</code>，它会从自己的作用域链的上一层继承 <code>this</code>，比如下面这个例子，其中的 <code>this</code> 会正确地指向 <code>p</code> 实例</p>
+<h4 id="没有-this"><a href="#没有-this" class="headerlink" title="没有 this"></a>没有 this</h4><p>箭头函数没有 <code>this</code>，所以需要通过查找作用域链来确定 <code>this</code> 的值，这就意味着如果箭头函数被非箭头函数包含，<code>this</code> 绑定的就是最近一层非箭头函数的 <code>this</code>，简单来说就是，箭头函数不会创建自己的 <code>this</code>，它会从自己的作用域链的上一层继承 <code>this</code>，比如下面这个例子，其中的 <code>this</code> 会正确地指向 <code>p</code> 实例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Person</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.age = <span class="hljs-number">0</span></span><br><span class="line">  setInterval(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.age++</span><br><span class="line">  &#125;, <span class="hljs-number">1000</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> p = <span class="hljs-keyword">new</span> Person()</span><br></pre></td></tr></table></figure>
 
 <p>但是这里需要注意，在严格模式下，与 <code>this</code> 相关的规则都将被忽略</p>
@@ -295,8 +292,7 @@ var _hmt = _hmt || [];
 <li>函数代码（<code>Function code</code>）</li>
 </ul>
 <p>其中，对于全局代码直接指向 <code>window</code>，<code>eval</code> 代码由于已经不推荐使用暂不做讨论，所以我们主要关注点就是函数代码中的 <code>this</code> 如何指定</p>
-<h4 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用</h4><p>规范指出，当执行流进入函数代码时，由函数调用者提供 <code>thisArg</code> 和 <code>argumentsList</code></p>
-<p>在 <a href="http://yanhaijing.com/es5/#164" target="_blank" rel="noopener">11.2.3 函数调用</a> 当中我们可以发现，在函数调用发生时，首先会对 <strong>函数名部分进行计算</strong> 并赋值给 <code>ref</code>，并且通过一系列的判断就可以来决定 <code>this</code> 会指向何方，如下图所示</p>
+<h4 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用</h4><p>规范指出，当执行流进入函数代码时，由函数调用者提供 <code>thisArg</code> 和 <code>argumentsList</code>，在 <a href="http://yanhaijing.com/es5/#164" target="_blank" rel="noopener">11.2.3 函数调用</a> 当中我们可以发现，在函数调用发生时，首先会对 <strong>函数名部分进行计算</strong> 并赋值给 <code>ref</code>，并且通过一系列的判断就可以来决定 <code>this</code> 会指向何方，如下图所示</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/52.png" alt></p>
 <p>但是在展开之前，我们需要先来了解一下什么是 <code>Reference</code></p>
 <h4 id="Type-ref-is-Reference"><a href="#Type-ref-is-Reference" class="headerlink" title="Type(ref) is Reference"></a>Type(ref) is Reference</h4><p>在 <a href="http://yanhaijing.com/es5/#80" target="_blank" rel="noopener">8.7 引用规范类型</a> 当中可知，<code>Reference</code> 的构成，由三个组成部分</p>
@@ -357,8 +353,7 @@ var _hmt = _hmt || [];
 
 <p>所以我们就依次来看上面的五个示例</p>
 <h4 id="foo-bar"><a href="#foo-bar" class="headerlink" title="foo.bar()"></a>foo.bar()</h4><p>第一个我们就慢慢来看，根据上面的流程可知，我们首先需要做的工作就是计算 <code>MemberExpression</code> 的结果，通过计算可以得出，第一个示例的 <code>MemberExpression</code> 的结果是 <code>foo.bar</code>，即是通过属性表达式来进行访问的，而我们在之前的左值表达式当中已经介绍过了，该表达式返回了一个 <code>Reference</code> 类型，所以我们第一步的工作已经完成了，即确定了它是 <code>Reference</code> 类型</p>
-<p>有了 <code>ref</code> 以后，所以接下来我们就可以先来进行第一次的判断，即判断 <code>IsPropertyReference(ref)</code> 的值，通过之前的内容我们可以知道，如果 <code>IsPropertyReference</code> 的 <code>base value</code> 是一个对象，那么就返回 <code>true</code>，观察可知该示例的 <code>base value</code> 为 <code>foo</code>，是一个对象，所以 <code>IsPropertyReference(ref)</code> 结果为 <code>true</code></p>
-<p>到了这一步，就不用继续往下走了，我们已经可以断定 <code>this</code> 的值了，也就是取 <code>GetBase(ref)</code>，而 <code>GetBase(ref)</code> 就是返回 <code>reference</code> 的 <code>base value</code>，所以 <code>this</code> 的值就是 <code>foo</code></p>
+<p>有了 <code>ref</code> 以后，所以接下来我们就可以先来进行第一次的判断，即判断 <code>IsPropertyReference(ref)</code> 的值，通过之前的内容我们可以知道，如果 <code>IsPropertyReference</code> 的 <code>base value</code> 是一个对象，那么就返回 <code>true</code>，观察可知该示例的 <code>base value</code> 为 <code>foo</code>，是一个对象，所以 <code>IsPropertyReference(ref)</code> 结果为 <code>true</code>，到了这一步，就不用继续往下走了，我们已经可以断定 <code>this</code> 的值了，也就是取 <code>GetBase(ref)</code>，而 <code>GetBase(ref)</code> 就是返回 <code>reference</code> 的 <code>base value</code>，所以 <code>this</code> 的值就是 <code>foo</code></p>
 <p>绕了一个大弯，我们终于知道了第一个示例的结果，不过既然已经知道了流程，那么剩下的解决起来就很快了</p>
 <h4 id="foo-bar-1"><a href="#foo-bar-1" class="headerlink" title="(foo.bar)()"></a>(foo.bar)()</h4><p><code>foo.bar</code> 被 <code>()</code> 包住，通过 <a href="http://yanhaijing.com/es5/#160" target="_blank" rel="noopener">11.1.6 分组表达式</a> 可知</p>
 <blockquote>
@@ -370,8 +365,7 @@ var _hmt = _hmt || [];
 <blockquote>
 <p>令 <code>rval</code> 为 <code>GetValue(rref)</code></p>
 </blockquote>
-<p>简单赋值语句返回的是针对 <code>=</code> 号右边进行 <code>GetValue</code> 之后的结果，又因为调用 <code>GetValue</code> 后，返回的值 <strong>不再是</strong> 一个 <code>Reference</code>，所以根据 <code>MemberExpression</code> 我们可以得出，如果 <code>ref</code> 不是 <code>Reference</code>，那么 <code>this</code> 的值为 <code>undefined</code></p>
-<p>这里需要注意，如果在非严格模式下，<code>this</code> 的值为 <code>undefined</code> 的时候，其值会被隐式转换为全局对象</p>
+<p>简单赋值语句返回的是针对 <code>=</code> 号右边进行 <code>GetValue</code> 之后的结果，又因为调用 <code>GetValue</code> 后，返回的值 <strong>不再是</strong> 一个 <code>Reference</code>，所以根据 <code>MemberExpression</code> 我们可以得出，如果 <code>ref</code> 不是 <code>Reference</code>，那么 <code>this</code> 的值为 <code>undefined</code>，这里需要注意，如果在非严格模式下，<code>this</code> 的值为 <code>undefined</code> 的时候，其值会被隐式转换为全局对象</p>
 <h4 id="false-foo-bar"><a href="#false-foo-bar" class="headerlink" title="(false || foo.bar)()"></a>(false || foo.bar)()</h4><p>同示例 <code>3</code> 类似，不过这里调用的不再是赋值操作，而是逻辑与算法，同样的，我们查看 <a href="http://yanhaijing.com/es5/#208" target="_blank" rel="noopener">11.11 二元逻辑运算符</a> 可知</p>
 <blockquote>
 <p>令 <code>lval</code> 为 <code>GetValue(lref)</code></p>
@@ -593,7 +587,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -786,7 +780,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -802,7 +796,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -810,7 +804,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -873,35 +867,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -911,7 +886,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -919,8 +932,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -930,7 +943,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -938,29 +951,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -1116,7 +1110,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1281,7 +1275,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1336,7 +1330,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1525,7 +1519,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1539,14 +1533,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

@@ -16,7 +16,7 @@
 <meta property="og:description" content="最近在梳理 JavaScript 相关知识，发现 V8 引擎机制相关内容还是较多的而且在之前工作的过程当中也是涉及比较少的，所以就抽些时间出来，在这里大致的整理一下，关于 JavaScript 的其他内容可以参考 JavaScript 知识梳理 和 前端知识体系整理，本章大致内容有下面这些">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/54.jpg">
-<meta property="og:updated_time" content="2020-08-23T14:25:49.043Z">
+<meta property="og:updated_time" content="2020-08-25T08:10:29.961Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="V8 引擎机制">
 <meta name="twitter:description" content="最近在梳理 JavaScript 相关知识，发现 V8 引擎机制相关内容还是较多的而且在之前工作的过程当中也是涉及比较少的，所以就抽些时间出来，在这里大致的整理一下，关于 JavaScript 的其他内容可以参考 JavaScript 知识梳理 和 前端知识体系整理，本章大致内容有下面这些">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    1 小时 读完 (大约 8518 个字)
+                    1 小时 读完 (大约 8520 个字)
                 </span>
                 
                 
@@ -186,7 +186,7 @@ var _hmt = _hmt || [];
             
         </h1>
         <div class="content">
-            <p>最近在梳理 <code>JavaScript</code> 相关知识，发现 <code>V8</code> 引擎机制相关内容还是较多的而且在之前工作的过程当中也是涉及比较少的，所以就抽些时间出来，在这里大致的整理一下，关于 <code>JavaScript</code> 的其他内容可以参考 <a href="http://localhost:4000/2020/08/02/JavaScript/00/" target="_blank" rel="noopener">JavaScript 知识梳理</a> 和 <a href="https://heptaluan.github.io/target/" target="_blank" rel="noopener">前端知识体系整理</a>，本章大致内容有下面这些</p>
+            <p>最近在梳理 <code>JavaScript</code> 相关知识，发现 <code>V8</code> 引擎机制相关内容还是较多的而且在之前工作的过程当中也是涉及比较少的，所以就抽些时间出来，在这里大致的整理一下，关于 <code>JavaScript</code> 的其他内容可以参考 <a href="http://localhost:4000/2020/07/22/JavaScript/00/" target="_blank" rel="noopener">JavaScript 知识梳理</a> 和 <a href="https://heptaluan.github.io/target/" target="_blank" rel="noopener">前端知识体系整理</a>，本章大致内容有下面这些</p>
 <a id="more"></a>
 
 <ul>
@@ -213,8 +213,7 @@ var _hmt = _hmt || [];
 </ul>
 <p>下面我们就从头开始一步一步慢慢来看</p>
 <h2 id="V8-引擎"><a href="#V8-引擎" class="headerlink" title="V8 引擎"></a>V8 引擎</h2><p>看到 <code>V8</code> 这个词，可能会联想到发动机，因为 <code>V8</code>、<code>V10</code>、<code>V12</code> 发动机这种概念可能都有所耳闻，的确，<code>V8</code> 的名字正是来源于汽车的 <code>V</code> 型 <code>8</code> 缸发动机，因为马力十足而广为人知，<code>V8</code> 引擎的命名是 <code>Google</code> 向用户展示它是一款强力并且高速的 <code>JavaScript</code> 引擎</p>
-<p><code>V8</code> 未诞生之前，早期主流的 <code>JavaScript</code> 引擎是 <code>JavaScriptCore</code> 引擎（<code>Safari</code>），<code>JavaScriptCore</code> 是主要服务于 <code>Webkit</code> 浏览器内核，他们都是由苹果公司开发并开源出来，据说 <code>Google</code> 是不满意 <code>JavaScriptCore</code> 和 <code>Webkit</code> 的开发速度和运行速度，<code>Google</code> 另起炉灶开发全新的 <code>JavaScript</code> 引擎和浏览器内核引擎，所以诞生了 <code>V8</code> 和 <code>Chromium</code> 两大引擎，到现在已经是最受欢迎的浏览器相关软件，当然发展至今，<code>V8</code> 不在局限于浏览器内核引擎，也应用于很多场景，例如流行的 <code>Node.js</code>，<code>Weex</code> 等</p>
-<p>在 <code>V8</code> 当中，有以下几个比较重要的部件</p>
+<p><code>V8</code> 未诞生之前，早期主流的 <code>JavaScript</code> 引擎是 <code>JavaScriptCore</code> 引擎（<code>Safari</code>），<code>JavaScriptCore</code> 是主要服务于 <code>Webkit</code> 浏览器内核，他们都是由苹果公司开发并开源出来，据说 <code>Google</code> 是不满意 <code>JavaScriptCore</code> 和 <code>Webkit</code> 的开发速度和运行速度，<code>Google</code> 另起炉灶开发全新的 <code>JavaScript</code> 引擎和浏览器内核引擎，所以诞生了 <code>V8</code> 和 <code>Chromium</code> 两大引擎，到现在已经是最受欢迎的浏览器相关软件，当然发展至今，<code>V8</code> 不在局限于浏览器内核引擎，也应用于很多场景，例如流行的 <code>Node.js</code>，<code>Weex</code> 等，在 <code>V8</code> 当中，有以下几个比较重要的部件</p>
 <ul>
 <li><code>Ignition</code>（基线编译器）</li>
 <li><code>TurboFan</code>（优化编译器）</li>
@@ -222,8 +221,7 @@ var _hmt = _hmt || [];
 <li><code>Liftoff</code>（<code>WebAssembly</code> 基线编译器）</li>
 </ul>
 <p>这里有个需要注意的地方，<code>Liftoff</code> 是从 <code>V8 6.8</code> 开始启用的针对 <code>WebAssembly</code> 的基线编译器，但是 <code>WebAssembly</code> 相关内容不在本文范围内，所以我们这里也就不做介绍了，相关内容可以参考 <a href="https://segmentfault.com/a/1190000016284865" target="_blank" rel="noopener">V8 引擎中全新的 WebAssembly</a> 这篇文章</p>
-<h4 id="早期架构"><a href="#早期架构" class="headerlink" title="早期架构"></a>早期架构</h4><p><code>V8</code> 引擎的诞生带着使命而来，就是要在速度和内存回收上进行革命的，<code>JavaScriptCore</code> 的架构是采用生成字节码的方式，然后执行字节码，<code>Google</code> 觉得 <code>JavaScriptCore</code> 这套架构不行，生成字节码会浪费时间，不如直接生成机器码快</p>
-<p>所以 <code>V8</code> 在前期的架构设计上是非常激进的，采用了直接编译成机器码的方式，后期的实践证明 <code>Google</code> 的这套架构速度是有改善，但是同时也造成了内存消耗问题，下面是 <code>V8</code> 的初期流程图</p>
+<h4 id="早期架构"><a href="#早期架构" class="headerlink" title="早期架构"></a>早期架构</h4><p><code>V8</code> 引擎的诞生带着使命而来，就是要在速度和内存回收上进行革命的，<code>JavaScriptCore</code> 的架构是采用生成字节码的方式，然后执行字节码，<code>Google</code> 觉得 <code>JavaScriptCore</code> 这套架构不行，生成字节码会浪费时间，不如直接生成机器码快，所以 <code>V8</code> 在前期的架构设计上是非常激进的，采用了直接编译成机器码的方式，后期的实践证明 <code>Google</code> 的这套架构速度是有改善，但是同时也造成了内存消耗问题，下面是 <code>V8</code> 的初期流程图</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/54-01.png" alt></p>
 <p>早期 <code>V8</code> 执行管道由基线编译器 <code>Full-Codegen</code> 与优化编译器 <code>Crankshaft</code> 组成，<code>V8</code> 首先用 <code>Full-Codegen</code> 把所有的代码都编译一次，生成对应的机器码，<code>JavaScript</code> 在执行的过程中，<code>V8</code> 内置的 <code>Profiler</code> 筛选出热点函数并且记录参数的反馈类型，然后交给 <code>Crankshaft</code> 来进行优化，所以 <code>Full-Codegen</code> 本质上是生成的是未优化的机器码，而 <code>Crankshaft</code> 生成的是优化过的机器码</p>
 <h4 id="缺陷"><a href="#缺陷" class="headerlink" title="缺陷"></a>缺陷</h4><p>但是随着版本的引进，网页的复杂化，<code>V8</code> 也渐渐的暴露出了自己架构上的缺陷，比如下面这些</p>
@@ -410,13 +408,15 @@ var _hmt = _hmt || [];
 <li>当用户第二次请求这个 <code>JavaScript</code> 文件时（即 <code>warm run</code>），<code>Chrome</code> 将从浏览器缓存中获取该文件，并将其再次交给 <code>V8</code> 进行编译，在 <code>warm run</code> 阶段编译完成后，编译的代码会被反序列化，作为元数据附加到缓存的脚本文件中</li>
 <li>当用户第三次请求这个 <code>JavaScript</code> 文件时（即 <code>hot run</code>），<code>Chrome</code> 从缓存中获取文件和元数据，并将两者交给 <code>V8</code>，<code>V8</code> 将跳过编译阶段，直接反序列化元数据</li>
 </ul>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://cnodejs.org/topic/59084a9cbbaf2f3f569be482" target="_blank" rel="noopener">JS 引擎与字节码的不解之缘</a></p>
-<p><a href="https://zhuanlan.zhihu.com/p/27628685" target="_blank" rel="noopener">认识 V8 引擎</a></p>
-<p><a href="https://juejin.im/post/6844903990073753613" target="_blank" rel="noopener">V8 是怎么跑起来的 —— V8 的 JavaScript 执行管道</a></p>
-<p><a href="https://juejin.im/post/6844903833571688462" target="_blank" rel="noopener">V8 是怎么跑起来的 —— V8 中的对象表示</a></p>
-<p><a href="https://docs.google.com/presentation/d/1HgDDXBYqCJNasBKBDf9szap1j4q4wnSHhOYpaNy5mHU/edit#slide=id.g17d335048f_1_1105" target="_blank" rel="noopener">DLS Keynote: Ignition: Jump-starting an Interpreter for V8</a></p>
-<p><a href="https://docs.google.com/presentation/d/1Z9iIHojKDrXvZ27gRX51UxHD-bKf1QcPzSijntpMJBM/edit#slide=id.p" target="_blank" rel="noopener">Turbofan IR</a></p>
-<p><a href="https://zhuanlan.zhihu.com/p/82854566" target="_blank" rel="noopener">V8 小整数（smi）和指针</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://cnodejs.org/topic/59084a9cbbaf2f3f569be482" target="_blank" rel="noopener">JS 引擎与字节码的不解之缘</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/27628685" target="_blank" rel="noopener">认识 V8 引擎</a></li>
+<li><a href="https://juejin.im/post/6844903990073753613" target="_blank" rel="noopener">V8 是怎么跑起来的 —— V8 的 JavaScript 执行管道</a></li>
+<li><a href="https://juejin.im/post/6844903833571688462" target="_blank" rel="noopener">V8 是怎么跑起来的 —— V8 中的对象表示</a></li>
+<li><a href="https://docs.google.com/presentation/d/1HgDDXBYqCJNasBKBDf9szap1j4q4wnSHhOYpaNy5mHU/edit#slide=id.g17d335048f_1_1105" target="_blank" rel="noopener">DLS Keynote: Ignition: Jump-starting an Interpreter for V8</a></li>
+<li><a href="https://docs.google.com/presentation/d/1Z9iIHojKDrXvZ27gRX51UxHD-bKf1QcPzSijntpMJBM/edit#slide=id.p" target="_blank" rel="noopener">Turbofan IR</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/82854566" target="_blank" rel="noopener">V8 小整数（smi）和指针</a></li>
+</ul>
 
         </div>
         
@@ -442,9 +442,9 @@ var _hmt = _hmt || [];
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/08/09/JavaScript/55/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/08/08/HTTP/00/">
                 <i class="level-item fa fa-chevron-left"></i>
-                <span class="level-item">JavaScript 中常用算法</span>
+                <span class="level-item">计算机网络知识梳理</span>
             </a>
         </div>
         
@@ -527,7 +527,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -700,7 +700,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -716,7 +716,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -724,7 +724,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -787,35 +787,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -825,7 +806,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -833,8 +852,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -844,7 +863,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -852,29 +871,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -1030,7 +1030,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1195,7 +1195,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1250,7 +1250,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1439,7 +1439,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1453,14 +1453,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

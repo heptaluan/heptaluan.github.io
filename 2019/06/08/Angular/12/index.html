@@ -16,7 +16,7 @@
 <meta property="og:description" content="在之前的文章当中我们简单的介绍了 什么是 rxjs 以及一些常见的操作符使用场景，那么在本章当中，我们就在之前的基础上来看看另外几个比较常用的高阶操作符，关于更多的操作符的详细内容可以参见官方文档 rxjs">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/12.jpg">
-<meta property="og:updated_time" content="2020-07-18T14:54:33.904Z">
+<meta property="og:updated_time" content="2020-08-24T10:00:04.922Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="rxjs 中的高阶操作符">
 <meta name="twitter:description" content="在之前的文章当中我们简单的介绍了 什么是 rxjs 以及一些常见的操作符使用场景，那么在本章当中，我们就在之前的基础上来看看另外几个比较常用的高阶操作符，关于更多的操作符的详细内容可以参见官方文档 rxjs">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    19 分钟 读完 (大约 2828 个字)
+                    19 分钟 读完 (大约 2830 个字)
                 </span>
                 
                 
@@ -211,8 +211,7 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 热的 Observable，添加上 share() 即可</span></span><br><span class="line"><span class="hljs-keyword">const</span> count$ = Rx.Observable.interval(<span class="hljs-number">1000</span>).share()</span><br><span class="line"><span class="hljs-keyword">const</span> sub1 = count$.subscribe(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(v))</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> sub2 = count$.subscribe(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(v))</span><br><span class="line">&#125;, <span class="hljs-number">2000</span>)</span><br></pre></td></tr></table></figure>
 
 <p>可以发现，后进来的流会将之前的全部抛弃掉，直接从进来时候的流的位置跟着往下走</p>
-<h2 id="Subject"><a href="#Subject" class="headerlink" title="Subject"></a>Subject</h2><p><code>Subject</code> 既是 <code>Observable</code> 对象，又是 <code>Observer</code> 对象，是一个特殊的对象，一方面可以作为流的组成也就是输出的一方，另一方可以作为流的观察一方即接收的一方</p>
-<p>这个操作符也是平常开发过程当中使用较多的，<code>Subject</code> 其实是观察者模式的实现，所以当观察者订阅 <code>Subject</code> 对象时，<code>Subject</code> 对象会把订阅者添加到观察者列表中，每当有 <code>Subject</code> 对象接收到新值时，它就会遍历观察者列表，依次调用观察者内部的 <code>next()</code> 方法，把值一一送出</p>
+<h2 id="Subject"><a href="#Subject" class="headerlink" title="Subject"></a>Subject</h2><p><code>Subject</code> 既是 <code>Observable</code> 对象，又是 <code>Observer</code> 对象，是一个特殊的对象，一方面可以作为流的组成也就是输出的一方，另一方可以作为流的观察一方即接收的一方，这个操作符也是平常开发过程当中使用较多的，<code>Subject</code> 其实是观察者模式的实现，所以当观察者订阅 <code>Subject</code> 对象时，<code>Subject</code> 对象会把订阅者添加到观察者列表中，每当有 <code>Subject</code> 对象接收到新值时，它就会遍历观察者列表，依次调用观察者内部的 <code>next()</code> 方法，把值一一送出</p>
 <p>当有新消息时，<code>Subject</code> 会对内部的 <code>observers</code> 列表进行组播（<code>multicast</code>），<code>Subject</code> 之所以具有 <code>Observable</code> 中的所有方法，是因为 <code>Subject</code> 类继承了 <code>Observable</code> 类，在 <code>Subject</code> 类中有五个重要的方法</p>
 <ul>
 <li><code>next</code>，每当 <code>Subject</code> 对象接收到新值的时候，<code>next</code> 方法会被调用</li>
@@ -248,8 +247,7 @@ var _hmt = _hmt || [];
 <p>下面是一个示例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 使用 BehaviorSubject 去存储，因为其总是可以记住上一次的一个最新值</span></span><br><span class="line">private _dragData = <span class="hljs-keyword">new</span> BehaviorSubject&lt;DragData&gt;(<span class="hljs-literal">null</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 在开始拖拽的时候，把流中新增一个 data 元素，把这个最新值 next 出去</span></span><br><span class="line">setDragData(data: DragData) &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>._dragData.next(data)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 当放到否个区域的时候，可以得到这个 Observable，所以取值的时候就会取到最新的 data，尽管在拖拽的过程中值已经发射完了，但是依然可以得到上一次发射之后最新的一个值</span></span><br><span class="line"><span class="hljs-comment">// this._dragData.asObservable() 的作用是将 Subject 转换成 Observable</span></span><br><span class="line">getDragData(): Observable&lt;DragData&gt; &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._dragData.asObservable()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 清空的时候将一个 null 放到这个流中，可以保证在其他误接收的地方会发现这是一个 null，即没有这个值</span></span><br><span class="line">clearDragData() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>._dragData.next(<span class="hljs-literal">null</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="Async-Pipe"><a href="#Async-Pipe" class="headerlink" title="Async Pipe"></a>Async Pipe</h4><p>在常规编程中，如果得到一个 <code>Observable</code> 数组，在页面当中是没有办法去直接使用，需要去 <code>Subscribe</code> 一下，然后赋予给声明的本地变量，用来得到返回的数据，最后再用于页面渲染</p>
-<p>但是有了 <code>Async Pipe</code> 以后，上面这些操作都不需要了，可以直接在页面当中直接使用 <code>Observable</code>，并且不需要去取消订阅</p>
+<h4 id="Async-Pipe"><a href="#Async-Pipe" class="headerlink" title="Async Pipe"></a>Async Pipe</h4><p>在常规编程中，如果得到一个 <code>Observable</code> 数组，在页面当中是没有办法去直接使用，需要去 <code>Subscribe</code> 一下，然后赋予给声明的本地变量，用来得到返回的数据，最后再用于页面渲染，但是有了 <code>Async Pipe</code> 以后，上面这些操作都不需要了，可以直接在页面当中直接使用 <code>Observable</code>，并且不需要去取消订阅</p>
 <figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">md-option</span></span></span><br><span class="line"><span class="hljs-tag">  *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">'let item of memberRestlts$ | async'</span></span></span><br><span class="line"><span class="hljs-tag">  [<span class="hljs-attr">value</span>]=<span class="hljs-string">'item'</span></span></span><br><span class="line"><span class="hljs-tag">  (<span class="hljs-attr">onSelectionChange</span>)=<span class="hljs-string">'handleMembersSelection(item)'</span></span></span><br><span class="line"><span class="hljs-tag">&gt;</span>&#123;&#123;item.email&#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">md-option</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">this</span>.memberRestlts$ = <span class="hljs-keyword">this</span>.form.get(<span class="hljs-string">'memberSearch'</span>).valueChanges</span><br><span class="line">  .debounceTime(<span class="hljs-number">300</span>)</span><br><span class="line">  .distinctUntilChanged()</span><br><span class="line">  .filter(<span class="hljs-function"><span class="hljs-params">s</span> =&gt;</span> s &amp;&amp; s.length &gt; <span class="hljs-number">1</span>)</span><br><span class="line">  .switchMap(<span class="hljs-function"><span class="hljs-params">str</span> =&gt;</span> <span class="hljs-keyword">this</span>.service$.serachUsers(str))</span><br></pre></td></tr></table></figure>
@@ -399,7 +397,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -552,7 +550,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -568,7 +566,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -576,7 +574,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -639,35 +637,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -677,7 +656,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -685,8 +702,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -696,7 +713,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -704,29 +721,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -882,7 +880,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1047,7 +1045,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1102,7 +1100,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1291,7 +1289,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1305,14 +1303,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

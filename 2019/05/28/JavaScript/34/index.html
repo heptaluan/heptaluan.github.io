@@ -16,7 +16,7 @@
 <meta property="og:description" content="最近看了 zepto 设计和源码分析 ，感觉有耳目一新的感觉，作者没有老套的去讲各个方法怎么实现的，能做些什么，而是讲了许多为什么源码要这样去设计，这样设计有什么好处，也分享了一些自己的看源码心得 一口气看完，收货良多，不光了解了 Zepto 的设计理念，同时也重温了 JavaScript 原型链的一些相关知识，在此记录一些笔记和涉及到的一些知识点，同时也感谢作者分享了加注版本的 zepto 源码">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/34.jpg">
-<meta property="og:updated_time" content="2020-07-18T14:54:33.911Z">
+<meta property="og:updated_time" content="2020-08-25T07:32:21.870Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Zepto 架构设计">
 <meta name="twitter:description" content="最近看了 zepto 设计和源码分析 ，感觉有耳目一新的感觉，作者没有老套的去讲各个方法怎么实现的，能做些什么，而是讲了许多为什么源码要这样去设计，这样设计有什么好处，也分享了一些自己的看源码心得 一口气看完，收货良多，不光了解了 Zepto 的设计理念，同时也重温了 JavaScript 原型链的一些相关知识，在此记录一些笔记和涉及到的一些知识点，同时也感谢作者分享了加注版本的 zepto 源码">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    12 分钟 读完 (大约 1815 个字)
+                    12 分钟 读完 (大约 1817 个字)
                 </span>
                 
                 
@@ -201,8 +201,7 @@ var _hmt = _hmt || [];
 <h2 id="zepto-init"><a href="#zepto-init" class="headerlink" title="zepto.init"></a>zepto.init</h2><p>查看源码可以发现，其实 <code>$</code> 也是一个函数（同理也可得知 <code>Zepto</code> 也是一个函数）</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">selector, context</span>)</span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> zepto.init(selector, context)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>它本身并没没有做什么具体的操作，而是直接返回了一个函数 <code>zepto.init(selector, context)</code>，查看源码可知，<code>init</code> 函数中添加了一系列判断来梳理 <code>selector</code> 参数的各种可能，然后根据不同条件下对 <code>DOM</code> 变量进行赋值，最终，它将通过 <code>selector</code> 一起传递给 <code>zepto.Z</code> 函数并返回值</p>
-<p>我们一条一条的来看</p>
+<p>它本身并没没有做什么具体的操作，而是直接返回了一个函数 <code>zepto.init(selector, context)</code>，查看源码可知，<code>init</code> 函数中添加了一系列判断来梳理 <code>selector</code> 参数的各种可能，然后根据不同条件下对 <code>DOM</code> 变量进行赋值，最终，它将通过 <code>selector</code> 一起传递给 <code>zepto.Z</code> 函数并返回值，我们一条一条的来看</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">zepto.init = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">selector, context</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">var</span> dom</span><br><span class="line">  <span class="hljs-comment">// 如果 selector 为空（null，undefined...），即 $() 那么就直接返回一个空的 Zepto 对象</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (!selector) <span class="hljs-keyword">return</span> zepto.Z()</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 参数是 String 的情况（$('p')，$('&lt;div&gt;')）</span></span><br><span class="line">  <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> selector == <span class="hljs-string">'string'</span>) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 字符串的情况，一般有两种</span></span><br><span class="line">    <span class="hljs-comment">// 第一，一段 html 代码，旨在通过 zepto 生成 dom 对象</span></span><br><span class="line">    <span class="hljs-comment">// 第二，一段查询字符串，旨在通过 zepto 查找 dom 对象</span></span><br><span class="line">    <span class="hljs-comment">// 将查询结果存储到 dom 变量中</span></span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 先剔除掉两边的空格</span></span><br><span class="line">    selector = selector.trim()</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// fragmentRE = /^\s*&lt;(\w+|!)[^&gt;]*&gt;/</span></span><br><span class="line">    <span class="hljs-comment">// 取出 html 代码中第一个 html 标签（或注释），如取出 &lt;p&gt;123&lt;/p&gt;&lt;h1&gt;345&lt;/h1&gt; 中的 &lt;p&gt;</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (selector[<span class="hljs-number">0</span>] == <span class="hljs-string">'&lt;'</span> &amp;&amp; fragmentRE.test(selector))</span><br><span class="line"></span><br><span class="line">      <span class="hljs-comment">// 第一，RegExp.$1 取出来的就是第一个标签名称，即正则中 (\w+|!) 对应的内容</span></span><br><span class="line">      <span class="hljs-comment">// 第二，此时的 context 应该传入的是 css 属性对象（这里会产生歧义，老版的不会传入 context）</span></span><br><span class="line">      dom = zepto.fragment(selector, <span class="hljs-built_in">RegExp</span>.$<span class="hljs-number">1</span>, context), selector = <span class="hljs-literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 如果 selector 不是 html 字符串标签，并且 context 有值，则从 context 中查找</span></span><br><span class="line">    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (context !== <span class="hljs-literal">undefined</span>) <span class="hljs-keyword">return</span> $(context).find(selector)</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 除了以上情况，就从整个 document 执行 qsa 的查找</span></span><br><span class="line">    <span class="hljs-comment">// qsa 就是 document.querySelectAll</span></span><br><span class="line">    <span class="hljs-keyword">else</span> dom = zepto.qsa(<span class="hljs-built_in">document</span>, selector)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 如果是函数，则放在 dom ready 时执行</span></span><br><span class="line">  <span class="hljs-comment">// 即 $(document).ready(function()&#123; ... &#125;)</span></span><br><span class="line">  <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isFunction(selector)) <span class="hljs-keyword">return</span> $(<span class="hljs-built_in">document</span>).ready(selector)</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 如果传入的参数本身就已经是 zepto 对象，则直接返回</span></span><br><span class="line">  <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (zepto.isZ(selector)) <span class="hljs-keyword">return</span> selector</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// compact 函数，剔除数组中 == null（undefined） 的元素</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (isArray(selector)) dom = compact(selector)</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 如果传入的是 object，直接强制塞进一个数组</span></span><br><span class="line">    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (isObject(selector)) dom = [selector], selector = <span class="hljs-literal">null</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 从此往下，和上文 selector 是字符串的情况处理相同</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// fragmentRE.test 即判断字符串是否是 html 标签开头（即是否是 html fragement）</span></span><br><span class="line">    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (fragmentRE.test(selector))</span><br><span class="line"></span><br><span class="line">      <span class="hljs-comment">// 此时，context 也是属性集合，不是容器（这里会产生歧义，老版的不会传入 context）</span></span><br><span class="line">      <span class="hljs-comment">// 然后清空 selector 不妨碍下面的判断</span></span><br><span class="line">      dom = zepto.fragment(selector.trim(), <span class="hljs-built_in">RegExp</span>.$<span class="hljs-number">1</span>, context), selector = <span class="hljs-literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (context !== <span class="hljs-literal">undefined</span>) <span class="hljs-keyword">return</span> $(context).find(selector)</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">else</span> dom = zepto.qsa(<span class="hljs-built_in">document</span>, selector)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 最后通过 zepto.Z 创建了对象</span></span><br><span class="line">  <span class="hljs-comment">// 这里的 dom 其实就是一个数组</span></span><br><span class="line">  <span class="hljs-keyword">return</span> zepto.Z(dom, selector)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>最后 <code>init</code> 函数的结构梳理如下</p>
@@ -222,8 +221,7 @@ var _hmt = _hmt || [];
 <li>如果该对象本身具有这个功能，则直接使用</li>
 <li>如果该对象本身没有这个功能，则去 <code>__proto__</code> 中找（即构造函数的原型链上）</li>
 </ul>
-<p>这就是为何数组会有 <code>concat</code>、<code>push</code> 等方法，因为这些方法都存在于 <code>Array.prototype</code> 中，这也就解释了为什么 <code>Zepto</code> 取得的元素数组（<code>$(&#39;p&#39;)</code> 返回的是一个元素数组）上会有类似 <code>addClass</code> 等方法了，原因就是 <code>__proto__</code> 肯定是被修改过的，而不仅仅是 <code>Array.prototype</code>，这样再去看上面的 <code>zepto.Z</code> 函数就很明了了</p>
-<p>新版的 <code>zepto.Z</code> 函数如下</p>
+<p>这就是为何数组会有 <code>concat</code>、<code>push</code> 等方法，因为这些方法都存在于 <code>Array.prototype</code> 中，这也就解释了为什么 <code>Zepto</code> 取得的元素数组（<code>$(&#39;p&#39;)</code> 返回的是一个元素数组）上会有类似 <code>addClass</code> 等方法了，原因就是 <code>__proto__</code> 肯定是被修改过的，而不仅仅是 <code>Array.prototype</code>，这样再去看上面的 <code>zepto.Z</code> 函数就很明了了，新版的 <code>zepto.Z</code> 函数如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Z</span>(<span class="hljs-params">dom, selector</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> i, len = dom ? dom.length : <span class="hljs-number">0</span></span><br><span class="line">  <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i++) <span class="hljs-keyword">this</span>[i] = dom[i]</span><br><span class="line">  <span class="hljs-keyword">this</span>.length = len</span><br><span class="line">  <span class="hljs-keyword">this</span>.selector = selector || <span class="hljs-string">''</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">zepto.Z = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">dom, selector</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Z(dom, selector)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$.fn = &#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">zepto.Z.prototype = Z.prototype = $.fn</span><br></pre></td></tr></table></figure>
 
 <p>相较于老版，新版的 <code>zepto.Z</code> 函数直接将构造函数的原型修改了，即 <code>Z.prototype = $.fn</code>，经过这样一改，构造函数再 <code>new</code> 出来的对象的隐式原型 <code>__proto__</code> 自然就指向了 <code>$.fn</code>，而这时返回的是一个<strong>对象数组</strong>，相对于之前的单纯数组，本质上更灵活一些</p>
@@ -342,7 +340,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -439,7 +437,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -455,7 +453,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -463,7 +461,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -526,35 +524,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -564,7 +543,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -572,8 +589,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -583,7 +600,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -591,29 +608,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -769,7 +767,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -934,7 +932,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -989,7 +987,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1178,7 +1176,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1192,14 +1190,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

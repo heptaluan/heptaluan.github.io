@@ -16,7 +16,7 @@
 <meta property="og:description" content="之前在学习 koa.js 当中的 中间件 部分时，我们接触到过中间件这个概念，也了解洋葱模型这个概念，所以在今天我们就来深入的了解一下 redux 当中与其十分类似的 middleware">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/05.jpg">
-<meta property="og:updated_time" content="2020-08-02T13:25:06.576Z">
+<meta property="og:updated_time" content="2020-08-25T09:12:04.134Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redux 中的 Middleware">
 <meta name="twitter:description" content="之前在学习 koa.js 当中的 中间件 部分时，我们接触到过中间件这个概念，也了解洋葱模型这个概念，所以在今天我们就来深入的了解一下 redux 当中与其十分类似的 middleware">
@@ -217,8 +217,7 @@ var _hmt = _hmt || [];
 
 <p>在 <code>redux</code> 当中提供了 <code>applyMiddleware</code> 这个 <code>api</code> 用来加载 <code>middleware</code>，我们将其与我们上面定义的 <code>logger</code> 中间件放到一起来进行对比介绍，如下图所示</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/11.png" alt></p>
-<h2 id="函数式编程思想设计-Middleware"><a href="#函数式编程思想设计-Middleware" class="headerlink" title="函数式编程思想设计 Middleware"></a>函数式编程思想设计 Middleware</h2><p><code>middleware</code> 的设计有点特殊，是一个层层包裹的匿名函数，这其实是函数式编程中的 <a href="https://zh.wikipedia.org/zh/%E6%9F%AF%E9%87%8C%E5%8C%96" target="_blank" rel="noopener">柯里化</a>，<code>applyMiddleware</code> 会对 <code>logger</code> 这个 <code>middleware</code> 进行层层调用，动态地对 <code>store</code> 和 <code>next</code> 参数赋值</p>
-<p>这样设计的好处在于</p>
+<h2 id="函数式编程思想设计-Middleware"><a href="#函数式编程思想设计-Middleware" class="headerlink" title="函数式编程思想设计 Middleware"></a>函数式编程思想设计 Middleware</h2><p><code>middleware</code> 的设计有点特殊，是一个层层包裹的匿名函数，这其实是函数式编程中的 <a href="https://zh.wikipedia.org/zh/%E6%9F%AF%E9%87%8C%E5%8C%96" target="_blank" rel="noopener">柯里化</a>，<code>applyMiddleware</code> 会对 <code>logger</code> 这个 <code>middleware</code> 进行层层调用，动态地对 <code>store</code> 和 <code>next</code> 参数赋值，这样设计的好处在于</p>
 <ul>
 <li>易串联，柯里化函数具有延迟执行的特性，通过不断柯里化形成的 <code>middleware</code> 可以累积参数，配合组合 <code>compose</code> 的方式，很容易形成 <code>pipeline</code> 来处理数据流</li>
 <li>共享 <code>store</code>，在 <code>applyMiddleware</code> 执行过程中，<code>store</code> 还是旧的，但是因为闭包的存在，在 <code>applyMiddleware</code> 完成后，所有的 <code>middlewares</code> 内部拿到的 <code>store</code> 是最新且相同的</li>
@@ -251,8 +250,7 @@ var _hmt = _hmt || [];
 <h2 id="在-Middleware-中调用-Dispatch-会发生什么？"><a href="#在-Middleware-中调用-Dispatch-会发生什么？" class="headerlink" title="在 Middleware 中调用 Dispatch 会发生什么？"></a>在 Middleware 中调用 Dispatch 会发生什么？</h2><p>经过 <code>compose</code> 之后，所有的 <code>middleware</code> 算是串联起来了，可是还有一个问题，在之前我们提到过每个 <code>middleware</code> 都可以访问 <code>store</code>，即 <code>middlewareAPI</code> 这个变量，所以就可以拿到 <code>store</code> 的 <code>dispatch</code> 方法，那么在 <code>middleware</code> 中调用 <code>store.dispatch()</code> 会发生什么，和调用 <code>next()</code> 有区别吗？</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> logger = <span class="hljs-function"><span class="hljs-params">store</span> =&gt;</span> <span class="hljs-function"><span class="hljs-params">next</span> =&gt;</span> <span class="hljs-function"><span class="hljs-params">action</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'dispatch'</span>, action)</span><br><span class="line">  next(action)            <span class="hljs-comment">// &lt;==</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'finish'</span>, action)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 对比</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> logger = <span class="hljs-function"><span class="hljs-params">store</span> =&gt;</span> <span class="hljs-function"><span class="hljs-params">next</span> =&gt;</span> <span class="hljs-function"><span class="hljs-params">action</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'dispatch'</span>, action)</span><br><span class="line">  store.dispatch(action)  <span class="hljs-comment">// &lt;==</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'finish'</span>, action)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>在之前我们已经介绍过，通过匿名函数的方式 <code>middleware</code> 中拿到的 <code>dispatch</code> 和最终 <code>compose</code> 结束后的新 <code>dispatch</code> 是保持一致的，所以在 <code>middleware</code> 中调用 <code>store.dispatch()</code> 和在其他任何地方调用效果是一样的，而在 <code>middleware</code> 中调用 <code>next()</code> 的效果则是进入下一个 <code>middleware</code></p>
-<p>可以如下图所示</p>
+<p>在之前我们已经介绍过，通过匿名函数的方式 <code>middleware</code> 中拿到的 <code>dispatch</code> 和最终 <code>compose</code> 结束后的新 <code>dispatch</code> 是保持一致的，所以在 <code>middleware</code> 中调用 <code>store.dispatch()</code> 和在其他任何地方调用效果是一样的，而在 <code>middleware</code> 中调用 <code>next()</code> 的效果则是进入下一个 <code>middleware</code>，如下图所示</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/12.png" alt></p>
 <p>在正常情况下（图左），当我们 <code>dispatch</code> 一个 <code>action</code> 时，<code>middleware</code> 通过 <code>next(action)</code> 一层一层处理和传递 <code>action</code> 直到 <code>redux</code> 原生的 <code>dispatch</code>，如果某个 <code>middleware</code> 使用 <code>store.dispatch(action)</code> 来分发 <code>action</code>，就发生了右图的情况，相当于从外层重新再来一遍</p>
 <h2 id="在-Middleware-中调用-Dispatch-的应用场景"><a href="#在-Middleware-中调用-Dispatch-的应用场景" class="headerlink" title="在 Middleware 中调用 Dispatch 的应用场景"></a>在 Middleware 中调用 Dispatch 的应用场景</h2><p>我们知道，如果在中间件当中不调用 <code>next</code> 的话，中间件就不会串起来执行的，不过有些特殊的 <code>action</code>，比如异步请求的 <code>action</code>，它们的目的地并不是原生的 <code>dispatch</code>，而是对异步请求的 <code>action</code> 进行拦截，在请求完数据后利用新的 <code>dispatch</code> 发送更新 <code>UI</code> 的 <code>action</code>，这个 <code>action</code> 就可以把所有的中间价走一遍了</p>
@@ -275,10 +273,12 @@ var _hmt = _hmt || [];
 <p>这样我们运行在浏览器窗口就可以看到打印的函数调用轨迹</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>applyMiddleware</code> 机制的核心在于组合 <code>compose</code>，将不同的 <code>middlewares</code> 一层一层包裹到原生的 <code>dispatch</code> 之上，而为了方便进行 <code>compose</code>，需对 <code>middleware</code> 的设计采用柯里化的方式，达到动态产生 <code>next</code> 方法以及保持 <code>store</code> 的一致性</p>
 <p>由于在 <code>middleware</code> 中可以像在外部一样轻松访问到 <code>store</code>，因此可以利用当前 <code>store</code> 的 <code>state</code> 来进行条件判断，用 <code>dispatch</code> 方法拦截老的 <code>action</code> 或发送新的 <code>action</code></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://cn.redux.js.org/docs/advanced/Middleware.html" target="_blank" rel="noopener">Middleware</a></p>
-<p><a href="https://zhuanlan.zhihu.com/p/20597452" target="_blank" rel="noopener">Redux Middleware 详解</a></p>
-<p><a href="https://segmentfault.com/a/1190000003746223" target="_blank" rel="noopener">Redux 学习之何为 Middleware？</a></p>
-<p><a href="https://juejin.im/post/59dc7e43f265da4332268906" target="_blank" rel="noopener">解读 Redux 中间件的原理</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://cn.redux.js.org/docs/advanced/Middleware.html" target="_blank" rel="noopener">Middleware</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/20597452" target="_blank" rel="noopener">Redux Middleware 详解</a></li>
+<li><a href="https://segmentfault.com/a/1190000003746223" target="_blank" rel="noopener">Redux 学习之何为 Middleware？</a></li>
+<li><a href="https://juejin.im/post/59dc7e43f265da4332268906" target="_blank" rel="noopener">解读 Redux 中间件的原理</a></li>
+</ul>
 
         </div>
         
@@ -389,7 +389,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -514,7 +514,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -530,7 +530,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -538,7 +538,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -601,35 +601,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -639,7 +620,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -647,8 +666,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -658,7 +677,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -666,29 +685,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -844,7 +844,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1009,7 +1009,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1064,7 +1064,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1253,7 +1253,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1267,14 +1267,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

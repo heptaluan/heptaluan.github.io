@@ -16,7 +16,7 @@
 <meta property="og:description" content="我们首先先来看一张图，如下">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg">
-<meta property="og:updated_time" content="2020-08-23T14:25:49.037Z">
+<meta property="og:updated_time" content="2020-08-25T06:36:33.943Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的原型和原型对象">
 <meta name="twitter:description" content="我们首先先来看一张图，如下">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    21 分钟 读完 (大约 3162 个字)
+                    21 分钟 读完 (大约 3163 个字)
                 </span>
                 
                 
@@ -247,8 +247,7 @@ var _hmt = _hmt || [];
 <p>其实原型对象就是通过 <code>Object</code> 构造函数生成的，结合之前所讲，实例的 <code>__proto__</code> 指向构造函数的 <code>prototype</code>，那 <code>Object.prototype</code> 的原型又是指向哪里的呢？我们可以打印一下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Object</span>.prototype.__proto__           <span class="hljs-comment">// null</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.prototype.__proto__ === <span class="hljs-literal">null</span>  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
 
-<p><code>null</code> 表示没有对象，即该处不应该有值，所以 <code>Object.prototype.__proto__</code> 的值为 <code>null</code> 跟 <code>Object.prototype</code> 没有原型，其实表达了一个意思，所以查找属性的时候查到 <code>Object.prototype</code> 就可以停止查找了，这也就是开头部分的图片当中所表达的这个意思</p>
-<p>来看下面这个示例</p>
+<p><code>null</code> 表示没有对象，即该处不应该有值，所以 <code>Object.prototype.__proto__</code> 的值为 <code>null</code> 跟 <code>Object.prototype</code> 没有原型，其实表达了一个意思，所以查找属性的时候查到 <code>Object.prototype</code> 就可以停止查找了，这也就是开头部分的图片当中所表达的这个意思，来看下面这个示例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = &#123;</span><br><span class="line">  x: <span class="hljs-number">1</span>,</span><br><span class="line">  y: &#123; <span class="hljs-attr">z</span>: <span class="hljs-number">2</span> &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> b = &#123;&#125;</span><br><span class="line">b.__proto__ = a</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// a 和 b 都是对象（通过new Object() 生成，这里是简写）</span></span><br><span class="line"><span class="hljs-comment">// 所以 a.__proto__ === b.__proto__ 是相等的（都是指向 Object.prototype）</span></span><br><span class="line"><span class="hljs-comment">// 所以在查找 b.x 的时候先去 b 查看，发现是空对象（&#123;&#125;），所以 b.x 是不存在的</span></span><br><span class="line"><span class="hljs-comment">// 然后原则上应该去 Object.prototype 上查找，但是现在把 b.__proto__ 从新指回了 a，所以应该就去 a 上查找</span></span><br><span class="line"><span class="hljs-comment">// 所以 b.x 为 1，b.y 为 &#123; z: 2 &#125;</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(a.x)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(b.x)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 然后把 b.x 重新赋值为 22</span></span><br><span class="line"><span class="hljs-comment">// 因为是基本类型，所以 a.x 是不变的</span></span><br><span class="line">b.x = <span class="hljs-number">22</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(a.x)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(b.x)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 这个同上面那个类似</span></span><br><span class="line"><span class="hljs-comment">// 但是由于是引用类型，所以 a.y 和 b.y 指向的都是同一个地址</span></span><br><span class="line"><span class="hljs-comment">// 其中一个变化的话自然会引起另外一个变化</span></span><br><span class="line">b.y.z = <span class="hljs-number">33</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(a.y.z)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(b.y.z)</span><br></pre></td></tr></table></figure>
 
 <h2 id="自定义对象"><a href="#自定义对象" class="headerlink" title="自定义对象"></a>自定义对象</h2><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 1. 默认情况下</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Foo</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"><span class="hljs-keyword">var</span> foo = <span class="hljs-keyword">new</span> Foo()</span><br><span class="line">Foo.prototype.__proto__ === <span class="hljs-built_in">Object</span>.prototype  <span class="hljs-comment">// true 理由同上</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 2. 其他情况 </span></span><br><span class="line"><span class="hljs-comment">// 第一种情况</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Bar</span>(<span class="hljs-params"></span>) </span>&#123; &#125;  <span class="hljs-comment">// 这时我们想让 Foo 继承 Bar</span></span><br><span class="line"></span><br><span class="line">Foo.prototype = <span class="hljs-keyword">new</span> Bar()</span><br><span class="line">Foo.prototype.__proto__ === Bar.prototype     <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 第二种情况</span></span><br><span class="line"><span class="hljs-comment">// 我们不想让 Foo 继承谁，但是我们要自己重新定义 Foo.prototype（实际过程当中不建议这样操作）</span></span><br><span class="line">Foo.prototype = &#123;</span><br><span class="line">  a: <span class="hljs-number">10</span>,</span><br><span class="line">  b: <span class="hljs-number">-10</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 这种方式就是用了对象字面量的方式来创建一个对象，根据前文所述 </span></span><br><span class="line">Foo.prototype.__proto__ === <span class="hljs-built_in">Object</span>.prototype  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
@@ -284,12 +283,14 @@ var _hmt = _hmt || [];
 </ol>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> obj = <span class="hljs-built_in">Object</span>.create(<span class="hljs-literal">null</span>)</span><br><span class="line"></span><br><span class="line">obj.__proto__   <span class="hljs-comment">// undefined</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.zhihu.com/question/34183746/answer/58068402" target="_blank" rel="noopener">js 中 <strong>proto</strong> 和 prototype 的区别和关系？</a></p>
-<p><a href="http://www.blogjava.net/heavensay/archive/2013/10/20/405440.html" target="_blank" rel="noopener">Js 中 Prototype、<strong>proto</strong>、Constructor、Object、Function 关系介绍</a></p>
-<p><a href="http://www.cnblogs.com/xiaohuochai/p/5721552.html" target="_blank" rel="noopener">一张图理解 prototype、proto 和 constructor 的三角关系</a></p>
-<p><a href="http://stackoverflow.com/questions/9959727/proto-vs-prototype-in-javascript" target="_blank" rel="noopener"><strong>proto</strong> VS. prototype in JavaScript</a></p>
-<p><a href="http://www.cnblogs.com/dolphinX/p/4385862.html" target="_blank" rel="noopener">JavaScript 面向对象</a></p>
-<p><a href="http://blog.jobbole.com/38614/" target="_blank" rel="noopener">全面理解面向对象的 JavaScript</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://www.zhihu.com/question/34183746/answer/58068402" target="_blank" rel="noopener">JavaScript 中 <strong>proto</strong> 和 prototype 的区别和关系？</a></li>
+<li><a href="http://www.blogjava.net/heavensay/archive/2013/10/20/405440.html" target="_blank" rel="noopener">JavaScript 中 Prototype、<strong>proto</strong>、Constructor、Object、Function 关系介绍</a></li>
+<li><a href="http://www.cnblogs.com/xiaohuochai/p/5721552.html" target="_blank" rel="noopener">一张图理解 prototype、proto 和 constructor 的三角关系</a></li>
+<li><a href="http://stackoverflow.com/questions/9959727/proto-vs-prototype-in-javascript" target="_blank" rel="noopener"><strong>proto</strong> VS. prototype in JavaScript</a></li>
+<li><a href="http://www.cnblogs.com/dolphinX/p/4385862.html" target="_blank" rel="noopener">JavaScript 面向对象</a></li>
+<li><a href="http://blog.jobbole.com/38614/" target="_blank" rel="noopener">全面理解面向对象的 JavaScript</a></li>
+</ul>
 
         </div>
         
@@ -400,7 +401,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -529,7 +530,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -545,7 +546,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -553,7 +554,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -616,35 +617,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -654,7 +636,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -662,8 +682,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -673,7 +693,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -681,29 +701,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -859,7 +860,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1024,7 +1025,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1079,7 +1080,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1268,7 +1269,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1282,14 +1283,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 

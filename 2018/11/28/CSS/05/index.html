@@ -16,7 +16,7 @@
 <meta property="og:description" content="算是一篇系列文章吧，主要涉及到 CSS 当中的 float、display、position、vertical-align、line-height 这几个属性，因为在平常开发当中也只是拿来使用，并没有十分深入的去了解它们，所以就打算在这里从头开始慢慢的梳理一遍，也当是复习复习了，我们就先从 float 开始">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/05.jpg">
-<meta property="og:updated_time" content="2020-08-09T15:57:46.703Z">
+<meta property="og:updated_time" content="2020-08-24T10:18:43.770Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CSS 当中的 float">
 <meta name="twitter:description" content="算是一篇系列文章吧，主要涉及到 CSS 当中的 float、display、position、vertical-align、line-height 这几个属性，因为在平常开发当中也只是拿来使用，并没有十分深入的去了解它们，所以就打算在这里从头开始慢慢的梳理一遍，也当是复习复习了，我们就先从 float 开始">
@@ -190,6 +190,9 @@ var _hmt = _hmt || [];
 <a id="more"></a>
 
 
+
+
+
 <h2 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h2><p>在 <code>CSS</code> 中，是存在流的概念的，在正常情况下页面总是从左到右，从上到下布局，这种被称为正常的流，但是有很多情况，正常流是没办法实现的，因此我们需要一些手段来破坏流，从而实现一些特殊的布局，而本节的主角 <code>float</code> 就具备破坏流的特性</p>
 <p>在还是新手阶段的时候，我们通常在布局的时候，总喜欢用 <code>float</code> 来实现，例如一个三栏布局，左右固定，中间自适应，则会通过 <code>float</code> 来一列一列把它们砌起来，这样的布局看上去是实现了目的，但是也是极其容易崩溃，只要高度或者宽度稍微有些变化，整个页面都会错乱，这是因为 <code>float</code> 的设计初衷并不是用来布局的，其本意仅仅是实现图片文字环绕效果，即图片左浮动，文字环绕图片，也就是下面这样的效果</p>
 <iframe width="100%" height="355px" frameborder="0" src="https://interactive-examples.mdn.mozilla.net/pages/css/float.html"></iframe>
@@ -212,8 +215,7 @@ var _hmt = _hmt || [];
 <h2 id="块状化"><a href="#块状化" class="headerlink" title="块状化"></a>块状化</h2><p>块状化的意思是，一旦元素 <code>float</code> 的属性不为 <code>none</code>，则其 <code>display</code> 计算值就是 <code>block</code> 或者 <code>table</code>，举个例子，我们使用 <code>JavaScript</code> 来进行测试，如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> span = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'span'</span>)</span><br><span class="line"><span class="hljs-built_in">document</span>.body.appendChild(span)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'1.'</span> + <span class="hljs-built_in">window</span>.getComputedStyle(span).display)  <span class="hljs-comment">// inline</span></span><br><span class="line"></span><br><span class="line">span.style.cssFloat = <span class="hljs-string">'left'</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'2.'</span> + <span class="hljs-built_in">window</span>.getComputedStyle(span).display)  <span class="hljs-comment">// block</span></span><br></pre></td></tr></table></figure>
 
-<p>运行完了以后观察两者的输出值可以发现这里存在一个问题，既然元素设置 <code>float</code> 后，元素就块状化了，那么怎么还能产生包裹性的效果呢？</p>
-<p>要回答这个问题，需要重新阐述下块状化的意思，这里的块状化意思是可以像 <code>block</code> 元素一样设置宽和高，但并不是真正的块元素，因此下面这些属性是多余的，并且如果你使用的代码编辑器有提示功能的话，它也会提示你存在多余这个问题</p>
+<p>运行完了以后观察两者的输出值可以发现这里存在一个问题，既然元素设置 <code>float</code> 后，元素就块状化了，那么怎么还能产生包裹性的效果呢？要回答这个问题，需要重新阐述下块状化的意思，这里的块状化意思是可以像 <code>block</code> 元素一样设置宽和高，但并不是真正的块元素，因此下面这些属性是多余的，并且如果你使用的代码编辑器有提示功能的话，它也会提示你存在多余这个问题</p>
 <figure class="highlight css hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-selector-tag">span</span> &#123;</span><br><span class="line">  <span class="hljs-attribute">display</span>: block;          <span class="hljs-comment">/* 多余属性 */</span></span><br><span class="line">  <span class="hljs-attribute">float</span>: left;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-selector-tag">div</span> &#123;</span><br><span class="line">  <span class="hljs-attribute">float</span>: left;</span><br><span class="line">  <span class="hljs-attribute">vertical-align</span>: middle;  <span class="hljs-comment">/* 多余属性 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="作用机制"><a href="#作用机制" class="headerlink" title="作用机制"></a>作用机制</h2><p>我们还是以之前的例子来进行了解</p>
@@ -335,7 +337,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        155
+                        151
                     </p>
                 </div>
             </div>
@@ -432,7 +434,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">30</span>
+                <span class="level-item tag">31</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -448,7 +450,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">9</span>
+                <span class="level-item tag">5</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -456,7 +458,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">48</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -519,35 +521,16 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/23/Node/00/" class="media-left">
+            <a href="/2020/08/23/Essay/0000/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="数据结构与算法知识梳理">
                 </p>
             </a>
             
             <div class="media-content">
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-22T16:00:00.000Z">2020-08-23</time></div>
-                    <a href="/2020/08/23/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/22/Frame/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/32.jpg" alt="框架相关知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-21T16:00:00.000Z">2020-08-22</time></div>
-                    <a href="/2020/08/22/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <a href="/2020/08/23/Essay/0000/" class="has-link-black-ter is-size-6">数据结构与算法知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
                     </p>
@@ -557,7 +540,45 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/17/HTTP/09/" class="media-left">
+            <a href="/2020/08/16/Node/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="服务端知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
+                    <a href="/2020/08/16/Node/00/" class="has-link-black-ter is-size-6">服务端知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Node-js/">Node.js</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/15/Frame/00/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/132.jpg" alt="框架相关知识梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-14T16:00:00.000Z">2020-08-15</time></div>
+                    <a href="/2020/08/15/Frame/00/" class="has-link-black-ter is-size-6">框架相关知识梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/08/09/HTTP/09/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg" alt="HTTPS 是如何进行加密的">
                 </p>
@@ -565,8 +586,8 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-16T16:00:00.000Z">2020-08-17</time></div>
-                    <a href="/2020/08/17/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
+                    <a href="/2020/08/09/HTTP/09/" class="has-link-black-ter is-size-6">HTTPS 是如何进行加密的</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
                     </p>
@@ -576,7 +597,7 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
-            <a href="/2020/08/16/HTTP/00/" class="media-left">
+            <a href="/2020/08/08/HTTP/00/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
                 </p>
@@ -584,29 +605,10 @@ var _hmt = _hmt || [];
             
             <div class="media-content">
                 <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-15T16:00:00.000Z">2020-08-16</time></div>
-                    <a href="/2020/08/16/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
+                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/08/09/JavaScript/55/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中常用算法">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-08T16:00:00.000Z">2020-08-09</time></div>
-                    <a href="/2020/08/09/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中常用算法</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
                     </p>
                 </div>
             </div>
@@ -762,7 +764,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -927,7 +929,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -982,7 +984,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1171,7 +1173,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">30</span>
+                        <span class="tag is-grey">31</span>
                     </a>
                 </div>
                 
@@ -1185,14 +1187,14 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">9</span>
+                        <span class="tag is-grey">5</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">48</span>
                     </a>
                 </div>
                 
