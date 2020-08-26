@@ -16,7 +16,7 @@
 <meta property="og:description" content="递归（Recursion algorithm）在计算机科学中是指一种通过重复将问题分解为同类的子问题而解决问题的方法，递归式方法可以被用于解决很多的计算机科学问题，因此它是计算机科学中十分重要的一个概念，绝大多数编程语言支持函数的自调用，在这些语言中函数可以通过调用自身来进行递归，在平常可以说是经常可以听到的概念，今天我们就来深入的了解一下，什么是递归，以及递归的一些相关应用">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg">
-<meta property="og:updated_time" content="2020-08-25T02:25:18.345Z">
+<meta property="og:updated_time" content="2020-08-26T09:26:47.345Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="递归">
 <meta name="twitter:description" content="递归（Recursion algorithm）在计算机科学中是指一种通过重复将问题分解为同类的子问题而解决问题的方法，递归式方法可以被用于解决很多的计算机科学问题，因此它是计算机科学中十分重要的一个概念，绝大多数编程语言支持函数的自调用，在这些语言中函数可以通过调用自身来进行递归，在平常可以说是经常可以听到的概念，今天我们就来深入的了解一下，什么是递归，以及递归的一些相关应用">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    28 分钟 读完 (大约 4179 个字)
+                    29 分钟 读完 (大约 4418 个字)
                 </span>
                 
                 
@@ -191,7 +191,7 @@ var _hmt = _hmt || [];
 
 
 <h2 id="什么是递归"><a href="#什么是递归" class="headerlink" title="什么是递归"></a>什么是递归</h2><p>简单来说，在编程语言中，函数直接或间接调用函数本身，则该函数称为 <strong>递归函数</strong>，我们可以用数学代入法来理解，假设我们用递归来算阶乘 <code>f(n)</code>，常用的方式是这样的</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f = <span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> n === <span class="hljs-number">1</span> ? <span class="hljs-number">1</span> : n * f(n - <span class="hljs-number">1</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">factorial</span>(<span class="hljs-params">n</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> n === <span class="hljs-number">1</span> ? <span class="hljs-number">1</span> : n * factorial(n - <span class="hljs-number">1</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 也可以使用箭头函数来进行简化</span></span><br><span class="line"><span class="hljs-keyword">const</span> factorial = <span class="hljs-function">(<span class="hljs-params">x</span>) =&gt;</span> (x == <span class="hljs-number">0</span> ? <span class="hljs-number">1</span> : x * factorial(x - <span class="hljs-number">1</span>))</span><br></pre></td></tr></table></figure>
 
 <p>我们可以发现，在 <code>f</code> 的里面再次用到了 <code>f</code>，我们把它展开了来看看</p>
 <figure class="highlight console hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">f(6)</span><br><span class="line">=&gt; 6 * f(5)</span><br><span class="line">=&gt; 6 * (5 * f(4))</span><br><span class="line">=&gt; 6 * (5 * (4 * f(3)))</span><br><span class="line">=&gt; 6 * (5 * (4 * (3 * f(2))))</span><br><span class="line">=&gt; 6 * (5 * (4 * (3 * (2 * f(1)))))</span><br><span class="line">=&gt; 6 * (5 * (4 * (3 * (2 * 1))))</span><br><span class="line">=&gt; 6 * (5 * (4 * (3 * 2)))</span><br><span class="line">=&gt; 6 * (5 * (4 * 6))</span><br><span class="line">=&gt; 6 * (5 * 24)</span><br><span class="line">=&gt; 6 * 120</span><br><span class="line">=&gt; 720</span><br></pre></td></tr></table></figure>
@@ -207,6 +207,16 @@ var _hmt = _hmt || [];
 
 <p>这样可以发现代码就很清晰了，拆解后如下图所示</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/13-02.png" alt></p>
+<p><code>JavaScript</code> 当中的实现方式如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fibonacci</span>(<span class="hljs-params">n</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> n &lt;= <span class="hljs-number">1</span> ? <span class="hljs-number">1</span> : fibonacci(n - <span class="hljs-number">1</span>) + fibonacci(n - <span class="hljs-number">2</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt;= <span class="hljs-number">10</span>; i++) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(fibonacci(i))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="尾调用"><a href="#尾调用" class="headerlink" title="尾调用"></a>尾调用</h2><p>在上面我们介绍了斐波那契数列的实现，在这里我们多提一点，那就是 <a href="https://zh.wikipedia.org/zh-hans/尾调用" target="_blank" rel="noopener">尾调用</a> 的使用，它的作用是利用在某个函数的最后一步是调用另一个函数的方式来进行优化，我们需要做的就是把所有用到的内部变量改写成函数的参数，比如我们使用尾调用来优化我们上面提到的斐波那契数列和阶乘</p>
+<p><strong>阶乘优化</strong></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">factorial</span>(<span class="hljs-params">n, total</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> n === <span class="hljs-number">1</span> ? total : factorial(n - <span class="hljs-number">1</span>, n * total)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">factorial(<span class="hljs-number">5</span>, <span class="hljs-number">1</span>)  <span class="hljs-comment">// 120</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>斐波纳契数列优化</strong></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fibonacci</span>(<span class="hljs-params">n, n1 = <span class="hljs-number">1</span>, n2 = <span class="hljs-number">1</span></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> n &lt;= <span class="hljs-number">1</span> ? n2 : fibonacci(n - <span class="hljs-number">1</span>, n2, n1 + n2)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt;= <span class="hljs-number">10</span>; i++) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(fibonacci(i))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h2 id="递归定义"><a href="#递归定义" class="headerlink" title="递归定义"></a>递归定义</h2><p>之前我们通过了斐波那契数列的示例简单的了解了一下什么是递归，下面我们就来看看递归的具体含义</p>
 <blockquote>
 <p>在高级语言中，函数自己调用和调用其他函数并没有本质的不同，我们把一个直接调用自己或通过一系列的调用语句间接地调用自己的函数，称作 <strong>递归函数</strong>，不过，递归程序最怕的就是陷入永不结束的无穷递归中，所以需要注意，每个递归定义必须至少有一个条件，当满足这个条件时递归不再进行，即函数不再调用自身而是返回值，比如之前我们的 <code>Fbi</code> 函数结束条件就是 <code>i &lt; 2</code></p>
@@ -448,20 +458,24 @@ var _hmt = _hmt || [];
         <span class="has-mr-6">2</span>
         <span>斐波那契数列</span>
         </a></li><li>
-        <a class="is-flex" href="#递归定义">
+        <a class="is-flex" href="#尾调用">
         <span class="has-mr-6">3</span>
+        <span>尾调用</span>
+        </a></li><li>
+        <a class="is-flex" href="#递归定义">
+        <span class="has-mr-6">4</span>
         <span>递归定义</span>
         </a></li><li>
         <a class="is-flex" href="#分治思想">
-        <span class="has-mr-6">4</span>
+        <span class="has-mr-6">5</span>
         <span>分治思想</span>
         </a></li><li>
         <a class="is-flex" href="#汉诺塔">
-        <span class="has-mr-6">5</span>
+        <span class="has-mr-6">6</span>
         <span>汉诺塔</span>
         </a></li><li>
         <a class="is-flex" href="#八皇后问题">
-        <span class="has-mr-6">6</span>
+        <span class="has-mr-6">7</span>
         <span>八皇后问题</span>
         </a></li></ul>
         </div>
