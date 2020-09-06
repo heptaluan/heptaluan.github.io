@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="最后更新于 2020-02-01  JavaScript 的一大特点就是单线程，这意味着在任何时候只能有一段代码执行，JavaScript 主线程在运行时，会建立一个执行同步代码的栈和执行异步代码的队列，在深入展开之前，我们先来了解一些前置知识，包括单线程执行机制和 JavaScript 中堆和栈的相关概念（建议在阅读本文之前先了解一下 体系结构与操作系统 当中的进程和线程相关概念）">
+    <meta name="description" content="最后更新于 2020-02-01  JavaScript 的一大特点就是单线程，这意味着在任何时候只能有一段代码执行，JavaScript 主线程在运行时，会建立一个执行同步代码的栈和执行异步代码的队列，在深入展开之前，我们先来了解一些前置知识，包括单线程执行机制和 JavaScript 中堆和栈的相关概念（堆和栈的相关概念可以参考 体系结构与操作系统 当中的相关章节）">
 <meta name="keywords" content="JavaScript">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JavaScript 并发模型">
 <meta property="og:url" content="http://yoursite.com/2018/08/12/JavaScript/30/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="最后更新于 2020-02-01  JavaScript 的一大特点就是单线程，这意味着在任何时候只能有一段代码执行，JavaScript 主线程在运行时，会建立一个执行同步代码的栈和执行异步代码的队列，在深入展开之前，我们先来了解一些前置知识，包括单线程执行机制和 JavaScript 中堆和栈的相关概念（建议在阅读本文之前先了解一下 体系结构与操作系统 当中的进程和线程相关概念）">
+<meta property="og:description" content="最后更新于 2020-02-01  JavaScript 的一大特点就是单线程，这意味着在任何时候只能有一段代码执行，JavaScript 主线程在运行时，会建立一个执行同步代码的栈和执行异步代码的队列，在深入展开之前，我们先来了解一些前置知识，包括单线程执行机制和 JavaScript 中堆和栈的相关概念（堆和栈的相关概念可以参考 体系结构与操作系统 当中的相关章节）">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/30.jpg">
-<meta property="og:updated_time" content="2020-08-25T07:19:50.398Z">
+<meta property="og:updated_time" content="2020-09-05T14:41:22.583Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 并发模型">
-<meta name="twitter:description" content="最后更新于 2020-02-01  JavaScript 的一大特点就是单线程，这意味着在任何时候只能有一段代码执行，JavaScript 主线程在运行时，会建立一个执行同步代码的栈和执行异步代码的队列，在深入展开之前，我们先来了解一些前置知识，包括单线程执行机制和 JavaScript 中堆和栈的相关概念（建议在阅读本文之前先了解一下 体系结构与操作系统 当中的进程和线程相关概念）">
+<meta name="twitter:description" content="最后更新于 2020-02-01  JavaScript 的一大特点就是单线程，这意味着在任何时候只能有一段代码执行，JavaScript 主线程在运行时，会建立一个执行同步代码的栈和执行异步代码的队列，在深入展开之前，我们先来了解一些前置知识，包括单线程执行机制和 JavaScript 中堆和栈的相关概念（堆和栈的相关概念可以参考 体系结构与操作系统 当中的相关章节）">
 <meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/30.jpg">
 
 
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    24 分钟 读完 (大约 3656 个字)
+                    44 分钟 读完 (大约 6563 个字)
                 </span>
                 
                 
@@ -189,12 +189,12 @@ var _hmt = _hmt || [];
             <blockquote>
 <p>最后更新于 <code>2020-02-01</code></p>
 </blockquote>
-<p><code>JavaScript</code> 的一大特点就是单线程，这意味着在任何时候只能有一段代码执行，<code>JavaScript</code> 主线程在运行时，会建立一个执行同步代码的栈和执行异步代码的队列，在深入展开之前，我们先来了解一些前置知识，包括单线程执行机制和 <code>JavaScript</code> 中堆和栈的相关概念（建议在阅读本文之前先了解一下 <a href="https://heptaluan.github.io/2020/01/01/Essay/06/" target="_blank" rel="noopener">体系结构与操作系统</a> 当中的进程和线程相关概念）</p>
+<p><code>JavaScript</code> 的一大特点就是单线程，这意味着在任何时候只能有一段代码执行，<code>JavaScript</code> 主线程在运行时，会建立一个执行同步代码的栈和执行异步代码的队列，在深入展开之前，我们先来了解一些前置知识，包括单线程执行机制和 <code>JavaScript</code> 中堆和栈的相关概念（堆和栈的相关概念可以参考 <a href="https://heptaluan.github.io/2020/01/01/Essay/06/" target="_blank" rel="noopener">体系结构与操作系统</a> 当中的相关章节）</p>
 <a id="more"></a>
 
 
-<h2 id="单线程执行机制"><a href="#单线程执行机制" class="headerlink" title="单线程执行机制"></a>单线程执行机制</h2><p><code>JavaScript</code> 就是属于单线程，程序顺序执行，本质上执行的是基于浏览器的一个事件队列，要执行的函数和触发事件的回调函数都被放在这个队列中，但是浏览器是 <strong>事件驱动的、异步的、多线程的</strong></p>
-<p>浏览器内部有一个事件轮询（<code>event loop</code>），是一个大的内部消息循环，会轮询大的消息队列，并执行，也就是 <code>JavaScript</code> 要处理的事件队列，是浏览器维护的，浏览器至少有四个线程（不同浏览器会有差异）</p>
+<h2 id="单线程执行机制"><a href="#单线程执行机制" class="headerlink" title="单线程执行机制"></a>单线程执行机制</h2><p><code>JavaScript</code> 属于单线程，程序按顺序执行，本质上执行的是基于浏览器的一个事件队列，要执行的函数和触发事件的回调函数都被放在这个队列中，但是浏览器是 <strong>事件驱动的、异步的、多线程的</strong></p>
+<p>浏览器内部有一个事件轮询（<code>Event Loop</code>），是一个大的内部消息循环，会轮询大的消息队列并执行，也就是 <code>JavaScript</code> 要处理的事件队列，是浏览器维护的，浏览器至少有四个线程（不同浏览器会有差异）</p>
 <ul>
 <li><code>JavaScript</code> 引擎线程</li>
 <li>界面渲染线程</li>
@@ -206,7 +206,7 @@ var _hmt = _hmt || [];
 <li><code>setTimeout</code>，<code>JavaScript</code> 在执行到延时函数时，会触发浏览器的定时器，到设置时间，浏览器再将这个函数放入执行的函数队列，再由 <code>JavaScript</code> 引擎执行，都是在浏览器空闲了才会执行</li>
 <li><code>Ajax</code>，是真正的异步，在调用 <code>Ajax</code> 的时候，浏览器会开辟一个新的线程，去处理这个请求，得到响应后，如果这个请求有回调，会将这个回调再放入事件队列中，再由 <code>JavaScript</code> 引擎执行</li>
 </ul>
-<h2 id="阻塞"><a href="#阻塞" class="headerlink" title="阻塞"></a>阻塞</h2><p>浏览器虽然是多线程，但是由于 <code>JavaScript</code> 具有阻塞特性（比如 <code>alert</code>），无论外链还是内嵌脚本，在浏览器执行解释 <code>JavaScript</code> 脚本的时候，浏览器是不会去做别的事情的，比如渲染页面，而是直到 <code>JavaScript</code> 下载并执行完毕，这样一来，<code>JavaScript</code> 脚本的下载、解释执行，会反使页面的继续绘制，给用户带来不良的体验，所以避免此类情况的话可以采用下面一些方式</p>
+<h2 id="阻塞"><a href="#阻塞" class="headerlink" title="阻塞"></a>阻塞</h2><p>浏览器虽然是多线程，但是由于 <code>JavaScript</code> 具有阻塞特性（比如 <code>alert()</code>），无论外链还是内嵌脚本，在浏览器执行解释 <code>JavaScript</code> 脚本的时候，浏览器是不会去做别的事情的，比如渲染页面，而是直到 <code>JavaScript</code> 下载并执行完毕，这样一来 <code>JavaScript</code> 脚本的下载、解释执行，会反使页面的继续绘制，给用户带来不良的体验，所以避免此类情况的话可以采用下面一些方式</p>
 <ul>
 <li>将 <code>&lt;script&gt;</code> 内嵌和外链，在可以的情况下放在 <code>&lt;body&gt;</code> 底部（对于 <code>CSS</code>，浏览器是并行下载的）</li>
 <li>在页面 <code>onload</code> 后再加载 <code>JavaScript</code></li>
@@ -214,10 +214,6 @@ var _hmt = _hmt || [];
 <li>使用动态创建 <code>&lt;script&gt;</code> 标签的方式，在页面加载完成后添加进去（<code>createElement</code>）</li>
 </ul>
 <p>简单来说就是一句话，先让页面渲染完，再加载 <code>JavaScript</code></p>
-<blockquote>
-<p>这里有一个需要注意的地方，即 <code>Node.js</code> 的运行机制也是基于事件轮询（<code>event loop</code>）的，但是和浏览器当中的是不一样的</p>
-<p>详细见 <a href="https://heptaluan.github.io/2019/07/05/Node/04/" target="_blank" rel="noopener">Node.js 中的事件轮询机制</a></p>
-</blockquote>
 <h2 id="JavaScript-中的栈和堆"><a href="#JavaScript-中的栈和堆" class="headerlink" title="JavaScript 中的栈和堆"></a>JavaScript 中的栈和堆</h2><p>首先要先说一下耳熟能详的「堆栈」，要区分数据结构和内存中各自「堆栈」的含义，数据结构中的堆和栈是两种不同的数据项按序排列的数据结构，但是在这里我们主要介绍的是内存中的堆区与栈区</p>
 <h4 id="内存中的堆区与栈区"><a href="#内存中的堆区与栈区" class="headerlink" title="内存中的堆区与栈区"></a>内存中的堆区与栈区</h4><p>在 <code>C</code> 语言中，各个区别如下</p>
 <ul>
@@ -227,14 +223,14 @@ var _hmt = _hmt || [];
 <li>只读区是分配常量和程序代码空间的</li>
 </ul>
 <p>一个简单的例子</p>
-<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">int</span> a = <span class="hljs-number">0</span>;                  <span class="hljs-comment">// 全局初始化区</span></span><br><span class="line"><span class="hljs-keyword">char</span> *p1;                   <span class="hljs-comment">// 全局未初始化区</span></span><br><span class="line"></span><br><span class="line">main() &#123;</span><br><span class="line">  <span class="hljs-keyword">int</span> b;                    <span class="hljs-comment">// 栈</span></span><br><span class="line">  <span class="hljs-keyword">char</span> s[] = <span class="hljs-string">"abc"</span>;         <span class="hljs-comment">// 栈</span></span><br><span class="line">  <span class="hljs-keyword">char</span> *p2;                 <span class="hljs-comment">// 栈</span></span><br><span class="line">  <span class="hljs-keyword">char</span> *p3 = <span class="hljs-string">"123"</span>;         <span class="hljs-comment">// 在常量区，p3 在栈上</span></span><br><span class="line">  <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> c =<span class="hljs-number">0</span>；         <span class="hljs-comment">// 全局（静态）初始化区</span></span><br><span class="line">  p1 = (<span class="hljs-keyword">char</span> *)<span class="hljs-built_in">malloc</span>(<span class="hljs-number">10</span>);  <span class="hljs-comment">// 堆</span></span><br><span class="line">  p2 = (<span class="hljs-keyword">char</span> *)<span class="hljs-built_in">malloc</span>(<span class="hljs-number">20</span>);  <span class="hljs-comment">// 堆</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">int</span> a = <span class="hljs-number">0</span>;                  <span class="hljs-comment">// 全局初始化区</span></span><br><span class="line"><span class="hljs-keyword">char</span> *p1;                   <span class="hljs-comment">// 全局未初始化区</span></span><br><span class="line"></span><br><span class="line">main() &#123;</span><br><span class="line">  <span class="hljs-keyword">int</span> b;                    <span class="hljs-comment">// 栈</span></span><br><span class="line">  <span class="hljs-keyword">char</span> s[] = <span class="hljs-string">"abc"</span>;         <span class="hljs-comment">// 栈</span></span><br><span class="line">  <span class="hljs-keyword">char</span> *p2;                 <span class="hljs-comment">// 栈</span></span><br><span class="line">  <span class="hljs-keyword">char</span> *p3 = <span class="hljs-string">"123"</span>;         <span class="hljs-comment">// 在常量区，p3 在栈上</span></span><br><span class="line">  <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> c =<span class="hljs-number">0</span>，         <span class="hljs-comment">// 全局（静态）初始化区</span></span><br><span class="line">  p1 = (<span class="hljs-keyword">char</span> *)<span class="hljs-built_in">malloc</span>(<span class="hljs-number">10</span>);  <span class="hljs-comment">// 堆</span></span><br><span class="line">  p2 = (<span class="hljs-keyword">char</span> *)<span class="hljs-built_in">malloc</span>(<span class="hljs-number">20</span>);  <span class="hljs-comment">// 堆</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>而 <code>JavaScript</code> 是高级语言，底层依靠 <code>C/C++</code> 来编译实现，其变量划分为基本数据类型和引用数据类型</p>
 <ul>
 <li>基本数据类型包括 <code>Undefined</code>，<code>Null</code>，<code>Boolean</code>，<code>Number</code>，<code>BigInt</code>，<code>String</code>，<code>Symbol</code>，这些类型在内存中分别占有固定大小的空间，他们的值保存在栈空间，通过按值访问、拷贝和比较</li>
 <li>引用类型包括 <code>Object</code>，<code>Array</code>，<code>Function</code>，<code>Error</code>，<code>Date</code>，这些类型大小不固定，栈内存中存放地址指向堆内存中的对象，是按引用访问的（和 <code>C</code> 语言的指针类似）</li>
 </ul>
-<p>对于引用类型的变量，栈内存中存放的只是该对象的访问地址，在堆内存中为该值分配空间，由于这种值的大小不固定，因此不能把他们保存在栈内存中，但是内存地址大小是固定的，因此可以将堆内存地址保存到栈内存中，这样一来，当查询引用类型的变量的时候，就会先从栈中读取堆内存地址，然后在根据地址取出对应的值，显而易见的是，<code>JavaScript</code> 中所有引用类型创建实例的时候，都是显式或者隐式的 <code>new</code> 出对应类型的实例，实际上就是对应 <code>C</code> 语言的 <code>malloc</code> 分配内存函数</p>
+<p>对于引用类型的变量，栈内存中存放的只是该对象的访问地址，在堆内存中为该值分配空间，由于这种值的大小不固定，因此不能把他们保存在栈内存中，但是内存地址大小是固定的，因此可以将堆内存地址保存到栈内存中，这样一来，当查询引用类型的变量的时候，就会先从栈中读取堆内存地址，然后在根据地址取出对应的值，显而易见的是，<code>JavaScript</code> 中所有引用类型创建实例的时候，都是显式或者隐式的 <code>new</code> 出对应类型的实例，实际上就是对应 <code>C</code> 语言的 <code>malloc()</code> 分配内存函数</p>
 <h4 id="栈和队列的区别"><a href="#栈和队列的区别" class="headerlink" title="栈和队列的区别"></a>栈和队列的区别</h4><ul>
 <li>栈的插入和删除操作都是在一端进行的，而队列的操作却是在两端进行的</li>
 <li>队列先进先出，栈先进后出</li>
@@ -250,8 +246,8 @@ var _hmt = _hmt || [];
 <li>堆（数据结构），堆可以被看成是一棵树，如堆排序</li>
 <li>栈（数据结构），一种先进后出的数据结构</li>
 </ul>
-<p>下面我们就正式来看看 <code>JavaScript</code> 当中的并发模型</p>
-<h2 id="并发模型"><a href="#并发模型" class="headerlink" title="并发模型"></a>并发模型</h2><p>可以参考下面这个理论模型（转自网络）</p>
+<p>在了解完相关前置知识之后，下面我们就正式来看看 <code>JavaScript</code> 当中的并发模型</p>
+<h2 id="并发模型"><a href="#并发模型" class="headerlink" title="并发模型"></a>并发模型</h2><p><code>JavaScript</code> 当中的并发模型可以参考下面这个理论模型</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/13.png" alt></p>
 <p><code>JavaScript</code> 执行引擎的主线程运行的时候，产生堆（<code>heap</code>）和栈（<code>stack</code>），程序中代码依次进入栈中等待执行，若执行时遇到异步方法，该异步方法会被添加到用于回调的队列（<code>queue</code>）中，即 <code>JavaScript</code> 执行引擎的主线程拥有一个执行栈（或者堆）和一个任务队列</p>
 <ul>
@@ -266,10 +262,10 @@ var _hmt = _hmt || [];
 </li>
 </ul>
 <h2 id="Event-Loop"><a href="#Event-Loop" class="headerlink" title="Event Loop"></a>Event Loop</h2><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/14.png" alt></p>
-<p>关于上图当中的内容，这里主要介绍两个点，即 <code>queue</code> 和 <code>callback</code></p>
+<p>关于上图当中的内容，这里我们主要看两个点，即 <code>queue</code> 和 <code>callback</code></p>
 <ul>
-<li>关于 <code>queue</code>，如上文的解释，值得注意的是，除了 <code>IO</code> 设备的事件（比如 <code>load</code>）会被添加到 <code>queue</code> 中，用户操作产生的事件（比如 <code>click</code>，<code>touchmove</code>）同样也会被添加到 <code>queue</code> 中，队列中的这些事件会在主线程的执行栈被清空时被依次读取（队列先进先出，即先被压入队列中的事件会被先执行）</li>
-<li>关于 <code>callback</code>，被主线程挂起来的代码，等主线程执行队列中的事件时，事件对应的 <code>callback</code> 代码就会被执行</li>
+<li>关于 <code>queue</code> 值得注意的是，除了 <code>IO</code> 设备的事件（比如 <code>load</code>）会被添加到 <code>queue</code> 中，用户操作产生的事件（比如 <code>click</code>，<code>touchmove</code>）同样也会被添加到 <code>queue</code> 中，队列中的这些事件会在主线程的执行栈被清空时被依次读取（队列先进先出，即先被压入队列中的事件会被先执行）</li>
+<li>关于 <code>callback</code> 则是被主线程挂起来的代码，等主线程执行队列中的事件时，事件对应的 <code>callback</code> 代码就会被执行</li>
 </ul>
 <p>针对上面的并发模型和 <code>JavaScript</code> 的同步异步运行机制，我们可以看到整个流程大致是这样的</p>
 <ol>
@@ -279,10 +275,34 @@ var _hmt = _hmt || [];
 <li>主线程不断重复上面的第三步</li>
 </ol>
 <p>因为主线程从任务队列中读取事件的过程是循环不断的，因此这种运行机制又称为 <code>Event Loop</code>（事件循环），简单总结就是，主线程运行的时候，产生堆（<code>heap</code>）和栈（<code>stack</code>），栈中的代码调用各种外部 <code>API</code>，它们在任务队列中加入各种事件（<code>click</code>，<code>load</code>，<code>done</code>），只要栈中的代码执行完毕，主线程就会去读取任务队列，依次执行那些事件所对应的回调函数</p>
-<h2 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h2><p>定时器一般主要指 <code>setTimeout()</code> 和 <code>setInterval()</code> 这两个函数，如下</p>
+<p>下面我们就简单的结合规范，来看一下官方当中针对 <code>Event Loop</code> 是如何进行介绍的</p>
+<h2 id="任务队列"><a href="#任务队列" class="headerlink" title="任务队列"></a>任务队列</h2><p>我们在之前提到过，事件循环是通过 <a href="https://html.spec.whatwg.org/multipage/webappapis.html#task-queues" target="_blank" rel="noopener">任务队列</a> 的机制来进行协调的，在一个 <code>Event Loop</code> 中可以有一个或者多个任务队列（<code>task queue</code>），一个任务队列便是一系列有序任务（<code>task</code>）的集合，每个任务都有一个任务源（<code>task source</code>），源自同一个任务源的 <code>task</code> 必须放到同一个任务队列，从不同源来的则被添加到不同队列</p>
+<p>在事件循环中，每进行一次循环操作称为 <code>tick</code>，每一次 <code>tick</code> 的 <a href="https://html.spec.whatwg.org/multipage/webappapis.html#event-loops-processing-model" target="_blank" rel="noopener">任务处理模型</a> 是比较复杂的，但关键步骤如下</p>
+<ul>
+<li>在此次 <code>tick</code> 中选择最先进入队列的任务（<code>oldest task</code>），如果有则执行（一次）</li>
+<li>检查是否存在 <code>Microtasks</code>，如果存在则不停地执行，直至清空 <code>Microtasks Queue</code></li>
+<li>更新 <code>render</code></li>
+<li>主线程重复执行上述步骤</li>
+</ul>
+<p>我们仔细查阅规范可知，异步任务可分为 <code>task</code> 和 <code>Microtask</code> 两类，不同的 <code>API</code> 注册的异步任务会依次进入自身对应的队列中，然后等待 <code>Event Loop</code> 将它们依次压入执行栈中执行（也就是如上面章节中的图片所示那样）</p>
+<blockquote>
+<p>在网上比较常见的说法是分为是分为 <code>Macrotask</code>（<code>宏任务</code>） 和 <code>Microtask</code>（<code>微任务</code>） 两个概念，但规范中并没有提到 <code>Macrotask</code>，因而一个比较合理的解释是 <code>task</code> 即为其它文章中的 <code>Macrotask</code>，另外在 <code>ES2015</code> 规范中将 <code>Microtask</code> 又称为 <code>Job</code></p>
+</blockquote>
+<p>但是在这里我们为了统一，干脆就称为 <code>Macrotask</code>（<code>宏任务</code>） 和 <code>Microtask</code>（<code>微任务</code>），知道它们各自具体代表的是什么即可，下面我们来看看它们两者之间的区别</p>
+<ul>
+<li><code>Macrotask</code>（<code>宏任务</code>） 主要包含 <code>setTimeout</code>、<code>setInterval</code>、<code>I/O</code>、<code>UI</code> 交互事件、<code>postMessage</code>、<code>MessageChannel</code>、<code>setImmediate</code>（<code>Node.js</code>）</li>
+<li><code>Microtask</code>（<code>微任务</code>） 主要包含 <code>Promise.then</code>、<code>MutaionObserver</code>、<code>process.nextTick</code>（<code>Node.js</code>）、<code>Object.observe</code>（已废弃）</li>
+</ul>
+<p>这里有几个需要注意的地方</p>
+<ul>
+<li>在有些地方会列出来 <code>UI Rendering</code>，说这个也是宏任务，可是在 <a href="https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model" target="_blank" rel="noopener">规范文档</a> 当中可以发现这很显然是和微任务平行的一个操作步骤</li>
+<li>在 <code>Node.js</code> 中，会优先清空 <code>next tick queue</code>，即通过 <code>process.nextTick</code> 注册的函数，再清空 <code>other queue</code>，常见的如 <code>Promise</code>，此外，<code>timers</code>（<code>setTimeout/setInterval</code>） 会优先于 <code>setImmediate</code> 执行，因为前者在 <code>timer</code> 阶段执行，后者在 <code>check</code> 阶段执行（下面我们会进行介绍）</li>
+<li>还有一个比较特殊的 <code>requestAnimationFrame</code>，有的将其归纳到宏任务当中，但是这里是存在一定争议的，关于这个我们会在后面来详细进行介绍</li>
+</ul>
+<h2 id="执行顺序"><a href="#执行顺序" class="headerlink" title="执行顺序"></a>执行顺序</h2><p>我们下面就通过几个例子来深入的理解一下，先来看一个 <code>setTimeout()</code> 相关示例，如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-number">1</span>)</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">2</span>)</span><br><span class="line">&#125;, <span class="hljs-number">5000</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-number">3</span>)</span><br></pre></td></tr></table></figure>
 
-<p>需要注意的是，定时器只是将事件插入了任务队列，必须等到当前代码（执行栈）执行完，主线程才会去执行它指定的回调函数，下面我们就结合 <code>Event Loop</code> 看看单线程的 <code>JavaScript</code> 执行引擎是如何来执行该方法的</p>
+<p>这里需要注意的是，定时器只是将事件插入了任务队列，必须等到当前代码（执行栈）执行完，主线程才会去执行它指定的回调函数，我们结合之前提到过的 <code>Event Loop</code> 来看看单线程的 <code>JavaScript</code> 执行引擎是如何来执行该方法的</p>
 <ol>
 <li><code>JavaScript</code> 执行引擎主线程运行，产生 <code>heap</code> 和 <code>stack</code></li>
 <li>从上往下执行同步代码，<code>console.log(1)</code> 被压入执行栈，因为 <code>console.log()</code> 方法是 <code>webkit</code> 内核支持的普通方法而非 <code>WebAPIs</code> 的方法，因此立即出栈被引擎执行，输出 <code>1</code></li>
@@ -295,26 +315,92 @@ var _hmt = _hmt || [];
 <li><code>JavaScript</code> 执行引擎继续轮循队列，直到队列为空</li>
 <li>执行完毕</li>
 </ol>
-<p>以上就是一个基本的 <code>JavaScript</code> 并发模型，下面再来看一个经典的案例加深一下印象</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 请写出下面代码的输出结果</span></span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">1</span>)</span><br><span class="line">&#125;, <span class="hljs-number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">3</span>)</span><br><span class="line">  res()</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">4</span>)</span><br><span class="line">&#125;).then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">5</span>)</span><br><span class="line">&#125;).then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">6</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-number">7</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 2 3 4 7 5 6 1</span></span><br></pre></td></tr></table></figure>
+<p>看完了 <code>setTimeout()</code>，下面再来看一个 <code>Promise</code> 的示例</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">  resolve(<span class="hljs-number">1</span>)</span><br><span class="line">  <span class="hljs-built_in">Promise</span>.resolve().then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// t2</span></span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-number">2</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">4</span>)</span><br><span class="line">&#125;).then(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// t1</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(t)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-number">3</span>)</span><br></pre></td></tr></table></figure>
 
-<p>唯一需要注意的地方就是，新建的 <code>promise</code> 对象时需要传入一个函数参数，这个函数参数是同步代码</p>
-<h2 id="Macrotask-和-Microtask"><a href="#Macrotask-和-Microtask" class="headerlink" title="Macrotask 和 Microtask"></a>Macrotask 和 Microtask</h2><p>在之前定时器的示例当中，<code>promise</code> 在 <code>resolve</code> 后先于 <code>setTimeout</code> 执行，说明 <code>promise</code> 任务的优先级比 <code>setTimeout</code> 任务的优先级要高，这就引出了两个概念 <code>Macrotask</code>（宏任务）和 <code>Microtask</code>（微任务），两者的区别如下</p>
-<ul>
-<li><code>Macrotask</code> 包含 <code>setTimeout</code>，<code>setInterval</code>，<code>setImmediate</code>，<code>I/O</code>，<code>UI rendering</code></li>
-<li><code>Microtask</code> 包含 <code>process.nextTick</code>，<code>Promises</code>，<code>Object.observe</code>（废弃），<code>MutationObserver</code></li>
-</ul>
-<h2 id="执行顺序"><a href="#执行顺序" class="headerlink" title="执行顺序"></a>执行顺序</h2><p><code>Macrotask</code> 和 <code>Microtask</code> 的执行顺序如下，在执行每个 <code>Macrotask</code>（宏任务）之前，会先检查有微任务队列中有没有任务需要处理，若有，就先将微任务队列中的任务全部放入同步执行栈中执行，直到微任务队列被清空，然后再执行宏任务队列中的任务，循环往复，比如下面这个例子</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">1</span>)</span><br><span class="line">&#125;, <span class="hljs-number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> &#123;</span><br><span class="line">  res()</span><br><span class="line">&#125;).then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">4</span>)</span><br><span class="line">&#125;).then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">5</span>)</span><br><span class="line">&#125;).then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">6</span>)</span><br><span class="line">&#125;).then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">7</span>)</span><br><span class="line">&#125;).then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">8</span>)</span><br><span class="line">&#125;).then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">9</span>)</span><br><span class="line">&#125;).then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">10</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>同样的，我们也简单的梳理一下这段代码的流程</p>
+<ol>
+<li>程序运行，首先遇到 <code>Promise</code> 实例，构造函数首先执行，所以首先输出了 <code>4</code>，此时 <code>Microtask</code> 的任务有 <code>t2</code> 和 <code>t1</code></li>
+<li>代码继续运行，输出 <code>3</code>，至此，第一个宏任务执行完成，</li>
+<li>执行所有的微任务，先后取出 <code>t2</code> 和 <code>t1</code>，分别输出 <code>2</code> 和 <code>1</code></li>
+<li>代码执行完毕</li>
+</ol>
+<p>所以综上所述，最后的输出结果是 <code>4321</code>，但是这里可能会有一些疑惑，那就是为什么 <code>t2</code> 会先执行呢？我们根据 <a href="https://www.ituring.com.cn/article/66566" target="_blank" rel="noopener">Promises/A+</a> 规范可知</p>
+<blockquote>
+<p>实践中要确保 <code>onFulfilled</code> 和 <code>onRejected</code> 方法异步执行，且应该在 <code>then</code> 方法被调用的那一轮事件循环之后的新执行栈中执行</p>
+</blockquote>
+<p>所以我们可以推断出，<code>Promise.resolve</code> 方法允许调用时不带参数，直接返回一个 <code>resolved</code> 状态的 <code>Promise</code> 对象，也就是立即 <code>resolved</code> 的 <code>Promise</code> 对象，是在本轮事件循环（<code>Event Loop</code>）的结束时，而不是在下一轮事件循环的开始时（详细可以参考 <a href="https://es6.ruanyifeng.com/#docs/promise#Promise-resolve" target="_blank" rel="noopener">Promise-resolve</a>），所以 <code>t2</code> 比 <code>t1</code> 会先进入 <code>Microtask</code> 的 <code>Promise</code> 队列</p>
+<p>最后，我们再来看一个综合两者的示例，如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'script start'</span>)</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'timeout1'</span>)</span><br><span class="line">&#125;, <span class="hljs-number">10</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'promise1'</span>)</span><br><span class="line">  resolve()</span><br><span class="line">  setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'timeout2'</span>), <span class="hljs-number">10</span>)</span><br><span class="line">&#125;).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'then1'</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'script end'</span>)</span><br></pre></td></tr></table></figure>
 
-<p>因此，这就能解释为什么 <code>promise</code> 会优先于 <code>setTimeout</code> 执行，即使 <code>promise</code> 的执行链很长，这是因为 <code>setTimeout</code> 属于 <code>Macrotask</code>，而 <code>promise</code> 属于 <code>Microtask</code>，在执行 <code>Macrotask</code> 之前需要先将 <code>Microtask</code> 队列清空，简单的总结就是</p>
+<ol>
+<li>首先，事件循环从宏任务（<code>Macrotask</code>）队列开始，当遇到任务源（<code>task source</code>）时，则会先分发任务到对应的任务队列中去，然后遇到了 <code>console</code> 语句，直接输出 <code>script start</code>，输出之后，任务继续往下执行，遇到 <code>setTimeout</code>，其作为一个宏任务源，则会先将其任务分发到对应的队列中</li>
+<li>任务继续往下执行，遇到 <code>Promise</code> 实例，<code>Promise</code> 构造函数中的第一个参数，是在 <code>new</code> 的时候执行，构造函数执行时，里面的参数进入执行栈执行，而后续的 <code>.then</code> 则会被分发到 <code>Microtask</code> 的 <code>Promise</code> 队列中去，所以会先输出 <code>promise1</code>，然后执行 <code>resolve</code>，将 <code>then1</code> 分配到对应队列</li>
+<li>构造函数继续往下执行，又碰到 <code>setTimeout</code>，然后将对应的任务分配到对应队列</li>
+<li>任务继续往下执行，最后只有一句输出，所以输出 <code>script end</code>，至此，全局任务就执行完毕了</li>
+</ol>
+<p>根据上述，每次执行完一个宏任务之后，会去检查是否存在 <code>Microtasks</code>，如果有，则执行 <code>Microtasks</code> 直至清空 <code>Microtask Queue</code>，因而在任务执行完毕之后，开始查找清空微任务队列，此时，微任务中只有 <code>Promise</code> 队列中的一个任务 <code>then1</code>，因此直接执行就行了，执行结果输出 <code>then1</code>，当所有的 <code>microtast</code> 执行完毕之后，表示第一轮的循环就结束了</p>
+<ol start="5">
+<li>这个时候就得开始第二轮的循环，第二轮循环仍然从宏任务 <code>Macrotask</code> 开始，此时有两个宏任务 <code>timeout1</code> 和 <code>timeout2</code>，取出 <code>timeout1</code> 执行，输出 <code>timeout1</code>，此时微任务队列中已经没有可执行的任务了，直接开始第三轮循环</li>
+<li>第三轮循环依旧从宏任务队列开始，此时宏任务中只有一个 <code>timeout2</code>，取出直接输出即可</li>
+</ol>
+<p>这个时候宏任务队列与微任务队列中都没有任务了，所以代码就不会再输出其他东西了，那么例子的输出结果就显而易见</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">script start</span><br><span class="line">promise1</span><br><span class="line">script end</span><br><span class="line">then1</span><br><span class="line">timeout1</span><br><span class="line">timeout2</span><br></pre></td></tr></table></figure>
+
+<h2 id="关于-requestAnimationFrame"><a href="#关于-requestAnimationFrame" class="headerlink" title="关于 requestAnimationFrame"></a>关于 requestAnimationFrame</h2><p>先说结论，<code>requestAnimationFrame</code> 其实不属于 <code>task</code>，它只是浏览器渲染过程的一步，和 <code>task/microtask</code> 的执行是分离的，至于为什么会这样，我们则需要深入的去了解一下 <code>requestAnimationFrame</code> 这个接口，详细可以参考 <a href="https://www.cnblogs.com/onepixel/p/7078617.html" target="_blank" rel="noopener">requestAnimationFrame 知多少</a> 和 <a href="https://stackoverflow.com/questions/43050448/when-will-requestanimationframe-be-executed" target="_blank" rel="noopener">When will requestAnimationFrame be executed</a>，我们在这里只简单的总结一下</p>
 <ul>
-<li><code>Microtask</code> 会优先 <code>Macrotask</code> 执行</li>
-<li><code>Microtask</code> 会被循环提取到执行引擎主线程的执行栈，直到 <code>Microtask</code> 任务队列清空，才会执行 <code>Macrotask</code></li>
+<li><code>setTimeout</code> 的执行时间并不是确定的，在 <code>JavaScript</code> 中，<code>setTimeout</code> 任务被放进了异步队列中，只有当主线程上的任务执行完以后，才会去检查该队列里的任务是否需要开始执行，所以 <code>setTimeout</code> 的实际执行时机一般要比其设定的时间晚一些</li>
+<li>与 <code>setTimeout</code> 相比，<code>requestAnimationFrame</code> 最大的优势是 <strong>由系统来决定回调函数的执行时机</strong>，系统每次绘制之前会主动调用 <code>requestAnimationFrame</code> 中的回调函数，如果系统绘制率是 <code>60Hz</code>，那么回调函数就每 <code>16.7ms</code> 被执行一次，如果绘制频率是 <code>75Hz</code>，那么这个间隔时间就变成了 <code>1000 / 75 = 13.3ms</code>，换句话说就是 <code>requestAnimationFrame</code> 的执行步伐跟着系统的绘制频率走，它能保证回调函数在屏幕每一次的绘制间隔中只被执行一次，这样就不会引起丢帧现象，也不会导致动画出现卡顿的问题</li>
 </ul>
+<p>至于具体是什么样的流程，我们可以参考规范当中的 <a href="https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model" target="_blank" rel="noopener">事件循环处理模型</a>，简化后的流程是下面这样</p>
+<ul>
+<li>执行最早的（宏）任务</li>
+<li>微任务</li>
+<li>如果这是渲染的好时机<ul>
+<li>准备工作</li>
+<li>运行 <code>requestAnimationFrame</code> 回调</li>
+<li>渲染</li>
+</ul>
+</li>
+</ul>
+<p>但是这里也会存在一个问题，就是如果你在不同的浏览器上进行测试，结果可能会有所不同，但是现在 <code>Chrome/Firefox/iOS Safari/Legacy Edge</code> 等都在向着规范靠拢，所以我们还是以规范为准吧</p>
+<h2 id="Node-js-中的表现"><a href="#Node-js-中的表现" class="headerlink" title="Node.js 中的表现"></a>Node.js 中的表现</h2><p><code>Node.js</code> 也是单线程，但是在处理 <code>Event Loop</code> 上与浏览器稍微有些不同，就单从 <code>API</code> 层面上来理解，<code>Node.js</code> 新增了两个方法可以用来使用，微任务的 <code>process.nextTick</code> 以及宏任务的 <code>setImmediate</code></p>
+<blockquote>
+<p><code>Node.js</code> 的运行机制也是基于事件轮询（<code>Event Loop</code>）的，详细见 <a href="https://heptaluan.github.io/2019/07/05/Node/04/" target="_blank" rel="noopener">Node.js 中的事件轮询机制</a></p>
+</blockquote>
+<h4 id="setImmediate-与-setTimeout-的区别"><a href="#setImmediate-与-setTimeout-的区别" class="headerlink" title="setImmediate 与 setTimeout 的区别"></a>setImmediate 与 setTimeout 的区别</h4><p>在官方文档中的定义，<code>setImmediate</code> 为一次 <code>Event Loop</code> 执行完毕后调用，<code>setTimeout</code> 则是通过计算一个延迟时间后进行执行，但是同时还提到了如果在主进程中直接执行这两个操作，很难保证哪个会先触发</p>
+<p>因为如果主进程中先注册了两个任务，然后执行的代码耗时超过设定的期限，而这时定时器已经处于可执行回调的状态了，所以会先执行定时器，而执行完定时器以后才是结束了一次 <code>Event Loop</code>，这时才会执行 <code>setImmediate</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'setTimeout'</span>))</span><br><span class="line">setImmediate(<span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'setImmediate'</span>))</span><br></pre></td></tr></table></figure>
+
+<p>比如上面的代码，可以试验一下，执行多次的话会得到不同的结果，但是如果后续添加一些代码以后，就可以保证 <code>setTimeout</code> 一定会在 <code>setImmediate</code> 之前触发了</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'setTimeout'</span>))</span><br><span class="line">setImmediate(<span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'setImmediate'</span>))</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> countdown = <span class="hljs-number">1e9</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 我们确保这个循环的执行速度会超过定时器的倒计时，导致这轮循环没有结束时，setTimeout 已经可以执行回调了</span></span><br><span class="line"><span class="hljs-comment">// 所以会先执行 setTimeout 然后再结束这一轮循环，也就是说开始执行 setImmediate </span></span><br><span class="line"><span class="hljs-keyword">while</span> (countdown--) &#123; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果在另一个宏任务中，必然是 <code>setImmediate</code> 先执行</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 如果使用一个设置了延迟的 setTimeout 也可以实现相同的效果</span></span><br><span class="line"><span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>).readFile(__dirname, _ =&gt; &#123;</span><br><span class="line">  setTimeout(<span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'timeout'</span>))</span><br><span class="line">  setImmediate(<span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'immediate'</span>))</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="process-nextTick"><a href="#process-nextTick" class="headerlink" title="process.nextTick"></a>process.nextTick</h4><p>就像上边说的，这个可以认为是一个类似于 <code>Promise</code> 和 <code>MutationObserver</code> 的微任务实现，在代码执行的过程中可以随时插入 <code>nextTick</code>，并且会保证在下一个宏任务开始之前所执行，在使用方面的一个最常见的例子就是一些事件绑定类的操作</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Lib</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">require</span>('<span class="hljs-title">events</span>').<span class="hljs-title">EventEmitter</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="hljs-keyword">super</span>()</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">this</span>.emit(<span class="hljs-string">'init'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> lib = <span class="hljs-keyword">new</span> Lib()</span><br><span class="line"></span><br><span class="line">lib.on(<span class="hljs-string">'init'</span>, _ =&gt; &#123;</span><br><span class="line">  <span class="hljs-comment">// 这里将永远不会执行</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'init!'</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>因为上述的代码在实例化 <code>Lib</code> 对象时是同步执行的，在实例化完成以后就立马发送了 <code>init</code> 事件，而这时在外层的主程序还没有开始执行到 <code>lib.on(&#39;init&#39;)</code> 监听事件的这一步，所以会导致发送事件时没有回调，回调注册后事件不会再次发送，我们可以很轻松的使用 <code>process.nextTick</code> 来解决这个问题</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Lib</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">require</span>('<span class="hljs-title">events</span>').<span class="hljs-title">EventEmitter</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="hljs-keyword">super</span>()</span><br><span class="line"></span><br><span class="line">    process.nextTick(<span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.emit(<span class="hljs-string">'init'</span>)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 同理使用其他的微任务</span></span><br><span class="line">    <span class="hljs-comment">// 比如 Promise.resolve().then(_ =&gt; this.emit('init'))</span></span><br><span class="line">    <span class="hljs-comment">// 也可以实现相同的效果</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样会在主进程的代码执行完毕后，程序空闲时触发 <code>Event Loop</code> 流程查找有没有微任务，然后再发送 <code>init</code> 事件</p>
+<blockquote>
+<p>但是这里也需要注意，循环调用 <code>process.nextTick</code> 会导致报警，后续的代码永远不会被执行</p>
+</blockquote>
+<h2 id="Async-Await"><a href="#Async-Await" class="headerlink" title="Async/Await"></a>Async/Await</h2><p>因为 <code>Async/Await</code> 本质上还是基于 <code>Promise</code> 的一些封装，而 <code>Promise</code> 是属于微任务的一种，所以在使用 <code>await</code> 关键字与 <code>Promise.then</code> 效果类似</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-number">4</span>))</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">main</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">1</span>)</span><br><span class="line">  <span class="hljs-keyword">await</span> <span class="hljs-built_in">Promise</span>.resolve()</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">3</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">main()</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<p><code>async</code> 函数在 <code>await</code> 之前的代码都是同步执行的，可以理解为 <code>await</code> 之前的代码属于 <code>new Promise</code> 时传入的代码，<code>await</code> 之后的所有代码都是在 <code>Promise.then</code> 中的回调</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/EventLoop" target="_blank" rel="noopener">并发模型与事件循环</a></li>
 <li><a href="https://www.jianshu.com/p/c38bd2b1bb43" target="_blank" rel="noopener">JavaScript 的并发模型</a></li>
+<li><a href="https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model" target="_blank" rel="noopener">事件循环处理模型</a></li>
+<li><a href="https://github.com/dwqs/blog/issues/61" target="_blank" rel="noopener">从一道题浅说 JavaScript 的事件循环</a></li>
+<li><a href="https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/" target="_blank" rel="noopener">Tasks, microtasks, queues and schedules</a></li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame" target="_blank" rel="noopener">window.requestAnimationFrame</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver" target="_blank" rel="noopener">MutationObserver</a></li>
+<li><a href="https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/" target="_blank" rel="noopener">What is the Event Loop?</a></li>
 </ul>
 
         </div>
@@ -426,7 +512,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        151
+                        152
                     </p>
                 </div>
             </div>
@@ -500,20 +586,36 @@ var _hmt = _hmt || [];
         <span class="has-mr-6">5</span>
         <span>Event Loop</span>
         </a></li><li>
-        <a class="is-flex" href="#定时器">
+        <a class="is-flex" href="#任务队列">
         <span class="has-mr-6">6</span>
-        <span>定时器</span>
-        </a></li><li>
-        <a class="is-flex" href="#Macrotask-和-Microtask">
-        <span class="has-mr-6">7</span>
-        <span>Macrotask 和 Microtask</span>
+        <span>任务队列</span>
         </a></li><li>
         <a class="is-flex" href="#执行顺序">
-        <span class="has-mr-6">8</span>
+        <span class="has-mr-6">7</span>
         <span>执行顺序</span>
         </a></li><li>
-        <a class="is-flex" href="#参考">
+        <a class="is-flex" href="#关于-requestAnimationFrame">
+        <span class="has-mr-6">8</span>
+        <span>关于 requestAnimationFrame</span>
+        </a></li><li>
+        <a class="is-flex" href="#Node-js-中的表现">
         <span class="has-mr-6">9</span>
+        <span>Node.js 中的表现</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#setImmediate-与-setTimeout-的区别">
+        <span class="has-mr-6">9.1</span>
+        <span>setImmediate 与 setTimeout 的区别</span>
+        </a></li><li>
+        <a class="is-flex" href="#process-nextTick">
+        <span class="has-mr-6">9.2</span>
+        <span>process.nextTick</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#Async-Await">
+        <span class="has-mr-6">10</span>
+        <span>Async/Await</span>
+        </a></li><li>
+        <a class="is-flex" href="#参考">
+        <span class="has-mr-6">11</span>
         <span>参考</span>
         </a></li></ul>
         </div>
@@ -571,7 +673,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">5</span>
+                <span class="level-item tag">6</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -639,6 +741,25 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/09/01/HTTP/10/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/10.jpg" alt="HTTP 协议梳理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-31T16:00:00.000Z">2020-09-01</time></div>
+                    <a href="/2020/09/01/HTTP/10/" class="has-link-black-ter is-size-6">HTTP 协议梳理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -716,25 +837,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/08/08/HTTP/00/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/08.jpg" alt="计算机网络知识梳理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-07T16:00:00.000Z">2020-08-08</time></div>
-                    <a href="/2020/08/08/HTTP/00/" class="has-link-black-ter is-size-6">计算机网络知识梳理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -746,6 +848,17 @@ var _hmt = _hmt || [];
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2020/08/">
@@ -1308,7 +1421,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">5</span>
+                        <span class="tag is-grey">6</span>
                     </a>
                 </div>
                 
