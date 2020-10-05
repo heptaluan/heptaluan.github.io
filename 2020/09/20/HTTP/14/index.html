@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="在之前的部分当中，我们梳理了 HTTP 协议，HTTPS，HTTP/2 和 HTTP/3 的一些相关内容，本章我们再来看看姑且算是最后一部分内容，也算是补充部分的 TCP/IP 协议相关内容，这部分内容主要参考的是 图解 TCP/IP 但是在本章当中关于 TCP/IP 协议的相关内容不会像 HTTP 协议那样梳理的十分细致，因为关于这部分的内容在工作之中接触有限，所以在这里简单记录一下也就当做是扩">
+    <meta name="description" content="在之前的章节当中，我们梳理了 HTTP 协议，HTTPS，HTTP/2 和 HTTP/3 的一些相关内容，本章我们再来看看姑且算是最后一部分内容，也就是 TCP/IP 协议相关内容，因为这部分内容在平常的工作之中接触有限，所以在这里简单记录一下也就当做是扩展知识了，内容主要参考的是 图解 TCP/IP">
 <meta name="keywords" content="HTTP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="TCP&#x2F;IP 协议">
 <meta property="og:url" content="http://yoursite.com/2020/09/20/HTTP/14/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="在之前的部分当中，我们梳理了 HTTP 协议，HTTPS，HTTP/2 和 HTTP/3 的一些相关内容，本章我们再来看看姑且算是最后一部分内容，也算是补充部分的 TCP/IP 协议相关内容，这部分内容主要参考的是 图解 TCP/IP 但是在本章当中关于 TCP/IP 协议的相关内容不会像 HTTP 协议那样梳理的十分细致，因为关于这部分的内容在工作之中接触有限，所以在这里简单记录一下也就当做是扩">
+<meta property="og:description" content="在之前的章节当中，我们梳理了 HTTP 协议，HTTPS，HTTP/2 和 HTTP/3 的一些相关内容，本章我们再来看看姑且算是最后一部分内容，也就是 TCP/IP 协议相关内容，因为这部分内容在平常的工作之中接触有限，所以在这里简单记录一下也就当做是扩展知识了，内容主要参考的是 图解 TCP/IP">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg">
-<meta property="og:updated_time" content="2020-09-26T13:00:01.562Z">
+<meta property="og:updated_time" content="2020-10-05T14:08:23.300Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TCP&#x2F;IP 协议">
-<meta name="twitter:description" content="在之前的部分当中，我们梳理了 HTTP 协议，HTTPS，HTTP/2 和 HTTP/3 的一些相关内容，本章我们再来看看姑且算是最后一部分内容，也算是补充部分的 TCP/IP 协议相关内容，这部分内容主要参考的是 图解 TCP/IP 但是在本章当中关于 TCP/IP 协议的相关内容不会像 HTTP 协议那样梳理的十分细致，因为关于这部分的内容在工作之中接触有限，所以在这里简单记录一下也就当做是扩">
+<meta name="twitter:description" content="在之前的章节当中，我们梳理了 HTTP 协议，HTTPS，HTTP/2 和 HTTP/3 的一些相关内容，本章我们再来看看姑且算是最后一部分内容，也就是 TCP/IP 协议相关内容，因为这部分内容在平常的工作之中接触有限，所以在这里简单记录一下也就当做是扩展知识了，内容主要参考的是 图解 TCP/IP">
 <meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg">
 
 
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    16 分钟 读完 (大约 2337 个字)
+                    2 小时 读完 (大约 16889 个字)
                 </span>
                 
                 
@@ -186,44 +186,749 @@ var _hmt = _hmt || [];
             
         </h1>
         <div class="content">
-            <p>在之前的部分当中，我们梳理了 <a href="https://heptaluan.github.io/2020/09/01/HTTP/10/" target="_blank" rel="noopener">HTTP 协议</a>，<a href="https://heptaluan.github.io/2020/08/09/HTTP/09/" target="_blank" rel="noopener">HTTPS</a>，<a href="https://heptaluan.github.io/2020/09/06/HTTP/11/" target="_blank" rel="noopener">HTTP/2</a> 和 <a href="https://heptaluan.github.io/2020/09/12/HTTP/12/" target="_blank" rel="noopener">HTTP/3</a> 的一些相关内容，本章我们再来看看姑且算是最后一部分内容，也算是补充部分的 <code>TCP/IP</code> 协议相关内容，这部分内容主要参考的是 <a href="https://book.douban.com/subject/24737674/" target="_blank" rel="noopener">图解 TCP/IP</a></p>
-<p>但是在本章当中关于 <code>TCP/IP</code> 协议的相关内容不会像 <code>HTTP</code> 协议那样梳理的十分细致，因为关于这部分的内容在工作之中接触有限，所以在这里简单记录一下也就当做是扩展知识了</p>
+            <p>在之前的章节当中，我们梳理了 <a href="https://heptaluan.github.io/2020/09/01/HTTP/10/" target="_blank" rel="noopener">HTTP 协议</a>，<a href="https://heptaluan.github.io/2020/08/09/HTTP/09/" target="_blank" rel="noopener">HTTPS</a>，<a href="https://heptaluan.github.io/2020/09/06/HTTP/11/" target="_blank" rel="noopener">HTTP/2</a> 和 <a href="https://heptaluan.github.io/2020/09/12/HTTP/12/" target="_blank" rel="noopener">HTTP/3</a> 的一些相关内容，本章我们再来看看姑且算是最后一部分内容，也就是 <code>TCP/IP</code> 协议相关内容，因为这部分内容在平常的工作之中接触有限，所以在这里简单记录一下也就当做是扩展知识了，内容主要参考的是 <a href="https://book.douban.com/subject/24737674/" target="_blank" rel="noopener">图解 TCP/IP</a></p>
 <a id="more"></a>
 
+
+
+<h2 id="协议"><a href="#协议" class="headerlink" title="协议"></a>协议</h2><p><code>TCP/IP</code> 是通信协议的统称，不过在此之前，我们有必要先来理清协议的概念，在计算机网络与信息通信领城里，人们经常提及协议一词，互联网中常用的具有代表性的协议有 <code>IP</code>、<code>TCP</code>、 <code>HTTP</code> 等，而 <code>LAN</code>（局域网）中常用的协议有 <code>IPX/SPX</code> 等，计算机网络体系结构将这些网络协议进行了系统的归纳，<code>TCP/IP</code> 就是 <code>IP</code>、<code>TCP</code>、<code>HTTP</code> 等协议的集合</p>
+<table>
+<thead>
+<tr>
+<th>网絡体系结构</th>
+<th>协议</th>
+<th>主要用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>TCP/IP</code></td>
+<td><code>IP/ICMP/TCP/UDP/HTTP/TELNET/SNMP/SMTP</code> 等</td>
+<td>互联网、局城网</td>
+</tr>
+<tr>
+<td><code>IPX/SPX</code>（<code>NetWare</code>）</td>
+<td><code>IPX/SPX/NPC</code> 等</td>
+<td>个人电脑局域网</td>
+</tr>
+<tr>
+<td><code>AplcTalk</code></td>
+<td><code>DDP/RTMP/AEP/ATP/ZIP</code> 等</td>
+<td>苹果公司现有产品的局城网</td>
+</tr>
+<tr>
+<td><code>DECnet</code></td>
+<td><code>DPR/NSP/SCP</code> 等</td>
+<td>前 <code>DEC</code> 小型机</td>
+</tr>
+<tr>
+<td><code>OSI</code></td>
+<td><code>FTAM/MOTIS/VT/CMIS/CMIP,CLNP/CONP</code></td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>XNS</code></td>
+<td><code>IDP/SPP/PEP</code> 等</td>
+<td>施乐公司网络</td>
+</tr>
+</tbody></table>
+<h4 id="协议的必要性"><a href="#协议的必要性" class="headerlink" title="协议的必要性"></a>协议的必要性</h4><p>简单来说，协议就是计算机与计算机之间通过网络实现通信时事先达成的一种约定，这种约定使那些由不同厂商的设备、不同的 <code>CPU</code> 以及不同的操作系统组成的计算机之间，只要遵循相同的协议就能够实现通信，反之如果所使用的协议不同，就无法实现通信，但是在计算机通信诞生之初，系统化与标准化并未得到足够的重视，每家计算机厂商都出产各自的网络产品来实现计算机通信，对于协议的系统化、分层化等事宜没有特别强烈的意识</p>
+<p>为了解决上述问题，<code>ISO</code> 制定了一个国际标准 <code>OSI</code>，对通信系统进行了标准化，现在 <code>OSI</code> 所定义的协议虽然并没有得到普及，但是在 <code>OSI</code> 协议设计之初作为其指导方针的 <code>OSI</code> 参考模型却常被用于网络协议的制定当中</p>
+<p>但是我们在本章当中介绍的 <code>TCP/IP</code> 并非 <code>ISO</code> 所制定的某种国际标准，而是由 <code>IETF</code> 所建议的、致力于推进其标准化作业的一种协议，在当时大学等研究机构和计算机行业作为中心力量，推动了 <code>TCP/IP</code> 的标准化进程，<code>TCP/IP</code> 作为互联网之上的一种标准，也作为业界标准，俨然已成为全世界所广泛应用的通信协议，那些础知识支持互联网的设备及软件，也正着力遵循由 <code>IETF</code> 标准化的 <code>TCP/IP</code> 协议</p>
+<p>协议得以标准化也使所有遵循标准协议的设备不再因计算机硬件或操作系统的差异而无法通信，因此协议的标准化也推动了计算机网络的普及</p>
+<h2 id="OSI-参考模型"><a href="#OSI-参考模型" class="headerlink" title="OSI 参考模型"></a>OSI 参考模型</h2><p><code>IS0</code> 在制定标准化 <code>OSI</code> 之前，对网络体系结构相关的问题进行了充分的讨论，最终提出了作为通信协议设计指标的 <code>OSI</code> 参考模型，这一模型将通信协议中必要的功能分成了七层，通过这些分层，使得那些比较复杂的网络协议更加简单化，在这一模型中，每个分层都接收由它下一层所提供的特定服务，并且负责为自己的上一层提供特定的服务</p>
+<ul>
+<li>上下层之间进行交互时所遵循的约定叫做接口</li>
+<li>同一层之间的交互所遵循的约定叫做协议</li>
+</ul>
+<p>协议分层就如同计算机软件中的模块化开发，<code>OSI</code> 参考模型的建议是比较理想化的，它希望实现从第一层到第七层的所有模块，并将它们组合起来实现网络通信，分层可以将每个分层独立使用，即使系统中某些分层发生变化，也不会波及整个系统，因此可以构造一个扩展性和灵活性都较强的系统</p>
+<ul>
+<li>此外通过层能够细分通信功能，更易于单独实现每个分层的协议，并界定各个分层的具体责任和义务，这些都属于分层的优点</li>
+<li>而分层的劣势，可能就在于过分模块化、使处理变得更加沉重以及每个模块都不得不实现相似的处理:逻辑等问题</li>
+</ul>
+<h4 id="OSI-参考模型-1"><a href="#OSI-参考模型-1" class="headerlink" title="OSI 参考模型"></a>OSI 参考模型</h4><p>如下图所示</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-06.png" alt></p>
+<p>不过，<code>OSI</code> 参考模型终究只是一个模型，它也只是对各层的作用做了一系列粗略的界定，并没有对协议和接口进行详细的定义，它对学习和设计协议只能起到一个引导的作用，许多通信协议，都对应了  <code>OSI</code> 参考模型七个分层中的某层，通过这一点，可以大致了解该协议在整个通信功能中的位置和作用</p>
 <blockquote>
+<p>这里需要区分开来 <code>OSI</code> 协议与 <code>OSI</code> 参考模型</p>
 </blockquote>
-<hr>
-<hr>
-<hr>
-<p>待续</p>
+<ul>
+<li><code>OSI</code> 协议是为了让异构的计算机之间能够相互通信的、由 <code>ISO</code> 和 <code>ITU-T</code> 推进其标准化的一种网絡体系结构，<code>OST</code>（参考模型）将通信功能划分为七个分层，称作 <code>OSI</code> 参考模型</li>
+<li>而 <code>OSI</code> 协议以 <code>OSI</code> 参考模型为基础界定了每个阶层的协议和每个阶层之间接口相关的标准，遵循 <code>OSI</code> 协议的产品叫 <code>OSI</code> 产品，而它们所遵循的通信则被称为 <code>OSI</code> 通信</li>
+</ul>
+<h2 id="TCP-IP-基础"><a href="#TCP-IP-基础" class="headerlink" title="TCP/IP 基础"></a>TCP/IP 基础</h2><p>从字面意义上讲，有人可能会认为 <code>TCP/IP</code> 是指 <code>TCP</code> 和 <code>IP</code> 两种协议，实际生活当中有时也确实就是指这两种协议，然而在很多情况下，它只是利用 <code>IP</code> 进行通信时所必须用到的协议群的统称，具体来说，<code>IP</code> 或 <code>ICMP</code>、<code>TCP</code> 或 <code>UDP</code>、<code>TELNET</code> 或 <code>FTP</code>、以及 <code>HTTP</code> 等都属于 <code>TCP/IP</code> 协议，他们与 <code>TCP</code> 或 <code>IP</code> 的关系紧密，是互联网必不可少的组成部分，<code>TCP/IP</code> 一词泛指这些协议</p>
+<p>因此，有时也称 <code>TCP/IP</code> 为网际协议群，互联网进行通信时，需要相应的网络协议，<code>TCP/IP</code> 原本就是为使用互联网而开发制定的协议族，因此互联网的协议就是 <code>TCP/IP</code>，<code>TCP/IP</code> 就是互联网的协议</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-07.png" alt></p>
+<h2 id="TCP-IP-协议分层模型"><a href="#TCP-IP-协议分层模型" class="headerlink" title="TCP/IP 协议分层模型"></a>TCP/IP 协议分层模型</h2><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-08.png" alt></p>
+<p>不难看出，<code>TCP/IP</code> 与 <code>OSI</code> 在分层模块上稍有区别，<code>OSI</code> 参考模型注重 <strong>通信协议必要的功能是什么</strong>，而 <code>TCP/IP</code> 则更强调 <strong>在计算机上实现协议应该开发哪种程序</strong></p>
+<h2 id="数据包"><a href="#数据包" class="headerlink" title="数据包"></a>数据包</h2><p>包、帧、数据包、段、消息以上五个术语都用来表述数据的单位，大致区分如下</p>
+<ul>
+<li>包可以说是全能性术语</li>
+<li>帧用于表示数据链路层中包的单位</li>
+<li>数据包是 <code>IP</code> 和 <code>UDP</code> 等网络层以上的分层中包的单位</li>
+<li>段则表示 <code>TCP</code> 数据流中的信息</li>
+<li>消息是指应用协议中数据的单位</li>
+</ul>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-09.png" alt></p>
+<p>每个分层中，都会对所发送的数据附加一个首部，在这个首部中包含了该层必要的信息，如发送的目标地址以及协议相关信息，通常为协议提供的信息为包首部，所要发送的内容为数据，如上图，在下一层的角度看，从上一分层收到的包全部都被认为是本层的数据</p>
+<p>网络中传输的数据包由两部分组成</p>
+<ul>
+<li>一部分是协议所要用到的首部</li>
+<li>另一部分是上一层传过来的数据</li>
+</ul>
+<p>首部的结构由协议的具体规范详细定义，在数据包的首部，明确标明了协议应该如何读取数据，反过来说，看到首部也就能够了解该协议必要的信息以及所要处理的数据，<strong>包首部就像协议的脸</strong></p>
+<h2 id="数据处理流程"><a href="#数据处理流程" class="headerlink" title="数据处理流程"></a>数据处理流程</h2><p>我们以一个发送邮件的流程为例，如下图</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-10.png" alt></p>
+<ol>
+<li>应用程序处理首先应用程序会进行编码处理，这些编码相当于 <code>OSI</code> 的表示层功能，编码转化后邮件不一定马上被发送出去，这种何时建立通信连接何时发送数据的管理功能，相当于 <code>OSI</code> 的会话层功能</li>
+<li><code>TCP</code> 模块的处理，<code>TCP</code> 根据应用的指示，负责建立连接、发送数据以及断开连接，<code>TCP</code> 提供将应用层发来的数据顺利发送至对端的可靠传输，为了实现这一功能，需要在应用层数据的前端附加一个 <code>TCP</code> 首部</li>
+<li><code>IP</code> 模块的处理，<code>IP</code> 将 <code>TCP</code> 传过来的 <code>TCP</code> 首部和 <code>TCP</code> 数据合起来当做自己的数据，并在 <code>TCP</code> 首部的前端加上自己的 <code>IP</code> 首部，<code>IP</code> 包生成后，参考路由控制表决定接受此 <code>IP</code> 包的路由或主机</li>
+<li>网络接口（以太网驱动）的处理从 <code>IP</code> 传过来的 <code>IP</code> 包对于以太网来说就是数据，给这些数据附加上以太网首部并进行发送处理，生成的以太网数据包将通过物理层传输给接收端</li>
+<li>网络接口（以太网驱动）的处理主机收到以太网包后，首先从以太网包首部找到 <code>MAC</code> 地址判断是否为发送给自己的包，若不是则丢弃数据，如果是发送给自己的包，则从以太网包首部中的类型确定数据类型，再传给相应的模块，如 <code>IP</code>、<code>ARP</code> 等，这里的例子则是 <code>IP</code> </li>
+<li><code>IP</code> 模块的处理<code>IP</code> 模块接收到 数据后也做类似的处理，从包首部中判断此 <code>IP</code> 地址是否与自己的 <code>IP</code> 地址匹配，如果匹配则根据首部的协议类型将数据发送给对应的模块，如 <code>TCP</code>、<code>UDP</code>，这里的例子则是 <code>TCP</code>，另外对于有路由器的情况，接收端地址往往不是自己的地址，此时需要借助路由控制表，在调查应该送往的主机或路由器之后再进行转发数据</li>
+<li><code>TCP</code> 模块的处理在 <code>TCP</code> 模块中，首先会计算一下校验和，判断数据是否被破坏，然后检查是否在按照序号接收数据，最后检查端口号，确定具体的应用程序，数据被完整地接收以后，会传给由端口号识别的应用程序</li>
+<li>应用程序的处理接收端应用程序会直接接收发送端发送的数据，通过解析数据，展示相应的内容</li>
+</ol>
+<h2 id="IP-协议"><a href="#IP-协议" class="headerlink" title="IP 协议"></a>IP 协议</h2><p><code>IP</code>（<code>IPv4</code>、<code>IPv6</code>）相当于 <code>OSI</code> 参考模型中的第三层（网络层），网络层的主要作用是 <strong>实现终端节点之间的通信</strong>，这种终端节点之间的通信也叫 <strong>点对点通信</strong>，而网络的下一层（数据链路层）的主要作用是在互连同一种数据链路的节点之间进行包传递，而一旦跨越多种数据链路，就需要借助网络层，网络层可以跨越不同的数据链路，即使是在不同的数据链路上也能实现两端节点之间的数据包传输</p>
+<p><code>IP</code> 大致分为三大作用模块，它们是 <code>IP</code> 寻址、路由（最终节点为止的转发）以及 <code>IP</code> 分包与组包，下面我们就一个一个来介绍</p>
+<h4 id="IP-地址"><a href="#IP-地址" class="headerlink" title="IP 地址"></a>IP 地址</h4><p>在计算机通信中，为了识别通信对端，必须要有一个类似于地址的识别码进行标识，在数据链路中的 <code>MAC</code> 地址正是用来标识同一个链路中不同计算机的一种识别码，作为网络层的 <code>IP</code> ,也有这种地址信息，一般叫做 <code>IP</code> 地址，<code>IP</code> 地址用于在 <strong>连接到网络中的所有主机中识别出进行通信的目标地址</strong>，因此在 <code>TCP/IP</code> 通信中所有主机或路由器必须设定自己的 <code>IP</code> 地址，但是不论一台主机与哪种数据链路连接，其 <code>IP</code> 地址的形式都保持不变</p>
+<h4 id="IP-地址的定义"><a href="#IP-地址的定义" class="headerlink" title="IP 地址的定义"></a>IP 地址的定义</h4><p>在用 <code>TCP/IP</code> 通信时，用 <code>IP</code> 地址识别主机和路由器，为了保证正常通信，有必要为每个设备配置正确的 <code>IP</code> 地址，在互联网通信中，全世界都必须设定正确的 <code>IP</code> 地址，否则，根本无法实现正常的通信，因此 <code>IP</code> 地址就像是 <code>TCP/IP</code> 通信的一块基石</p>
+<p><code>IP</code> 地址（<code>IPv4</code> 地址）由 <code>32</code> 位正整数来表示，<code>IP</code> 地址在计算机内部以二进制方式被处理，然而由于我们并不习惯于采用二进制方式，我们将 <code>32</code> 位的 <code>IP</code> 地址以每 <code>8</code> 位为一组，分成 <code>4</code> 组，每组以 <code>.</code>（点号）隔开，再将每组数转换成十进制数，如下</p>
+<table>
+<thead>
+<tr>
+<th><code>2^8</code></th>
+<th><code>2^8</code></th>
+<th><code>2^8</code></th>
+<th><code>2^8</code></th>
+<th>&nbsp;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>10101100</code></td>
+<td><code>00010100</code></td>
+<td><code>00000001</code></td>
+<td><code>00000001</code></td>
+<td>二进制</td>
+</tr>
+<tr>
+<td><code>10101100.</code></td>
+<td><code>00010100.</code></td>
+<td><code>00000001.</code></td>
+<td><code>00000001</code></td>
+<td>二进制</td>
+</tr>
+<tr>
+<td><code>172.</code></td>
+<td><code>20.</code></td>
+<td><code>1.</code></td>
+<td><code>1</code></td>
+<td>十进制</td>
+</tr>
+</tbody></table>
+<h4 id="组成"><a href="#组成" class="headerlink" title="组成"></a>组成</h4><p><code>IP</code> 地址由网络和主机两部分标识组成，如下图，网络标识在数据链路的每个段配置不同的值，网络标识必须保证相互连接的每个段的地址不相重复，而相同段内相连的主机必须有相同的网络地址，<code>IP</code> 地址的 <strong>主机标识</strong> 则不允许在同一个网段内重复出现，由此可以通过设置网络地址和主机地址，在相互连接的整个网络中保证每台主机的 <code>IP</code> 地址都不会相互重叠，即 <code>IP</code> 地址具有了唯一性</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-11.png" alt></p>
+<p><code>IP</code> 包被转发到途中某个路由器时，正是利用目标 <code>IP</code> 地址的网络标识进行路由，因为即使不看主机标识，只要一见到网络标识就能判断出是否为该网段内的主机</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-12.png" alt></p>
+<h4 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h4><p><code>IP</code> 地址分为四个级别，分别为<code>A</code>类、<code>B</code>类、<code>C</code>类、<code>D</code>类，它根据 <code>IP</code> 地址中从第 <code>1</code> 位到第 <code>4</code> 位的比特列对其网络标识和主机标识进行区分</p>
+<ul>
+<li><code>A</code> 类 <code>IP</code> 地址是首位以 <code>0</code> 开头的地址，从第 <code>1</code> 位到第 <code>8</code> 位是它的网络标识，用十进制表示的话，<code>0.0.0.0 ~ 127.0.0.0</code> 是 <code>A</code> 类的网络地址，<code>A</code> 类地址的后 <code>24</code> 位相当于主机标识，因此一个网段内可容纳的主机地址上限为 <code>16777214</code> 个</li>
+<li><code>B</code> 类 <code>IP</code> 地址是前两位 <code>10</code> 的地址，从第 <code>1</code> 位到第 <code>16</code> 位是它的网络标识，用十进制表示的话，<code>128.0.0.0 ~ 191.255.0.0</code> 是 <code>B</code> 类的网络地址，<code>B</code> 类地址的后 <code>16</code> 位相当于主机标识，因此一个网段内可容纳的主机地址上限为 <code>65534</code> 个</li>
+<li><code>C</code> 类 <code>IP</code> 地址是前三位为 <code>110</code> 的地址，从第 <code>1</code> 位到第 <code>24</code> 位是它的网络标识，用十进制表示的话，<code>192.0.0.0 ~ 223.255.255.0</code> 是 <code>C</code> 类的网络地址，<code>C</code> 类地址的后 <code>8</code> 位相当于主机标识，因此一个网段内可容纳的主机地址上限为 <code>254</code> 个</li>
+<li><code>D</code> 类 <code>IP</code> 地址是前四位为 <code>1110</code> 的地址，从第 <code>1</code> 位到第 <code>32</code> 位是它的网络标识，用十进制表示的话，<code>224.0.0.0 ~ 239.255.255.255</code> 是 <code>D</code> 类的网络地址，<code>D</code> 类地址没有主机标识，常用于多播</li>
+</ul>
+<p>在分配 <code>IP</code> 地址时关于主机标识有一点需要注意，即要用比特位表示主机地址时，不可以全部为 <code>0</code> 或全部为 <code>1</code>，因为全部为 <code>0</code> 只有在表示对应的网络地址或 <code>IP</code> 地址不可以获知的情况下才使用，而全部为 <code>1</code> 的主机通常作为广播地址，因此在分配过程中，应该去掉这两种情况，这也是为什么 <code>C</code> 类地址每个网段最多只能有 <code>254</code>（<code>2^8 - 2 = 254</code>）个主机地址的原因</p>
+<h4 id="广播地址"><a href="#广播地址" class="headerlink" title="广播地址"></a>广播地址</h4><ul>
+<li>广播地址用于在同一个链路中相互连接的主机之间发送数据包，将 <code>IP</code> 地址中的主机地址部分全部设置为 <code>1</code>，就成了广播地址</li>
+<li>广播分为本地广播和直接广播两种，在本网络内的广播叫做本地广播；在不同网络之间的广播叫做直接广播</li>
+</ul>
+<h4 id="IP-多播"><a href="#IP-多播" class="headerlink" title="IP 多播"></a>IP 多播</h4><ul>
+<li>多播用于将包发送给特定组内的所有主机，由于其直接使用 <code>IP</code> 地址，因此也不存在可靠传输</li>
+<li>相比于广播，多播既可以穿透路由器，又可以实现只给那些必要的组发送数据包</li>
+</ul>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-13.png" alt></p>
+<p>多播使用 <code>D</code> 类地址，因此如果从首位开始到第 <code>4</code> 位是 <code>1110</code>，就可以认为是多播地址，而剩下的 <code>28</code> 位可以成为多播的组编号，此外对于多播，所有的主机（路由器以外的主机和终端主机）必须属于 <code>224.0.0.1</code> 的组，所有的路由器必须属于 <code>224.0.0.2</code> 的组</p>
+<h4 id="子网掩码"><a href="#子网掩码" class="headerlink" title="子网掩码"></a>子网掩码</h4><p>一个 <code>IP</code> 地址只要确定了其分类，也就确定了它的网络标识和主机标识，例如以下各类各自的网络标识部分</p>
+<ul>
+<li><code>A</code> 类地址前 <code>8</code> 位（除首位 <code>0</code> 还有 <code>7</code> 位）</li>
+<li><code>B</code> 类地址前 <code>16</code> 位（除首位 <code>10</code> 还有 <code>14</code> 位）</li>
+<li><code>C</code> 类地址前 <code>24</code> 位（除首位 <code>110</code> 还有 <code>21</code> 位）</li>
+</ul>
+<p>但是直接使用 <code>A</code> 类或 <code>B</code> 类地址，确实有些浪费，随着互联网的覆盖范围逐渐增大，网络地址会越来越不足以应对需求，直接使用 <code>A</code> 类、<code>B</code> 类、<code>C</code> 类地址就更加显得浪费资源，为此人们已经开始一种新的组合方式以减少这种浪费</p>
+<p>现在，一个 <code>IP</code> 地址的网络标识和主机标识已不再受限于该地址的类别，而是由一个叫做 <strong>子网掩码</strong> 的识别码通过子网网络地址细分出比 <code>A</code> 类、<code>B</code> 类、<code>C</code> 类更小粒度的网络，这种方式实际上就是将原来 <code>A</code> 类、<code>B</code> 类、<code>C</code> 类等分类中的主机地址部分用作子网地址，可以将原网络分为多个物理网络的一种机制</p>
+<p>子网掩码用二进制方式表示的话，也是一个 <code>32</code> 位的数字，它对应 <code>IP</code> 地址网络标识部分的位全部为 <code>1</code>，对应 <code>IP</code> 地址主机标识的部分则全部为 <code>0</code>，由此，一个 <code>IP</code> 地址可以不再受限于自己的类别，而是可以用这样的子网掩码自由地定位自己的网络标识长度，当然子网掩码必须是 <code>IP</code> 地址的首位开始连续的 <code>1</code></p>
+<p>对于子网掩码，目前有两种表示方式，第一种是，将 <code>IP</code> 地址与子网掩码的地址分别用两行来表示，以 <code>172.20.100.52</code> 的前 <code>26</code> 位是网络地址的情况为例，如下</p>
+<table>
+<thead>
+<tr>
+<th>地址</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>IP</code> 地址</td>
+<td><code>172.</code></td>
+<td><code>20.</code></td>
+<td><code>100.</code></td>
+<td><code>52</code></td>
+</tr>
+<tr>
+<td>子网掩码</td>
+<td><code>255.</code></td>
+<td><code>255.</code></td>
+<td><code>255.</code></td>
+<td><code>192</code></td>
+</tr>
+<tr>
+<td>网络地址</td>
+<td><code>172.</code></td>
+<td><code>20.</code></td>
+<td><code>100.</code></td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td>子网掩码</td>
+<td><code>255.</code></td>
+<td><code>255.</code></td>
+<td><code>255.</code></td>
+<td><code>192</code></td>
+</tr>
+<tr>
+<td>广播地址</td>
+<td><code>172.</code></td>
+<td><code>20.</code></td>
+<td><code>100.</code></td>
+<td><code>63</code></td>
+</tr>
+<tr>
+<td>子网掩码</td>
+<td><code>255.</code></td>
+<td><code>255.</code></td>
+<td><code>255.</code></td>
+<td><code>192</code></td>
+</tr>
+</tbody></table>
+<p>第二种表示方式是，在每个 <code>IP</code> 地址后面追加网络地址的位数用 <code>/</code> 隔开，如下</p>
+<table>
+<thead>
+<tr>
+<th>地址</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>IP</code> 地址</td>
+<td><code>172.</code></td>
+<td><code>20.</code></td>
+<td><code>100.</code></td>
+<td><code>52</code></td>
+<td><code>/26</code></td>
+</tr>
+<tr>
+<td>网络地址</td>
+<td><code>172.</code></td>
+<td><code>20.</code></td>
+<td><code>100.</code></td>
+<td><code>0</code></td>
+<td><code>/26</code></td>
+</tr>
+<tr>
+<td>广播地址</td>
+<td><code>172.</code></td>
+<td><code>20.</code></td>
+<td><code>100.</code></td>
+<td><code>63</code></td>
+<td><code>/26</code></td>
+</tr>
+</tbody></table>
+<h2 id="路由控制"><a href="#路由控制" class="headerlink" title="路由控制"></a>路由控制</h2><p>发送数据包时所使用的地址是网络层的地址，即 <code>IP</code> 地址，然而仅仅有 <code>IP</code> 地址还不足以实现将数据包发送到对端目标地址，在数据发送过程中还需要类似于 <strong>指明路由器或主机</strong> 的信息，以便真正发往目标地址，保存这种信息的就是路由控制表，该路由控制表的形成方式有两种</p>
+<ul>
+<li>一种是管理员手动设置（静态路由控制）</li>
+<li>另一种是路由器与其他路由器相互交换信息时自动刷新（动态路由控制）</li>
+</ul>
+<p><code>IP</code> 协议始终认为路由表是正确的，<code>IP</code> 本身并没有定义制作路由控制表的协议，即 <code>IP</code> 没有制作路由控制表的机制，该表示由一个叫做 <strong>路由协议</strong> 的协议制作而成</p>
+<h4 id="IP-地址与路由控制"><a href="#IP-地址与路由控制" class="headerlink" title="IP 地址与路由控制"></a>IP 地址与路由控制</h4><p><code>IP</code> 地址的网络地址部分用于进行路由控制，路由控制表中记录着网络地址与下一步应该发送至路由器的地址，在发送 <code>IP</code> 包时，首先要确定 <code>IP</code> 包首部中的目标地址，再从路由控制表中找到与该地址具有相同网络地址的记录，根据该记录将 <code>IP</code> 包转发给相应的下一个路由器，如果路由控制表中存在多条相同网络地址的记录，就选择一个最为吻合的网络地址</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-14.png" alt></p>
+<ul>
+<li>默认路由<ul>
+<li>如果一张路由表中包含所有的网络及其子网的信息，将会造成无端的浪费，这时默认路由是不错的选择，默认路由是指路由表中任何一个地址都能与之匹配的记录</li>
+<li>默认路由一般标记为 <code>0.0.0.0/0</code> 或 <code>default</code>，这里的 <code>0.0.0.0/0</code> 并不是指 <code>IP</code> 地址是 <code>0.0.0.0</code>，由于后面是 <code>/0</code>，所以并没有标识 <code>IP</code> 地址，它只是为了避免人们误以为 <code>0.0.0.0</code> 是 <code>IP</code> 地址，有时默认路由也被标记为 <code>default</code>，但是在计算机内部和路由协议的发送过程中还是以 <code>0.0.0.0/0</code> 进行处理</li>
+</ul>
+</li>
+<li>主机路由<ul>
+<li><strong>/32</strong> 也被称为主机路由（<code>Host Route</code>），例如 <code>192.168.153.15/32</code> 就是一种主机路由，它的意思是整个 <code>IP</code> 地址的所有位都将参与路由，进行主机路由，意昧着要基于主机上网卡上配置的 <code>IP</code> 地址本身，而不是基于该地址的网络地址部分进行路由</li>
+<li>主机路由多被用于不希望通过网络地址路由的情况</li>
+</ul>
+</li>
+<li>环回地址<ul>
+<li>环回地址是在同一台计算机上的程序之间进行网络通信时所使用的一个默认地址，计算机使用一个特殊的 <code>IP</code> 地址 <code>127.0.0.1</code> 作为环回地址，与该地址具有相同意义的是一个叫做 <code>localhost</code> 的主机名，使用这个 <code>IP</code> 或主机名时，数据包不会流向网络</li>
+</ul>
+</li>
+</ul>
+<h4 id="IP-报文的分片与重组"><a href="#IP-报文的分片与重组" class="headerlink" title="IP 报文的分片与重组"></a>IP 报文的分片与重组</h4><ul>
+<li>每种数据链路的最大传输单元（<code>MTU</code>）都不尽相同，因为每个不同类型的数据链路的使用目的不同，使用目的不同，可承载的 <code>MTU</code> 也就不同</li>
+<li>任何一台主机都有必要对 <code>IP</code> 分片进行相应的处理，分片往往在网络上遇到比较大的报文无法一下子发送出去时才会进行处理</li>
+<li>经过分片之后的 <code>IP</code> 数据报在被重组的时候，只能由目标主机进行，路由器虽然做分片但不会进行重组</li>
+</ul>
+<h4 id="路径-MTU-发现"><a href="#路径-MTU-发现" class="headerlink" title="路径 MTU 发现"></a>路径 MTU 发现</h4><ul>
+<li>分片机制也有它的不足，如路由器的处理负荷加重之类，因此只要允许，是不希望由路由器进行 <code>IP</code> 数据包的分片处理的</li>
+<li>为了应对分片机制的不足，路径 <code>MTU</code> 发现技术应运而生，路径 <code>MTU</code> 指的是，从发送端主机到接收端主机之间不需要分片是最大 <code>MTU</code> 的大小，即路径中存在的所有数据链路中最小的 <code>MTU</code></li>
+<li>进行路径 <code>MTU</code> 发现，就可以避免在中途的路由器上进行分片处理，也可以在 <code>TCP</code> 中发送更大的包</li>
+</ul>
+<h2 id="IPv6"><a href="#IPv6" class="headerlink" title="IPv6"></a>IPv6</h2><p><code>IPv6</code>（<code>IP version 6</code>）是为了根本解决 <code>IPv4</code> 地址耗尽的问题而被标准化的网际协议，<code>IPv4</code> 的地址长度为 <code>4</code> 个 <code>8</code> 位字节，即 <code>32</code> 比特，而 <code>IPv6</code> 的地址长度则是原来的 <code>4</code> 倍，即 <code>128</code> 比特，一般写成 <code>8</code> 个 <code>16</code> 位字节</p>
+<h4 id="IPv6-的特点"><a href="#IPv6-的特点" class="headerlink" title="IPv6 的特点"></a>IPv6 的特点</h4><ul>
+<li><code>IP</code> 得知的扩大与路由控制表的聚合</li>
+<li>性能提升，包首部长度采用固定的值（<code>40</code> 字节），不再采用首部检验码，简化首部结构，减轻路由器负担，路由器不再做分片处理</li>
+<li>支持即插即用功能，即使没有 <code>DHCP</code> 服务器也可以实现自动分配 <code>IP</code> 地址</li>
+<li>采用认证与加密功能，应对伪造 <code>IP</code> 地址的网络安全功能以及防止线路窃听的功能</li>
+<li>多播、<code>Mobile IP</code> 成为扩展功能</li>
+</ul>
+<h4 id="IPv6-中-IP-地址的标记方法"><a href="#IPv6-中-IP-地址的标记方法" class="headerlink" title="IPv6 中 IP 地址的标记方法"></a>IPv6 中 IP 地址的标记方法</h4><ul>
+<li><p>一般人们将 <code>128</code> 比特 <code>IP</code> 地址以每 <code>16</code> 比特为一组，每组用冒号（<code>:</code>）隔开进行标记</p>
+</li>
+<li><p>而且如果出现连续的 <code>0</code> 时还可以将这些 <code>0</code> 省略，并用两个冒号（<code>::</code>）隔开，但是一个 <code>IP</code> 地址中只允许出现一次两个连续的冒号</p>
+</li>
+<li><p><code>IPv6</code> 的 <code>IP</code> 地址标记举例</p>
+<ul>
+<li>用二进制数表示 <code>1111111011011100: 1011101010011000: 0111011001010100:0011001000010000: 1111111011011100: 1011101010011000: 0111011001010100: 0011001000010000</code></li>
+<li>用十六进制数表示 <code>FEDC: BA98: 7654: 3210: FEDC: BA98: 7654: 3210</code></li>
+</ul>
+</li>
+<li><p><code>IPv6</code> 的 <code>IP</code> 地址省略举例</p>
+<ul>
+<li>用二进制数表示 <code>0001000010000000: 0000000000000000: 0000000000000000: 0000000000000000: 0000000000000000: 0000100000000000: 0010000000001100: 0100000101111010</code></li>
+<li>用十六进制数表示 <code>1080: 0: 0: 0: 8: 800: 200C: 417A</code> 省略后为 <code>1080:: 8: 800: 200C: 417A</code></li>
+</ul>
+</li>
+</ul>
+<h4 id="IPv6-地址的结构"><a href="#IPv6-地址的结构" class="headerlink" title="IPv6 地址的结构"></a>IPv6 地址的结构</h4><ul>
+<li><code>IPv6</code> 类似 <code>IPv4</code>，也是通过 <code>IP</code> 地址的前几位标识 <code>IP</code> 地址的种类</li>
+<li>在互联网通信中，使用一种全局的单播地址，它是互联网中唯一的一个地址，不需要正式分配 <code>IP</code> 地址</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>结构</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>未定义</td>
+<td><code>0000 ... 0000</code>（<code>128</code> 比特）</td>
+<td><code>:: /128</code></td>
+</tr>
+<tr>
+<td>环回地址</td>
+<td><code>0000 ... 0001</code>（<code>128</code> 比特）</td>
+<td><code>:: 1/128</code></td>
+</tr>
+<tr>
+<td>唯一本地地址</td>
+<td><code>1111 110</code></td>
+<td><code>FC00:: /7</code></td>
+</tr>
+<tr>
+<td>链路本地单播地址</td>
+<td><code>1111 1110 10</code></td>
+<td><code>FE80:: /10</code></td>
+</tr>
+<tr>
+<td>多播地址</td>
+<td><code>1111 1111</code></td>
+<td><code>FF00:: /8</code></td>
+</tr>
+<tr>
+<td>全局单播地址</td>
+<td>（其他）</td>
+<td>（其他）</td>
+</tr>
+</tbody></table>
+<h4 id="全局单播地址"><a href="#全局单播地址" class="headerlink" title="全局单播地址"></a>全局单播地址</h4><ul>
+<li>全局单播地址是指世界上唯一的一个地址，它是互联网通信以及各个域内部通信中最为常用的一个 <code>IPv6</code> 地址</li>
+<li>格式如下图所示，现在 <code>IPv6</code> 的网络中所使用的格式为，<code>n = 48</code>，<code>m = 16</code> 以及 <code>128 - n - m = 64</code>，即前 <code>64</code> 比特为网络标识，后 <code>64</code> 比特为主机标识</li>
+</ul>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-15.png" alt></p>
+<h4 id="链路本地单播地址"><a href="#链路本地单播地址" class="headerlink" title="链路本地单播地址"></a>链路本地单播地址</h4><p>链路本地单播地址是指在同一个数据链路内唯一的地址，它用于不经过路由器，在同一个链路中的通信，通常接口 <code>ID</code> 保存 <code>64</code> 比特版的 <code>MAC</code> 地址</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-16.png" alt></p>
+<h4 id="唯一本地地址"><a href="#唯一本地地址" class="headerlink" title="唯一本地地址"></a>唯一本地地址</h4><ul>
+<li>唯一本地地址是不进行互联网通信时所用的地址</li>
+<li>唯一本地地址虽然不会与互联网连接，但是也会尽可能地随机生成一个唯一的全局 <code>ID</code></li>
+<li><code>L</code> 通常被置为 <code>1</code></li>
+<li>全局 <code>ID</code> 的值随机决定</li>
+<li>子网 <code>ID</code> 是指该域子网地址</li>
+<li>接口 <code>ID</code> 即为接口的 <code>ID</code></li>
+</ul>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-17.png" alt></p>
+<h4 id="IPv6-分段处理"><a href="#IPv6-分段处理" class="headerlink" title="IPv6 分段处理"></a>IPv6 分段处理</h4><ul>
+<li><code>IPv6</code> 的分片处理只在作为起点的发送端主机上进行，路由器不参与分片</li>
+<li><code>IPv6</code> 中最小 <code>MTU</code> 为 <code>1280</code> 字节，因此在嵌入式系统中对于那些有一定系统资源限制的设备来说，不需要进行路径 <code>MTU</code> 发现，而是在发送 <code>IP</code> 包时直接以 <code>1280</code> 字节为单位分片送出</li>
+</ul>
+<h2 id="IPv4-首部"><a href="#IPv4-首部" class="headerlink" title="IPv4 首部"></a>IPv4 首部</h2><p>通过 <code>IP</code> 进行通信时，需要在数据的前面加入 <code>IP</code> 首部信息，<code>IP</code> 首部中包含着用于 <code>IP</code> 协议进行发包控制时所有的必要信息，了解 <code>IP</code> 首部的结构，也就能够对 <code>IP</code> 所提供的功能有一个详细的把握</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-19.png" alt></p>
+<ul>
+<li>版本（<code>Version</code>）<ul>
+<li>由 <code>4</code> 比特构成，表示标识IP首部的版本号，<code>IPv4</code> 的版本号即为 <code>4</code>，因此在这个字段上的值也是 <code>4</code> </li>
+</ul>
+</li>
+<li>图首部长度（<code>Internet Header Length，IHL</code>）<ul>
+<li>由 <code>4</code> 比特构成，表明 <code>IP</code> 首部的大小，单位为 <code>4</code> 字节（<code>32</code> 比特），对于没有可选项的 <code>IP</code> 包，首部长度则设置为 <code>5</code>，也就是说当没有可选项时，<code>IP</code> 首部的长度为 <code>20</code> 字节（ <code>4 x 5 = 20</code>）</li>
+</ul>
+</li>
+<li>区分服务（<code>Type Of Service，TOS</code>）<ul>
+<li>由 <code>8</code> 比特构成，用来表明服务质量，每一位的具体含义如下</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>比特</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>0 1 2</code></td>
+<td>优先度</td>
+</tr>
+<tr>
+<td><code>3</code></td>
+<td>最低延迟</td>
+</tr>
+<tr>
+<td><code>4</code></td>
+<td>最大吞吐</td>
+</tr>
+<tr>
+<td><code>5</code></td>
+<td>最大可靠性</td>
+</tr>
+<tr>
+<td><code>6</code></td>
+<td>最小代价</td>
+</tr>
+<tr>
+<td>（<code>3 ~ 6</code>）</td>
+<td>最大安全</td>
+</tr>
+<tr>
+<td><code>7</code></td>
+<td>未定义</td>
+</tr>
+</tbody></table>
+<ul>
+<li><code>DSCP</code> 段与 <code>ECN</code> 段<ul>
+<li><code>DSCP</code>（<code>Differential Services Codepoint</code>，差分服务代码点）是 <code>TOS</code>（<code>Type OfService</code>）的一部分，现在统称为 <code>DiflServY</code>，用来进行质量控制</li>
+<li><code>ECN</code>（<code>Explicit Congestion Notification</code>，显式拥塞通告）用来报告网络拥堵情况，由两个比特构成</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>比特</th>
+<th>简称</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>6</td>
+<td><code>ECT</code></td>
+<td><code>ECN-Capable Transport</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>CE</code></td>
+<td><code>Congenstion Experienced</code></td>
+</tr>
+</tbody></table>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-20.png" alt></p>
+<ul>
+<li>总长度（<code>Total Length</code>）<ul>
+<li>表示 <code>IP</code> 首部与数据部分合起来的总字节数，该字段长 <code>16</code> 比特，因此 <code>IP</code> 包的最大长度为 <code>65535</code>（<code>2^16</code>）字节</li>
+</ul>
+</li>
+<li>标识（<code>Identification</code>）<ul>
+<li>由 <code>16</code> 比特构成，用于分片重组，同一个分片的标识值相同，不同分片的标识值不同，通常每发送一个 <code>IP</code> 包，它的值也逐渐递增，此外即使 <code>ID</code> 相同，如果目标地址、源地址或协议不同的话，也会被认为是不同的分片</li>
+</ul>
+</li>
+<li>标志（<code>Flags</code>）<ul>
+<li>由 <code>3</code> 比特构成，表示包被分片的相关信息，每一位的具体含义请参考下表</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>比特</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>未使用，现在必须是 <code>0</code></td>
+</tr>
+<tr>
+<td>1</td>
+<td>指示是否进行分片，<code>0</code> 表示可以分片，<code>1</code> 表示不能分片</td>
+</tr>
+<tr>
+<td>2</td>
+<td>包被分片的情况下，表示是否为最后一个包，<code>0</code> 表示最后一个分片的包，<code>1</code> 表示分片中段的包</td>
+</tr>
+</tbody></table>
+<ul>
+<li>片偏移（<code>Fragment Offset</code>）<ul>
+<li>由 <code>13</code> 比特构成，用来标识被分片的每一个分段相对于原始数据的位置</li>
+</ul>
+</li>
+<li>生存时间（<code>Time To Live</code>）<ul>
+<li>由 <code>8</code> 比特构成，它最初的意思是以秒为单位记录当前包在网络上应该生存的期限，然而在实际中它是指可以中转多少个路由器的意思，每经过一个路由器，<code>TTL</code> 会减少 <code>1</code>，直到变成 <code>0</code> 则丢弃该包</li>
+</ul>
+</li>
+<li>协议（<code>Protocol</code>）<ul>
+<li>由 <code>8</code> 比特构成，表示 <code>IP</code> 首部的下一个首部隶属于哪个协议</li>
+</ul>
+</li>
+<li>首部校验和（<code>Header Checksum</code>）<ul>
+<li>由 <code>16</code> 比特（<code>2</code> 个字节）构成，也叫 <code>IP</code> 首部校验和，该字段只校验数据报的首部，不校验数据部分，它主要用来确保 <code>IP</code> 数据报不被破坏</li>
+</ul>
+</li>
+<li>源地址（<code>Source Address</code>）<ul>
+<li>由 <code>32</code> 比特（<code>4</code> 个字节）构成，表示发送端 <code>IP</code> 地址</li>
+</ul>
+</li>
+<li>目标地址（<code>Destination Address</code>）<ul>
+<li>由 <code>32</code> 比特（<code>4</code> 个字节）构成，表示接收端 <code>IP</code> 地址</li>
+</ul>
+</li>
+<li>可选项（<code>Options</code>）<ul>
+<li>长度可变，通常只在进行实验或诊断时使用，该字段包含 安全级别/源路径/路径记录/时间戳 等信息</li>
+</ul>
+</li>
+<li>填充（<code>Padding</code>）<ul>
+<li>也称作填补物，在有可选项的情况下，首部长度可能不是 <code>32</code> 比特的整数倍，为此通过向字段填充 <code>0</code>，调整为 <code>32</code> 比特的整数倍</li>
+</ul>
+</li>
+<li>数据（<code>Data</code>）<ul>
+<li>存入数据，将 <code>IP</code> 上层协议的首部也作为数据进行处理</li>
+</ul>
+</li>
+</ul>
+<h2 id="IPv6-首部格式"><a href="#IPv6-首部格式" class="headerlink" title="IPv6 首部格式"></a>IPv6 首部格式</h2><p><code>IPv6</code> 中为了减轻路由器的负担，省略了首部校验和字段，因此路由器不再需要计算校验和，从而也提高了包的转发效率，此外分片处理所用的识别码成为可选项，为了让 <code>64</code> 位 <code>CPU</code> 的计算机处理起来更方便，<code>IPv6</code> 的首部及可选项都由 <code>8</code> 字节构成</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-21.png" alt></p>
+<ul>
+<li>版本（<code>Version</code>）<ul>
+<li>与 <code>IPv4</code> 一样，由 <code>4</code> 比特构成，<code>IPv6</code> 其版本号为 <code>6</code>，因此在这个字段上的值为 <code>6</code></li>
+</ul>
+</li>
+<li>通信量类（<code>Traffic Class</code>）<ul>
+<li>相当于 <code>IPv4</code> 的 <code>TOS</code>（<code>Type Of Service</code>）字段，也由 <code>8</code> 比特构成</li>
+</ul>
+</li>
+<li>流标号（<code>Flow Label</code>）<ul>
+<li>由 <code>20</code> 比特构成，用于服务质量控制</li>
+<li>此外，只有流标号、源地址以及目标地址三项完全一致时，才被认为是一个流</li>
+</ul>
+</li>
+<li>有效载荷长度（<code>Payload Length</code>）<ul>
+<li>有效载荷是指包的数据部分， <code>IPv4</code> 的 <code>TL</code>（<code>Total Length</code>）是指包括首部在内的所有长度，然而 <code>IPv6</code> 中的这个 <code>Playload Length</code> 不包括首部，只表示数据部分的长度，由于 <code>IPv6</code> 的可选项是指连接 <code>IPv6</code> 首部的数据，因此当有可选项时，此处包含可选项数据的所有长度就是 <code>Playload Length</code></li>
+</ul>
+</li>
+<li>下一个首部（<code>Next Header</code>）<ul>
+<li>相当于 <code>IPv4</code> 中的协议字段，由 <code>8</code> 比特构成，通常表示 <code>IP</code> 的上一层协议是 <code>TCP</code> 或 <code>UDP</code>，不过在有 <code>IPv6</code> 扩展首部的情况下，该字段表示后面第一个扩展首部的协议类型</li>
+</ul>
+</li>
+<li>跳数限制（<code>Hop Limit</code>）<ul>
+<li>由 <code>8</code> 比特构成，与 <code>IPv4</code> 中的 <code>TTL</code> 意思相同，为了强调 <strong>可通过路由器个数</strong> 这个概念，数据每经过一次路由器就减 <code>1</code>，减到 <code>0</code> 则丟弃数据</li>
+</ul>
+</li>
+<li>源地址（<code>Source Address</code>）<ul>
+<li>由 <code>128</code> 比特（<code>8</code> 个 <code>16</code> 位字节）构成，表示发送端 <code>IP</code> 地址</li>
+</ul>
+</li>
+<li>目标地址（<code>Destination Address</code>）<ul>
+<li>由 <code>128</code> 比特（<code>8</code> 个 <code>16</code> 位字节）构成，表示接收端 <code>IP</code> 地址</li>
+</ul>
+</li>
+</ul>
+<h4 id="IPv6-扩展首部"><a href="#IPv6-扩展首部" class="headerlink" title="IPv6 扩展首部"></a>IPv6 扩展首部</h4><p><code>IPv6</code> 的首部长度固定，无法将可选项加入其中，取而代之的是通过扩展首部对功能进行了有效扩展，扩展首部通常介于 <code>IPv6</code> 首部与 <code>TCP/UDP</code> 首部中间，在 <code>IPv4</code> 中可选项长度固定为 <code>40</code> 字节，但是在 <code>IPv6</code> 中没有这样的限制，也就是说 <code>IPv6</code> 的扩展首部可以是任意长度，扩展首部当中还可以包含扩展首部协议以及下一个扩展首部字段</p>
+<p><code>IPv6</code> 首部中没有标识以及标志字段，在需要对 <code>IP</code> 数据报进行分片时，可以使用扩展首部</p>
+<h2 id="IP-协议相关技术"><a href="#IP-协议相关技术" class="headerlink" title="IP 协议相关技术"></a>IP 协议相关技术</h2><p><code>IP</code> 旨在让最终目标主机收到数据包，但是在这一过程中仅仅有 <code>IP</code> 是无法实现通信的，必须还有能够解析主机名称和 <code>MAC</code> 地址的功能，以及数据包在发送过程中异常情况处理的功能</p>
+<h4 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h4><ul>
+<li>我们平常在访问某个网站时不适用 <code>IP</code> 地址，而是用一串由罗马字和点号组成的字符串，而一般用户在使用 <code>TCP/IP</code> 进行通信时也不使用 <code>IP</code> 地址，能够这样做是因为有了 <code>DNS</code>（<code>Domain Name System</code>）功能的支持，<code>DNS</code> 可以将那串字符串自动转换为具体的 <code>IP</code> 地址</li>
+<li>这种 <code>DNS</code> 不仅适用于 <code>IPv4</code>，还适用于 <code>IPv6</code></li>
+</ul>
+<h4 id="ARP"><a href="#ARP" class="headerlink" title="ARP"></a>ARP</h4><ul>
+<li>只要确定了 <code>IP</code> 地址，就可以向这个目标地址发送 <code>IP</code> 数据报，然而在底层数据链路层，进行实际通信时却有必要了解每个 <code>IP</code> 地址所对应的 <code>MAC</code> 地址</li>
+<li><code>ARP</code> 是一种解决地址问题的协议，以目标 <code>IP</code> 地址为线索，用来定位下一个应该接收数据分包的网络设备对应的 <code>MAC</code> 地址，不过 <code>ARP</code> 只适用于 <code>IPv4</code>，不能用于 <code>IPv6</code>，<code>IPv6</code> 中可以用 <code>ICMPv6</code> 替代 <code>ARP</code> 发送邻居探索消息</li>
+<li><code>RARP</code> 是将 <code>ARP</code> 反过来，从 <code>MAC</code> 地址定位 <code>IP</code> 地址的一种协议，</li>
+</ul>
+<h4 id="ICMP"><a href="#ICMP" class="headerlink" title="ICMP"></a>ICMP</h4><ul>
+<li><code>ICMP</code> 的主要功能包括，确认 <code>IP</code> 包是否成功送达目标地址，通知在发送过程当中 <code>IP</code> 包被废弃的具体原因，改善网络设置等</li>
+<li><code>IPv4</code> 中 <code>ICMP</code> 仅作为一个辅助作用支持 <code>IPv4</code>，也就是说在 <code>IPv4</code> 时期，即使没有 <code>ICMP</code>，仍然可以实现 <code>IP</code> 通信，然而在 <code>IPv6</code> 中，<code>ICMP</code> 的作用被扩大，如果没有 <code>ICMPv6</code>，<code>IPv6</code> 就无法进行正常通信</li>
+</ul>
+<h4 id="DHCP"><a href="#DHCP" class="headerlink" title="DHCP"></a>DHCP</h4><ul>
+<li>如果逐一为每一台主机设置 <code>IP</code> 地址会是非常繁琐的事情，特别是在移动使用笔记本电脑、只能终端以及平板电脑等设备时，每移动到一个新的地方，都要重新设置 <code>IP</code> 地址</li>
+<li>于是为了实现自动设置 <code>IP</code> 地址、统一管理 <code>IP</code> 地址分配，就产生了 <code>DHCP</code>（<code>Dynamic Host Configuration Protocol</code>）协议，有了 <code>DHCP</code>，计算机只要连接到网络，就可以进行 <code>TCP/IP</code> 通信，也就是说 <code>DHCP</code> 让即插即用变得可能</li>
+<li><code>DHCP</code> 不仅在 <code>IPv4</code> 中，在 <code>IPv6</code> 中也可以使用</li>
+</ul>
+<h4 id="NAT"><a href="#NAT" class="headerlink" title="NAT"></a>NAT</h4><ul>
+<li><code>NAT</code>（<code>Network Address Translator</code>）是用于在本地网络中使用私有地址，在连接互联网时转而使用全局 <code>IP</code> 地址的技术</li>
+<li>除转换 <code>IP</code> 地址外，还出现了可以转换 <code>TCP</code>、<code>UDP</code> 端口号的 <code>NAPT</code>（<code>Network Address Ports Translator</code>）技术，由此可以实现用一个全局 <code>IP</code> 地址与多个主机的通信</li>
+<li><code>NAT</code>（<code>NAPT</code>）实际上是为正在面临地址枯竭的 <code>IPv4</code> 而开发的技术，不过在 <code>IPv6</code> 中为了提高网络安全也在使用 <code>NAT</code>，在 <code>IPv4</code> 和 <code>IPv6</code> 之间的相互通信当中常常使用 <code>NAT-PT</code></li>
+</ul>
+<h4 id="IP-隧道"><a href="#IP-隧道" class="headerlink" title="IP 隧道"></a>IP 隧道</h4><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-18.png" alt></p>
+<ul>
+<li>如上图的网络环境中，网络 <code>A</code> 与网络 <code>B</code> 之间无法直接进行通信，为了让它们之间正常通信，这时必须得采用 <code>IP</code> 隧道的功能</li>
+<li><code>IP</code> 隧道可以将那些从网络 <code>A</code> 发过来的 <code>IPv6</code> 的包统合为一个数据，再为之追加一个 <code>IPv4</code> 的首部以后转发给网络 <code>C</code></li>
+<li>一般情况下紧接着 <code>IP</code> 首部的是 <code>TCP</code> 或 <code>UDP</code> 的首部，然而现在的应用当中“ <code>IP</code> 首部的后面还是 <code>IP</code> 首部或者 <code>IP</code> 首部的后面是 <code>IPv6</code> 的首部等情况与日俱增，这种在网络层的首部后面追加网络层首部的通信方法就叫做 <code>IP</code> 隧道</li>
+</ul>
+<h2 id="TCP-和-UDP"><a href="#TCP-和-UDP" class="headerlink" title="TCP 和 UDP"></a>TCP 和 UDP</h2><p><code>TCP/IP</code> 中有两个具有代表性的传输层协议，分别是 <code>TCP</code> 和 <code>UDP</code>，它们的区别如下</p>
+<ul>
+<li><code>TCP</code> 是面向连接的、可靠的流协议，流就是指不间断的数据结构，当应用程序采用 <code>TCP</code> 发送消息时，虽然可以保证发送的顺序，但还是犹如没有任何间隔的数据流发送给接收端，<code>TCP</code> 为提供可靠性传输，实行 <strong>顺序控制</strong> 或 <strong>重发控制</strong> 机制，此外还具备 <strong>流控制（流量控制）</strong> 、<strong>拥塞控制</strong> 等提高网络利用率等众多功能</li>
+<li><code>UDP</code> 是不具有可靠性的数据报协议，细微的处理它会交给上层的应用去完成，在 <code>UDP</code> 的情况下，虽然可以确保发送消息的大小，却不能保证消息一定会到达，因此应用有时会根据自己的需要进行重发处理，</li>
+<li><code>TCP</code> 和 <code>UDP</code> 的优缺点无法简单地、绝对地去做比较：<code>TCP</code> 用于在传输层有必要实现可靠传输的情况，而在一方面，<code>UDP</code> 主要用于那些对高速传输和实时性有较高要求的通信或广播通信，<code>TCP</code> 和 <code>UDP</code> 应该根据应用的目的按需使用</li>
+</ul>
+<h4 id="端口号"><a href="#端口号" class="headerlink" title="端口号"></a>端口号</h4><p>数据链路和 <code>IP</code> 中的地址，分别指的是 <code>MAC</code> 地址和 <code>IP</code> 地址，前者用来识别同一链路中不同的计算机，后者用来识别 <code>TCP/IP</code>  网络中互连的主机和路由器，在传输层也有这种类似于地址的概念，那就是端口号，端口号用来识别同一台计算机中进行通信的不同应用程序，因此它也被称为程序地址</p>
+<h6 id="根据端口号识别应用"><a href="#根据端口号识别应用" class="headerlink" title="根据端口号识别应用"></a>根据端口号识别应用</h6><p>一台计算机上同时可以运行多个程序，传输层协议正是利用这些端口号识别本机中正在进行通信的应用程序，并准确地将数据传输</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-22.png" alt></p>
+<h6 id="通过-IP-地址、端口号、协议号进行通信识别"><a href="#通过-IP-地址、端口号、协议号进行通信识别" class="headerlink" title="通过 IP 地址、端口号、协议号进行通信识别"></a>通过 IP 地址、端口号、协议号进行通信识别</h6><p>仅凭目标端口号识别某一个通信是远远不够的</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-23.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-24.png" alt></p>
+<ul>
+<li>一和二的通信是在两台计算机上进行的，它们的目标端口号相同，都是 <code>80</code>，这里可以根据源端口号加以区分</li>
+<li>三和一的目标端口号和源端口号完全相同，但它们各自的源 <code>IP</code> 地址不同</li>
+<li>此外当 <code>IP</code> 地址和端口号全都一样时，我们还可以通过协议号来区分（<code>TCP</code> 和 <code>UDP</code>）</li>
+</ul>
+<h6 id="端口号的确定"><a href="#端口号的确定" class="headerlink" title="端口号的确定"></a>端口号的确定</h6><ul>
+<li>标准既定的端口号，这种方法也叫静态方法，它是指每个应用程序都有其指定的端口号，但并不是说可以随意使用任何一个端口号，例如 <code>HTTP</code>、<code>FTP</code>、<code>TELNET</code> 等广为使用的应用协议中所使用的端口号就是固定的，这些端口号被称为知名端口号，分布在 <code>0 ~ 1023</code> 之间，除知名端口号之外，还有一些端口号被正式注册，它们分布在 <code>1024 ~ 49151</code> 之间，不过这些端口号可用于任何通信用途</li>
+<li>时序分配法，服务器有必要确定监听端口号，但是接受服务的客户端没必要确定端口号，在这种方法下，客户端应用程序完全可以不用自己设置端口号，而全权交给操作系统进行分配，动态分配的端口号范围在 <code>49152 ~ 65535</code> 之间</li>
+</ul>
+<h6 id="端口号与协议"><a href="#端口号与协议" class="headerlink" title="端口号与协议"></a>端口号与协议</h6><ul>
+<li>端口号由其使用的传输层协议决定，因此不同的传输层协议可以使用相同的端口号</li>
+<li>此外，那些知名端口号与传输层协议并无关系，只要端口一致都将分配同一种应用程序进行处理</li>
+</ul>
+<h4 id="UDP"><a href="#UDP" class="headerlink" title="UDP"></a>UDP</h4><ul>
+<li><code>UDP</code> 不提供复杂的控制机制，利用 <code>IP</code> 提供面向无连接的通信服务</li>
+<li>并且它是将应用程序发来的数据在收到的那一刻，立即按照原样发送到网络上的一种机制，即使是出现网络拥堵的情况，<code>UDP</code> 也无法进行流量控制等避免网络拥塞行为</li>
+<li>此外传输途中出现丢包，<code>UDP</code> 也不负责重发</li>
+<li>甚至当包的到达顺序出现乱序时也没有纠正的功能</li>
+<li>如果需要以上的细节控制，不得不交由采用 <code>UDP</code> 的应用程序去处理</li>
+<li><code>UDP</code> 常用于以下几个方面<ul>
+<li>包总量较少的通信（<code>DNS</code>、<code>SNMP</code> 等）</li>
+<li>视频、音频等多媒体通信（即时通信）</li>
+<li>限定于 <code>LAN</code> 等特定网络中的应用通信</li>
+<li>广播通信（广播、多播）</li>
+</ul>
+</li>
+</ul>
+<h4 id="TCP"><a href="#TCP" class="headerlink" title="TCP"></a>TCP</h4><ul>
+<li><code>TCP</code> 与 <code>UDP</code> 的区别相当大，它充分地实现了数据传输时各种控制功能，可以进行丢包时的重发控制，还可以对次序乱掉的分包进行顺序控制，而这些在 <code>UDP</code> 中都没有</li>
+<li>此外 <code>TCP</code> 作为一种面向有连接的协议，只有在确认通信对端存在时才会发送数据，从而可以控制通信流量的浪费</li>
+<li>根据 <code>TCP</code> 的这些机制，在 <code>IP</code> 这种无连接的网络上也能够实现高可靠性的通信（ 主要通过检验和、序列号、确认应答、重发控制、连接管理以及窗口控制等机制实现）</li>
+</ul>
+<h6 id="三次握手（重点）"><a href="#三次握手（重点）" class="headerlink" title="三次握手（重点）"></a>三次握手（重点）</h6><ul>
+<li><code>TCP</code> 提供面向有连接的通信传输，面向有连接是指在数据通信开始之前先做好两端之间的准备工作</li>
+<li>所谓三次握手是指建立一个 <code>TCP</code> 连接时需要客户端和服务器端总共发送三个包以确认连接的建立，在 <code>Socket</code> 编程中，这一过程由客户端执行 <code>Connect</code> 来触发</li>
+</ul>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-25.png" alt></p>
+<ul>
+<li>第一次握手，客户端将标志位 <code>SYN</code> 置为 <code>1</code>，随机产生一个值 <code>seq = J</code>，并将该数据包发送给服务器端，客户端进入 <code>SYN_SENT</code> 状态，等待服务器端确认</li>
+<li>第二次握手，服务器端收到数据包后由标志位 <code>SYN = 1</code> 知道客户端请求建立连接，服务器端将标志位 <code>SYN</code> 和 <code>ACK</code> 都置为 <code>1</code>，<code>ack = J + 1</code>，随机产生一个值 <code>seq = K</code>，并将该数据包发送给客户端以确认连接请求，服务器端进入 <code>SYN_RCVD</code> 状态</li>
+<li>第三次握手，客户端收到确认后，检查 <code>ack</code> 是否为 <code>J + 1</code>，<code>ACK</code> 是否为 <code>1</code>，如果正确则将标志位 <code>ACK</code> 置为 <code>1</code>，<code>ack = K + 1</code>，并将该数据包发送给服务器端，服务器端检查 <code>ack</code> 是否为 <code>K + 1</code>，<code>ACK</code> 是否为 <code>1</code>，如果正确则连接建立成功，客户端和服务器端进入 <code>ESTABLISHED</code> 状态，完成三次握手，随后客户端与服务器端之间可以开始传输数据了</li>
+</ul>
+<h6 id="四次挥手（重点）"><a href="#四次挥手（重点）" class="headerlink" title="四次挥手（重点）"></a>四次挥手（重点）</h6><ul>
+<li>四次挥手即终止 <code>TCP</code> 连接，就是指断开一个 <code>TCP</code> 连接时，需要客户端和服务端总共发送 <code>4</code> 个包以确认连接的断开，在 <code>Socket</code> 编程中，这一过程由客户端或服务端任一方执行 <code>Close</code> 来触发</li>
+<li>由于 <code>TCP</code> 连接是全双工的，因此每个方向都必须要单独进行关闭，这一原则是当一方完成数据发送任务后，发送一个 <code>FIN</code> 来终止这一方向的连接，收到一个 <code>FIN</code> 只是意味着这一方向上没有数据流动了，即不会再收到数据了，但是在这个 <code>TCP</code> 连接上仍然能够发送数据，直到这一方向也发送了 <code>FIN</code>，首先进行关闭的一方将执行主动关闭，而另一方则执行被动关闭</li>
+</ul>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-26.png" alt></p>
+<ul>
+<li>中断连接端可以是客户端，也可以是服务器端</li>
+<li>第一次挥手，客户端发送一个 <code>FIN = M</code>，用来关闭客户端到服务器端的数据传送，客户端进入 <code>FIN_WAIT_1</code> 状态，意思是说 <strong>客户端没有数据要发给你了</strong>，但是如果你服务器端还有数据没有发送完成，则不必急着关闭连接，可以继续发送数据</li>
+<li>第二次挥手，服务器端收到 <code>FIN</code> 后，先发送 <code>ack = M + 1</code>，告诉客户端，你的请求我收到了，但是我还没准备好，请继续你等我的消息，这个时候客户端就进入 <code>FIN_WAIT_2</code> 状态，继续等待服务器端的 <code>FIN</code> 报文</li>
+<li>第三次挥手，当服务器端确定数据已发送完成，则向客户端发送 <code>FIN = N</code> 报文，告诉客户端，好了，我这边数据发完了，准备好关闭连接了，服务器端进入 <code>LAST_ACK</code> 状态</li>
+<li>第四次挥手，客户端收到 <code>FIN = N</code> 报文后，就知道可以关闭连接了，但是他还是不相信网络，怕服务器端不知道要关闭，所以发送 <code>ack = N + 1</code> 后进入 <code>TIME_WAIT</code> 状态，如果 <code>Server</code> 端没有收到 <code>ACK</code> 则可以重传，服务器端收到 <code>ACK</code> 后，就知道可以断开连接了，客户端等待了 <code>2MSL（最大报文段寿命）</code> 后依然没有收到回复，则证明服务器端已正常关闭，那好，我客户端也可以关闭连接了，最终完成了四次握手</li>
+</ul>
+<p>上面是一方主动关闭，另一方被动关闭的情况，实际中还会出现同时发起主动关闭的情况，具体流程如下图</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-27.png" alt></p>
+<h6 id="通过序列号与确认应答提高可靠性"><a href="#通过序列号与确认应答提高可靠性" class="headerlink" title="通过序列号与确认应答提高可靠性"></a>通过序列号与确认应答提高可靠性</h6><ul>
+<li>在 <code>TCP</code> 中，当发送端的数据到达接收主机时，接收端主机会返回一个已收到消息的通知，这个消息叫做确认应答（<code>ACK</code>），当发送端将数据发出之后会等待对端的确认应答，如果有确认应答，说明数据已经成功到达对端，反之则数据丢失的可能性很大</li>
+<li>在一定时间内没有等待到确认应答，发送端就可以认为数据已经丢失，并进行重发，由此即使产生了丢包，仍然能够保证数据能够到达对端，实现可靠传输</li>
+<li>未收到确认应答并不意味着数据一定丢失，也有可能是数据对方已经收到，只是返回的确认应答在途中丢失，这种情况也会导致发送端误以为数据没有到达目的地而重发数据</li>
+<li>此外，也有可能因为一些其他原因导致确认应答延迟到达，在源主机重发数据以后才到达的情况也屡见不鲜，此时源主机只要按照机制重发数据即可，对于目标主机来说，反复收到相同的数据是不可取的，为了对上层应用提供可靠的传输，目标主机必须放弃重复的数据包，为此我们引入了序列号</li>
+<li>序列号是按照顺序给发送数据的每一个字节（<code>8</code> 位字节）都标上号码的编号，接收端查询接收数据 <code>TCP</code> 首部中的序列号和数据的长度，将自己下一步应该接收的序列号作为确认应答返送回去，通过序列号和确认应答号，<code>TCP</code> 能够识别是否已经接收数据，又能够判断是否需要接收，从而实现可靠传输</li>
+</ul>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-28.png" alt></p>
+<h6 id="重发超时的确定"><a href="#重发超时的确定" class="headerlink" title="重发超时的确定"></a>重发超时的确定</h6><ul>
+<li>重发超时是指在重发数据之前，等待确认应答到来的那个特定时间间隔，如果超过这个时间仍未收到确认应答，发送端将进行数据重发，最理想的是，找到一个最小时间，它能保证 <strong>确认应答一定能在这个时间内返回</strong></li>
+<li><code>TCP</code> 要求不论处在何种网络环境下都要提供高性能通信，并且无论网络拥堵情况发生何种变化，都必须保持这一特性，为此它在每次发包时都会计算往返时间及其偏差，将这个往返时间和偏差时间相加，重发超时的时间就是比这个总和要稍大一点的值</li>
+<li>在 <code>BSD</code> 的 <code>Unix</code> 以及 <code>Windows</code> 系统中，超时都以 <code>0.5</code> 秒为单位进行控制，因此重发超时都是 <code>0.5</code> 秒的整数倍，不过最初其重发超时的默认值一般设置为 <code>6</code> 秒左右</li>
+<li>数据被重发之后若还是收不到确认应答，则进行再次发送，此时等待确认应答的时间将会以 <code>2</code> 倍、<code>4</code> 倍的指数函数延长</li>
+<li>此外，数据也不会被无限、反复地重发，达到一定重发次数之后，如果仍没有任何确认应答返回，就会判断为网络或对端主机发生了异常，强制关闭连接，并且通知应用通信异常强行终止</li>
+</ul>
+<h6 id="以段为单位发送数据"><a href="#以段为单位发送数据" class="headerlink" title="以段为单位发送数据"></a>以段为单位发送数据</h6><ul>
+<li>在建立 <code>TCP</code> 连接的同时，也可以确定发送数据包的单位，我们也可以称其为 <strong>最大消息长度</strong>（<code>MSS</code>），最理想的情况是，最大消息长度正好是 <code>IP</code> 中不会被分片处理的最大数据长度</li>
+<li><code>TCP</code> 在传送大量数据时，是以 <code>MSS</code> 的大小将数据进行分割发送，进行重发时也是以 <code>MSS</code>  为单位</li>
+<li><code>MSS</code> 在三次握手的时候，在两端主机之间被计算得出，两端的主机在发出建立连接的请求时，会在 <code>TCP</code> 首部中写入 <code>MSS</code> 选项，告诉对方自己的接口能够适应的 <code>MSS</code> 的大小，然后会在两者之间选择一个较小的值投入使用</li>
+</ul>
+<h6 id="利用窗口控制提高速度"><a href="#利用窗口控制提高速度" class="headerlink" title="利用窗口控制提高速度"></a>利用窗口控制提高速度</h6><ul>
+<li><code>TCP</code> 以 <code>1</code> 个段为单位，每发送一个段进行一次确认应答的处理，这样的传输方式有一个缺点，就是包的往返时间越长通信性能就越低</li>
+<li>为解决这个问题，<code>TCP</code> 引入了窗口这个概念，确认应答不再是以每个分段，而是以更大的单位进行确认，转发时间将会被大幅地缩短，也就是说发送端主机，在发送了一个段以后不必要一直等待确认应答，而是继续发送，如下图所示</li>
+</ul>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-29.png" alt></p>
+<ul>
+<li>窗口大小就是指无需等待确认应答而可以继续发送数据的最大值，上图中窗口大小为 <code>4</code> 个段，这个机制实现了使用大量的缓冲区，通过对多个段同时进行确认应答的功能</li>
+</ul>
+<h6 id="滑动窗口控制"><a href="#滑动窗口控制" class="headerlink" title="滑动窗口控制"></a>滑动窗口控制</h6><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-30.png" alt></p>
+<ul>
+<li>上图中的窗口内的数据即便没有收到确认应答也可以被发送出去，不过在整个窗口的确认应答没有到达之前，如果其中部分数据出现丢包，那么发送端仍然要负责重传，为此发送端主机需要设置缓存保留这些待被重传的数据，直到收到他们的确认应答</li>
+<li>在滑动窗口以外的部分包括未发送的数据以及已经确认对端已收到的数据，当数据发出后若如期收到确认应答就可以不用再进行重发，此时数据就可以从缓存区清除</li>
+<li>收到确认应答的情况下，将窗口滑动到确认应答中的序列号的位置，这样可以顺序地将多个段同时发送提高通信性能，这种机制也别称为滑动窗口控制</li>
+</ul>
+<h6 id="窗口控制中的重发控制"><a href="#窗口控制中的重发控制" class="headerlink" title="窗口控制中的重发控制"></a>窗口控制中的重发控制</h6><p>在使用窗口控制中， 出现丢包一般分为两种情况</p>
+<ol>
+<li>确认应答未能返回的情况，在这种情况下，数据已经到达对端，是不需要再进行重发的，如下图</li>
+</ol>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-31.png" alt></p>
+<ol start="2">
+<li>某个报文段丢失的情况，接收主机如果收到一个自己应该接收的序列号以外的数据时，会针对当前为止收到数据返回确认应答，如下图所示，当某一报文段丢失后，发送端会一直收到序号为 <code>1001</code> 的确认应答，因此，在窗口比较大，又出现报文段丢失的情况下，同一个序列号的确认应答将会被重复不断地返回，而发送端主机如果连续3次收到同一个确认应答，就会将其对应的数据进行重发，这种机制比之前提到的超时管理更加高效，因此也被称为高速重发控制</li>
+</ol>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-32.png" alt></p>
 <!-- ## IP 数据报格式
 
 ![](https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-01.png)
 
-IP数据报首部可以分为固定长度（20字节）和可选长度。固定长度是所有IP数据报所必须的。固定部分个字段的意义如下
+IP数据报首部可以分为固定长度（20字节）和可选长度，固定长度是所有IP数据报所必须的，固定部分个字段的意义如下
 
-* 版本： 占4位，指IP协议的版本，通信双方的协议版本必须一致。
-* 首部长度： 占4位，可表示的最大十进制数是15（1111）。它的单位是4字节（也就是32位），因此首部长度最小值为5（固定长度部分），可选长度最长为40字节。
-* 区分服务： 占8位，用来获得更好的服务。
-* 总长度： 占16位，首部和数据部分的总长度，单位为字节。因此IP数据报的最大长度为2^16-1。
-* 标识： 占16位。当数据报的长度超过网络的最大传送单元使，就给该数据报的所有分片赋值相同的标识，相同的标识字段的值使分片后的各数据报片能正确的重装成原来的数据报。
-* 标志： 占3位，但是只有两位具有意义。
-  * 标记字段中的最低位记为MF。MF=1表示后面还有分片，MF=0表示这是最后一个分片。
-  * 标志字段中间的一位记为DF，意思是能否分片，只有DF=0时才能分片。
-* 片偏移： 占13位。片偏移指出：较长的分组在分片后，某片在原分组中的相对位置。也就是说，数据片相对于初始位置的距离。单位是8字节。因此，除去最后一个数据片，每个数据片的长度都是8字节的倍数。
-* 生存时间： 占8位，TTL（Time To Live），单位为跳数，跳数表明该数据报至多能在互联网中经过多少个路由器，每经过一个路由器就减1。
-* 协议： 占8位，协议字段指出该数据报携带的数据是使用哪种协议，以便使目的主机的IP层知道应将数据部分上交给哪个协议进行处理。
+* 版本： 占4位，指IP协议的版本，通信双方的协议版本必须一致，
+* 首部长度： 占4位，可表示的最大十进制数是15（1111），它的单位是4字节（也就是32位），因此首部长度最小值为5（固定长度部分），可选长度最长为40字节，
+* 区分服务： 占8位，用来获得更好的服务，
+* 总长度： 占16位，首部和数据部分的总长度，单位为字节，因此IP数据报的最大长度为2^16-1，
+* 标识： 占16位，当数据报的长度超过网络的最大传送单元使，就给该数据报的所有分片赋值相同的标识，相同的标识字段的值使分片后的各数据报片能正确的重装成原来的数据报，
+* 标志： 占3位，但是只有两位具有意义，
+  * 标记字段中的最低位记为MF，MF=1表示后面还有分片，MF=0表示这是最后一个分片，
+  * 标志字段中间的一位记为DF，意思是能否分片，只有DF=0时才能分片，
+* 片偏移： 占13位，片偏移指出：较长的分组在分片后，某片在原分组中的相对位置，也就是说，数据片相对于初始位置的距离，单位是8字节，因此，除去最后一个数据片，每个数据片的长度都是8字节的倍数，
+* 生存时间： 占8位，TTL（Time To Live），单位为跳数，跳数表明该数据报至多能在互联网中经过多少个路由器，每经过一个路由器就减1，
+* 协议： 占8位，协议字段指出该数据报携带的数据是使用哪种协议，以便使目的主机的IP层知道应将数据部分上交给哪个协议进行处理，
 
 协议名 |    ICMP |    IGMP |    IP |    TCP |    EGP |    IGP |    UDP |    IPv6 |    ESP |    OSPF
 -|-|-|-|-|-|-|-|-|-|-
 协议字段值 |    1 |    2 |    4 |    6 |    8 |    9 |    17 |    41 |    50 |    89 |
 
-* 源地址： 占32位。
-* 目的地址： 占32位。
-* 首部校验和： 占16位，这个字段只检验数据报的首部，但是不包括数据部分。
-  * 在发送方，先把数据报划分为许多16位的字的序列，并把校验和字段置为0，。
-  * 用反码算术运算（从低位到高位计算，0+0等于0,0+1等于1,1+1等于0，但是要进1。）把所有的16位字相加后，将得到的反码写入校验和字段。
-  * 接收方接收到数据报之后，将首部的所有16位字再使用反码运算相加一次，将得到的和取反码，即得出接收方的检验和的计算结果。如果结果全为0，则代表首部未发生变化，保留该数据报，反之则丢弃。
+* 源地址： 占32位，
+* 目的地址： 占32位，
+* 首部校验和： 占16位，这个字段只检验数据报的首部，但是不包括数据部分，
+  * 在发送方，先把数据报划分为许多16位的字的序列，并把校验和字段置为0，，
+  * 用反码算术运算（从低位到高位计算，0+0等于0,0+1等于1,1+1等于0，但是要进1，）把所有的16位字相加后，将得到的反码写入校验和字段，
+  * 接收方接收到数据报之后，将首部的所有16位字再使用反码运算相加一次，将得到的和取反码，即得出接收方的检验和的计算结果，如果结果全为0，则代表首部未发生变化，保留该数据报，反之则丢弃，
 
 ![](https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-02.png)
 
@@ -231,13 +936,13 @@ IP数据报首部可以分为固定长度（20字节）和可选长度。固定�
 
 ## UDP数据报格式
 
-UDP用户数据报分为 = 首部字段 （8个字节，4个字段，每个字段2个字节）+ 数字字段。
+UDP用户数据报分为 = 首部字段 （8个字节，4个字段，每个字段2个字节）+ 数字字段，
 
 首部字段：
-* 源端口： 源端口号。在需要对方回信的时候选用，不需要填0。
-* 目的端口： 目的端口号。必填。
-* 长度： UDP用户数据报的长度。最小为8。
-* 检验和：检测UDP用户数据报传输过程中是否有错。有错就丢弃。
+* 源端口： 源端口号，在需要对方回信的时候选用，不需要填0，
+* 目的端口： 目的端口号，必填，
+* 长度： UDP用户数据报的长度，最小为8，
+* 检验和：检测UDP用户数据报传输过程中是否有错，有错就丢弃，
 
 ![](https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-03.png)
 
@@ -245,41 +950,41 @@ UDP用户数据报分为 = 首部字段 （8个字节，4个字段，每个字�
 
 ## TCP报文段格式
 
-TCP虽然是面向字节流的，但是TCP传输的数据单元却是报文段。一个报文段可以分为首部和数据两部分。
+TCP虽然是面向字节流的，但是TCP传输的数据单元却是报文段，一个报文段可以分为首部和数据两部分，
 
-TCP报文段的首部的前20个字节是固定的，后面的4n字节是需要增加的选项。因此TCP首部的最小长度是20字节。
+TCP报文段的首部的前20个字节是固定的，后面的4n字节是需要增加的选项，因此TCP首部的最小长度是20字节，
 
 ![](https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-04.png)
 
 
 首部部分字段的意义如下
 
-* 源端口和目的端口：各占2个字节，分别写入源端口号和目的端口号。TCP的分用功能也是通过端口号实现的。
-* 序号：占4字节。在TCP连接中传送的字节流中的每一个字节都按照顺序编号。首部中的序号字段值则代表本报文段所发送的数据的第一个字节的序号。
-* 确认号：占4字节。代表期望收到对方下一个报文段的第一个数据字节的序号。需要注意：若确认号=N，则表明：到序号N-1为止的所有数据都已正确收到
-* 数据偏移：占4位。他指出TCP报文段的数据起始处距离TCP报文段的起始处有多远。一般情况下为20字节，但是首部中还有不确定的选项字段。它的单位是4字节，而它的最大值是15，因此数据偏移最大值为60字节，也就是说选项不能超过40字节。
-* 保留：占6位。以防后续使用。
+* 源端口和目的端口：各占2个字节，分别写入源端口号和目的端口号，TCP的分用功能也是通过端口号实现的，
+* 序号：占4字节，在TCP连接中传送的字节流中的每一个字节都按照顺序编号，首部中的序号字段值则代表本报文段所发送的数据的第一个字节的序号，
+* 确认号：占4字节，代表期望收到对方下一个报文段的第一个数据字节的序号，需要注意：若确认号=N，则表明：到序号N-1为止的所有数据都已正确收到
+* 数据偏移：占4位，他指出TCP报文段的数据起始处距离TCP报文段的起始处有多远，一般情况下为20字节，但是首部中还有不确定的选项字段，它的单位是4字节，而它的最大值是15，因此数据偏移最大值为60字节，也就是说选项不能超过40字节，
+* 保留：占6位，以防后续使用，
 
 下面是6个控制位，每个占一位：
-* 紧急URG：当URG=1时，表明紧急字段有效，它告诉系统此报文中有紧急数据，应该尽快传送。
-* 确认ACK：仅当ACK=1时确认号字段才有效。
-* 推送PSH：当两个应用进程进行交互式的通信时，有时一端的应用进程希望在键入一个命令后立即就能收到对方的相应，这时设置PSH=1。
-* 复位RST：当RST=1时，表明TCP连接中出现严重错误，必须释放连接，再重新建立运输连接。RST=1还可以用来拒绝一个非法的报文段或拒绝打开一个连接。
-* 同步SYN：在建立连接时用来同步序号。当SYN=1，ACK=0时代表是连接请求报文段。若对方同意建立连接，则应在相应报文段中使SYN=1，ACK=1。也就是说，SYN=1代表连接请求或者连接接受报文。
-* 终止FIN。用于释放一个连接。当FIN=1时，代表此报文段的发送方的数据已发送完毕，并且请求释放运输连接。
+* 紧急URG：当URG=1时，表明紧急字段有效，它告诉系统此报文中有紧急数据，应该尽快传送，
+* 确认ACK：仅当ACK=1时确认号字段才有效，
+* 推送PSH：当两个应用进程进行交互式的通信时，有时一端的应用进程希望在键入一个命令后立即就能收到对方的相应，这时设置PSH=1，
+* 复位RST：当RST=1时，表明TCP连接中出现严重错误，必须释放连接，再重新建立运输连接，RST=1还可以用来拒绝一个非法的报文段或拒绝打开一个连接，
+* 同步SYN：在建立连接时用来同步序号，当SYN=1，ACK=0时代表是连接请求报文段，若对方同意建立连接，则应在相应报文段中使SYN=1，ACK=1，也就是说，SYN=1代表连接请求或者连接接受报文，
+* 终止FIN，用于释放一个连接，当FIN=1时，代表此报文段的发送方的数据已发送完毕，并且请求释放运输连接，
 
-控制位到这结束。
+控制位到这结束，
 
-* 窗口：占2字节。窗口值告诉对方：从本报文段中的确认号算起，接收方目前允许对方发送的数据量（以字节为单位）。之所以设置这个限制，是因为接收方的数据缓存空间是有限的。总之，窗口值作为接收方让发送方设置其窗口大小的依据。
-* 检验和：占2字节。检验的范围包括首部字段和数据字段。和UDP检验的方法一样，只不过把伪首部第四个字段的17改成6.
-* 紧急指针：占2字节。只有在紧急URG=1时才有效，它指出本报文段中的紧急数据的字节数。
-* 选项：长度可变，最大40字节，注意，TCP最初只规定了一种选项，即最大报文长度MSS。MSS是每一个TCP报文段中的数据字段的最大长度，而并不是整个TCP报文段的长度。
+* 窗口：占2字节，窗口值告诉对方：从本报文段中的确认号算起，接收方目前允许对方发送的数据量（以字节为单位），之所以设置这个限制，是因为接收方的数据缓存空间是有限的，总之，窗口值作为接收方让发送方设置其窗口大小的依据，
+* 检验和：占2字节，检验的范围包括首部字段和数据字段，和UDP检验的方法一样，只不过把伪首部第四个字段的17改成6.
+* 紧急指针：占2字节，只有在紧急URG=1时才有效，它指出本报文段中的紧急数据的字节数，
+* 选项：长度可变，最大40字节，注意，TCP最初只规定了一种选项，即最大报文长度MSS，MSS是每一个TCP报文段中的数据字段的最大长度，而并不是整个TCP报文段的长度，
 
 ## 以太网MAC帧格式
 
 ![](https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-05.png)
 
-以太网MAC帧较为简单，由五个字段组成，前两个字段分别为6字节长的目的地址和源地址。第三个字段是2字节的类型字段，用来标志上一层使用的是什么协议，以便把收到的MAC帧的数据上交给上一层的这个协议。第四个字段是数据字段，其长度为46~1500字节（46字节是因为最小长度64字节减去18字节的首部和尾部）。最后一个字段是4字节的帧检测序列FCS（使用CRC检测）。 -->
+以太网MAC帧较为简单，由五个字段组成，前两个字段分别为6字节长的目的地址和源地址，第三个字段是2字节的类型字段，用来标志上一层使用的是什么协议，以便把收到的MAC帧的数据上交给上一层的这个协议，第四个字段是数据字段，其长度为46~1500字节（46字节是因为最小长度64字节减去18字节的首部和尾部），最后一个字段是4字节的帧检测序列FCS（使用CRC检测）， -->
         </div>
         
         <div class="level is-size-7 is-uppercase">
@@ -423,7 +1128,223 @@ TCP报文段的首部的前20个字节是固定的，后面的4n字节是需要�
             <h3 class="menu-label">
                 目录
             </h3>
-            
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#协议">
+        <span class="has-mr-6">1</span>
+        <span>协议</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#协议的必要性">
+        <span class="has-mr-6">1.1</span>
+        <span>协议的必要性</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#OSI-参考模型">
+        <span class="has-mr-6">2</span>
+        <span>OSI 参考模型</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#OSI-参考模型-1">
+        <span class="has-mr-6">2.1</span>
+        <span>OSI 参考模型</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#TCP-IP-基础">
+        <span class="has-mr-6">3</span>
+        <span>TCP/IP 基础</span>
+        </a></li><li>
+        <a class="is-flex" href="#TCP-IP-协议分层模型">
+        <span class="has-mr-6">4</span>
+        <span>TCP/IP 协议分层模型</span>
+        </a></li><li>
+        <a class="is-flex" href="#数据包">
+        <span class="has-mr-6">5</span>
+        <span>数据包</span>
+        </a></li><li>
+        <a class="is-flex" href="#数据处理流程">
+        <span class="has-mr-6">6</span>
+        <span>数据处理流程</span>
+        </a></li><li>
+        <a class="is-flex" href="#IP-协议">
+        <span class="has-mr-6">7</span>
+        <span>IP 协议</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#IP-地址">
+        <span class="has-mr-6">7.1</span>
+        <span>IP 地址</span>
+        </a></li><li>
+        <a class="is-flex" href="#IP-地址的定义">
+        <span class="has-mr-6">7.2</span>
+        <span>IP 地址的定义</span>
+        </a></li><li>
+        <a class="is-flex" href="#组成">
+        <span class="has-mr-6">7.3</span>
+        <span>组成</span>
+        </a></li><li>
+        <a class="is-flex" href="#分类">
+        <span class="has-mr-6">7.4</span>
+        <span>分类</span>
+        </a></li><li>
+        <a class="is-flex" href="#广播地址">
+        <span class="has-mr-6">7.5</span>
+        <span>广播地址</span>
+        </a></li><li>
+        <a class="is-flex" href="#IP-多播">
+        <span class="has-mr-6">7.6</span>
+        <span>IP 多播</span>
+        </a></li><li>
+        <a class="is-flex" href="#子网掩码">
+        <span class="has-mr-6">7.7</span>
+        <span>子网掩码</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#路由控制">
+        <span class="has-mr-6">8</span>
+        <span>路由控制</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#IP-地址与路由控制">
+        <span class="has-mr-6">8.1</span>
+        <span>IP 地址与路由控制</span>
+        </a></li><li>
+        <a class="is-flex" href="#IP-报文的分片与重组">
+        <span class="has-mr-6">8.2</span>
+        <span>IP 报文的分片与重组</span>
+        </a></li><li>
+        <a class="is-flex" href="#路径-MTU-发现">
+        <span class="has-mr-6">8.3</span>
+        <span>路径 MTU 发现</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#IPv6">
+        <span class="has-mr-6">9</span>
+        <span>IPv6</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#IPv6-的特点">
+        <span class="has-mr-6">9.1</span>
+        <span>IPv6 的特点</span>
+        </a></li><li>
+        <a class="is-flex" href="#IPv6-中-IP-地址的标记方法">
+        <span class="has-mr-6">9.2</span>
+        <span>IPv6 中 IP 地址的标记方法</span>
+        </a></li><li>
+        <a class="is-flex" href="#IPv6-地址的结构">
+        <span class="has-mr-6">9.3</span>
+        <span>IPv6 地址的结构</span>
+        </a></li><li>
+        <a class="is-flex" href="#全局单播地址">
+        <span class="has-mr-6">9.4</span>
+        <span>全局单播地址</span>
+        </a></li><li>
+        <a class="is-flex" href="#链路本地单播地址">
+        <span class="has-mr-6">9.5</span>
+        <span>链路本地单播地址</span>
+        </a></li><li>
+        <a class="is-flex" href="#唯一本地地址">
+        <span class="has-mr-6">9.6</span>
+        <span>唯一本地地址</span>
+        </a></li><li>
+        <a class="is-flex" href="#IPv6-分段处理">
+        <span class="has-mr-6">9.7</span>
+        <span>IPv6 分段处理</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#IPv4-首部">
+        <span class="has-mr-6">10</span>
+        <span>IPv4 首部</span>
+        </a></li><li>
+        <a class="is-flex" href="#IPv6-首部格式">
+        <span class="has-mr-6">11</span>
+        <span>IPv6 首部格式</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#IPv6-扩展首部">
+        <span class="has-mr-6">11.1</span>
+        <span>IPv6 扩展首部</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#IP-协议相关技术">
+        <span class="has-mr-6">12</span>
+        <span>IP 协议相关技术</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#DNS">
+        <span class="has-mr-6">12.1</span>
+        <span>DNS</span>
+        </a></li><li>
+        <a class="is-flex" href="#ARP">
+        <span class="has-mr-6">12.2</span>
+        <span>ARP</span>
+        </a></li><li>
+        <a class="is-flex" href="#ICMP">
+        <span class="has-mr-6">12.3</span>
+        <span>ICMP</span>
+        </a></li><li>
+        <a class="is-flex" href="#DHCP">
+        <span class="has-mr-6">12.4</span>
+        <span>DHCP</span>
+        </a></li><li>
+        <a class="is-flex" href="#NAT">
+        <span class="has-mr-6">12.5</span>
+        <span>NAT</span>
+        </a></li><li>
+        <a class="is-flex" href="#IP-隧道">
+        <span class="has-mr-6">12.6</span>
+        <span>IP 隧道</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#TCP-和-UDP">
+        <span class="has-mr-6">13</span>
+        <span>TCP 和 UDP</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#端口号">
+        <span class="has-mr-6">13.1</span>
+        <span>端口号</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#根据端口号识别应用">
+        <span class="has-mr-6">13.1.1</span>
+        <span>根据端口号识别应用</span>
+        </a></li><li>
+        <a class="is-flex" href="#通过-IP-地址、端口号、协议号进行通信识别">
+        <span class="has-mr-6">13.1.2</span>
+        <span>通过 IP 地址、端口号、协议号进行通信识别</span>
+        </a></li><li>
+        <a class="is-flex" href="#端口号的确定">
+        <span class="has-mr-6">13.1.3</span>
+        <span>端口号的确定</span>
+        </a></li><li>
+        <a class="is-flex" href="#端口号与协议">
+        <span class="has-mr-6">13.1.4</span>
+        <span>端口号与协议</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#UDP">
+        <span class="has-mr-6">13.2</span>
+        <span>UDP</span>
+        </a></li><li>
+        <a class="is-flex" href="#TCP">
+        <span class="has-mr-6">13.3</span>
+        <span>TCP</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#三次握手（重点）">
+        <span class="has-mr-6">13.3.1</span>
+        <span>三次握手（重点）</span>
+        </a></li><li>
+        <a class="is-flex" href="#四次挥手（重点）">
+        <span class="has-mr-6">13.3.2</span>
+        <span>四次挥手（重点）</span>
+        </a></li><li>
+        <a class="is-flex" href="#通过序列号与确认应答提高可靠性">
+        <span class="has-mr-6">13.3.3</span>
+        <span>通过序列号与确认应答提高可靠性</span>
+        </a></li><li>
+        <a class="is-flex" href="#重发超时的确定">
+        <span class="has-mr-6">13.3.4</span>
+        <span>重发超时的确定</span>
+        </a></li><li>
+        <a class="is-flex" href="#以段为单位发送数据">
+        <span class="has-mr-6">13.3.5</span>
+        <span>以段为单位发送数据</span>
+        </a></li><li>
+        <a class="is-flex" href="#利用窗口控制提高速度">
+        <span class="has-mr-6">13.3.6</span>
+        <span>利用窗口控制提高速度</span>
+        </a></li><li>
+        <a class="is-flex" href="#滑动窗口控制">
+        <span class="has-mr-6">13.3.7</span>
+        <span>滑动窗口控制</span>
+        </a></li><li>
+        <a class="is-flex" href="#窗口控制中的重发控制">
+        <span class="has-mr-6">13.3.8</span>
+        <span>窗口控制中的重发控制</span>
+        </a></li></ul></li></ul></li></ul>
         </div>
     </div>
 </div>
