@@ -16,7 +16,7 @@
 <meta property="og:description" content="本章记录的是一些 HTTP 相关内容的补充，偏向于查漏补缺，主要是一些平常遇到或是看到过的知识点，面试题之类的，在这里简单的整理汇总一下，一方面补充些专业知识，另一方面也是方便以后查询或是复习，更多相关内容可以参考 计算机网络知识梳理 和 前端知识体系整理">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg">
-<meta property="og:updated_time" content="2020-09-26T12:58:47.290Z">
+<meta property="og:updated_time" content="2020-10-18T15:52:54.067Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HTTP 查漏补缺">
 <meta name="twitter:description" content="本章记录的是一些 HTTP 相关内容的补充，偏向于查漏补缺，主要是一些平常遇到或是看到过的知识点，面试题之类的，在这里简单的整理汇总一下，一方面补充些专业知识，另一方面也是方便以后查询或是复习，更多相关内容可以参考 计算机网络知识梳理 和 前端知识体系整理">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    1 小时 读完 (大约 9313 个字)
+                    2 小时 读完 (大约 19724 个字)
                 </span>
                 
                 
@@ -491,19 +491,221 @@ var _hmt = _hmt || [];
 <li>流量控制，流量控制的目的是让接收方来得及接收数据，这样避免了数据丢包以及网络拥塞等情况</li>
 <li>拥塞控制，拥塞控制就是防止过多的数据注入到网络中，这样使网络中的路由器或者链路不至于过载（四个核心算法，慢启动、拥塞避免、快速重传和快速恢复）</li>
 </ul>
-<h2 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h2><p><code>TCP</code> 建立连接的过程叫做握手，握手需要在客户和服务器之间交换三个 <code>TCP</code> 报文段，也叫三报文握手</p>
+<h2 id="TCP-和-UDP-的区别"><a href="#TCP-和-UDP-的区别" class="headerlink" title="TCP 和 UDP 的区别"></a>TCP 和 UDP 的区别</h2><p><code>UDP</code> 协议的特点有以下这些</p>
+<ul>
+<li>面向无连接<ul>
+<li>首先 <code>UDP</code> 是不需要和 <code>TCP</code> 一样在发送数据前进行三次握手建立连接的，想发数据就可以开始发送了，并且也只是数据报文的搬运工，不会对数据报文进行任何拆分和拼接操作，具体来说就是</li>
+<li>在发送端，应用层将数据传递给传输层的 <code>UDP</code> 协议，<code>UDP</code> 只会给数据增加一个 <code>UDP</code> 头标识下是 <code>UDP</code> 协议，然后就传递给网络层了</li>
+<li>在接收端，网络层将数据传递给传输层，<code>UDP</code> 只去除 <code>IP</code> 报文头就传递给应用层，不会任何拼接操作</li>
+</ul>
+</li>
+<li>有单播，多播，广播的功能<ul>
+<li><code>UDP</code> 不止支持一对一的传输方式，同样支持一对多，多对多，多对一的方式，也就是说 <code>UDP</code> 提供了单播，多播，广播的功能</li>
+</ul>
+</li>
+<li><code>UDP</code> 是面向报文的<ul>
+<li>发送方的 <code>UDP</code> 对应用程序交下来的报文，在添加首部后就向下交付 <code>IP</code> 层，<code>UDP</code> 对应用层交下来的报文，既不合并，也不拆分，而是保留这些报文的边界，因此，应用程序必须选择合适大小的报文</li>
+</ul>
+</li>
+<li>不可靠性<ul>
+<li>首先不可靠性体现在无连接上，通信都不需要建立连接，想发就发，这样的情况肯定不可靠，并且收到什么数据就传递什么数据，并且也不会备份数据，发送数据也不会关心对方是否已经正确接收到数据了</li>
+<li>再者网络环境时好时坏，但是 <code>UDP</code> 因为没有拥塞控制，一直会以恒定的速度发送数据，即使网络条件不好，也不会对发送速率进行调整，这样实现的弊端就是在网络条件不好的情况下可能会导致丢包，但是优点也很明显，在某些实时性要求高的场景（比如电话会议）就需要使用 <code>UDP</code> 而不是 <code>TCP</code></li>
+</ul>
+</li>
+<li>头部开销小，传输数据报文时是很高效的<ul>
+<li><code>UDP</code> 头部包含了以下几个数据<ul>
+<li>两个十六位的端口号，分别为源端口（可选字段）和目标端口</li>
+<li>整个数据报文的长度</li>
+<li>整个数据报文的检验和（<code>IPv4</code> 可选 字段），该字段用于发现头部信息和数据中的错误</li>
+</ul>
+</li>
+<li>因此 <code>UDP</code> 的头部开销小，只有八字节，相比 <code>TCP</code> 的至少二十字节要少得多，在传输数据报文时是很高效的</li>
+</ul>
+</li>
+</ul>
+<p><code>TCP</code> 协议的特点有以下这些</p>
+<ul>
+<li>面向连接<ul>
+<li>面向连接，是指发送数据之前必须在两端建立连接，建立连接的方法是三次握手，这样能建立可靠的连接，建立连接，是为数据的可靠传输打下了基础</li>
+</ul>
+</li>
+<li>仅支持单播传输<ul>
+<li>每条 <code>TCP</code> 传输连接只能有两个端点，只能进行点对点的数据传输，不支持多播和广播传输方式</li>
+</ul>
+</li>
+<li>面向字节流<ul>
+<li><code>TCP</code> 不像 <code>UDP</code> 一样那样一个个报文独立地传输，而是在不保留报文边界的情况下以字节流方式进行传输</li>
+</ul>
+</li>
+<li>可靠传输<ul>
+<li>对于可靠传输，判断丢包，误码靠的是 <code>TCP</code> 的段编号以及确认号，<code>TCP</code> 为了保证报文传输的可靠，就给每个包一个序号，同时序号也保证了传送到接收端实体的包的按序接收，然后接收端实体对已成功收到的字节发回一个相应的确认（<code>ACK</code>），如果发送端实体在合理的往返时延（<code>RTT</code>）内未收到确认，那么对应的数据（假设丢失了）将会被重传</li>
+</ul>
+</li>
+<li>提供拥塞控制<ul>
+<li>当网络出现拥塞的时候，<code>TCP</code> 能够减小向网络注入数据的速率和数量，缓解拥塞</li>
+</ul>
+</li>
+<li><code>TCP</code> 提供全双工通信<ul>
+<li><code>TCP</code> 允许通信双方的应用程序在任何时候都能发送数据，因为 <code>TCP</code> 连接的两端都设有缓存，用来临时存放双向通信的数据，当然 <code>TCP</code> 可以立即发送一个数据段，也可以缓存一段时间以便一次发送更多的数据段（最大的数据段大小取决于 <code>MSS</code>）</li>
+</ul>
+</li>
+</ul>
+<p>这里我们简单介绍一下 <code>MSS</code>，其实简单来说，就是一个网络包的最大长度，计算每个网络包能容纳的数据长度，协议栈会根据一个叫作 <code>MTU</code> 的参数来进行判断，<code>MTU</code> 表示一个网络包的最大长度，在以太网中一般是 <code>1500</code> 字节</p>
+<p><code>MTU</code> 是包含头部的总长度，因此需要从 <code>MTU</code> 减去头部的长度，然后得到的长度就是一个网络包中所能容纳的最大数据长度，这一长度叫作 <code>MSS</code></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/10-21.png" alt></p>
+<p>下面我们再来看看 <code>TCP</code> 和 <code>UDP</code> 两者的区别，如下表</p>
+<table>
+<thead>
+<tr>
+<th>区别</th>
+<th>UDP</th>
+<th>TCP</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>是否连接</td>
+<td>无连接</td>
+<td>面向连接</td>
+</tr>
+<tr>
+<td>是否可靠</td>
+<td>不可靠传输，不使用流量控制和拥塞控制</td>
+<td>可靠传输，使用流量控制和拥塞控制</td>
+</tr>
+<tr>
+<td>连接对象个数</td>
+<td>支持一对一，一对多，多对一和多对多交互通信</td>
+<td>只能是一对一通信</td>
+</tr>
+<tr>
+<td>传输方式</td>
+<td>面向报文</td>
+<td>面向字节流</td>
+</tr>
+<tr>
+<td>首部开销</td>
+<td>首部开销小，仅 <code>8</code> 字节</td>
+<td>首部最小 <code>20</code> 字节，最大 <code>60</code> 字节</td>
+</tr>
+<tr>
+<td>适用场景</td>
+<td>适用于实时应用（<code>IP</code> 电话、视频会议、直播等）</td>
+<td>适用于要求可靠传输的应用，例如文件传输</td>
+</tr>
+</tbody></table>
+<p>简单总结就是</p>
+<ul>
+<li><code>TCP</code> 向上层提供面向连接的可靠服务，<code>UDP</code> 向上层提供无连接不可靠服务</li>
+<li>虽然 <code>UDP</code> 并没有 <code>TCP</code> 传输来的准确，但是也能在很多实时性要求高的地方有所作为</li>
+<li>对数据准确性要求高，速度可以相对较慢的，可以选用 <code>TCP</code> </li>
+</ul>
+<p>我们在上面也介绍了负责域名解析的 <code>DNS</code> 服务，那么 <code>DNS</code> 为什么使用 <code>UDP</code> 协议作为传输层协议而不是 <code>TCP</code> 呢？其实简单来说，<code>DNS</code> 使用 <code>UDP</code> 协议作为传输层协议的主要原因是为了避免使用 <code>TCP</code> 协议时造成的连接时延</p>
+<ul>
+<li>为了得到一个域名的 <code>IP</code> 地址，往往会向多个域名服务器查询，如果使用 <code>TCP</code> 协议，那么每次请求都会存在连接时延，这样使 <code>DNS</code> 服务变得很慢</li>
+<li>大多数的地址查询请求，都是浏览器请求页面时发出的，这样会造成网页的等待时间过长</li>
+</ul>
+<p>下表是使用 <code>UDP</code> 和 <code>TCP</code> 协议的各种应用和应用层协议</p>
+<table>
+<thead>
+<tr>
+<th>应用</th>
+<th>应用层协议</th>
+<th>运输层协议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>名字转换</td>
+<td><code>DNS</code>（域名系统）</td>
+<td><code>UDP</code></td>
+</tr>
+<tr>
+<td>文件传送</td>
+<td><code>TFTP</code>（简单文件传送协议）</td>
+<td><code>UDP</code></td>
+</tr>
+<tr>
+<td>路由选择协议</td>
+<td><code>RIP</code>（路由信息协议）</td>
+<td><code>UDP</code></td>
+</tr>
+<tr>
+<td><code>IP</code> 地址配置</td>
+<td><code>DHCP</code>（动态主机配置协议）</td>
+<td><code>UDP</code></td>
+</tr>
+<tr>
+<td>网络管理</td>
+<td><code>SNMP</code>（简单网络管理协议）</td>
+<td><code>UDP</code></td>
+</tr>
+<tr>
+<td>远程文件服务器</td>
+<td><code>NFS</code>（网络文件系统）</td>
+<td><code>UDP</code></td>
+</tr>
+<tr>
+<td><code>IP</code> 电话</td>
+<td>专用协议</td>
+<td><code>UDP</code></td>
+</tr>
+<tr>
+<td>流式多媒体通信</td>
+<td>专用协议</td>
+<td><code>UDP</code></td>
+</tr>
+<tr>
+<td>多播</td>
+<td><code>IGMP</code>（网际组管理协议）</td>
+<td><code>UDP</code></td>
+</tr>
+<tr>
+<td>电子邮件</td>
+<td><code>SMTP</code>（简单邮件传送协议）</td>
+<td><code>TCP</code></td>
+</tr>
+<tr>
+<td>远程终端接入</td>
+<td><code>TELNET</code>（远程终端协议）</td>
+<td><code>TCP</code></td>
+</tr>
+<tr>
+<td>万维网</td>
+<td><code>HTTP</code>（超文本传送协议）</td>
+<td><code>TCP</code></td>
+</tr>
+<tr>
+<td>文件传送</td>
+<td><code>FTP</code>（文件传送协议）</td>
+<td><code>TCP</code></td>
+</tr>
+</tbody></table>
+<h2 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h2><p><code>TCP</code> 建立连接的过程叫做握手，握手需要在客户和服务器之间交换三个 <code>TCP</code> 报文段，也叫三报文握手，之所以会有三次握手的过程，是因为需要确认双方的两样能力，即 <strong>发送的能力</strong> 和 <strong>接收的能力</strong></p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/13-01.png" alt></p>
 <ul>
 <li><code>A</code> 主动打开连接，<code>B</code> 被动打开连接，<code>B</code> 先进入收听状态（<code>LISTEN</code>），<code>A</code> 打算建立 <code>TCP</code> 连接时，先向 <code>B</code> 发送连接请求报文段，其中同步位 <code>SYN = 1</code>，初始序号 <code>seq = x</code>，这个报文段不能携带数据，但是要消耗一个序号，接着 <code>A</code> 进入同步已发送状态</li>
 <li><code>B</code> 收到请求报文段，如果同意建立连接，则向 <code>A</code> 发送 <code>ACK</code> 确认报文段，其中同步位 <code>SYN = 1</code>，确认号 <code>ACK = 1</code>，初始序号 <code>seq = y</code>，确认号 <code>ack = x + 1</code>（请求报文段消耗了一个序号），这个 <code>ACK</code> 报文段也不能携带数据，但是要消耗一个序号，与此同时 <code>B</code> 进入到同步收到的状态</li>
 <li><code>A</code> 收到 <code>B</code> 的确认报文后，还要给 <code>B</code> 发送确认报文，其中 <code>ACK = 1</code>， <code>seq = x + 1</code>（上一个报文段的 <code>ack</code>），<code>ack = y + 1</code>（上一个报文段的 <code>seq + 1</code>，因为消耗了一个序号），这个 <code>ACK</code> 报文段可以携带数据，但是如果不携带数据则不会消耗序号，下一次 <code>A</code> 给 <code>B</code> 发送报文段的初始序号 <code>seq = 1</code>，此时 <code>A</code> 进入已建立连接的状态，<code>B</code> 收到确认后也进入已建立连接的状态</li>
 </ul>
-<p>这里存在一个问题，那就是为什么需要最后一次确认？</p>
+<p>从上图可以看出，<code>SYN</code> 是需要消耗一个序列号的，下次发送对应的 <code>ACK</code> 序列号要加 <code>1</code>，那么为什么会这样呢？这里只需要记住一个规则</p>
+<blockquote>
+<p>凡是需要对端确认的，一定消耗 <code>TCP</code> 报文的序列号（<code>SYN</code> 需要对端的确认，而 <code>ACK</code> 并不需要，因此 <code>SYN</code> 消耗一个序列号而 <code>ACK</code> 不需要）</p>
+</blockquote>
+<h4 id="为什么不是两次握手"><a href="#为什么不是两次握手" class="headerlink" title="为什么不是两次握手"></a>为什么不是两次握手</h4><p>其实也就是为什么需要最后一次确认？</p>
 <p>其实简单来说，这是防止已失效的连接请求报文段突然又传送到了 <code>B</code> 而引发错误，但是有可能出现异常情况，即 <code>A</code> 发送的连接请求并没有丢失，而是滞留了在网络中，如果在传输数据完成之后，这个请求又发到 <code>B</code> ，<code>B</code> 误以为 <code>A</code> 还要发送数据，因此发送确认报文，但是 <code>A</code> 没有运输需求，因此不予理睬，如果没有最后一次确认，<code>B</code> 一直等待 <code>A</code> 的确认，这样会造成的浪费</p>
 <p>采用三报文握手，如果 <code>B</code> 没有收到 <code>A</code> 的确认，则可以知道 <code>A</code> 没有建立连接的需求，就可以避免上述这种情况</p>
 <blockquote>
 <p>所谓的失效的连接请求就是 <code>A</code> 第一次先发送了一个请求，但是丢失了，于是 <code>A</code> 再发送一个连接请求，重新建立连接，发送数据并释放连接</p>
 </blockquote>
+<h4 id="为什么不是四次握手"><a href="#为什么不是四次握手" class="headerlink" title="为什么不是四次握手"></a>为什么不是四次握手</h4><p>三次握手的目的是确认双方 <strong>发送</strong> 和 <strong>接收</strong> 的能力，当然四次握手也是可以的，甚至 <code>100</code> 次都可以，但为了解决问题，三次就已经足够了，再多用处就不大了</p>
+<h4 id="三次握手过程中可以携带数据么"><a href="#三次握手过程中可以携带数据么" class="headerlink" title="三次握手过程中可以携带数据么"></a>三次握手过程中可以携带数据么</h4><p>第三次握手的时候，可以携带，前两次握手不能携带数据</p>
+<ul>
+<li>如果前两次握手能够携带数据，那么一旦有人想攻击服务器，那么他只需要在第一次握手中的 <code>SYN</code> 报文中放大量数据，那么服务器势必会消耗更多的时间和内存空间去处理这些数据，增大了服务器被攻击的风险</li>
+<li>第三次握手的时候，客户端已经处于 <code>ESTABLISHED</code> 状态，并且已经能够确认服务器的接收、发送能力正常，这个时候相对安全了，可以携带数据</li>
+</ul>
+<h4 id="如果同时打开会怎样"><a href="#如果同时打开会怎样" class="headerlink" title="如果同时打开会怎样"></a>如果同时打开会怎样</h4><p>如果双方同时发 <code>SYN</code> 报文，这是一个可能会发生的情况，状态变迁如下</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/13-03.png" alt></p>
+<p>在发送方给接收方发 <code>SYN</code> 报文的同时，接收方也给发送方发 <code>SYN</code> 报文，此时发完 <code>SYN</code>，两者的状态都变为 <code>SYN-SENT</code>，在各自收到对方的 <code>SYN</code> 后，两者状态都变为 <code>SYN-REVD</code></p>
+<p>接着会回复对应的 <code>ACK + SYN</code>，这个报文在对方接收之后，两者状态一起变为 <code>ESTABLISHED</code>，这就是同时打开情况下的状态变迁</p>
 <h2 id="四次挥手"><a href="#四次挥手" class="headerlink" title="四次挥手"></a>四次挥手</h2><p>所谓的四次挥手其实也就是 <code>TCP</code> 的连接释放的过程</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/13-02.png" alt></p>
 <ul>
@@ -520,7 +722,274 @@ var _hmt = _hmt || [];
 <ul>
 <li>保证 <code>A</code> 最后发送的 <code>ACK</code> 报文段能够到达 <code>B</code>，因为这个报文可能丢失，因此 <code>B</code> 会重传最后一个确认报文段，<code>A</code> 再重新发送确认报文，并且重启计时器，直到 <code>A</code> ，<code>B</code> 都能正常进入到 <code>CLOSED</code> 状态</li>
 <li>防止上面提到的已失效的连接请求报文，这段时间内，这些连接请求报文就可能在网络中消失</li>
-<li>此外 <code>B</code> 要比 <code>A</code> 先进入 <code>CLOSED</code> 状态</li>
+</ul>
+<p>简单来说就是</p>
+<ul>
+<li><code>1</code> 个 <code>MSL</code> 确保四次挥手中主动关闭方最后的 <code>ACK</code> 报文最终能达到对端</li>
+<li><code>1</code> 个 <code>MSL</code> 确保对端没有收到 <code>ACK</code> 重传的 <code>FIN</code> 报文可以到达</li>
+</ul>
+<p>这就是等待 <code>2MSL</code> 的意义，此外 <code>B</code> 要比 <code>A</code> 先进入 <code>CLOSED</code> 状态</p>
+<h4 id="为什么是四次挥手而不是三次"><a href="#为什么是四次挥手而不是三次" class="headerlink" title="为什么是四次挥手而不是三次"></a>为什么是四次挥手而不是三次</h4><p>因为服务端在接收到 <code>FIN</code>，往往不会立即返回 <code>FIN</code>，必须等到服务端所有的报文都发送完毕了，才能发 <code>FIN</code>，因此先发一个 <code>ACK</code> 表示已经收到客户端的 <code>FIN</code>，延迟一段时间才发 <code>FIN</code>，这就造成了四次挥手，那么如果是三次挥手会有什么问题？</p>
+<p>如果是三次挥手，这就等于说服务端将 <code>ACK</code> 和 <code>FIN</code> 的发送合并为一次挥手，这个时候长时间的延迟可能会导致客户端误以为 <code>FIN</code> 没有到达客户端，从而让客户端不断的重发 <code>FIN</code></p>
+<h4 id="同时关闭会怎样"><a href="#同时关闭会怎样" class="headerlink" title="同时关闭会怎样"></a>同时关闭会怎样</h4><p>如果客户端和服务端同时发送 <code>FIN</code>，状态如下图所示</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/13-04.png" alt></p>
+<h2 id="半连接队列与-SYN-Flood-攻击"><a href="#半连接队列与-SYN-Flood-攻击" class="headerlink" title="半连接队列与 SYN Flood 攻击"></a>半连接队列与 SYN Flood 攻击</h2><p>三次握手前，服务端的状态从 <code>CLOSED</code> 变为 <code>LISTEN</code>，同时在内部创建了两个队列 <strong>半连接队列</strong> 和 <strong>全连接队列</strong>，即 <code>SYN</code> 队列和 <code>ACCEPT</code>（<code>Accept Queue</code>） 队列</p>
+<ul>
+<li>半连接队列，当客户端发送 <code>SYN</code> 到服务端，服务端收到以后回复 <code>ACK</code> 和 <code>SYN</code>，状态由 <code>LISTEN</code> 变为 <code>SYN_RCVD</code>，此时这个连接就被推入了 <code>SYN</code> 队列，也就是半连接队列</li>
+<li>全连接队列，当客户端返回 <code>ACK</code>，服务端接收后，三次握手完成，这个时候连接等待被具体的应用取走，在被取走之前，它会被推入另外一个 <code>TCP</code> 维护的队列，也就是全连接队列</li>
+</ul>
+<h4 id="SYN-Flood-攻击原理"><a href="#SYN-Flood-攻击原理" class="headerlink" title="SYN Flood 攻击原理"></a>SYN Flood 攻击原理</h4><p><code>SYN Flood</code> 属于典型的 <code>DoS/DDoS</code> 攻击，其攻击的原理很简单，就是用客户端在短时间内伪造大量不存在的 <code>IP</code> 地址，并向服务端疯狂发送 <code>SYN</code>，对于服务端而言，会产生两个危险的后果</p>
+<ul>
+<li>处理大量的 <code>SYN</code> 包并返回对应 <code>ACK</code>，势必有大量连接处于 <code>SYN_RCVD</code> 状态，从而占满整个半连接队列，无法处理正常的请求</li>
+<li>由于是不存在的 <code>IP</code>，服务端长时间收不到客户端的 <code>ACK</code>，会导致服务端不断重发数据，直到耗尽服务端的资源</li>
+</ul>
+<h4 id="如何应对-SYN-Flood-攻击"><a href="#如何应对-SYN-Flood-攻击" class="headerlink" title="如何应对 SYN Flood 攻击"></a>如何应对 SYN Flood 攻击</h4><ul>
+<li>增加 <code>SYN</code> 连接，也就是增加半连接队列的容量</li>
+<li>减少 <code>SYN</code> + <code>ACK</code> 重试次数，避免大量的超时重发</li>
+<li>利用 <code>SYN Cookie</code> 技术，在服务端接收到 <code>SYN</code> 后不立即分配连接资源，而是根据这个 <code>SYN</code> 计算出一个 <code>Cookie</code>，连同第二次握手回复给客户端，在客户端回复 <code>ACK</code> 的时候带上这个 <code>Cookie</code> 值，服务端验证 <code>Cookie</code> 合法之后才分配连接资源</li>
+</ul>
+<h2 id="报文头部的字段"><a href="#报文头部的字段" class="headerlink" title="报文头部的字段"></a>报文头部的字段</h2><p>主要分为 <code>IP</code> 数据报格式、<code>UDP</code> 数据报格式、<code>TCP</code> 报文段格式和以太网 <code>MAC</code> 帧格式</p>
+<h4 id="IP-数据报格式"><a href="#IP-数据报格式" class="headerlink" title="IP 数据报格式"></a>IP 数据报格式</h4><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-01.png" alt></p>
+<p><code>IP</code> 数据报首部可以分为固定长度（<code>20</code> 字节）和可选长度，固定长度是所有 <code>IP</code> 数据报所必须的，固定部分个字段的意义如下</p>
+<ul>
+<li>版本，占 <code>4</code> 位，指 <code>IP</code> 协议的版本，通信双方的协议版本必须一致</li>
+<li>首部长度，占 <code>4</code> 位，可表示的最大十进制数是<code>15</code>（<code>1111</code>），它的单位是 <code>4</code> 字节（也就是 <code>32</code> 位），因此首部长度最小值为 <code>5</code>（固定长度部分），可选长度最长为 <code>40</code> 字节</li>
+<li>区分服务，占 <code>8</code> 位，用来获得更好的服务</li>
+<li>总长度，占 <code>16</code> 位，首部和数据部分的总长度，单位为字节，因此 <code>IP</code> 数据报的最大长度为 <code>2^16 - 1</code></li>
+<li>标识，占 <code>16</code> 位，当数据报的长度超过网络的最大传送单元使，就给该数据报的所有分片赋值相同的标识，相同的标识字段的值使分片后的各数据报片能正确的重装成原来的数据报</li>
+<li>标志，占 <code>3位</code>，但是只有两位具有意义<ul>
+<li>标记字段中的最低位记为 <code>MF</code>，<code>MF = 1</code> 表示后面还有分片，<code>MF = 0</code> 表示这是最后一个分片</li>
+<li>标志字段中间的一位记为 <code>DF</code>，意思是能否分片，只有 <code>DF = 0</code> 时才能分片</li>
+</ul>
+</li>
+<li>片偏移，占 <code>13</code> 位，较长的分组在分片后，某片在原分组中的相对位置，也就是说，数据片相对于初始位置的距离，单位是 <code>8</code> 字节，因此除去最后一个数据片，每个数据片的长度都是 <code>8</code> 字节的倍数</li>
+<li>生存时间，占 <code>8位</code>，<code>TTL</code>（<code>Time To Live</code>），单位为跳数，跳数表明该数据报至多能在互联网中经过多少个路由器，每经过一个路由器就减 <code>1</code></li>
+<li>协议，占 <code>8位</code>，协议字段指出该数据报携带的数据是使用哪种协议，以便使目的主机的 <code>IP</code> 层知道应将数据部分上交给哪个协议进行处理</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>协议名</th>
+<th><code>ICMP</code></th>
+<th><code>IGMP</code></th>
+<th><code>IP</code></th>
+<th><code>TCP</code></th>
+<th><code>EGP</code></th>
+<th><code>IGP</code></th>
+<th><code>UDP</code></th>
+<th><code>IPv6</code></th>
+<th><code>ESP</code></th>
+<th><code>OSPF</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>协议字段值</td>
+<td><code>1</code></td>
+<td><code>2</code></td>
+<td><code>4</code></td>
+<td><code>6</code></td>
+<td><code>8</code></td>
+<td><code>9</code></td>
+<td><code>17</code></td>
+<td><code>41</code></td>
+<td><code>50</code></td>
+<td><code>89</code></td>
+</tr>
+</tbody></table>
+<ul>
+<li>源地址，占 <code>32</code> 位</li>
+<li>目的地址，占 <code>32</code> 位</li>
+<li>首部校验和，占 <code>16</code> 位，这个字段只检验数据报的首部，但是不包括数据部分<ul>
+<li>在发送方，先把数据报划分为许多 <code>16</code> 位的字的序列，并把校验和字段置为 <code>0</code></li>
+<li>用反码算术运算（从低位到高位计算，<code>0 + 0</code> 等于 <code>0</code>，<code>0 + 1</code> 等于 <code>1</code>，<code>1 + 1</code> 等于 <code>0</code>，但是要进 <code>1</code>）把所有的 <code>16</code> 位字相加后，将得到的反码写入校验和字段</li>
+<li>接收方接收到数据报之后，将首部的所有 <code>16</code> 位字再使用反码运算相加一次，将得到的和取反码，即得出接收方的检验和的计算结果，如果结果全为 <code>0</code>，则代表首部未发生变化，保留该数据报，反之则丢弃</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-02.png" alt></p>
+<h4 id="UDP-数据报格式"><a href="#UDP-数据报格式" class="headerlink" title="UDP 数据报格式"></a>UDP 数据报格式</h4><p><code>UDP</code> 用户数据报分为 = 首部字段 （<code>8</code>个字节，<code>4</code>个字段，每个字段 <code>2</code> 个字节）+ 数字字段，首部字段分为</p>
+<ul>
+<li>源端口，源端口号，在需要对方回信的时候选用，不需要填 <code>0</code></li>
+<li>目的端口，目的端口号，必填</li>
+<li>长度，<code>UDP</code> 用户数据报的长度，最小为 <code>8</code></li>
+<li>检验和，检测 <code>UDP</code> 用户数据报传输过程中是否有错，有错就丢弃</li>
+</ul>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-03.png" alt></p>
+<h3 id="TCP-报文段格式"><a href="#TCP-报文段格式" class="headerlink" title="TCP 报文段格式"></a>TCP 报文段格式</h3><p><code>TCP</code> 虽然是面向字节流的，但是 <code>TCP</code> 传输的数据单元却是报文段，一个报文段可以分为首部和数据两部分，<code>TCP</code> 报文段的首部的前 <code>20</code> 个字节是固定的，后面的 <code>4n</code> 字节是需要增加的选项，因此 <code>TCP</code> 首部的最小长度是 <code>20</code> 字节</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-04.png" alt></p>
+<p>首部部分字段的意义如下</p>
+<ul>
+<li>源端口和目的端口，各占 <code>2</code> 个字节，分别写入源端口号和目的端口号，<code>TCP</code> 的分用功能也是通过端口号实现的<ul>
+<li>那么如何标识唯一一个连接呢？答案是 <code>TCP</code> 连接的四元组，源 <code>IP</code>、源端口、目标 <code>IP</code> 和目标端口，但是 <code>TCP</code> 报文当中为何没有源 <code>IP</code> 和目标 <code>IP</code> 呢？这是因为在 <code>IP</code> 层就已经处理了 <code>IP</code>，<code>TCP</code> 只需要记录两者的端口即可</li>
+</ul>
+</li>
+<li>序号，占 <code>4</code> 字节，在 <code>TCP</code> 连接中传送的字节流中的每一个字节都按照顺序编号，首部中的序号字段值则代表本报文段所发送的数据的第一个字节的序号，作用有两个<ul>
+<li>在 <code>SYN</code> 报文中交换彼此的初始序列号</li>
+<li>保证数据包按正确的顺序组装</li>
+</ul>
+</li>
+<li>确认号，占 <code>4</code> 字节，代表期望收到对方下一个报文段的第一个数据字节的序号，需要注意若确认号 <code>= N</code>，则表明到序号 <code>N - 1</code> 为止的所有数据都已正确收到</li>
+<li>数据偏移，占 <code>4</code> 位，他指出 <code>TCP</code> 报文段的数据起始处距离 <code>TCP</code> 报文段的起始处有多远，一般情况下为 <code>20</code> 字节，但是首部中还有不确定的选项字段，它的单位是 <code>4</code> 字节，而它的最大值是 <code>15</code>，因此数据偏移最大值为 <code>60</code> 字节，也就是说选项不能超过 <code>40</code> 字节</li>
+<li>保留，占 <code>6</code> 位，以防后续使用</li>
+</ul>
+<p>下面是 <code>6</code> 个控制位（标记位），每个占一位</p>
+<ul>
+<li>紧急 <code>URG</code>，当 <code>URG = 1</code> 时，表明紧急字段有效，它告诉系统此报文中有紧急数据，应该尽快传送</li>
+<li>确认 <code>ACK</code>，仅当 <code>ACK = 1</code> 时确认号字段才有效</li>
+<li>推送 <code>PSH</code>，当两个应用进程进行交互式的通信时，有时一端的应用进程希望在键入一个命令后立即就能收到对方的相应，这时设置 <code>PSH = 1</code></li>
+<li>复位 <code>RST</code>，当 <code>RST = 1</code> 时，表明 <code>TCP</code> 连接中出现严重错误，必须释放连接，再重新建立运输连接，<code>RST = 1</code> 还可以用来拒绝一个非法的报文段或拒绝打开一个连接</li>
+<li>同步 <code>SYN</code>，在建立连接时用来同步序号，当 <code>SYN = 1</code> ，<code>ACK = 0</code> 时代表是连接请求报文段，若对方同意建立连接，则应在相应报文段中使 <code>SYN = 1</code> ，<code>ACK = 1</code> ，也就是说，<code>SYN = 1</code> 代表连接请求或者连接接受报文</li>
+<li>终止 <code>FIN</code>，用于释放一个连接，当 <code>FIN = 1</code> 时，代表此报文段的发送方的数据已发送完毕，并且请求释放运输连接</li>
+</ul>
+<p>控制位至此结束</p>
+<ul>
+<li>窗口，占 <code>2</code> 字节，窗口值告诉对方，从本报文段中的确认号算起，接收方目前允许对方发送的数据量（以字节为单位），之所以设置这个限制，是因为接收方的数据缓存空间是有限的，总之窗口值作为接收方让发送方设置其窗口大小的依据</li>
+<li>检验和，占 <code>2</code> 字节，检验的范围包括首部字段和数据字段，和 <code>UDP</code> 检验的方法一样，只不过把伪首部第四个字段的 <code>17</code> 改成 <code>6</code></li>
+<li>紧急指针，占 <code>2</code> 字节，只有在紧急 <code>URG = 1</code> 时才有效，它指出本报文段中的紧急数据的字节数</li>
+<li>选项，长度可变，最大 <code>40</code> 字节，注意，<code>TCP</code> 最初只规定了一种选项，即最大报文长度 <code>MSS</code>，<code>MSS</code> 是每一个 <code>TCP</code> 报文段中的数据字段的最大长度，而并不是整个 <code>TCP</code> 报文段的长度</li>
+</ul>
+<p>这里补充一些 <code>ISN</code> 相关内容，即 <code>Initial Sequence Number</code>（初始序列号）</p>
+<p>在三次握手的过程当中，双方会用过 <code>SYN</code> 报文来交换彼此的 <code>ISN</code>，<code>ISN</code> 并不是一个固定的值，而是每 <code>4ms</code> 加一，溢出则回到 <code>0</code>，这个算法使得猜测 <code>ISN</code> 变得很困难，那么为什么要这么做呢？</p>
+<p>如果 <code>ISN</code> 被攻击者预测到，要知道源 <code>IP</code> 和源端口号都是很容易伪造的，当攻击者猜测 <code>ISN</code> 之后，直接伪造一个 <code>RST</code> 后，就可以强制连接关闭的，这是非常危险的，而动态增长的 <code>ISN</code> 大大提高了猜测 <code>ISN</code> 的难度</p>
+<h4 id="以太网-MAC-帧格式"><a href="#以太网-MAC-帧格式" class="headerlink" title="以太网 MAC 帧格式"></a>以太网 MAC 帧格式</h4><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/14-05.png" alt></p>
+<p>以太网 <code>MAC</code> 帧较为简单，由五个字段组成，前两个字段分别为 <code>6</code> 字节长的目的地址和源地址，第三个字段是 <code>2</code> 字节的类型字段，用来标志上一层使用的是什么协议，以便把收到的 <code>MAC</code> 帧的数据上交给上一层的这个协议，第四个字段是数据字段，其长度为 <code>46 ~ 1500</code> 字节（<code>46</code> 字节是因为最小长度 <code>64</code> 字节减去 <code>18</code> 字节的首部和尾部），最后一个字段是 <code>4</code> 字节的帧检测序列 <code>FCS</code>（使用 <code>CRC</code> 检测）</p>
+<h2 id="TFO-原理"><a href="#TFO-原理" class="headerlink" title="TFO 原理"></a>TFO 原理</h2><p><code>TFO</code> 即 <code>TCP</code> 快速打开（<code>TCP Fast Open</code>），是对计算机网络中传输控制协议（<code>TCP</code>）连接的一种简化握手手续的拓展，用于提高两端点间连接的打开速度，在上面 <code>SYN Flood</code> 部分当中我们曾提到 <code>SYN Cookie</code>，这个 <code>Cookie</code> 可不是浏览器的 <code>Cookie</code>，用它同样可以实现 <code>TFO</code>，下面我们就来看看 <code>TFO</code> 的流程</p>
+<h4 id="首轮三次握手"><a href="#首轮三次握手" class="headerlink" title="首轮三次握手"></a>首轮三次握手</h4><p>首先客户端发送 <code>SYN</code> 给服务端，服务端接收到，但是需要注意，现在服务端不是立刻回复 <code>SYN + ACK</code>，而是通过计算得到一个 <code>SYN Cookie</code>，将这个 <code>Cookie</code> 放到 <code>TCP</code> 报文的 <code>Fast Open</code> 选项中，然后才给客户端返回，客户端拿到这个 <code>Cookie</code> 的值缓存下来，后面正常完成三次握手</p>
+<p>首轮三次握手就是这样的流程，但是后面的三次握手则不一样</p>
+<h4 id="后面的三次握手"><a href="#后面的三次握手" class="headerlink" title="后面的三次握手"></a>后面的三次握手</h4><p>在后面的三次握手中，客户端会将之前缓存的 <code>Cookie</code>、<code>SYN</code> 和 <code>HTTP</code> 请求发送给服务端，服务端验证了 <code>Cookie</code> 的合法性，如果不合法直接丢弃，如果是合法的，那么就正常返回 <code>SYN + ACK</code></p>
+<p>重点来了，现在服务端能向客户端发 <code>HTTP</code> 响应了，这是最显著的改变，三次握手还没建立，仅仅验证了 <code>Cookie</code> 的合法性，就可以返回 <code>HTTP</code> 响应了，当然客户端的 <code>ACK</code> 还得正常传过来，流程如下</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/13-05.png" alt></p>
+<p>注意，客户端最后握手的 <code>ACK</code> 不一定要等到服务端的 <code>HTTP</code> 响应到达才发送，两个过程没有任何关系</p>
+<h4 id="TFO-的优势"><a href="#TFO-的优势" class="headerlink" title="TFO 的优势"></a>TFO 的优势</h4><p><code>TFO</code> 的优势并不在与首轮三次握手，而在于后面的握手，在拿到客户端的 <code>Cookie</code> 并验证通过以后，可以直接返回 <code>HTTP</code> 响应，充分利用了 <code>1</code> 个 <code>RTT</code> 的时间提前进行数据传输，积累起来还是一个比较大的优势</p>
+<h2 id="TCP-的超时重传时间是如何计算的"><a href="#TCP-的超时重传时间是如何计算的" class="headerlink" title="TCP 的超时重传时间是如何计算的"></a>TCP 的超时重传时间是如何计算的</h2><p><code>TCP</code> 具有超时重传机制，即间隔一段时间没有等到数据包的回复时，重传这个数据包，这个重传间隔也叫做超时重传时间（<code>Retransmission TimeOut</code>，简称 <code>RTO</code>），那么这个重传间隔是如何来计算的呢？主要有两种方式，一个是经典方法，一个是标准方法</p>
+<h4 id="经典方法"><a href="#经典方法" class="headerlink" title="经典方法"></a>经典方法</h4><p>经典方法引入了一个新的概念 <code>SRTT</code>（<code>Smoothed round trip time</code>，即平滑往返时间），没产生一次新的 <code>RTT</code>，就根据一定的算法对 <code>SRTT</code> 进行更新，具体而言计算方式如下（<code>SRTT</code> 初始值为 <code>0</code>）</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SRTT =  (α * SRTT) + ((<span class="hljs-number">1</span> - α) * RTT)</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>α</code> 是平滑因子，建议值是 <code>0.8</code>，范围是 <code>0.8 ~ 0.9</code>，拿到 <code>SRTT</code> 我们就可以计算 <code>RTO</code> 的值了</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RTO = min(ubound, max(lbound, β * SRTT))</span><br></pre></td></tr></table></figure>
+
+<p><code>β</code> 是加权因子，一般为 <code>1.3 ~ 2.0</code>，<code>lbound</code> 是下界，<code>ubound</code> 是上界，其实这个算法过程还是很简单的，但是也存在一定的局限，就是在 <code>RTT</code> 稳定的地方表现还可以，而在 <code>RTT</code> 变化较大的地方就不行了，因为平滑因子 <code>α</code> 的范围是 <code>0.8 ~ 0.9</code>，<code>RTT</code> 对于 <code>RTO</code> 的影响太小</p>
+<h4 id="标准方法"><a href="#标准方法" class="headerlink" title="标准方法"></a>标准方法</h4><p>为了解决经典方法对于 <code>RTT</code> 变化不敏感的问题，后面又引出了标准方法，也叫 <code>Jacobson/Karels</code> 算法，一共有三步</p>
+<ul>
+<li>第一步，计算 <code>SRTT</code>，公式如下</li>
+</ul>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SRTT = (<span class="hljs-number">1</span> - α) * SRTT + α * RTT</span><br></pre></td></tr></table></figure>
+
+<p>注意这个时候的 <code>α</code> 跟经典方法中的 <code>α</code> 取值不一样了，建议值是 <code>1/8</code>，也就是 <code>0.125</code></p>
+<ul>
+<li>第二步，计算 <code>RTTVAR</code>（<code>round-trip time variation</code>）这个中间变量</li>
+</ul>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RTTVAR = (<span class="hljs-number">1</span> - β) * RTTVAR + β * (|RTT - SRTT|)</span><br></pre></td></tr></table></figure>
+
+<p><code>β</code> 建议值为 <code>0.25</code>，这个值是这个算法中出彩的地方，也就是说，它记录了最新的 <code>RTT</code> 与当前 <code>SRTT</code> 之间的差值，给我们在后续感知到 <code>RTT</code> 的变化提供了抓手</p>
+<ul>
+<li>第三步，计算最终的 <code>RTO</code></li>
+</ul>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RTO = µ * SRTT + ∂ * RTTVAR</span><br></pre></td></tr></table></figure>
+
+<p><code>µ</code> 建议值取 <code>1</code>，<code>∂</code> 建议值取 <code>4</code>，这个公式在 <code>SRTT</code> 的基础上加上了最新 <code>RTT</code> 与它的偏移，从而很好的感知了 <code>RTT</code> 的变化，这种算法下 <code>RTO</code> 与 <code>RTT</code> 变化的差值关系更加密切</p>
+<h2 id="TCP-的流量控制是如何实现的"><a href="#TCP-的流量控制是如何实现的" class="headerlink" title="TCP 的流量控制是如何实现的"></a>TCP 的流量控制是如何实现的</h2><p>我们之前在 <a href="https://heptaluan.github.io/2020/09/01/HTTP/10/" target="_blank" rel="noopener">HTTP 协议</a> 和 <a href="https://heptaluan.github.io/2020/09/20/HTTP/14/" target="_blank" rel="noopener">TCP/IP 协议</a> 的章节当中简单介绍过 <code>TCP</code> 的流量控制，在这里就汇总整理一下，但是需要注意的是，<code>HTTP/3</code> 当中 <code>QUIC</code> 实现的流量控制与 <code>TCP</code> 当中有所区别，这里我们主要介绍的是 <code>TCP</code> 当中的流量控制，所以关于 <code>HTTP/3</code> 当中 <code>QUIC</code> 的实现方法就不详细展开了，详细可见 <a href="https://heptaluan.github.io/2020/09/12/HTTP/12/#流量控制" target="_blank" rel="noopener">HTTP/3 流量控制</a></p>
+<p>对于发送端和接收端而言，<code>TCP</code> 需要把发送的数据放到发送缓存区，将接收的数据放到接收缓存区，而流量控制索要做的事情，就是在通过接收缓存区的大小，控制发送端的发送，如果对方的接收缓存区满了，就不能再继续发送了，所以要具体理解流量控制，我们要从滑动窗口的概念开始了解</p>
+<h4 id="TCP-滑动窗口"><a href="#TCP-滑动窗口" class="headerlink" title="TCP 滑动窗口"></a>TCP 滑动窗口</h4><p><code>TCP</code> 滑动窗口分为两种，发送窗口和接收窗口，发送端的滑动窗口结构如下</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/13-06.png" alt></p>
+<p>其中包含四大部分</p>
+<ul>
+<li>已发送且已确认</li>
+<li>已发送但未确认</li>
+<li>未发送但可以发送</li>
+<li>未发送也不可以发送</li>
+</ul>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/13-07.png" alt></p>
+<p>发送窗口就是图中被框住的范围，<code>SND</code> 即 <code>send</code>，<code>WND</code> 即 <code>window</code>，<code>UNA</code> 即 <code>unacknowledged</code>，表示未被确认，<code>NXT</code> 即 <code>next</code>，表示下一个发送的位置，接收端的窗口结构如下</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/13-08.png" alt></p>
+<p><code>REV</code> 即 <code>receive</code>，<code>NXT</code> 表示下一个接收的位置，<code>WND</code> 表示接收窗口大小</p>
+<h4 id="流量控制过程"><a href="#流量控制过程" class="headerlink" title="流量控制过程"></a>流量控制过程</h4><p>这里我们用一个简单的例子来模拟一下流量控制的过程</p>
+<ul>
+<li>首先双方三次握手，初始化各自的窗口大小，均为 <code>200</code> 个字节</li>
+<li>假如当前发送端给接收端发送 <code>100</code> 个字节，那么此时对于发送端而言，<code>SND.NXT</code> 当然要右移 <code>100</code> 个字节，也就是说当前的可用窗口减少了 <code>100</code> 个字节</li>
+<li>现在这 <code>100</code> 个到达了接收端，被放到接收端的缓冲队列中，不过此时由于大量负载的原因，接收端处理不了这么多字节，只能处理 <code>40</code> 个字节，剩下的 <code>60</code> 个字节被留在了缓冲队列中</li>
+<li>此时接收端的情况是处理能力不够用，所以此时接收端的接收窗口应该缩小，具体来说缩小 <code>60</code> 个字节，由 <code>200</code> 个字节变成了 <code>140</code> 字节，因为缓冲队列还有 <code>60</code> 个字节没被应用拿走</li>
+</ul>
+<p>因此，接收端会在 <code>ACK</code> 的报文首部带上缩小后的滑动窗口 <code>140</code> 字节，发送端对应地调整发送窗口的大小为 <code>140</code> 个字节，此时对于发送端而言，已经发送且确认的部分增加 <code>40</code> 字节，也就是 <code>SND.UNA</code> 右移 <code>40</code> 个字节，同时发送窗口缩小为 <code>140</code> 个字节</p>
+<p>这也就是流量控制的过程，尽管回合再多，整个控制的过程和原理是一样的</p>
+<h2 id="TCP-的拥塞控制"><a href="#TCP-的拥塞控制" class="headerlink" title="TCP 的拥塞控制"></a>TCP 的拥塞控制</h2><p>和上面流量控制部分类似，这里我们主要介绍的是 <code>TCP</code> 当中的拥塞控制，关于 <code>HTTP/3</code> 当中拥塞控制的热插拔和前向纠错等相关内容可见 <a href="https://heptaluan.github.io/2020/09/12/HTTP/12/#拥塞控制" target="_blank" rel="noopener">HTTP/3 拥塞控制</a></p>
+<p>上一节所说的流量控制发生在发送端跟接收端之间，并没有考虑到整个网络环境的影响，如果说当前网络特别差，特别容易丢包，那么发送端就应该注意一些了，而这也正是拥塞控制需要处理的问题，对于拥塞控制来说，<code>TCP</code> 每条连接都需要维护两个核心状态</p>
+<ul>
+<li>拥塞窗口（<code>Congestion Window</code>，<code>cwnd</code>）</li>
+<li>慢启动阈值（<code>Slow Start Threshold</code>，<code>ssthresh</code>）</li>
+</ul>
+<p>涉及到的算法有这几个</p>
+<ul>
+<li>慢启动</li>
+<li>拥塞避免</li>
+<li>快速重传</li>
+<li>快速恢复</li>
+</ul>
+<p>接下来，我们就来一一来梳理这些状态和算法，首先从拥塞窗口说起</p>
+<h4 id="拥塞窗口"><a href="#拥塞窗口" class="headerlink" title="拥塞窗口"></a>拥塞窗口</h4><p>拥塞窗口是指目前自己还能传输的数据量大小，那么之前介绍了接收窗口的概念，两者有什么区别呢？</p>
+<ul>
+<li>接收窗口（<code>rwnd</code>）是接收端给的限制</li>
+<li>拥塞窗口（<code>cwnd</code>）是发送端的限制</li>
+</ul>
+<p>限制谁呢？其实是限制的是发送窗口的大小，在有了这两个窗口以后，我们来看看如何来计算发送窗口？</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">发送窗口大小 = min(rwnd, cwnd)</span><br></pre></td></tr></table></figure>
+
+<p>简单来说就是取两者的较小值，而拥塞控制，就是来控制 <code>cwnd</code> 变化的</p>
+<h4 id="慢启动"><a href="#慢启动" class="headerlink" title="慢启动"></a>慢启动</h4><p>刚开始进入传输数据的时候，我们是不知道现在的网络情况到底是稳定还是拥堵的，如果发包太急，那么可能会疯狂丢包，造成雪崩式的网络灾难，因此拥塞控制首先就是要采用一种保守的算法来慢慢地适应整个网络，这种算法叫慢启动，运作过程如下</p>
+<ul>
+<li>首先，三次握手，双方宣告自己的接收窗口大小</li>
+<li>双方初始化自己的拥塞窗口（<code>cwnd</code>）大小</li>
+<li>在开始传输的一段时间，发送端每收到一个 <code>ACK</code>，拥塞窗口大小加 <code>1</code>，也就是说每经过一个 <code>RTT</code>，<code>cwnd</code> 翻倍，如果说初始窗口为 <code>10</code>，那么第一轮 <code>10</code> 个报文传完且发送端收到 <code>ACK</code> 后，<code>cwnd</code> 变为 <code>20</code>，第二轮变为 <code>40</code>，第三轮变为 <code>80</code>，依次类推</li>
+</ul>
+<p>当然不会无止境地翻倍下去，它的阈值叫做慢启动阈值，超出阈值则会导致网络拥塞，那么当 <code>cwnd</code> 到达这个阈值之后，如何来控制 <code>cwnd</code> 的大小呢？而这就是拥塞避免做的事情了</p>
+<h4 id="拥塞避免"><a href="#拥塞避免" class="headerlink" title="拥塞避免"></a>拥塞避免</h4><p>其实简单来说，原理就是在到达某个限制（慢启动阈值）之后，指数增长变为线性增长，比如原来每收到一个 <code>ACK</code>，<code>cwnd</code> 加 <code>1</code>，现在到达阈值后，<code>cwnd</code> 只增加 <code>1 / cwnd</code>，所以一轮 <code>RTT</code> 下来，收到 <code>cwnd</code> 个 <code>ACK</code>，那最后拥塞窗口的大小 <code>cwnd</code> 总共才增加 <code>1</code></p>
+<p>也就是说，以前一个 <code>RTT</code> 下来，<code>cwnd</code> 翻倍，现在 <code>cwnd</code> 只是增加 <code>1</code> 而已，当然慢启动和拥塞避免是一起作用的，是一体的</p>
+<h4 id="快速重传"><a href="#快速重传" class="headerlink" title="快速重传"></a>快速重传</h4><p>在 <code>TCP</code> 传输的过程中，如果发生了丢包，即接收端发现数据段不是按序到达的时候，接收端的处理是重复发送之前的 <code>ACK</code>，比如第 <code>5</code> 个包丢了，即使第 <code>6</code>、<code>7</code> 个包到达的接收端，接收端也一律返回第 <code>4</code> 个包的 <code>ACK</code>，当发送端收到 <code>3</code> 个重复的 <code>ACK</code> 时，意识到丢包了，于是马上进行重传，不用等到一个 <code>RTO</code>（<code>Retransmission Timeout</code>，重传超时） 的时间到了才重传，这就是快速重传，它解决的是是否需要重传的问题</p>
+<h4 id="选择性重传"><a href="#选择性重传" class="headerlink" title="选择性重传"></a>选择性重传</h4><p>既然要重传，那么是只重传第 <code>5</code> 个包还是第 <code>5</code>、<code>6</code>、<code>7</code> 个包都重传呢？当然如果第 <code>6</code>、<code>7</code> 个都已经到达了的话，则会记录一下哪些包到了，哪些没到，针对性地重传</p>
+<p>在收到发送端的报文后，接收端回复一个 <code>ACK</code> 报文，那么在这个报文首部的可选项中，就可以加上 <code>SACK</code> 这个属性，通过 <code>left edge</code> 和 <code>right edge</code> 告知发送端已经收到了哪些区间的数据报，因此，即使第 <code>5</code> 个包丢包了，当收到第 <code>6</code>、<code>7</code> 个包之后，接收端依然会告诉发送端，这两个包到了，剩下第 <code>5</code> 个包没到，就重传这个包，这个过程也叫做选择性重传（<code>Selective Acknowledgment</code>，<code>SACK</code>），它解决的是如何重传的问题</p>
+<h4 id="快速恢复"><a href="#快速恢复" class="headerlink" title="快速恢复"></a>快速恢复</h4><p>当然，发送端收到三次重复 <code>ACK</code>之后，发现丢包，觉得现在的网络已经有些拥塞了，自己会进入快速恢复阶段，在这个阶段，发送端如下改变</p>
+<ul>
+<li>拥塞阈值降低为 <code>cwnd</code> 的一半</li>
+<li><code>cwnd</code> 的大小变为拥塞阈值</li>
+<li><code>cwnd</code> 线性增加</li>
+</ul>
+<h4 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h4><p><code>TCP</code> 拥塞控制由 <code>4</code> 个核心算法组成，即 <strong>慢启动、拥塞避免、快速重传和快速恢复</strong></p>
+<ul>
+<li>慢启动，发送方向接收方发送 <code>1</code> 个单位的数据，收到对方确认后会发送 <code>2</code> 个单位的数据，然后依次是 <code>4</code> 个、<code>8</code> 个呈指数级增长，这个过程就是在不断试探网络的拥塞程度，超出阈值则会导致网络拥塞</li>
+<li>拥塞避免，指数增长不可能是无限的，到达某个限制（慢启动阈值）之后，指数增长变为线性增长</li>
+<li>快速重传，发送方每一次发送时都会设置一个超时计时器，超时后即认为丢失，需要重发</li>
+<li>快速恢复，在上面快速重传的基础上，发送方重新发送数据时，也会启动一个超时定时器，如果收到确认消息则进入拥塞避免阶段，如果仍然超时，则回到慢启动阶段</li>
+</ul>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/12-12.png" alt></p>
+<h2 id="Nagle-算法和延迟确认"><a href="#Nagle-算法和延迟确认" class="headerlink" title="Nagle 算法和延迟确认"></a>Nagle 算法和延迟确认</h2><p>这里首先需要明确的是，前者意味着延迟发，后者意味着延迟接收，如果两者一起使用会造成更大的延迟，产生性能问题，所以需要小心</p>
+<h4 id="Nagle-算法"><a href="#Nagle-算法" class="headerlink" title="Nagle 算法"></a>Nagle 算法</h4><p>试想一个场景，发送端不停地给接收端发很小的包，一次只发 <code>1</code> 个字节，那么发 <code>1</code> 千个字节需要发 <code>1000</code> 次，这种频繁的发送是存在问题的，不光是传输的时延消耗，发送和确认本身也是需要耗时的，频繁的发送接收带来了巨大的时延，而避免小包的频繁发送，这就是 <code>Nagle</code> 算法要做的事情，<code>Nagle</code> 算法的规则如下</p>
+<ul>
+<li>当第一次发送数据时不用等待，就算是 <code>1byte</code> 的小包也立即发送</li>
+<li>后面发送满足下面条件之一就可以发了<ul>
+<li>数据包大小达到最大段大小（<code>Max Segment Size</code>，即 <code>MSS</code>）</li>
+<li>之前所有包的 <code>ACK</code> 都已接收到</li>
+</ul>
+</li>
+</ul>
+<h4 id="延迟确认"><a href="#延迟确认" class="headerlink" title="延迟确认"></a>延迟确认</h4><p>试想这样一个场景，当我们收到了发送端的一个包，然后在极短的时间内又接收到了第二个包，那我是一个个地回复，还是稍微等一下，把两个包的 <code>ACK</code> 合并后一起回复呢？</p>
+<p>延迟确认（<code>delayed ack</code>）所做的事情，就是后者，稍稍延迟，然后合并 <code>ACK</code>，最后才回复给发送端，<code>TCP</code> 要求这个延迟的时延必须小于 <code>500ms</code>，一般操作系统实现都不会超过 <code>200ms</code>，不过需要主要的是，有一些场景是不能延迟确认的，收到了就要马上回复</p>
+<ul>
+<li>接收到了大于一个 <code>frame</code> 的报文，且需要调整窗口大小</li>
+<li><code>TCP</code> 处于 <code>quickack</code> 模式（通过 <code>tcp_in_quickack_mode</code> 设置）</li>
+<li>发现了乱序包</li>
+</ul>
+<h2 id="TCP-的-keep-alive"><a href="#TCP-的-keep-alive" class="headerlink" title="TCP 的 keep-alive"></a>TCP 的 keep-alive</h2><p>大家都听说过 <code>HTTP</code> 的 <code>keep-alive</code>，不过 <code>TCP</code> 层面也是有 <code>keep-alive</code> 机制，而且跟应用层不太一样，试想一个场景，当有一方因为网络故障或者宕机导致连接失效，由于 <code>TCP</code> 并不是一个轮询的协议，在下一个数据包到达之前，对端对连接失效的情况是一无所知的，这个时候就出现了 <code>keep-alive</code>，它的作用就是探测对端的连接有没有失效，在 <code>Linux</code> 下，可以这样查看相关的配置</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sudo sysctl -a | grep keepalive</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 每隔 7200 s 检测一次</span></span><br><span class="line">net.ipv4.tcp_keepalive_time = <span class="hljs-number">7200</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 一次最多重传 9 个包</span></span><br><span class="line">net.ipv4.tcp_keepalive_probes = <span class="hljs-number">9</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 每个包的间隔重传间隔 75 s</span></span><br><span class="line">net.ipv4.tcp_keepalive_intvl = <span class="hljs-number">75</span></span><br></pre></td></tr></table></figure>
+
+<p>不过，现状是大部分的应用并没有默认开启 <code>TCP</code> 的 <code>keep-alive</code> 选项，这是因为如果我们站在应用的角度来看的话，会发现这是一个比较尴尬的设计，原因主要有下面两点</p>
+<ul>
+<li><code>7200s</code> 也就是两个小时检测一次，时间太长</li>
+<li>时间再短一些，也难以体现其设计的初衷，即检测长时间的死连接</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://juejin.im/book/6844733788681928712" target="_blank" rel="noopener">深入理解 TCP 协议</a></li>
+<li><a href="https://time.geekbang.org/column/article/7398" target="_blank" rel="noopener">趣谈网络协议</a></li>
+<li><a href="https://time.geekbang.org/course/intro/175" target="_blank" rel="noopener">Web 协议详解与抓包实战</a></li>
 </ul>
 
         </div>
@@ -632,7 +1101,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        158
+                        159
                     </p>
                 </div>
             </div>
@@ -685,39 +1154,39 @@ var _hmt = _hmt || [];
         <a class="is-flex" href="#队头阻塞问题">
         <span class="has-mr-6">3</span>
         <span>队头阻塞问题</span>
-        </a><ul class="menu-list"><li>
+        </a><ul class="menu-list"><ul class="menu-list"><li>
         <a class="is-flex" href="#什么是队头阻塞？">
-        <span class="has-mr-6">3.1</span>
+        <span class="has-mr-6">3.1.1</span>
         <span>什么是队头阻塞？</span>
         </a></li><li>
         <a class="is-flex" href="#如何解决">
-        <span class="has-mr-6">3.2</span>
+        <span class="has-mr-6">3.1.2</span>
         <span>如何解决</span>
-        </a></li></ul></li><li>
+        </a></li></ul></ul></li><li>
         <a class="is-flex" href="#HTTP-数据传输">
         <span class="has-mr-6">4</span>
         <span>HTTP 数据传输</span>
-        </a><ul class="menu-list"><li>
+        </a><ul class="menu-list"><ul class="menu-list"><li>
         <a class="is-flex" href="#定长数据">
-        <span class="has-mr-6">4.1</span>
+        <span class="has-mr-6">4.1.1</span>
         <span>定长数据</span>
         </a></li><li>
         <a class="is-flex" href="#不定长数据">
-        <span class="has-mr-6">4.2</span>
+        <span class="has-mr-6">4.1.2</span>
         <span>不定长数据</span>
-        </a></li></ul></li><li>
+        </a></li></ul></ul></li><li>
         <a class="is-flex" href="#SSL-连接断开后如何恢复">
         <span class="has-mr-6">5</span>
         <span>SSL 连接断开后如何恢复</span>
-        </a><ul class="menu-list"><li>
+        </a><ul class="menu-list"><ul class="menu-list"><li>
         <a class="is-flex" href="#通过-Session-ID">
-        <span class="has-mr-6">5.1</span>
+        <span class="has-mr-6">5.1.1</span>
         <span>通过 Session ID</span>
         </a></li><li>
         <a class="is-flex" href="#通过-Session-Ticket">
-        <span class="has-mr-6">5.2</span>
+        <span class="has-mr-6">5.1.2</span>
         <span>通过 Session Ticket</span>
-        </a></li></ul></li><li>
+        </a></li></ul></ul></li><li>
         <a class="is-flex" href="#短轮询、长轮询和-WebSocket-间的区别">
         <span class="has-mr-6">6</span>
         <span>短轮询、长轮询和 WebSocket 间的区别</span>
@@ -733,70 +1202,186 @@ var _hmt = _hmt || [];
         <a class="is-flex" href="#HTTP-缓存策略">
         <span class="has-mr-6">9</span>
         <span>HTTP 缓存策略</span>
-        </a><ul class="menu-list"><li>
+        </a><ul class="menu-list"><ul class="menu-list"><li>
         <a class="is-flex" href="#强缓存">
-        <span class="has-mr-6">9.1</span>
-        <span>强缓存</span>
-        </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#Expires">
         <span class="has-mr-6">9.1.1</span>
-        <span>Expires</span>
+        <span>强缓存</span>
         </a></li><li>
-        <a class="is-flex" href="#Cache-Control">
-        <span class="has-mr-6">9.1.2</span>
-        <span>Cache-Control</span>
-        </a></li></ul></li><li>
         <a class="is-flex" href="#协商缓存">
-        <span class="has-mr-6">9.2</span>
+        <span class="has-mr-6">9.1.2</span>
         <span>协商缓存</span>
-        </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#Last-Modified">
-        <span class="has-mr-6">9.2.1</span>
-        <span>Last-Modified</span>
         </a></li><li>
-        <a class="is-flex" href="#ETag">
-        <span class="has-mr-6">9.2.2</span>
-        <span>ETag</span>
-        </a></li><li>
-        <a class="is-flex" href="#两者对比">
-        <span class="has-mr-6">9.2.3</span>
-        <span>两者对比</span>
-        </a></li></ul></li><li>
         <a class="is-flex" href="#缓存位置">
-        <span class="has-mr-6">9.3</span>
+        <span class="has-mr-6">9.1.3</span>
         <span>缓存位置</span>
-        </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#Service-Worker">
-        <span class="has-mr-6">9.3.1</span>
-        <span>Service Worker</span>
         </a></li><li>
-        <a class="is-flex" href="#Memory-Cache">
-        <span class="has-mr-6">9.3.2</span>
-        <span>Memory Cache</span>
-        </a></li><li>
-        <a class="is-flex" href="#Disk-Cache">
-        <span class="has-mr-6">9.3.3</span>
-        <span>Disk Cache</span>
-        </a></li><li>
-        <a class="is-flex" href="#Push-Cache">
-        <span class="has-mr-6">9.3.4</span>
-        <span>Push Cache</span>
-        </a></li></ul></li><li>
         <a class="is-flex" href="#总结">
-        <span class="has-mr-6">9.4</span>
+        <span class="has-mr-6">9.1.4</span>
         <span>总结</span>
-        </a></li></ul></li><li>
+        </a></li></ul></ul></li><li>
         <a class="is-flex" href="#TCP-如何保证可靠传输">
         <span class="has-mr-6">10</span>
         <span>TCP 如何保证可靠传输</span>
         </a></li><li>
-        <a class="is-flex" href="#三次握手">
+        <a class="is-flex" href="#TCP-和-UDP-的区别">
         <span class="has-mr-6">11</span>
-        <span>三次握手</span>
+        <span>TCP 和 UDP 的区别</span>
         </a></li><li>
-        <a class="is-flex" href="#四次挥手">
+        <a class="is-flex" href="#三次握手">
         <span class="has-mr-6">12</span>
+        <span>三次握手</span>
+        </a><ul class="menu-list"><ul class="menu-list"><li>
+        <a class="is-flex" href="#为什么不是两次握手">
+        <span class="has-mr-6">12.1.1</span>
+        <span>为什么不是两次握手</span>
+        </a></li><li>
+        <a class="is-flex" href="#为什么不是四次握手">
+        <span class="has-mr-6">12.1.2</span>
+        <span>为什么不是四次握手</span>
+        </a></li><li>
+        <a class="is-flex" href="#三次握手过程中可以携带数据么">
+        <span class="has-mr-6">12.1.3</span>
+        <span>三次握手过程中可以携带数据么</span>
+        </a></li><li>
+        <a class="is-flex" href="#如果同时打开会怎样">
+        <span class="has-mr-6">12.1.4</span>
+        <span>如果同时打开会怎样</span>
+        </a></li></ul></ul></li><li>
+        <a class="is-flex" href="#四次挥手">
+        <span class="has-mr-6">13</span>
         <span>四次挥手</span>
+        </a><ul class="menu-list"><ul class="menu-list"><li>
+        <a class="is-flex" href="#为什么是四次挥手而不是三次">
+        <span class="has-mr-6">13.1.1</span>
+        <span>为什么是四次挥手而不是三次</span>
+        </a></li><li>
+        <a class="is-flex" href="#同时关闭会怎样">
+        <span class="has-mr-6">13.1.2</span>
+        <span>同时关闭会怎样</span>
+        </a></li></ul></ul></li><li>
+        <a class="is-flex" href="#半连接队列与-SYN-Flood-攻击">
+        <span class="has-mr-6">14</span>
+        <span>半连接队列与 SYN Flood 攻击</span>
+        </a><ul class="menu-list"><ul class="menu-list"><li>
+        <a class="is-flex" href="#SYN-Flood-攻击原理">
+        <span class="has-mr-6">14.1.1</span>
+        <span>SYN Flood 攻击原理</span>
+        </a></li><li>
+        <a class="is-flex" href="#如何应对-SYN-Flood-攻击">
+        <span class="has-mr-6">14.1.2</span>
+        <span>如何应对 SYN Flood 攻击</span>
+        </a></li></ul></ul></li><li>
+        <a class="is-flex" href="#报文头部的字段">
+        <span class="has-mr-6">15</span>
+        <span>报文头部的字段</span>
+        </a><ul class="menu-list"><ul class="menu-list"><li>
+        <a class="is-flex" href="#IP-数据报格式">
+        <span class="has-mr-6">15.1.1</span>
+        <span>IP 数据报格式</span>
+        </a></li><li>
+        <a class="is-flex" href="#UDP-数据报格式">
+        <span class="has-mr-6">15.1.2</span>
+        <span>UDP 数据报格式</span>
+        </a></li></ul><li>
+        <a class="is-flex" href="#TCP-报文段格式">
+        <span class="has-mr-6">15.2</span>
+        <span>TCP 报文段格式</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#以太网-MAC-帧格式">
+        <span class="has-mr-6">15.2.1</span>
+        <span>以太网 MAC 帧格式</span>
+        </a></li></ul></li></ul></li><li>
+        <a class="is-flex" href="#TFO-原理">
+        <span class="has-mr-6">16</span>
+        <span>TFO 原理</span>
+        </a><ul class="menu-list"><ul class="menu-list"><li>
+        <a class="is-flex" href="#首轮三次握手">
+        <span class="has-mr-6">16.1.1</span>
+        <span>首轮三次握手</span>
+        </a></li><li>
+        <a class="is-flex" href="#后面的三次握手">
+        <span class="has-mr-6">16.1.2</span>
+        <span>后面的三次握手</span>
+        </a></li><li>
+        <a class="is-flex" href="#TFO-的优势">
+        <span class="has-mr-6">16.1.3</span>
+        <span>TFO 的优势</span>
+        </a></li></ul></ul></li><li>
+        <a class="is-flex" href="#TCP-的超时重传时间是如何计算的">
+        <span class="has-mr-6">17</span>
+        <span>TCP 的超时重传时间是如何计算的</span>
+        </a><ul class="menu-list"><ul class="menu-list"><li>
+        <a class="is-flex" href="#经典方法">
+        <span class="has-mr-6">17.1.1</span>
+        <span>经典方法</span>
+        </a></li><li>
+        <a class="is-flex" href="#标准方法">
+        <span class="has-mr-6">17.1.2</span>
+        <span>标准方法</span>
+        </a></li></ul></ul></li><li>
+        <a class="is-flex" href="#TCP-的流量控制是如何实现的">
+        <span class="has-mr-6">18</span>
+        <span>TCP 的流量控制是如何实现的</span>
+        </a><ul class="menu-list"><ul class="menu-list"><li>
+        <a class="is-flex" href="#TCP-滑动窗口">
+        <span class="has-mr-6">18.1.1</span>
+        <span>TCP 滑动窗口</span>
+        </a></li><li>
+        <a class="is-flex" href="#流量控制过程">
+        <span class="has-mr-6">18.1.2</span>
+        <span>流量控制过程</span>
+        </a></li></ul></ul></li><li>
+        <a class="is-flex" href="#TCP-的拥塞控制">
+        <span class="has-mr-6">19</span>
+        <span>TCP 的拥塞控制</span>
+        </a><ul class="menu-list"><ul class="menu-list"><li>
+        <a class="is-flex" href="#拥塞窗口">
+        <span class="has-mr-6">19.1.1</span>
+        <span>拥塞窗口</span>
+        </a></li><li>
+        <a class="is-flex" href="#慢启动">
+        <span class="has-mr-6">19.1.2</span>
+        <span>慢启动</span>
+        </a></li><li>
+        <a class="is-flex" href="#拥塞避免">
+        <span class="has-mr-6">19.1.3</span>
+        <span>拥塞避免</span>
+        </a></li><li>
+        <a class="is-flex" href="#快速重传">
+        <span class="has-mr-6">19.1.4</span>
+        <span>快速重传</span>
+        </a></li><li>
+        <a class="is-flex" href="#选择性重传">
+        <span class="has-mr-6">19.1.5</span>
+        <span>选择性重传</span>
+        </a></li><li>
+        <a class="is-flex" href="#快速恢复">
+        <span class="has-mr-6">19.1.6</span>
+        <span>快速恢复</span>
+        </a></li><li>
+        <a class="is-flex" href="#总结-1">
+        <span class="has-mr-6">19.1.7</span>
+        <span>总结</span>
+        </a></li></ul></ul></li><li>
+        <a class="is-flex" href="#Nagle-算法和延迟确认">
+        <span class="has-mr-6">20</span>
+        <span>Nagle 算法和延迟确认</span>
+        </a><ul class="menu-list"><ul class="menu-list"><li>
+        <a class="is-flex" href="#Nagle-算法">
+        <span class="has-mr-6">20.1.1</span>
+        <span>Nagle 算法</span>
+        </a></li><li>
+        <a class="is-flex" href="#延迟确认">
+        <span class="has-mr-6">20.1.2</span>
+        <span>延迟确认</span>
+        </a></li></ul></ul></li><li>
+        <a class="is-flex" href="#TCP-的-keep-alive">
+        <span class="has-mr-6">21</span>
+        <span>TCP 的 keep-alive</span>
+        </a></li><li>
+        <a class="is-flex" href="#参考">
+        <span class="has-mr-6">22</span>
+        <span>参考</span>
         </a></li></ul>
         </div>
     </div>
@@ -877,7 +1462,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">React</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">10</span>
+                <span class="level-item tag">11</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Vue/">
@@ -921,6 +1506,25 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/10/11/React/11/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/11.jpg" alt="React 查漏补缺">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-10T16:00:00.000Z">2020-10-11</time></div>
+                    <a href="/2020/10/11/React/11/" class="has-link-black-ter is-size-6">React 查漏补缺</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -998,25 +1602,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/09/01/HTTP/10/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/10.jpg" alt="HTTP 协议">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-08-31T16:00:00.000Z">2020-09-01</time></div>
-                    <a href="/2020/09/01/HTTP/10/" class="has-link-black-ter is-size-6">HTTP 协议</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1028,6 +1613,17 @@ var _hmt = _hmt || [];
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2020/09/">
@@ -1622,7 +2218,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/React/">
                         <span class="tag">React</span>
-                        <span class="tag is-grey">10</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
