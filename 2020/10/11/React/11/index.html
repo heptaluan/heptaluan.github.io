@@ -16,7 +16,7 @@
 <meta property="og:description" content="本章主要用于记录一些 React 相关知识点，因为最近在复习 React 相关内容，发现版本迭代了许多，废弃了很多 API，也添加了一些新的方法（比如生命周期钩子等），所以就简单的在这里汇总整理一下，也算是查漏补缺">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/11.jpg">
-<meta property="og:updated_time" content="2020-10-18T15:52:54.071Z">
+<meta property="og:updated_time" content="2020-10-23T17:09:13.035Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="React 查漏补缺">
 <meta name="twitter:description" content="本章主要用于记录一些 React 相关知识点，因为最近在复习 React 相关内容，发现版本迭代了许多，废弃了很多 API，也添加了一些新的方法（比如生命周期钩子等），所以就简单的在这里汇总整理一下，也算是查漏补缺">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    8 分钟 读完 (大约 1151 个字)
+                    16 分钟 读完 (大约 2432 个字)
                 </span>
                 
                 
@@ -232,6 +232,43 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> AComponent = React.lazy(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">import</span>(<span class="hljs-comment">/* webpackChunkName: 'A-component' */</span> <span class="hljs-string">'./AComponent'</span>))</span><br><span class="line"><span class="hljs-keyword">const</span> BComponent = React.lazy(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">import</span>(<span class="hljs-comment">/* webpackChunkName: 'B-component' */</span> <span class="hljs-string">'./BComponent'</span>))</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Test</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;Suspense fallback=&#123;&lt;div&gt;Loading...&lt;<span class="hljs-regexp">/div&gt;&#125;&gt;</span></span><br><span class="line"><span class="hljs-regexp">          &lt;AComponent /</span>&gt;</span><br><span class="line">          &lt;BComponent /&gt;</span><br><span class="line">        &lt;<span class="hljs-regexp">/Suspense&gt;</span></span><br><span class="line"><span class="hljs-regexp">      &lt;/</span>div&gt;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>运行后可以在控制台的 <code>Network</code> 选项当中发现 <code>A-component.chunk.js</code> 和 <code>B-component.chunk.js</code></p>
+<h2 id="setState-是同步还是异步"><a href="#setState-是同步还是异步" class="headerlink" title="setState() 是同步还是异步"></a>setState() 是同步还是异步</h2><p>我们从一个简单的例子开始看起，如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">App</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  state = &#123; <span class="hljs-attr">val</span>: <span class="hljs-number">0</span> &#125;</span><br><span class="line"></span><br><span class="line">  increment = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.setState(&#123; <span class="hljs-attr">val</span>: <span class="hljs-keyword">this</span>.state.val + <span class="hljs-number">1</span> &#125;)</span><br><span class="line">    <span class="hljs-comment">// 需要注意的是这里的值仍为 0</span></span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.state.val)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> (</span><br><span class="line">      &lt;div onClick=&#123;<span class="hljs-keyword">this</span>.increment&#125;&gt;</span><br><span class="line">        &#123;<span class="hljs-string">`Counter is <span class="hljs-subst">$&#123;<span class="hljs-keyword">this</span>.state.val&#125;</span>`</span>&#125;</span><br><span class="line">      &lt;<span class="hljs-regexp">/div&gt;</span></span><br><span class="line"><span class="hljs-regexp">    )</span></span><br><span class="line"><span class="hljs-regexp">  &#125;</span></span><br><span class="line"><span class="hljs-regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>运行以后我们可以发现，输出的值仍为 <code>0</code>，所以在本节当中，我们就来简单的探讨一下这个问题，其实在 <code>React</code> 中，<code>setState()</code> 的使用场景一般有以下这些</p>
+<ul>
+<li>合成事件中 <code>setState()</code></li>
+<li>生命周期函数中的 <code>setState()</code></li>
+<li>原生事件中的 <code>setState()</code></li>
+<li><code>setTimeout</code> 中的 <code>setState()</code></li>
+<li><code>setState()</code> 中的批量更新</li>
+</ul>
+<p>所以下面我们就分别来看看这些不同情况下的结果</p>
+<h4 id="合成事件中-setState"><a href="#合成事件中-setState" class="headerlink" title="合成事件中 setState()"></a>合成事件中 setState()</h4><p>在 <code>jsx</code> 中常见的 <code>onClick()</code>、<code>onChange()</code> 这些其实本质上都是合成事件，也就是属于 <code>React</code> 来进行管辖的范围，就比如上面的例子，我们可以知道它的结果为 <code>0</code></p>
+<h4 id="生命周期函数中的-setState"><a href="#生命周期函数中的-setState" class="headerlink" title="生命周期函数中的 setState()"></a>生命周期函数中的 setState()</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">App</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  state = &#123; <span class="hljs-attr">val</span>: <span class="hljs-number">0</span> &#125;</span><br><span class="line"></span><br><span class="line">  componentDidMount() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.setState(&#123; <span class="hljs-attr">val</span>: <span class="hljs-keyword">this</span>.state.val + <span class="hljs-number">1</span> &#125;)</span><br><span class="line">    <span class="hljs-comment">// 需要注意的是这里的值仍为 0</span></span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.state.val)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &#123;<span class="hljs-string">`Counter is <span class="hljs-subst">$&#123;<span class="hljs-keyword">this</span>.state.val&#125;</span>`</span>&#125;</span><br><span class="line">      &lt;<span class="hljs-regexp">/div&gt;</span></span><br><span class="line"><span class="hljs-regexp">    )</span></span><br><span class="line"><span class="hljs-regexp">  &#125;</span></span><br><span class="line"><span class="hljs-regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>其实还是和合成事件一样，当 <code>componentDidmount()</code> 执行的时候，<code>React</code> 内部并没有更新，这就导致在 <code>componentDidmount()</code> 中调用完 <code>setState()</code> 以后去 <code>console.log()</code> 拿到的结果还是更新之前的值</p>
+<h4 id="原生事件中的-setState"><a href="#原生事件中的-setState" class="headerlink" title="原生事件中的 setState()"></a>原生事件中的 setState()</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">App</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  state = &#123; <span class="hljs-attr">val</span>: <span class="hljs-number">0</span> &#125;</span><br><span class="line"></span><br><span class="line">  changeValue = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.setState(&#123; <span class="hljs-attr">val</span>: <span class="hljs-keyword">this</span>.state.val + <span class="hljs-number">1</span> &#125;)</span><br><span class="line">    <span class="hljs-comment">// 需要注意的是这里的值为 1</span></span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.state.val)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  componentDidMount() &#123;</span><br><span class="line">    <span class="hljs-built_in">document</span>.body.addEventListener(<span class="hljs-string">'click'</span>, <span class="hljs-keyword">this</span>.changeValue, <span class="hljs-literal">false</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &#123;<span class="hljs-string">`Counter is <span class="hljs-subst">$&#123;<span class="hljs-keyword">this</span>.state.val&#125;</span>`</span>&#125;</span><br><span class="line">      &lt;<span class="hljs-regexp">/div&gt;</span></span><br><span class="line"><span class="hljs-regexp">    )</span></span><br><span class="line"><span class="hljs-regexp">  &#125;</span></span><br><span class="line"><span class="hljs-regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>原生事件是指非 <code>React</code> 合成事件，比如上面的 <code>addEventListener()</code>，它相较于合成事件，会直接触发点击事件，所以当你在原生事件中 <code>setState()</code> 后，能同步拿到更新后的 <code>state</code> 值</p>
+<h4 id="setTimeout-中的-setState"><a href="#setTimeout-中的-setState" class="headerlink" title="setTimeout 中的 setState()"></a>setTimeout 中的 setState()</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">App</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  state = &#123; <span class="hljs-attr">val</span>: <span class="hljs-number">0</span> &#125;</span><br><span class="line"></span><br><span class="line">  componentDidMount() &#123;</span><br><span class="line">    setTimeout(<span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.setState(&#123; <span class="hljs-attr">val</span>: <span class="hljs-keyword">this</span>.state.val + <span class="hljs-number">1</span> &#125;)</span><br><span class="line">      <span class="hljs-comment">// 需要注意的是这里的值为 1</span></span><br><span class="line">      <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.state.val)</span><br><span class="line">    &#125;, <span class="hljs-number">0</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &#123;<span class="hljs-string">`Counter is <span class="hljs-subst">$&#123;<span class="hljs-keyword">this</span>.state.val&#125;</span>`</span>&#125;</span><br><span class="line">      &lt;<span class="hljs-regexp">/div&gt;</span></span><br><span class="line"><span class="hljs-regexp">    )</span></span><br><span class="line"><span class="hljs-regexp">  &#125;</span></span><br><span class="line"><span class="hljs-regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>在 <code>setTimeout()</code> 中去使用 <code>setState()</code> 并不算是一个单独的场景，它是随着外层所决定的，因为你可以在合成事件中使用 <code>setTimeout()</code>，可以在钩子函数中使用 <code>setTimeout()</code>，也可以在原生事件中使用 <code>setTimeout()</code>，但是不管是哪个场景下，基于 <code>Event Loop</code> 的模型下， 在 <code>setTimeout()</code> 当中去 <code>setState()</code> 总能拿到最新的 <code>state</code> 值</p>
+<h4 id="setState-中的批量更新"><a href="#setState-中的批量更新" class="headerlink" title="setState 中的批量更新"></a>setState 中的批量更新</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">App</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  state = &#123; <span class="hljs-attr">val</span>: <span class="hljs-number">0</span> &#125;</span><br><span class="line"></span><br><span class="line">  batchUpdates = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.setState(&#123; <span class="hljs-attr">val</span>: <span class="hljs-keyword">this</span>.state.val + <span class="hljs-number">1</span> &#125;)</span><br><span class="line">    <span class="hljs-keyword">this</span>.setState(&#123; <span class="hljs-attr">val</span>: <span class="hljs-keyword">this</span>.state.val + <span class="hljs-number">1</span> &#125;)</span><br><span class="line">    <span class="hljs-keyword">this</span>.setState(&#123; <span class="hljs-attr">val</span>: <span class="hljs-keyword">this</span>.state.val + <span class="hljs-number">1</span> &#125;)</span><br><span class="line">    <span class="hljs-comment">// 需要注意的是这里的值仍为 1</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> (</span><br><span class="line">      &lt;div onClick=&#123;<span class="hljs-keyword">this</span>.batchUpdates&#125;&gt;</span><br><span class="line">        &#123;<span class="hljs-string">`Counter is <span class="hljs-subst">$&#123;<span class="hljs-keyword">this</span>.state.val&#125;</span>`</span>&#125;</span><br><span class="line">      &lt;<span class="hljs-regexp">/div&gt;</span></span><br><span class="line"><span class="hljs-regexp">    )</span></span><br><span class="line"><span class="hljs-regexp">  &#125;</span></span><br><span class="line"><span class="hljs-regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>在调用 <code>setState()</code> 的时候 <code>React</code> 内部会创建一个更新队列，通过 <code>firstUpdate/lastUpdate/lastUpdate.next</code> 等方式去维护一个更新队列，在最终的 <code>performWork</code> 当中，相同的 <code>key</code> 会被覆盖，所以只会对最后一次的 <code>setState()</code> 进行更新，而如果我们使用一些别的方式，如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">App</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">React</span>.<span class="hljs-title">Component</span> </span>&#123;</span><br><span class="line">  state = &#123; <span class="hljs-attr">val</span>: <span class="hljs-number">0</span> &#125;</span><br><span class="line"></span><br><span class="line">  componentDidMount() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.setState(&#123; <span class="hljs-attr">val</span>: <span class="hljs-keyword">this</span>.state.val + <span class="hljs-number">1</span> &#125;)</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.state.val)</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">this</span>.setState(&#123; <span class="hljs-attr">val</span>: <span class="hljs-keyword">this</span>.state.val + <span class="hljs-number">1</span> &#125;)</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.state.val)</span><br><span class="line"></span><br><span class="line">    setTimeout(<span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.setState(&#123; <span class="hljs-attr">val</span>: <span class="hljs-keyword">this</span>.state.val + <span class="hljs-number">1</span> &#125;)</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.state.val);</span><br><span class="line"></span><br><span class="line">      <span class="hljs-keyword">this</span>.setState(&#123; <span class="hljs-attr">val</span>: <span class="hljs-keyword">this</span>.state.val + <span class="hljs-number">1</span> &#125;)</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.state.val)</span><br><span class="line">    &#125;, <span class="hljs-number">0</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>&#123;this.state.val&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>结合上面分析的，钩子函数中的 <code>setState()</code> 无法立即拿到更新后的值，所以前两次都是输出 <code>0</code>，当执行到 <code>setTimeout()</code> 里的时候，前面两个 <code>state</code> 的值已经被更新，由于 <code>setState()</code> 批量更新的策略， <code>this.state.val</code> 只对最后一次的生效，为 <code>1</code>，而在 <code>setTimeout()</code> 中 <code>setState()</code> 是可以同步拿到更新结果，所以 <code>setTimeout()</code> 中的两次输出 <code>2</code>，<code>3</code>，最终结果就为 <code>0，0，2，3</code></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ol>
+<li><code>setState()</code> 只在合成事件和钩子函数当中可以理解为异步的，在原生事件和 <code>setTimeout()</code> 中都是同步的</li>
+<li><code>setState()</code> 的异步并不是说内部由异步代码实现，其实本身执行的过程和代码都是同步的，只是合成事件和钩子函数的调用顺序在更新之前，导致在合成事件和钩子函数中没法立马拿到更新后的值，形式了所谓的异步，当然可以通过第二个参数 <code>setState(partialState, callback)</code> 中的 <code>callback</code> 拿到更新后的结果（这个可以参考官方文档当中的 <a href="https://zh-hans.reactjs.org/docs/state-and-lifecycle.html#state-updates-may-be-asynchronous" target="_blank" rel="noopener">State 的更新可能是异步的</a>）</li>
+<li><code>setState()</code> 的批量更新优化也是建立在异步（合成事件、钩子函数）之上的，在原生事件和 <code>setTimeout()</code> 中不会批量更新，在异步中如果对同一个值进行多次 <code>setState()</code>，<code>setState()</code> 的批量更新策略会对其进行覆盖，取最后一次的执行，如果是同时 <code>setState()</code> 多个不同的值，在更新时会对其进行合并批量更新</li>
+</ol>
+<p>其实如果简单使用一句话来进行概括的话，就是</p>
+<blockquote>
+<p><code>React</code> 管得到的就是异步，管不到的就是同步</p>
+</blockquote>
 
         </div>
         
@@ -256,10 +293,17 @@ var _hmt = _hmt || [];
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
         
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/10/23/React/13/">
+                <i class="level-item fa fa-chevron-left"></i>
+                <span class="level-item">React-Redux 的实现</span>
+            </a>
+        </div>
+        
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2020/09/20/HTTP/14/">
-                <span class="level-item">TCP/IP 协议</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/10/04/React/12/">
+                <span class="level-item">Redux 的实现</span>
                 <i class="level-item fa fa-chevron-right"></i>
             </a>
         </div>
@@ -335,7 +379,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        159
+                        161
                     </p>
                 </div>
             </div>
@@ -396,6 +440,34 @@ var _hmt = _hmt || [];
         <a class="is-flex" href="#搭配-Webpack-实现代码分割">
         <span class="has-mr-6">3.2</span>
         <span>搭配 Webpack 实现代码分割</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#setState-是同步还是异步">
+        <span class="has-mr-6">4</span>
+        <span>setState() 是同步还是异步</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#合成事件中-setState">
+        <span class="has-mr-6">4.1</span>
+        <span>合成事件中 setState()</span>
+        </a></li><li>
+        <a class="is-flex" href="#生命周期函数中的-setState">
+        <span class="has-mr-6">4.2</span>
+        <span>生命周期函数中的 setState()</span>
+        </a></li><li>
+        <a class="is-flex" href="#原生事件中的-setState">
+        <span class="has-mr-6">4.3</span>
+        <span>原生事件中的 setState()</span>
+        </a></li><li>
+        <a class="is-flex" href="#setTimeout-中的-setState">
+        <span class="has-mr-6">4.4</span>
+        <span>setTimeout 中的 setState()</span>
+        </a></li><li>
+        <a class="is-flex" href="#setState-中的批量更新">
+        <span class="has-mr-6">4.5</span>
+        <span>setState 中的批量更新</span>
+        </a></li><li>
+        <a class="is-flex" href="#总结">
+        <span class="has-mr-6">4.6</span>
+        <span>总结</span>
         </a></li></ul></li></ul>
         </div>
     </div>
@@ -476,7 +548,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">React</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">11</span>
+                <span class="level-item tag">13</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Vue/">
@@ -506,7 +578,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 16.67px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16.67px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/HTTP/" style="font-size: 15px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16.67px;">Node.js</a> <a href="/tags/React/" style="font-size: 13.33px;">React</a> <a href="/tags/Vue/" style="font-size: 11.67px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.67px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 16.67px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16.67px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/HTTP/" style="font-size: 13.33px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16.67px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 11.67px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.67px;">jQuery</a>
     </div>
 </div>
 
@@ -523,6 +595,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/10/23/React/13/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg" alt="React-Redux 的实现">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-22T16:00:00.000Z">2020-10-23</time></div>
+                    <a href="/2020/10/23/React/13/" class="has-link-black-ter is-size-6">React-Redux 的实现</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/10/11/React/11/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/11.jpg" alt="React 查漏补缺">
@@ -533,6 +624,25 @@ var _hmt = _hmt || [];
                 <div class="content">
                     <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-10T16:00:00.000Z">2020-10-11</time></div>
                     <a href="/2020/10/11/React/11/" class="has-link-black-ter is-size-6">React 查漏补缺</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/10/04/React/12/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/12.jpg" alt="Redux 的实现">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-03T16:00:00.000Z">2020-10-04</time></div>
+                    <a href="/2020/10/04/React/12/" class="has-link-black-ter is-size-6">Redux 的实现</a>
                     <p class="is-size-7 is-uppercase">
                         <a class="has-link-grey -link" href="/categories/React/">React</a>
                     </p>
@@ -578,44 +688,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/09/12/HTTP/12/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/12.jpg" alt="HTTP/3">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-11T16:00:00.000Z">2020-09-12</time></div>
-                    <a href="/2020/09/12/HTTP/12/" class="has-link-black-ter is-size-6">HTTP/3</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/09/06/HTTP/11/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/11.jpg" alt="HTTP/2">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-05T16:00:00.000Z">2020-09-06</time></div>
-                    <a href="/2020/09/06/HTTP/11/" class="has-link-black-ter is-size-6">HTTP/2</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -634,7 +706,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1232,7 +1304,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/React/">
                         <span class="tag">React</span>
-                        <span class="tag is-grey">11</span>
+                        <span class="tag is-grey">13</span>
                     </a>
                 </div>
                 
