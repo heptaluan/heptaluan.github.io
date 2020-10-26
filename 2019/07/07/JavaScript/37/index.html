@@ -16,7 +16,7 @@
 <meta property="og:description" content="在展开渲染机制相关内容之前，我们先来简单的了解一下浏览器的内核的分类，浏览器的内核是指支持浏览器运行的最核心的程序，分为两个部分的，一是渲染引擎，另一个是 JavaScript 引擎（比如我们经常可以听到的 V8 引擎），渲染引擎在不同的浏览器中也不是都相同的，目前市面上常见的浏览器内核有  Trident（IE） Gecko（火狐） Blink（Chrome、Opera） Webkit（Safa">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/37.jpg">
-<meta property="og:updated_time" content="2020-10-18T15:52:54.069Z">
+<meta property="og:updated_time" content="2020-10-12T03:40:44.058Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浏览器的渲染机制">
 <meta name="twitter:description" content="在展开渲染机制相关内容之前，我们先来简单的了解一下浏览器的内核的分类，浏览器的内核是指支持浏览器运行的最核心的程序，分为两个部分的，一是渲染引擎，另一个是 JavaScript 引擎（比如我们经常可以听到的 V8 引擎），渲染引擎在不同的浏览器中也不是都相同的，目前市面上常见的浏览器内核有  Trident（IE） Gecko（火狐） Blink（Chrome、Opera） Webkit（Safa">
@@ -279,17 +279,17 @@ var _hmt = _hmt || [];
 <h4 id="Async-和-Defer-有什么区别？"><a href="#Async-和-Defer-有什么区别？" class="headerlink" title="Async 和 Defer 有什么区别？"></a>Async 和 Defer 有什么区别？</h4><p>我们先来对比下 <code>Async</code> 和 <code>Defer</code> 属性的区别，如下图所示</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-05.png" alt></p>
 <p>其中蓝色线代表 <code>JavaScript</code> 加载，红色线代表 <code>JavaScript</code> 执行，绿色线代表 <code>HTML</code> 解析，所以我们也对应的分别来看看三种情况</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="hljs-string">"example.js"</span>&gt;<span class="hljs-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="hljs-string">"example.js"</span>&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
 
 <ol>
 <li>没有 <code>Async</code> 和 <code>Defer</code>，浏览器会立即加载并执行指定的脚本，也就是说不等待后续载入的文档元素，读到就加载并执行</li>
 </ol>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script <span class="hljs-keyword">async</span> src=<span class="hljs-string">"example.js"</span>&gt;<span class="hljs-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script <span class="hljs-keyword">async</span> src=<span class="hljs-string">"example.js"</span>&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
 
 <ol start="2">
 <li><code>Async</code> 属性表示异步执行引入的 <code>JavaScript</code>，与 <code>Defer</code> 的区别在于，如果已经加载好，就会开始执行，即无论此刻是 <code>HTML</code> 解析阶段还是 <code>DOMContentLoaded</code> 触发之后，不过需要注意的是，这种方式加载的 <code>JavaScript</code> 依然会阻塞 <code>load</code> 事件，换句话说，<code>async-script</code> 可能在 <code>DOMContentLoaded</code> 触发之前或之后执行，但一定在 <code>load</code> 触发之前执行</li>
 </ol>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script defer src=<span class="hljs-string">"example.js"</span>&gt;<span class="hljs-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script defer src=<span class="hljs-string">"example.js"</span>&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
 
 <ol start="3">
 <li><code>Defer</code> 属性表示延迟执行引入的 <code>JavaScript</code>，即这段 <code>JavaScript</code> 加载时 <code>HTML</code> 并未停止解析，这两个过程是并行的，整个 <code>document</code> 解析完毕且 <code>defer-script</code> 也加载完成之后（这两件事情的顺序无关），会执行所有由 <code>defer-script</code> 加载的 <code>JavaScript</code> 代码，然后触发 <code>DOMContentLoaded</code> 事件</li>
