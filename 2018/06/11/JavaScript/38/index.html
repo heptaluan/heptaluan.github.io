@@ -16,7 +16,7 @@
 <meta property="og:description" content="今天在网上看到的一道面试题，感觉可以从中引申出不少问题，所以在此特意记录一下">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/38.jpg">
-<meta property="og:updated_time" content="2020-08-25T07:35:00.758Z">
+<meta property="og:updated_time" content="2020-11-01T16:13:39.305Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="在列表中插入 3 个，30 个，300 个 li，并绑定事件">
 <meta name="twitter:description" content="今天在网上看到的一道面试题，感觉可以从中引申出不少问题，所以在此特意记录一下">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    5 分钟 读完 (大约 725 个字)
+                    12 分钟 读完 (大约 1746 个字)
                 </span>
                 
                 
@@ -199,12 +199,38 @@ var _hmt = _hmt || [];
 <h2 id="动态插入-300-个-li，并且绑定事件"><a href="#动态插入-300-个-li，并且绑定事件" class="headerlink" title="动态插入 300 个 li，并且绑定事件"></a>动态插入 300 个 li，并且绑定事件</h2><p>当数据量变的很大的时候，如果依然使用 <code>for</code> 循环一次性生成的话，可能会引起性能上面的问题，这个时候就可以采用 <code>documentFragment + requestAnimationFrame</code> 的方式来分批次插入数据，主要目的是减少 <code>DOM</code> 操作次数、缩短循环时间，每次插入的时机是在页面重新渲染之前</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 获取容器元素</span></span><br><span class="line"><span class="hljs-keyword">const</span> el = <span class="hljs-built_in">document</span>.body</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 生成总数</span></span><br><span class="line"><span class="hljs-keyword">const</span> total = <span class="hljs-number">300</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 每次插入多少</span></span><br><span class="line"><span class="hljs-keyword">const</span> listSize = <span class="hljs-number">4</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 分多少次插入</span></span><br><span class="line"><span class="hljs-keyword">const</span> listCount = total / listSize</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 已经完成的批次</span></span><br><span class="line"><span class="hljs-keyword">let</span> listDone = <span class="hljs-number">0</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">appendItems</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> fragment = <span class="hljs-built_in">document</span>.createDocumentFragment()</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; listSize; i++) &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> item = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'li'</span>)</span><br><span class="line">    item.innerText = (listSize * listDone + i) + <span class="hljs-number">1</span></span><br><span class="line">    fragment.appendChild(item)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 每批次只修改一次 DOM</span></span><br><span class="line">  el.appendChild(fragment)</span><br><span class="line"></span><br><span class="line">  listDone += <span class="hljs-number">1</span></span><br><span class="line">  listAppend()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">listAppend</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (listDone &lt; listCount) &#123;</span><br><span class="line">    <span class="hljs-comment">// 这个的作用可以见文章下方</span></span><br><span class="line">    <span class="hljs-built_in">window</span>.requestAnimationFrame(appendItems)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 初始化</span></span><br><span class="line">listAppend()</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 事件绑定</span></span><br><span class="line">el.addEventListener(<span class="hljs-string">'click'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (e.target.tagName.toUpperCase() === <span class="hljs-string">'LI'</span>) &#123;</span><br><span class="line">    alert(e.target.innerHTML)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;, <span class="hljs-literal">false</span>)</span><br></pre></td></tr></table></figure>
 
-<h2 id="window-requestAnimationFrame"><a href="#window-requestAnimationFrame" class="headerlink" title="window.requestAnimationFrame()"></a>window.requestAnimationFrame()</h2><p><code>requestAnimationFrame</code> 是浏览器用于定时循环操作的一个接口，类似于 <code>setTimeout</code>，主要用途是按帧对网页进行重绘，设置这个 <code>API</code> 的目的是为了让各种网页动画效果能够有一个统一的刷新机制，从而节省系统资源，提高系统性能，改善视觉效果，代码中使用这个 <code>API</code>，就是告诉浏览器希望执行一个动画，让浏览器在下一个动画帧安排一次网页重绘，使用一个回调函数作为参数，这个回调函数会在浏览器重绘之前调用，语法如下</p>
+<h2 id="window-requestAnimationFrame"><a href="#window-requestAnimationFrame" class="headerlink" title="window.requestAnimationFrame()"></a>window.requestAnimationFrame()</h2><p><code>requestAnimationFrame</code> 是浏览器用于定时循环操作的一个接口，类似于 <code>setTimeout</code>，主要用途是按帧对网页进行重绘，设置这个 <code>API</code> 的目的是为了让各种网页动画效果（<code>DOM</code> 动画、<code>Canvas</code> 动画、<code>SVG</code> 动画、<code>WebGL</code> 动画）能够有一个统一的刷新机制，从而节省系统资源，提高系统性能，改善视觉效果，代码中使用这个 <code>API</code>，就是告诉浏览器希望执行一个动画，让浏览器在下一个动画帧安排一次网页重绘，它主要有两个特点</p>
+<ol>
+<li>按帧对网页进行重绘，该方法告诉浏览器希望执行动画并请求浏览器在下一次重绘之前调用回调函数来更新动画</li>
+<li>由系统来决定回调函数的执行时机，在运行时浏览器会自动优化方法的调用</li>
+</ol>
+<p>关于第二点，显示器有固定的刷新频率（<code>60Hz</code> 或 <code>75Hz</code>），也就是说每秒最多只能重绘 <code>60</code> 次或 <code>75</code> 次，<code>requestAnimationFrame</code> 的基本思想让页面重绘的频率与这个刷新频率保持同步，比如显示器屏幕刷新率为 <code>60Hz</code>，使用 <code>requestAnimationFrame API</code>，那么回调函数就每 <code>1000ms / 60 ≈ 16.7ms</code> 执行一次，如果显示器屏幕的刷新率为 <code>75Hz</code>，那么回调函数就每 <code>1000ms / 75 ≈ 13.3ms</code> 执行一次</p>
+<p>另外，一旦页面不处于浏览器的当前标签，就会自动停止刷新</p>
+<ul>
+<li>当页面被最小化或者被切换成后台标签页时，页面为不可见，浏览器会触发一个 <code>visibilitychange</code> 事件，并设置 <code>document.hidden</code> 属性为 <code>true</code></li>
+<li>当页面切换到显示状态，页面变为可见，同时触发一个 <code>visibilitychange</code> 事件，设置 <code>document.hidden</code> 属性为 <code>false</code></li>
+</ul>
+<p>不过有一点需要注意是 <code>requestAnimationFrame</code> 是在主线程上完成，这意味着如果主线程非常繁忙，<code>requestAnimationFrame</code> 的动画效果会大打折扣，<code>requestAnimationFrame</code> 使用一个回调函数作为参数，这个回调函数会在浏览器重绘之前调用</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id = <span class="hljs-built_in">window</span>.requestAnimationFrame(callback)</span><br></pre></td></tr></table></figure>
 
-<p>它会返回一个 <code>id</code> 结果，主要是用于传递给 <code>window.cancelAnimationFrame(id)</code> 来取消重绘</p>
+<p>它会返回一个 <code>id</code> 结果，主要是用于传递给 <code>window.cancelAnimationFrame(id)</code> 来取消重绘，在浏览器当中的执行过程大致如下</p>
+<ul>
+<li>首先判断 <code>document.hidden</code> 属性是否为 <code>true</code>（页面是否可见），页面处于可见状态才会执行后面步骤</li>
+<li>浏览器清空上一轮的动画函数</li>
+<li><code>requestAnimationFrame</code> 将回调函数追加到动画帧请求回调函数列表的末尾，当执行 <code>requestAnimationFrame(callback)</code> 的时候，不会立即调用 <code>callback</code> 函数，只是将其放入队列，每个回调函数都有一个布尔标识 <code>cancelled</code>，该标识初始值为 <code>false</code>，并且对外不可见</li>
+<li>当浏览器再执行列表中的回调函数的时候，判断每个元组的 <code>callback</code> 的 <code>cancelled</code>，如果为 <code>false</code> 则执行 <code>callback</code>，当页面可见并且动画帧请求回调函数列表不为空，浏览器会定期将这些回调函数加入到浏览器 <code>UI</code> 线程的队列中</li>
+<li>当调用 <code>cancelAnimationFrame(handle)</code> 时，浏览器会设置该 <code>handle</code> 指向的回调函数的 <code>cancelled</code> 为 <code>true</code>（无论该回调函数是否在动画帧请求回调函数列表中），如果该 <code>handle</code> 没有指向任何回调函数，则什么也不会发生</li>
+</ul>
+<p>更为底层的原理可以参考 <a href="https://www.cnblogs.com/chaogex/p/3960175.html" target="_blank" rel="noopener">深入理解 requestAnimationFrame</a>，这里就不详细展开了，但是在这里我们多提及两点，第一个就是递归调用，要想实现一个完整的动画，应该在回调函数中递归调用回调函数</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> count = <span class="hljs-number">0</span></span><br><span class="line"><span class="hljs-keyword">let</span> rafId = <span class="hljs-literal">null</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">requestAnimation</span>(<span class="hljs-params">time</span>) </span>&#123;                     <span class="hljs-comment">// requestAnimationFrame 调用该函数时，自动传入的一个时间</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(time)</span><br><span class="line">  <span class="hljs-keyword">if</span> (count &lt; <span class="hljs-number">50</span>) &#123;                                   <span class="hljs-comment">// 动画没有执行完，则递归渲染</span></span><br><span class="line">    count++</span><br><span class="line">    rafId = requestAnimationFrame(requestAnimation)   <span class="hljs-comment">// 渲染下一帧</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">requestAnimationFrame(requestAnimation)               <span class="hljs-comment">// 渲染第一帧</span></span><br></pre></td></tr></table></figure>
+
+<p>另外如果如果在执行回调函数或者 <code>Document</code> 的动画帧请求回调函数列表被清空之前多次调用 <code>requestAnimationFrame</code> 调用同一个回调函数，那么列表中会有多个元组指向该回调函数（它们的 <code>handle</code> 不同，但 <code>callback</code> 都为该回调函数），采集所有动画任务操作会执行多次该回调函数（类比定时器 <code>setTimeout</code>）</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">counter</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> count = <span class="hljs-number">0</span></span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">animate</span>(<span class="hljs-params">time</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (count &lt; <span class="hljs-number">50</span>) &#123;</span><br><span class="line">      count++</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(count)</span><br><span class="line">      requestAnimationFrame(animate)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  requestAnimationFrame(animate)</span><br><span class="line">&#125;</span><br><span class="line">btn.addEventListener(<span class="hljs-string">'click'</span>, counter, <span class="hljs-literal">false</span>)</span><br></pre></td></tr></table></figure>
+
+<p>例如上面这个示例，多次点击按钮，会发现打印出来多个序列数值</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame" target="_blank" rel="noopener">window.requestAnimationFrame</a></li>
+<li><a href="https://www.cnblogs.com/chaogex/p/3960175.html" target="_blank" rel="noopener">深入理解 requestAnimationFrame</a></li>
 </ul>
 
         </div>
@@ -316,7 +342,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        161
+                        163
                     </p>
                 </div>
             </div>
@@ -457,7 +483,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">React</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">13</span>
+                <span class="level-item tag">15</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Vue/">
@@ -504,6 +530,63 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/10/31/React/16/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg" alt="React 中的 Hook">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-30T16:00:00.000Z">2020-10-31</time></div>
+                    <a href="/2020/10/31/React/16/" class="has-link-black-ter is-size-6">React 中的 Hook</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/10/25/React/15/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/15.jpg" alt="React 中的 HOC">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-24T16:00:00.000Z">2020-10-25</time></div>
+                    <a href="/2020/10/25/React/15/" class="has-link-black-ter is-size-6">React 中的 HOC</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/10/24/React/14/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
+                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/10/23/React/13/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg" alt="React-Redux 的实现">
@@ -540,63 +623,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/04/React/12/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/12.jpg" alt="Redux 的实现">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-03T16:00:00.000Z">2020-10-04</time></div>
-                    <a href="/2020/10/04/React/12/" class="has-link-black-ter is-size-6">Redux 的实现</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/09/20/HTTP/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="TCP/IP 协议">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-19T16:00:00.000Z">2020-09-20</time></div>
-                    <a href="/2020/09/20/HTTP/14/" class="has-link-black-ter is-size-6">TCP/IP 协议</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/09/19/HTTP/13/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg" alt="HTTP 查漏补缺">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-18T16:00:00.000Z">2020-09-19</time></div>
-                    <a href="/2020/09/19/HTTP/13/" class="has-link-black-ter is-size-6">HTTP 查漏补缺</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -615,7 +641,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -736,7 +762,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1213,7 +1239,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/React/">
                         <span class="tag">React</span>
-                        <span class="tag is-grey">13</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 

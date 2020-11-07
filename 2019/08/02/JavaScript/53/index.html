@@ -16,7 +16,7 @@
 <meta property="og:description" content="算是一些手写 API，常用方法的一些汇总，反正就是面试可能涉及到的一些手写功能可能都会有所涉及，不仅仅只是为了面试所用，也算是在这里做下汇总记录，方便以后可以快速查询（可以直接参考左边目录）">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/45.jpg">
-<meta property="og:updated_time" content="2020-09-18T03:15:18.426Z">
+<meta property="og:updated_time" content="2020-11-07T14:22:54.543Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中一些常用方法的实现">
 <meta name="twitter:description" content="算是一些手写 API，常用方法的一些汇总，反正就是面试可能涉及到的一些手写功能可能都会有所涉及，不仅仅只是为了面试所用，也算是在这里做下汇总记录，方便以后可以快速查询（可以直接参考左边目录）">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    1 小时 读完 (大约 9502 个字)
+                    1 小时 读完 (大约 9507 个字)
                 </span>
                 
                 
@@ -449,14 +449,14 @@ var _hmt = _hmt || [];
 </ul>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getNext</span>(<span class="hljs-params">p</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> k = <span class="hljs-number">-1</span></span><br><span class="line">  <span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span></span><br><span class="line">  <span class="hljs-keyword">let</span> next = [<span class="hljs-number">-1</span>]</span><br><span class="line">  <span class="hljs-keyword">let</span> pLen = p.length</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">while</span> (j &lt; pLen - <span class="hljs-number">1</span>) &#123;</span><br><span class="line">    <span class="hljs-comment">// p[k] 表示前缀，p[j] 表示后缀</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (k == <span class="hljs-number">-1</span> || p[j] == p[k]) &#123;</span><br><span class="line">      ++j</span><br><span class="line">      ++k</span><br><span class="line">      <span class="hljs-comment">// 在这里直接进行赋值操作也是可以的，但是保持一致，还是同 C 语言版本，在这里进行一下优化</span></span><br><span class="line">      <span class="hljs-keyword">if</span> (p[j] != p[k]) &#123;</span><br><span class="line">        next[j] = k</span><br><span class="line">      &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">        <span class="hljs-comment">// 因为不能出现 p[j] = p[next[j]]，所以当出现时需要继续递归，k = next[k] = next[next[k]]</span></span><br><span class="line">        next[j] = next[k]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      k = next[k]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> next</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">KMP</span>(<span class="hljs-params">s, p</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span></span><br><span class="line">  <span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">let</span> sLen = s.length</span><br><span class="line">  <span class="hljs-keyword">let</span> pLen = p.length</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">let</span> next = getNext(p)</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">while</span> (i &lt; sLen &amp;&amp; j &lt; pLen) &#123;</span><br><span class="line">    <span class="hljs-comment">// 如果 j = -1，或者当前字符匹配成功（即 S[i] == P[j]），都令 i++，j++</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (j === <span class="hljs-number">-1</span> || s[i] === p[j]) &#123;</span><br><span class="line">      i++</span><br><span class="line">      j++</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-comment">// 如果 j != -1，且当前字符匹配失败（即 S[i] != P[j]），则令 i 不变，j = next[j]</span></span><br><span class="line">      <span class="hljs-comment">// 这里就是与 BF 算法不同的地方，这里仅仅只用回退 j，而不用回退 i</span></span><br><span class="line">      j = next[j]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> j === pLen ? i - j : <span class="hljs-number">-1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">s = <span class="hljs-string">'ABCDABCDABDE'</span></span><br><span class="line">t = <span class="hljs-string">'ABCDABD'</span></span><br><span class="line">KMP(s, t)  <span class="hljs-comment">// 4</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="深浅拷贝-amp-amp-mixin"><a href="#深浅拷贝-amp-amp-mixin" class="headerlink" title="深浅拷贝 &amp;&amp; mixin"></a>深浅拷贝 &amp;&amp; mixin</h2><p>详细可见 <a href="https://heptaluan.github.io/2018/01/14/JavaScript/24/" target="_blank" rel="noopener">JavaScript 中的深浅拷贝</a></p>
+<h2 id="深浅拷贝-amp-amp-Mixin"><a href="#深浅拷贝-amp-amp-Mixin" class="headerlink" title="深浅拷贝 &amp;&amp; Mixin"></a>深浅拷贝 &amp;&amp; Mixin</h2><p>详细可见 <a href="https://heptaluan.github.io/2018/01/14/JavaScript/24/" target="_blank" rel="noopener">JavaScript 中的深浅拷贝</a></p>
 <h4 id="浅拷贝"><a href="#浅拷贝" class="headerlink" title="浅拷贝"></a>浅拷贝</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">shallowCopy</span>(<span class="hljs-params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> newObj = &#123;&#125;</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> prop <span class="hljs-keyword">in</span> obj) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (obj.hasOwnProperty(prop)) &#123;</span><br><span class="line">      newObj[prop] = obj[prop]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> dst</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h4 id="深拷贝"><a href="#深拷贝" class="headerlink" title="深拷贝"></a>深拷贝</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> deepCopy = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> obj !== <span class="hljs-string">'object'</span>) <span class="hljs-keyword">return</span>             <span class="hljs-comment">// 只拷贝对象</span></span><br><span class="line">  <span class="hljs-keyword">let</span> newObj = obj <span class="hljs-keyword">instanceof</span> <span class="hljs-built_in">Array</span> ? [] : &#123;&#125;     <span class="hljs-comment">// 根据 obj 的类型判断是新建一个数组还是对象</span></span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> key <span class="hljs-keyword">in</span> obj) &#123;                          <span class="hljs-comment">// 遍历 obj，并且判断是 obj 的属性才拷贝</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (obj.hasOwnProperty(key)) &#123;</span><br><span class="line">      newObj[key] = <span class="hljs-keyword">typeof</span> obj[key] === <span class="hljs-string">'object'</span>  <span class="hljs-comment">// 如果 obj 的子属性是对象，则进行递归操作,否则直接赋值</span></span><br><span class="line">        ? deepCopy(obj[key])</span><br><span class="line">        : obj[key]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> newObj</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="mixin"><a href="#mixin" class="headerlink" title="mixin"></a>mixin</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">extend</span>(<span class="hljs-params">destClass, srcClass</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> destProto = destClass.prototype</span><br><span class="line">  <span class="hljs-keyword">var</span> srcProto = srcClass.prototype</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> method <span class="hljs-keyword">in</span> srcProto) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (!destProto[method]) &#123;</span><br><span class="line">      destProto[method] = srcProto[method]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Book</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">Book.prototype.printName = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'I am a book, named hello'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">JS</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line">extend(JS, Book)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> js = <span class="hljs-keyword">new</span> JS()</span><br><span class="line">js.printName()</span><br></pre></td></tr></table></figure>
+<h4 id="Mixin"><a href="#Mixin" class="headerlink" title="Mixin"></a>Mixin</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">mixin</span>(<span class="hljs-params">destClass, srcClass</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> destProto = destClass.prototype</span><br><span class="line">  <span class="hljs-keyword">var</span> srcProto = srcClass.prototype</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> method <span class="hljs-keyword">in</span> srcProto) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (!destProto[method]) &#123;</span><br><span class="line">      destProto[method] = srcProto[method]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Parent</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">Parent.prototype.say = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'hello'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Child</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line">mixin(Child, Parent)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> child = <span class="hljs-keyword">new</span> Child()</span><br><span class="line">child.say()  <span class="hljs-comment">// hello</span></span><br></pre></td></tr></table></figure>
 
-<h4 id="mixin-多继承"><a href="#mixin-多继承" class="headerlink" title="mixin 多继承"></a>mixin 多继承</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">extend</span>(<span class="hljs-params">destClass</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> classes = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">1</span>)</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; classes.length; i++) &#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> srcClass = classes[i]</span><br><span class="line">    <span class="hljs-keyword">var</span> srcProto = srcClass.prototype</span><br><span class="line">    <span class="hljs-keyword">var</span> destProto = destClass.prototype</span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> method <span class="hljs-keyword">in</span> srcProto) &#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (!destProto[method]) &#123;</span><br><span class="line">        destProto[method] = srcProto[method]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Book</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">Book.prototype.getName = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">Book.prototype.setName = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Tech</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">Tech.prototype.showTech = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">JS</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line">extend(JS, Book, Tech)</span><br><span class="line"><span class="hljs-keyword">var</span> js = <span class="hljs-keyword">new</span> JS()</span><br><span class="line"><span class="hljs-built_in">console</span>.log(js.__proto__)</span><br></pre></td></tr></table></figure>
+<h4 id="Mixin-多继承"><a href="#Mixin-多继承" class="headerlink" title="Mixin 多继承"></a>Mixin 多继承</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">mixin</span>(<span class="hljs-params">destClass</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> classes = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">1</span>)</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>; i &lt; classes.length; i++) &#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> srcClass = classes[i]</span><br><span class="line">    <span class="hljs-keyword">var</span> srcProto = srcClass.prototype</span><br><span class="line">    <span class="hljs-keyword">var</span> destProto = destClass.prototype</span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> method <span class="hljs-keyword">in</span> srcProto) &#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (!destProto[method]) &#123;</span><br><span class="line">        destProto[method] = srcProto[method]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Parent</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">Parent.prototype.getName = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">Parent.prototype.setName = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Child</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">Child.prototype.showName = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Man</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line">mixin(Man, Child, Parent)</span><br><span class="line"><span class="hljs-keyword">var</span> man = <span class="hljs-keyword">new</span> Man()</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(man.__proto__)</span><br><span class="line"><span class="hljs-comment">// &#123;</span></span><br><span class="line"><span class="hljs-comment">//   getName: ƒ ()</span></span><br><span class="line"><span class="hljs-comment">//   setName: ƒ ()</span></span><br><span class="line"><span class="hljs-comment">//   showName: ƒ ()</span></span><br><span class="line"><span class="hljs-comment">//   constructor: ƒ Man()</span></span><br><span class="line"><span class="hljs-comment">// &#125;</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="常用设计模式的实现"><a href="#常用设计模式的实现" class="headerlink" title="常用设计模式的实现"></a>常用设计模式的实现</h2><h4 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h4><p>简单来说，任意对象都是单例，无须特别处理</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> obj = &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">'zhangsan'</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">20</span> &#125;</span><br></pre></td></tr></table></figure>
@@ -632,7 +632,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        161
+                        163
                     </p>
                 </div>
             </div>
@@ -782,9 +782,9 @@ var _hmt = _hmt || [];
         <span class="has-mr-6">8.10</span>
         <span>BF 和 KMP 算法</span>
         </a></li></ul></li><li>
-        <a class="is-flex" href="#深浅拷贝-amp-amp-mixin">
+        <a class="is-flex" href="#深浅拷贝-amp-amp-Mixin">
         <span class="has-mr-6">9</span>
-        <span>深浅拷贝 &amp;&amp; mixin</span>
+        <span>深浅拷贝 &amp;&amp; Mixin</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#浅拷贝">
         <span class="has-mr-6">9.1</span>
@@ -794,13 +794,13 @@ var _hmt = _hmt || [];
         <span class="has-mr-6">9.2</span>
         <span>深拷贝</span>
         </a></li><li>
-        <a class="is-flex" href="#mixin">
+        <a class="is-flex" href="#Mixin">
         <span class="has-mr-6">9.3</span>
-        <span>mixin</span>
+        <span>Mixin</span>
         </a></li><li>
-        <a class="is-flex" href="#mixin-多继承">
+        <a class="is-flex" href="#Mixin-多继承">
         <span class="has-mr-6">9.4</span>
-        <span>mixin 多继承</span>
+        <span>Mixin 多继承</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#常用设计模式的实现">
         <span class="has-mr-6">10</span>
@@ -977,7 +977,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">React</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">13</span>
+                <span class="level-item tag">15</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Vue/">
@@ -1024,6 +1024,63 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/10/31/React/16/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg" alt="React 中的 Hook">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-30T16:00:00.000Z">2020-10-31</time></div>
+                    <a href="/2020/10/31/React/16/" class="has-link-black-ter is-size-6">React 中的 Hook</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/10/25/React/15/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/15.jpg" alt="React 中的 HOC">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-24T16:00:00.000Z">2020-10-25</time></div>
+                    <a href="/2020/10/25/React/15/" class="has-link-black-ter is-size-6">React 中的 HOC</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/10/24/React/14/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
+                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/10/23/React/13/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg" alt="React-Redux 的实现">
@@ -1060,63 +1117,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/04/React/12/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/12.jpg" alt="Redux 的实现">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-03T16:00:00.000Z">2020-10-04</time></div>
-                    <a href="/2020/10/04/React/12/" class="has-link-black-ter is-size-6">Redux 的实现</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/09/20/HTTP/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="TCP/IP 协议">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-19T16:00:00.000Z">2020-09-20</time></div>
-                    <a href="/2020/09/20/HTTP/14/" class="has-link-black-ter is-size-6">TCP/IP 协议</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/09/19/HTTP/13/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg" alt="HTTP 查漏补缺">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-18T16:00:00.000Z">2020-09-19</time></div>
-                    <a href="/2020/09/19/HTTP/13/" class="has-link-black-ter is-size-6">HTTP 查漏补缺</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1135,7 +1135,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -1256,7 +1256,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1733,7 +1733,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/React/">
                         <span class="tag">React</span>
-                        <span class="tag is-grey">13</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 

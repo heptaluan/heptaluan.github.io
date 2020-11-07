@@ -16,7 +16,7 @@
 <meta property="og:description" content="接上回 Redux 的实现，我们在之前的章节当中，从一个简单的示例开始一步一步推导出 Redux 的实现方式，但是之前我们也提到过，它其实跟 React.js 一点关系都没有，所以在本章当中我们会把 React.js 和 Redux 结合起来，用 Redux 模式帮助我们来管理 React.js 的应用状态">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg">
-<meta property="og:updated_time" content="2020-10-26T06:25:49.752Z">
+<meta property="og:updated_time" content="2020-11-01T16:13:39.329Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="React-Redux 的实现">
 <meta name="twitter:description" content="接上回 Redux 的实现，我们在之前的章节当中，从一个简单的示例开始一步一步推导出 Redux 的实现方式，但是之前我们也提到过，它其实跟 React.js 一点关系都没有，所以在本章当中我们会把 React.js 和 Redux 结合起来，用 Redux 模式帮助我们来管理 React.js 的应用状态">
@@ -237,20 +237,20 @@ var _hmt = _hmt || [];
 <p>至于第二点，我们可以将其改写成为 <code>UI</code> 组件，关于 <code>UI</code> 组件，也称为 <code>Dumb Component</code>，因为你传递给它什么，它就渲染什么出来，对参数（<code>props</code>）以外的数据零依赖，也不产生副作用，所以我们需要高阶组件来帮助我们从 <code>context</code> 取数据，使用高阶组件和 <code>context</code> 打交道，把里面数据取出来通过 <code>props</code> 传给 <code>UI</code> 组件，也就是如下图当中所示</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/13-01.png" alt></p>
 <p>我们把这个高阶组件起名为 <code>connect</code>，因为它把 <code>UI</code> 组件和 <code>context</code> 连接（<code>connect</code>）起来了</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span></span><br><span class="line"><span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> connect = <span class="hljs-function">(<span class="hljs-params">WrappedComponent</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Connect</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">static</span> contextTypes = &#123;</span><br><span class="line">      store: PropTypes.object</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    render() &#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> &lt;WrappedComponent /&gt;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return Connect</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span></span><br><span class="line"><span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> connect = <span class="hljs-function">(<span class="hljs-params">WrappedComponent</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Connect</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">static</span> contextTypes = &#123;</span><br><span class="line">      store: PropTypes.object</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    render() &#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">WrappedComponent</span> /&gt;</span></span></span><br><span class="line"><span class="hljs-xml">    &#125;</span></span><br><span class="line"><span class="hljs-xml">  &#125;</span></span><br><span class="line"><span class="hljs-xml"></span></span><br><span class="line"><span class="hljs-xml">  return Connect</span></span><br><span class="line"><span class="hljs-xml">&#125;</span></span><br></pre></td></tr></table></figure>
 
 <p><code>connect</code> 函数接受一个组件 <code>WrappedComponent</code> 作为参数，把这个组件包含在一个新的组件 <code>Connect</code> 里面，<code>Connect</code> 会去 <code>context</code> 里面取出 <code>store</code>，现在要把 <code>store</code> 里面的数据取出来通过 <code>props</code> 传给 <code>WrappedComponent</code>，但是每个传进去的组件需要 <code>store</code> 里面的数据都不一样的，所以还需要告诉高级组件我们需要什么数据，高阶组件才能正确地去取数据</p>
 <p>为了解决这个问题，我们需要一个映射函数来告诉 <code>store</code> 如何返回我们需要的数据，我们将其命名为 <code>mapStateToProps</code>，如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> mapStateToProps = <span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">    themeColor: state.themeColor,</span><br><span class="line">    themeName: state.themeName,</span><br><span class="line">    <span class="hljs-comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>这个函数会接受 <code>store.getState()</code> 的结果作为参数，然后返回一个对象，这个对象是根据 <code>state</code> 生成的，也就是我们使用 <code>mapStateTopProps</code> 去告知 <code>Connect</code> 应该如何去 <code>store</code> 里面取数据，然后得到我们需要的数据以后，再把这个函数的返回结果传给被包装的组件</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span></span><br><span class="line"><span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> connect = <span class="hljs-function">(<span class="hljs-params">mapStateToProps</span>) =&gt;</span> <span class="hljs-function">(<span class="hljs-params">WrappedComponent</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Connect</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">static</span> contextTypes = &#123;</span><br><span class="line">      store: PropTypes.object</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    render() &#123;</span><br><span class="line">      <span class="hljs-keyword">const</span> &#123; store &#125; = <span class="hljs-keyword">this</span>.context</span><br><span class="line">      <span class="hljs-keyword">let</span> stateProps = mapStateToProps(store.getState())</span><br><span class="line">      <span class="hljs-keyword">return</span> &lt;WrappedComponent &#123;...stateProps&#125; /&gt;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return Connect</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span></span><br><span class="line"><span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> connect = <span class="hljs-function">(<span class="hljs-params">mapStateToProps</span>) =&gt;</span> <span class="hljs-function">(<span class="hljs-params">WrappedComponent</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Connect</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">static</span> contextTypes = &#123;</span><br><span class="line">      store: PropTypes.object</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    render() &#123;</span><br><span class="line">      <span class="hljs-keyword">const</span> &#123; store &#125; = <span class="hljs-keyword">this</span>.context</span><br><span class="line">      <span class="hljs-keyword">let</span> stateProps = mapStateToProps(store.getState())</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">WrappedComponent</span> &#123;<span class="hljs-attr">...stateProps</span>&#125; /&gt;</span></span></span><br><span class="line"><span class="hljs-xml">    &#125;</span></span><br><span class="line"><span class="hljs-xml">  &#125;</span></span><br><span class="line"><span class="hljs-xml"></span></span><br><span class="line"><span class="hljs-xml">  return Connect</span></span><br><span class="line"><span class="hljs-xml">&#125;</span></span><br></pre></td></tr></table></figure>
 
 <p>其中的 <code>{...stateProps}</code> 意思是把这个对象里面的属性全部通过 <code>props</code> 方式传递进去，<code>connect</code> 现在接受一个参数 <code>mapStateToProps</code>，然后返回一个函数，这个返回的函数才是高阶组件，它会接受一个组件作为参数，然后用 <code>Connect</code> 把组件包装以后再返回，<code>connect</code> 的用法是</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> mapStateToProps = <span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">    themeColor: state.themeColor</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Header = connect(mapStateToProps)(Header)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ...</span></span><br></pre></td></tr></table></figure>
 
 <p>我们把上面 <code>connect</code> 的函数代码单独分离到一个模块当中，再把之前的监听数据变化重新渲染的逻辑放到其中调整一下，并将其取名为 <code>react-redux.js</code></p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> connect = <span class="hljs-function">(<span class="hljs-params">mapStateToProps</span>) =&gt;</span> <span class="hljs-function">(<span class="hljs-params">WrappedComponent</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Connect</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">static</span> contextTypes = &#123;</span><br><span class="line">      store: PropTypes.object</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">constructor</span>() &#123;</span><br><span class="line">      <span class="hljs-keyword">super</span>()</span><br><span class="line">      <span class="hljs-keyword">this</span>.state = &#123; <span class="hljs-attr">allProps</span>: &#123;&#125; &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    componentDidMount() &#123;</span><br><span class="line">      <span class="hljs-keyword">const</span> &#123; store &#125; = <span class="hljs-keyword">this</span>.context</span><br><span class="line">      <span class="hljs-keyword">this</span>._updateProps()</span><br><span class="line">      store.subscribe(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">this</span>._updateProps())</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    _updateProps() &#123;</span><br><span class="line">      <span class="hljs-keyword">const</span> &#123; store &#125; = <span class="hljs-keyword">this</span>.context</span><br><span class="line">      <span class="hljs-comment">// 额外传入 props，让获取数据更加灵活方便</span></span><br><span class="line">      <span class="hljs-keyword">let</span> stateProps = mapStateToProps(store.getState(), <span class="hljs-keyword">this</span>.props)</span><br><span class="line">      <span class="hljs-keyword">this</span>.setState(&#123;</span><br><span class="line">        <span class="hljs-comment">// 整合普通的 props 和从 state 生成的 props</span></span><br><span class="line">        allProps: &#123;</span><br><span class="line">          ...stateProps,</span><br><span class="line">          ...this.props</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    render() &#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> &lt;WrappedComponent &#123;...this.state.allProps&#125; /&gt;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  return Connect</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> connect = <span class="hljs-function">(<span class="hljs-params">mapStateToProps</span>) =&gt;</span> <span class="hljs-function">(<span class="hljs-params">WrappedComponent</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Connect</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">static</span> contextTypes = &#123;</span><br><span class="line">      store: PropTypes.object</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">constructor</span>() &#123;</span><br><span class="line">      <span class="hljs-keyword">super</span>()</span><br><span class="line">      <span class="hljs-keyword">this</span>.state = &#123; <span class="hljs-attr">allProps</span>: &#123;&#125; &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    componentDidMount() &#123;</span><br><span class="line">      <span class="hljs-keyword">const</span> &#123; store &#125; = <span class="hljs-keyword">this</span>.context</span><br><span class="line">      <span class="hljs-keyword">this</span>._updateProps()</span><br><span class="line">      store.subscribe(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">this</span>._updateProps())</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    _updateProps() &#123;</span><br><span class="line">      <span class="hljs-keyword">const</span> &#123; store &#125; = <span class="hljs-keyword">this</span>.context</span><br><span class="line">      <span class="hljs-comment">// 额外传入 props，让获取数据更加灵活方便</span></span><br><span class="line">      <span class="hljs-keyword">let</span> stateProps = mapStateToProps(store.getState(), <span class="hljs-keyword">this</span>.props)</span><br><span class="line">      <span class="hljs-keyword">this</span>.setState(&#123;</span><br><span class="line">        <span class="hljs-comment">// 整合普通的 props 和从 state 生成的 props</span></span><br><span class="line">        allProps: &#123;</span><br><span class="line">          ...stateProps,</span><br><span class="line">          ...this.props</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    render() &#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">WrappedComponent</span> &#123;<span class="hljs-attr">...this.state.allProps</span>&#125; /&gt;</span></span></span><br><span class="line"><span class="hljs-xml">    &#125;</span></span><br><span class="line"><span class="hljs-xml">  &#125;</span></span><br><span class="line"><span class="hljs-xml"></span></span><br><span class="line"><span class="hljs-xml">  return Connect</span></span><br><span class="line"><span class="hljs-xml">&#125;</span></span><br></pre></td></tr></table></figure>
 
 <p>我们在 <code>Connect</code> 组件的 <code>constructor</code> 里面初始化了 <code>state.allProps</code>，它是一个对象，用来保存需要传给被包装组件的所有的参数，为了让 <code>connect</code> 返回新组件和被包装的组件使用参数保持一致，我们会把所有传给 <code>Connect</code> 的 <code>props</code> 原封不动地传给 <code>WrappedComponent</code>，所以在 <code>_updateProps</code> 里面会把 <code>stateProps</code> 和 <code>this.props</code> 合并到 <code>this.state.allProps</code> 里面，再通过 <code>render</code> 方法把所有参数都传给 <code>WrappedComponent</code></p>
 <p><code>mapStateToProps</code> 也发生点变化，它现在可以接受两个参数了，我们会把传给 <code>Connect</code> 组件的 <code>props</code> 参数也传给它，那么它生成的对象配置性就更强了，我们可以根据 <code>store</code> 里面的 <code>state</code> 和外界传入的 <code>props</code> 生成我们想传给被包装组件的参数，接下来我们就可以在 <code>Header</code> 当中来进行使用了</p>
@@ -264,7 +264,7 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> mapDispatchToProps = <span class="hljs-function">(<span class="hljs-params">dispatch</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">    onSwitchColor: <span class="hljs-function">(<span class="hljs-params">color</span>) =&gt;</span> &#123;</span><br><span class="line">      dispatch(&#123; <span class="hljs-attr">type</span>: <span class="hljs-string">'CHANGE_COLOR'</span>, <span class="hljs-attr">themeColor</span>: color &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>和 <code>mapStateToProps</code> 一样，它返回一个对象，这个对象内容会同样被 <code>connect</code> 当作是 <code>props</code> 参数传给被包装的组件，而不一样的是这个函数不是接受 <code>state</code> 作为参数，而是 <code>dispatch</code>，你可以在返回的对象内部定义一些函数，这些函数会用到 <code>dispatch</code> 来触发特定的 <code>action</code>，所以我们调整 <code>connect</code> 让它能接受这样的 <code>mapDispatchToProps</code></p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span></span><br><span class="line"><span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> connect = <span class="hljs-function">(<span class="hljs-params">mapStateToProps, mapDispatchToProps</span>) =&gt;</span> <span class="hljs-function">(<span class="hljs-params">WrappedComponent</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Connect</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">static</span> contextTypes = &#123;</span><br><span class="line">      store: PropTypes.object</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">constructor</span>() &#123;</span><br><span class="line">      <span class="hljs-keyword">super</span>()</span><br><span class="line">      <span class="hljs-keyword">this</span>.state = &#123; <span class="hljs-attr">allProps</span>: &#123;&#125; &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    componentDidMount() &#123;</span><br><span class="line">      <span class="hljs-keyword">const</span> &#123; store &#125; = <span class="hljs-keyword">this</span>.context</span><br><span class="line">      <span class="hljs-keyword">this</span>._updateProps()</span><br><span class="line">      store.subscribe(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">this</span>._updateProps())</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    _updateProps() &#123;</span><br><span class="line">      <span class="hljs-keyword">const</span> &#123; store &#125; = <span class="hljs-keyword">this</span>.context</span><br><span class="line">      <span class="hljs-keyword">let</span> stateProps = mapStateToProps</span><br><span class="line">        ? mapStateToProps(store.getState(), <span class="hljs-keyword">this</span>.props)</span><br><span class="line">        : &#123;&#125;</span><br><span class="line">      <span class="hljs-keyword">let</span> dispatchProps = mapDispatchToProps</span><br><span class="line">        ? mapDispatchToProps(store.dispatch, <span class="hljs-keyword">this</span>.props)</span><br><span class="line">        : &#123;&#125;</span><br><span class="line">      <span class="hljs-keyword">this</span>.setState(&#123;</span><br><span class="line">        allProps: &#123;</span><br><span class="line">          ...stateProps,</span><br><span class="line">          ...dispatchProps,</span><br><span class="line">          ...this.props</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    render() &#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> &lt;WrappedComponent &#123;...this.state.allProps&#125; /&gt;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  return Connect</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> React, &#123; Component &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span></span><br><span class="line"><span class="hljs-keyword">import</span> PropTypes <span class="hljs-keyword">from</span> <span class="hljs-string">'prop-types'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> connect = <span class="hljs-function">(<span class="hljs-params">mapStateToProps, mapDispatchToProps</span>) =&gt;</span> <span class="hljs-function">(<span class="hljs-params">WrappedComponent</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Connect</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">static</span> contextTypes = &#123;</span><br><span class="line">      store: PropTypes.object</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">constructor</span>() &#123;</span><br><span class="line">      <span class="hljs-keyword">super</span>()</span><br><span class="line">      <span class="hljs-keyword">this</span>.state = &#123; <span class="hljs-attr">allProps</span>: &#123;&#125; &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    componentDidMount() &#123;</span><br><span class="line">      <span class="hljs-keyword">const</span> &#123; store &#125; = <span class="hljs-keyword">this</span>.context</span><br><span class="line">      <span class="hljs-keyword">this</span>._updateProps()</span><br><span class="line">      store.subscribe(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">this</span>._updateProps())</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    _updateProps() &#123;</span><br><span class="line">      <span class="hljs-keyword">const</span> &#123; store &#125; = <span class="hljs-keyword">this</span>.context</span><br><span class="line">      <span class="hljs-keyword">let</span> stateProps = mapStateToProps</span><br><span class="line">        ? mapStateToProps(store.getState(), <span class="hljs-keyword">this</span>.props)</span><br><span class="line">        : &#123;&#125;</span><br><span class="line">      <span class="hljs-keyword">let</span> dispatchProps = mapDispatchToProps</span><br><span class="line">        ? mapDispatchToProps(store.dispatch, <span class="hljs-keyword">this</span>.props)</span><br><span class="line">        : &#123;&#125;</span><br><span class="line">      <span class="hljs-keyword">this</span>.setState(&#123;</span><br><span class="line">        allProps: &#123;</span><br><span class="line">          ...stateProps,</span><br><span class="line">          ...dispatchProps,</span><br><span class="line">          ...this.props</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    render() &#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">WrappedComponent</span> &#123;<span class="hljs-attr">...this.state.allProps</span>&#125; /&gt;</span></span></span><br><span class="line"><span class="hljs-xml">    &#125;</span></span><br><span class="line"><span class="hljs-xml">  &#125;</span></span><br><span class="line"><span class="hljs-xml">  return Connect</span></span><br><span class="line"><span class="hljs-xml">&#125;</span></span><br></pre></td></tr></table></figure>
 
 <p>在 <code>_updateProps</code> 内部，我们把 <code>store.dispatch</code> 作为参数传给 <code>mapDispatchToProps</code>，它会返回一个对象 <code>dispatchProps</code>，接着把 <code>stateProps</code>、<code>dispatchProps</code>、<code>this.props</code> 三者合并到 <code>this.state.allProps</code> 里面去，这三者的内容都会在 <code>render</code> 函数内全部传给被包装的组件</p>
 <p>这时候我们就可以重构 <code>ThemeSwitch</code>，让它摆脱 <code>store.dispatch</code></p>
@@ -329,6 +329,13 @@ var _hmt = _hmt || [];
 
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/10/24/React/14/">
+                <i class="level-item fa fa-chevron-left"></i>
+                <span class="level-item">React 中的 Mixin</span>
+            </a>
+        </div>
         
         
         <div class="level-end">
@@ -409,7 +416,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        161
+                        163
                     </p>
                 </div>
             </div>
@@ -558,7 +565,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">React</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">13</span>
+                <span class="level-item tag">15</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Vue/">
@@ -605,6 +612,63 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/10/31/React/16/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg" alt="React 中的 Hook">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-30T16:00:00.000Z">2020-10-31</time></div>
+                    <a href="/2020/10/31/React/16/" class="has-link-black-ter is-size-6">React 中的 Hook</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/10/25/React/15/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/15.jpg" alt="React 中的 HOC">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-24T16:00:00.000Z">2020-10-25</time></div>
+                    <a href="/2020/10/25/React/15/" class="has-link-black-ter is-size-6">React 中的 HOC</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/10/24/React/14/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
+                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/10/23/React/13/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg" alt="React-Redux 的实现">
@@ -641,63 +705,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/04/React/12/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/12.jpg" alt="Redux 的实现">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-03T16:00:00.000Z">2020-10-04</time></div>
-                    <a href="/2020/10/04/React/12/" class="has-link-black-ter is-size-6">Redux 的实现</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/09/20/HTTP/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="TCP/IP 协议">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-19T16:00:00.000Z">2020-09-20</time></div>
-                    <a href="/2020/09/20/HTTP/14/" class="has-link-black-ter is-size-6">TCP/IP 协议</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/09/19/HTTP/13/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg" alt="HTTP 查漏补缺">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-18T16:00:00.000Z">2020-09-19</time></div>
-                    <a href="/2020/09/19/HTTP/13/" class="has-link-black-ter is-size-6">HTTP 查漏补缺</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -716,7 +723,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -837,7 +844,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1314,7 +1321,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/React/">
                         <span class="tag">React</span>
-                        <span class="tag is-grey">13</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 

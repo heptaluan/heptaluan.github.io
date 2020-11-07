@@ -16,7 +16,7 @@
 <meta property="og:description" content="在之前的章节 flux 与 redux 当中，我们介绍了 flux 与 redux 的一些基本概念和它们之间的一些区别，今天我们在来看看另外一个和它们比较类似的 react-redux，然后在简单汇总一下，比较一下它们三者之间的区别，不过在看 react-redux 的内容之前，我们先来简单的回顾一下上一章的内容">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/02.jpg">
-<meta property="og:updated_time" content="2020-08-25T08:58:15.791Z">
+<meta property="og:updated_time" content="2020-11-07T14:22:54.545Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redux、Flux 和 React-Redux 三者之间的区别">
 <meta name="twitter:description" content="在之前的章节 flux 与 redux 当中，我们介绍了 flux 与 redux 的一些基本概念和它们之间的一些区别，今天我们在来看看另外一个和它们比较类似的 react-redux，然后在简单汇总一下，比较一下它们三者之间的区别，不过在看 react-redux 的内容之前，我们先来简单的回顾一下上一章的内容">
@@ -189,7 +189,7 @@ var _hmt = _hmt || [];
             <p>在之前的章节 <a href="https://heptaluan.github.io/2019/02/22/React/01/" target="_blank" rel="noopener">flux 与 redux</a> 当中，我们介绍了 <code>flux</code> 与 <code>redux</code> 的一些基本概念和它们之间的一些区别，今天我们在来看看另外一个和它们比较类似的 <code>react-redux</code>，然后在简单汇总一下，比较一下它们三者之间的区别，不过在看 <code>react-redux</code> 的内容之前，我们先来简单的回顾一下上一章的内容</p>
 <a id="more"></a>
 
-<h2 id="Flux"><a href="#Flux" class="headerlink" title="Flux"></a>Flux</h2><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/08.png" alt></p>
+<h2 id="Flux"><a href="#Flux" class="headerlink" title="Flux"></a>Flux</h2><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/02-01.png" alt></p>
 <p>传统的 <code>redux</code> 简化了 <code>flux</code> 的流程，一般 <code>flux</code> 的流程是</p>
 <ul>
 <li><code>view</code> 触发 <code>action</code> 中的方法</li>
@@ -206,7 +206,7 @@ var _hmt = _hmt || [];
 <li>数据的结构处理也从 <code>store</code> 中移到了 <code>reducer</code> 中</li>
 </ul>
 <p><code>redux</code> 数据流如下图所示</p>
-<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/01.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/02-02.png" alt></p>
 <p>总之记住一句话 <strong>redux 的基本原理实际上就是围绕着 store 进行的</strong>，这个 <code>store</code> 不是 <code>flux</code> 中的 <code>store</code>，而是 <code>redux</code> 提供的 <code>createStore</code> 方法创建的 <code>store</code></p>
 <ul>
 <li><code>createStore</code> 方法接收 <code>reducer</code> 函数和初始化的数据（<code>currentState</code>），并将这两个参数并保存在 <code>store</code> 中</li>
@@ -223,7 +223,7 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> createStoreWithMiddleware = applyMiddleware(</span><br><span class="line">  thunkMiddleware,</span><br><span class="line">  loggerMiddleware</span><br><span class="line">)(createStore)</span><br><span class="line"></span><br><span class="line">store = createStoreWithMiddleware(rootReducer, initialState)</span><br></pre></td></tr></table></figure>
 
 <p><code>redux</code> 的 <code>middleware</code> 用 <code>reduceRight</code> 的方法，将 <code>applyMiddleware</code> 方法中的参数串起来，原始的 <code>dispatch</code> 方法会最后执行，比如下图所示</p>
-<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/02.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/02-03.png" alt></p>
 <p>而如果需要自定义 <code>middleware</code> 只需要注意这个 <code>middleware</code> 只接收一个 <code>action</code>，执行后也需要返回一个 <code>action</code>，如果需要执行下一步，调用 <code>next(action)</code> 即可</p>
 <blockquote>
 <p>关于中间件的概念，我们会在 <a href="https://heptaluan.github.io/2019/10/19/Node/12/" target="_blank" rel="noopener">中间件</a> 这一章当中详细的来进行介绍</p>
@@ -246,7 +246,7 @@ var _hmt = _hmt || [];
 <li>第三个函数接收前两个函数生成的 <code>stateProps</code> 和 <code>dispatchProps</code>，在加上原始的 <code>props</code> 合并成新的 <code>props</code> 并传给原始根节点的 <code>props</code></li>
 </ul>
 <p><code>react-redux</code> 中的流程如下图</p>
-<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/03.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/02-04.png" alt></p>
 <p>首先 <code>view</code> 触发 <code>dispatch</code> 然后进入 <code>reducer</code>，修改 <code>store</code> 中的 <code>state</code> ，再将新的 <code>state</code> 和 <code>props</code> 传入 <code>handleChange</code> 中，生成更符合页面的 <code>props</code>，最后传给原始根节点重新 <code>render</code>，下面我们就深入的来了解一下 <code>react-redux</code> 当中的相关概念，<code>react-redux</code> 将所有组件分成了以下两大类</p>
 <ul>
 <li><code>UI</code> 组件（<code>presentational component</code>）</li>
@@ -409,7 +409,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        161
+                        163
                     </p>
                 </div>
             </div>
@@ -574,7 +574,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">React</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">13</span>
+                <span class="level-item tag">15</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Vue/">
@@ -621,6 +621,63 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/10/31/React/16/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg" alt="React 中的 Hook">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-30T16:00:00.000Z">2020-10-31</time></div>
+                    <a href="/2020/10/31/React/16/" class="has-link-black-ter is-size-6">React 中的 Hook</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/10/25/React/15/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/15.jpg" alt="React 中的 HOC">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-24T16:00:00.000Z">2020-10-25</time></div>
+                    <a href="/2020/10/25/React/15/" class="has-link-black-ter is-size-6">React 中的 HOC</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/10/24/React/14/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
+                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/10/23/React/13/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg" alt="React-Redux 的实现">
@@ -657,63 +714,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/04/React/12/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/12.jpg" alt="Redux 的实现">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-03T16:00:00.000Z">2020-10-04</time></div>
-                    <a href="/2020/10/04/React/12/" class="has-link-black-ter is-size-6">Redux 的实现</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/09/20/HTTP/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="TCP/IP 协议">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-19T16:00:00.000Z">2020-09-20</time></div>
-                    <a href="/2020/09/20/HTTP/14/" class="has-link-black-ter is-size-6">TCP/IP 协议</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/09/19/HTTP/13/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg" alt="HTTP 查漏补缺">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-18T16:00:00.000Z">2020-09-19</time></div>
-                    <a href="/2020/09/19/HTTP/13/" class="has-link-black-ter is-size-6">HTTP 查漏补缺</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -732,7 +732,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -853,7 +853,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1330,7 +1330,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/React/">
                         <span class="tag">React</span>
-                        <span class="tag is-grey">13</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 

@@ -16,7 +16,7 @@
 <meta property="og:description" content="之前在学习 koa.js 当中的 中间件 部分时，我们接触到过中间件这个概念，也了解洋葱模型这个概念，所以在今天我们就来深入的了解一下 redux 当中与其十分类似的 middleware">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/05.jpg">
-<meta property="og:updated_time" content="2020-08-25T09:12:04.134Z">
+<meta property="og:updated_time" content="2020-11-07T14:22:54.546Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Redux 中的 Middleware">
 <meta name="twitter:description" content="之前在学习 koa.js 当中的 中间件 部分时，我们接触到过中间件这个概念，也了解洋葱模型这个概念，所以在今天我们就来深入的了解一下 redux 当中与其十分类似的 middleware">
@@ -197,10 +197,10 @@ var _hmt = _hmt || [];
 </blockquote>
 <p>不难理解，在 <code>redux</code> 里的 <code>middleware</code> 是发送 <code>action</code> 和 <code>action</code> 到达 <code>reducer</code> 之间的第三方扩展，也就是中间层，<code>middleware</code> 提供了一个分类处理 <code>action</code> 的机会，在 <code>middleware</code> 中你可以检阅每一个流过的 <code>action</code>，挑选出特定类型的 <code>action</code> 进行相应操作，简单的来说就是，<code>middleware</code> 是架在 <code>action</code> 和 <code>store</code> 之间的一座桥梁</p>
 <h2 id="为什么要引入-Middleware"><a href="#为什么要引入-Middleware" class="headerlink" title="为什么要引入 Middleware"></a>为什么要引入 Middleware</h2><p>我们先来看一个简单的同步数据流的例子，如下图</p>
-<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/09.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/05-01.png" alt></p>
 <p>当我们点击了 <code>button</code> 以后，在回调中 <code>dispatch</code> 一个 <code>action</code>，然后 <code>reducer</code> 收到 <code>action</code> 后，更新 <code>state</code> 并通知 <code>view</code> 重新渲染，一个很常规的同步数据流动的场景，但是如果我们现在的需求有所变动，比如需要打印每一个 <code>action</code> 信息用来调试，又或者需要在点击了 <code>button</code> 以后进行一些别的操作等等</p>
 <p>面对多种多样的业务需求，单纯的修改 <code>dispatch</code> 或 <code>reducer</code> 的代码显然不是很理想的选择，我们需要的是可以组合的，自由插拔的插件机制，所以，在这种情况下，我们就会用上 <code>middleware</code>，如下图</p>
-<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/10.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/05-02.png" alt></p>
 <p>每一个 <code>middleware</code> 处理一个相对独立的业务需求，通过串联不同的 <code>middleware</code>，实现变化多样的的功能，所以在本章当中，我们重点关注以下几个问题</p>
 <ul>
 <li><code>middlewares</code> 是如何工作的？</li>
@@ -216,7 +216,7 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// logger</span></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> store =&gt; <span class="hljs-function"><span class="hljs-params">next</span> =&gt;</span> <span class="hljs-function"><span class="hljs-params">action</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'dispatch'</span>, action)</span><br><span class="line">  next(action)</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'finish'</span>, action)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>在 <code>redux</code> 当中提供了 <code>applyMiddleware</code> 这个 <code>api</code> 用来加载 <code>middleware</code>，我们将其与我们上面定义的 <code>logger</code> 中间件放到一起来进行对比介绍，如下图所示</p>
-<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/11.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/05-03.png" alt></p>
 <h2 id="函数式编程思想设计-Middleware"><a href="#函数式编程思想设计-Middleware" class="headerlink" title="函数式编程思想设计 Middleware"></a>函数式编程思想设计 Middleware</h2><p><code>middleware</code> 的设计有点特殊，是一个层层包裹的匿名函数，这其实是函数式编程中的 <a href="https://zh.wikipedia.org/zh/%E6%9F%AF%E9%87%8C%E5%8C%96" target="_blank" rel="noopener">柯里化</a>，<code>applyMiddleware</code> 会对 <code>logger</code> 这个 <code>middleware</code> 进行层层调用，动态地对 <code>store</code> 和 <code>next</code> 参数赋值，这样设计的好处在于</p>
 <ul>
 <li>易串联，柯里化函数具有延迟执行的特性，通过不断柯里化形成的 <code>middleware</code> 可以累积参数，配合组合 <code>compose</code> 的方式，很容易形成 <code>pipeline</code> 来处理数据流</li>
@@ -251,7 +251,7 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> logger = <span class="hljs-function"><span class="hljs-params">store</span> =&gt;</span> <span class="hljs-function"><span class="hljs-params">next</span> =&gt;</span> <span class="hljs-function"><span class="hljs-params">action</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'dispatch'</span>, action)</span><br><span class="line">  next(action)            <span class="hljs-comment">// &lt;==</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'finish'</span>, action)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 对比</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> logger = <span class="hljs-function"><span class="hljs-params">store</span> =&gt;</span> <span class="hljs-function"><span class="hljs-params">next</span> =&gt;</span> <span class="hljs-function"><span class="hljs-params">action</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'dispatch'</span>, action)</span><br><span class="line">  store.dispatch(action)  <span class="hljs-comment">// &lt;==</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'finish'</span>, action)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>在之前我们已经介绍过，通过匿名函数的方式 <code>middleware</code> 中拿到的 <code>dispatch</code> 和最终 <code>compose</code> 结束后的新 <code>dispatch</code> 是保持一致的，所以在 <code>middleware</code> 中调用 <code>store.dispatch()</code> 和在其他任何地方调用效果是一样的，而在 <code>middleware</code> 中调用 <code>next()</code> 的效果则是进入下一个 <code>middleware</code>，如下图所示</p>
-<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/12.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/05-04.png" alt></p>
 <p>在正常情况下（图左），当我们 <code>dispatch</code> 一个 <code>action</code> 时，<code>middleware</code> 通过 <code>next(action)</code> 一层一层处理和传递 <code>action</code> 直到 <code>redux</code> 原生的 <code>dispatch</code>，如果某个 <code>middleware</code> 使用 <code>store.dispatch(action)</code> 来分发 <code>action</code>，就发生了右图的情况，相当于从外层重新再来一遍</p>
 <h2 id="在-Middleware-中调用-Dispatch-的应用场景"><a href="#在-Middleware-中调用-Dispatch-的应用场景" class="headerlink" title="在 Middleware 中调用 Dispatch 的应用场景"></a>在 Middleware 中调用 Dispatch 的应用场景</h2><p>我们知道，如果在中间件当中不调用 <code>next</code> 的话，中间件就不会串起来执行的，不过有些特殊的 <code>action</code>，比如异步请求的 <code>action</code>，它们的目的地并不是原生的 <code>dispatch</code>，而是对异步请求的 <code>action</code> 进行拦截，在请求完数据后利用新的 <code>dispatch</code> 发送更新 <code>UI</code> 的 <code>action</code>，这个 <code>action</code> 就可以把所有的中间价走一遍了</p>
 <p>我们可以来模拟一个异步请求到服务器获取数据，成功后弹出一个自定义的 <code>Message</code> 的中间件，我们使用 <a href="https://github.com/reduxjs/redux-thunk" target="_blank" rel="noopener">redux-thunk</a> 这个中间件</p>
@@ -389,7 +389,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        161
+                        163
                     </p>
                 </div>
             </div>
@@ -554,7 +554,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">React</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">13</span>
+                <span class="level-item tag">15</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Vue/">
@@ -601,6 +601,63 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/10/31/React/16/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg" alt="React 中的 Hook">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-30T16:00:00.000Z">2020-10-31</time></div>
+                    <a href="/2020/10/31/React/16/" class="has-link-black-ter is-size-6">React 中的 Hook</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/10/25/React/15/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/15.jpg" alt="React 中的 HOC">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-24T16:00:00.000Z">2020-10-25</time></div>
+                    <a href="/2020/10/25/React/15/" class="has-link-black-ter is-size-6">React 中的 HOC</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/10/24/React/14/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
+                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/10/23/React/13/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg" alt="React-Redux 的实现">
@@ -637,63 +694,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/04/React/12/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/12.jpg" alt="Redux 的实现">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-03T16:00:00.000Z">2020-10-04</time></div>
-                    <a href="/2020/10/04/React/12/" class="has-link-black-ter is-size-6">Redux 的实现</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/09/20/HTTP/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="TCP/IP 协议">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-19T16:00:00.000Z">2020-09-20</time></div>
-                    <a href="/2020/09/20/HTTP/14/" class="has-link-black-ter is-size-6">TCP/IP 协议</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/09/19/HTTP/13/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg" alt="HTTP 查漏补缺">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-18T16:00:00.000Z">2020-09-19</time></div>
-                    <a href="/2020/09/19/HTTP/13/" class="has-link-black-ter is-size-6">HTTP 查漏补缺</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/HTTP/">HTTP</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -712,7 +712,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -833,7 +833,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1310,7 +1310,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/React/">
                         <span class="tag">React</span>
-                        <span class="tag is-grey">13</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 

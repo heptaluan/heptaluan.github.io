@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+<title>React 中的 Hook - heptaluan&#39;s blog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="我们在之前 React 中的 Mixin 和 React 中的 HOC 的章节当中介绍了 Mixin 和 HOC 的相关内容，了解了它们大致的实现原理和使用方式，也知道了 HOC 的出现就是为了替代 Mixin，但是 HOC 也并非完美无缺，它其实也是存在着一些缺陷的，比如  HOC 需要在原组件上进行包裹或者嵌套，如果大量使用 HOC，将会产生非常多的嵌套，这让调试变得非常困难 HOC 可以劫持">
+<meta name="keywords" content="React">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React 中的 Hook">
+<meta property="og:url" content="http://yoursite.com/2020/10/31/React/16/index.html">
+<meta property="og:site_name" content="heptaluan&#39;s blog">
+<meta property="og:description" content="我们在之前 React 中的 Mixin 和 React 中的 HOC 的章节当中介绍了 Mixin 和 HOC 的相关内容，了解了它们大致的实现原理和使用方式，也知道了 HOC 的出现就是为了替代 Mixin，但是 HOC 也并非完美无缺，它其实也是存在着一些缺陷的，比如  HOC 需要在原组件上进行包裹或者嵌套，如果大量使用 HOC，将会产生非常多的嵌套，这让调试变得非常困难 HOC 可以劫持">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg">
+<meta property="og:updated_time" content="2020-11-07T14:22:54.552Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="React 中的 Hook">
+<meta name="twitter:description" content="我们在之前 React 中的 Mixin 和 React 中的 HOC 的章节当中介绍了 Mixin 和 HOC 的相关内容，了解了它们大致的实现原理和使用方式，也知道了 HOC 的出现就是为了替代 Mixin，但是 HOC 也并非完美无缺，它其实也是存在着一些缺陷的，比如  HOC 需要在原组件上进行包裹或者嵌套，如果大量使用 HOC，将会产生非常多的嵌套，这让调试变得非常困难 HOC 可以劫持">
+<meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg">
+
+
+
+
+
+
+
+<link rel="icon" href="https://gitee.com/heptaluan/backups/raw/master/cdn/favicon.ico">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?f0399d35b846ccd84f70acc7b232fb2e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-2-column">
+    <!-- fork me on github -->
+<a id="forkMe" style="position: fixed;top: 0;right: 0;z-index: 31" href="https://github.com/heptaluan" target="_blank">
+    <svg style="color: #fff;fill: #a0a1a7;height: 80px;width: 80px;" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg>
+</a>
+
+<nav class="navbar navbar-main">
+    <div class="container">
+        <!-- <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="React 中的 Hook" height="28">
+            
+            </a>
+        </div> -->
+
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/target">Target</a>
+                
+                <a class="navbar-item" href="https://heptaluan.github.io/demos/">Demos</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fa fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-image">
+        <span class="image is-7by1">
+            <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg" alt="React 中的 Hook">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <div class="level-item has-text-grey">2020-10-31</div>
+                <!-- <time class="level-item has-text-grey" datetime="2020-10-30T16:00:00.000Z">2020-10-31</time> -->
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/React/">React</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    39 分钟 读完 (大约 5810 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                React 中的 Hook
+            
+        </h1>
+        <div class="content">
+            <p>我们在之前 <a href="http://localhost:4000/2020/10/24/React/14/" target="_blank" rel="noopener">React 中的 Mixin</a> 和 <a href="http://localhost:4000/2020/10/25/React/15/" target="_blank" rel="noopener">React 中的 HOC</a> 的章节当中介绍了 <code>Mixin</code> 和 <code>HOC</code> 的相关内容，了解了它们大致的实现原理和使用方式，也知道了 <code>HOC</code> 的出现就是为了替代 <code>Mixin</code>，但是 <code>HOC</code> 也并非完美无缺，它其实也是存在着一些缺陷的，比如</p>
+<ul>
+<li><code>HOC</code> 需要在原组件上进行包裹或者嵌套，如果大量使用 <code>HOC</code>，将会产生非常多的嵌套，这让调试变得非常困难</li>
+<li><code>HOC</code> 可以劫持 <code>props</code>，在不遵守约定的情况下也可能造成冲突</li>
+</ul>
+<p>所以在本章当中我们就来看看 <code>React</code> 中的 <code>Hook</code> 是如何同时解决 <code>Mixin</code> 和 <code>HOC</code> 所带来的问题的</p>
+<a id="more"></a>
+
+
+
+<h2 id="为什么要使用-Hook"><a href="#为什么要使用-Hook" class="headerlink" title="为什么要使用 Hook"></a>为什么要使用 Hook</h2><p>如果说为什么要使用 <code>Hook</code>，那么我们可以先来看看 <code>Hook</code> 主要解决的问题，主要有下面三个</p>
+<ul>
+<li>在组件之间复用状态逻辑很难，<code>Hook</code> 使你在无需修改组件结构的情况下复用状态逻辑</li>
+<li>复杂组件变得难以理解，<code>Hook</code> 将组件中相互关联的部分拆分成更小的函数（比如设置订阅或请求数据）</li>
+<li>难以理解的 <code>Class</code>，<code>Hook</code> 使你在非 <code>Class</code> 的情况下可以使用更多的 <code>React</code> 特性</li>
+</ul>
+<p>那么到底什么是 <code>Hook</code> 呢？</p>
+<h2 id="什么是-Hook"><a href="#什么是-Hook" class="headerlink" title="什么是 Hook"></a>什么是 Hook</h2><p><code>React</code> 在 <code>16.8</code> 的版本当中新增了 <code>Hook</code> 这个特性，它可以让我们在不编写 <code>Class</code> 的情况下使用 <code>state</code> 以及其他的 <code>React</code> 特性，使用 <code>Hook</code>，你可以在将含有 <code>state</code> 的逻辑从组件中抽象出来，这将可以让这些逻辑容易被测试，同时 <code>Hook</code> 可以帮助你在不重写组件结构的情况下复用这些逻辑，所以它也可以作为一种实现状态逻辑复用的方案</p>
+<p><code>React</code> 内置了一些像 <code>useState</code> 这样的 <code>Hook</code>，你也可以创建你自己的 <code>Hook</code> 来复用不同组件之间的状态逻辑，其实简单来说 <code>Hook</code> 就是我们常见的 <code>JavaScript</code> 函数，但是使用它们会有两个额外的规则，如下</p>
+<ul>
+<li>只能在函数最外层调用 <code>Hook</code>，不要在循环、条件判断或者子函数中调用</li>
+<li>只能在 <code>React</code> 函数式组件或自定义 <code>Hook</code> 中使用 <code>Hook</code>，不要在其他 <code>JavaScript</code> 函数中调用</li>
+</ul>
+<p>之所以不要在循环当中去调用 <code>Hook</code>，这是因为 <code>Hook</code> 是通过数组实现的，每次 <code>useState</code> 都会改变下标，<code>React</code> 需要利用调用顺序来正确更新相应的状态，如果 <code>useState</code> 被包裹循环或条件语句中，那每就可能会引起调用顺序的错乱，从而造成意想不到的错误，我们可以利用 <code>eslint</code> 插件来帮助我们避免这些问题</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 安装</span></span><br><span class="line">npm install eslint-plugin-react-hooks --save-dev</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 配置</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="hljs-string">"plugins"</span>: [</span><br><span class="line">    <span class="hljs-comment">// ...</span></span><br><span class="line">    <span class="hljs-string">"react-hooks"</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="hljs-string">"rules"</span>: &#123;</span><br><span class="line">    <span class="hljs-comment">// ...</span></span><br><span class="line">    <span class="hljs-string">"react-hooks/rules-of-hooks"</span>: <span class="hljs-string">"error"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面我们就先从官方提供的几个比较常用的 <code>Hook</code> 开始看起，它们分别是</p>
+<ul>
+<li><code>useState()</code></li>
+<li><code>useContext()</code></li>
+<li><code>useReducer()</code></li>
+<li><code>useEffect()</code></li>
+<li><code>useRef()</code></li>
+</ul>
+<h2 id="useState"><a href="#useState" class="headerlink" title="useState()"></a>useState()</h2><p>先来看看如何使用，下面是一个简单的例子</p>
+<figure class="highlight jsx hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> React, &#123; useState &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Button</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> [text, setText] = useState(<span class="hljs-string">'click me'</span>)</span><br><span class="line"></span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">handleClick</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    setText(<span class="hljs-string">'clicked'</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> (</span><br><span class="line">    &lt;button onClick=&#123;handleClick&#125;&gt;&#123;text&#125;&lt;<span class="hljs-regexp">/button&gt;</span></span><br><span class="line"><span class="hljs-regexp">  )</span></span><br><span class="line"><span class="hljs-regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>在上面示例当中，<code>useState</code> 就是一个 <code>Hook</code>，通过在函数组件里调用它来给组件添加一些内部 <code>state</code>，<code>React</code> 会在重复渲染时保留这个 <code>state</code></p>
+<p><code>useState</code> 会返回一对值，包括 <strong>当前状态</strong> 和 <strong>一个让你更新它的函数</strong>，你可以在事件处理函数中或其他一些地方调用这个函数，它类似 <code>Class</code> 组件的 <code>this.setState</code>，但是它不会把新的 <code>state</code> 和旧的 <code>state</code> 进行合并，<code>useState</code> 唯一的参数就是初始 <code>state</code>，值得注意的是，不同于 <code>this.state</code>，这里的 <code>state</code> 不一定要是一个对象，这个初始 <code>state</code> 参数只有在第一次渲染时会被用到</p>
+<p>另外 <code>useState</code> 也可以使用函数式更新的方式，在上面的示例当中，我们只是简单的调用了 <code>handleClick</code>，但是如果新的 <code>state</code> 需要通过使用先前的 <code>state</code> 计算得出，那么可以将函数传递给 <code>setState</code>，该函数将接收先前的 <code>state</code>，并返回一个更新后的值，如下示例</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> React, &#123; useState &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">App</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> [count, setCount] = useState(<span class="hljs-number">0</span>)</span><br><span class="line">  <span class="hljs-keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;p&gt;&#123;count&#125;&lt;<span class="hljs-regexp">/p&gt;</span></span><br><span class="line"><span class="hljs-regexp">      &lt;button onClick=&#123;_ =&gt; setCount(0)&#125;&gt;重置&lt;/</span>button&gt;</span><br><span class="line">      &lt;button onClick=&#123;() =&gt; setCount(<span class="hljs-function"><span class="hljs-params">prev</span> =&gt;</span> prev + <span class="hljs-number">1</span>)&#125;&gt;增加&lt;<span class="hljs-regexp">/button&gt;</span></span><br><span class="line"><span class="hljs-regexp">      &lt;button onClick=&#123;() =&gt; setCount(prev =&gt; prev - 1)&#125;&gt;减少&lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="hljs-regexp">/div&gt;</span></span><br><span class="line"><span class="hljs-regexp">  )</span></span><br><span class="line"><span class="hljs-regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>不过需要注意的是与 <code>Class</code> 组件中的 <code>setState</code> 方法不同，<code>useState</code> 不会自动合并更新对象，你可以用函数式的 <code>setState</code> 结合展开运算符来达到合并更新对象的效果</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">setState(<span class="hljs-function"><span class="hljs-params">prevState</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// 也可以使用 Object.assign</span></span><br><span class="line">  <span class="hljs-keyword">return</span> &#123; ...prevState, ...updatedValues &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="useContext"><a href="#useContext" class="headerlink" title="useContext()"></a>useContext()</h2><p>如果需要在多个组件之间共享状态，那么这种情况下就可以考虑使用 <code>useContext()</code>，其实和 <code>React</code> 当中的 <code>Context</code> 的使用方式有些类似，比如下面这种情况，我们有 <code>A</code> 和 <code>B</code> 两个组件，它们需要共享标题内容</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> React, &#123; useContext &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> AppContext = React.createContext(&#123;&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> A = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> &#123; title &#125; = useContext(AppContext)</span><br><span class="line">  <span class="hljs-keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;p&gt;标题为 &#123; title &#125;&lt;<span class="hljs-regexp">/p&gt;</span></span><br><span class="line"><span class="hljs-regexp">      &lt;p&gt;A 组件的内容&lt;/</span>p&gt;</span><br><span class="line">    &lt;<span class="hljs-regexp">/div&gt;</span></span><br><span class="line"><span class="hljs-regexp">  )</span></span><br><span class="line"><span class="hljs-regexp">&#125;</span></span><br><span class="line"><span class="hljs-regexp"></span></span><br><span class="line"><span class="hljs-regexp">const B = () =&gt; &#123;</span></span><br><span class="line"><span class="hljs-regexp">  const &#123; title &#125; = useContext(AppContext)</span></span><br><span class="line"><span class="hljs-regexp">  return (</span></span><br><span class="line"><span class="hljs-regexp">    &lt;div&gt;</span></span><br><span class="line"><span class="hljs-regexp">      &lt;p&gt;标题为 &#123; title &#125;&lt;/</span>p&gt;</span><br><span class="line">      &lt;p&gt;B 组件的内容&lt;<span class="hljs-regexp">/p&gt;</span></span><br><span class="line"><span class="hljs-regexp">    &lt;/</span>div&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">App</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> (</span><br><span class="line">    &lt;AppContext.Provider value=&#123;&#123;<span class="hljs-attr">title</span>: <span class="hljs-string">'文章标题'</span>&#125;&#125;&gt;</span><br><span class="line">      &lt;A&gt;<span class="hljs-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">A</span>&gt;</span></span></span><br><span class="line">      &lt;B&gt;<span class="hljs-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">B</span>&gt;</span></span></span><br><span class="line">    &lt;<span class="hljs-regexp">/AppContext.Provider&gt;</span></span><br><span class="line"><span class="hljs-regexp">  )</span></span><br><span class="line"><span class="hljs-regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们首先使用了 <code>React.createContext({})</code> 在组件外部建立一个 <code>Context</code>，然后使用 <code>&lt;AppContext.Provider&gt;</code> 来提供了一个 <code>Context</code> 对象，这个对象可以被子组件共享，这里需要注意的是不能直接使用 <code>&lt;AppContext&gt;</code>，否则会报错，另外需要注意在传递值的时候使用的两层大括号</p>
+<p>最后我们在需要被共享内容的子组件内使用 <code>useContext()</code> 钩子函数用来引入 <code>Context</code> 对象，从中来获取 <code>title</code> 属性，这是因为当前的 <code>context</code> 的值是由上层组件中距离当前组件最近的 <code>&lt;MyContext.Provider&gt;</code> 的 <code>value prop</code> 所决定</p>
+<p>但是这里有一个需要我们注意的地方，比如我们上方的 <code>B</code> 组件变成了下面这种情况，即不在依赖 <code>context</code>，但是渲染的时候仍然放在 <code>&lt;AppContext.Provider&gt;</code> 当中</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> B = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;p&gt;B 组件的内容&lt;<span class="hljs-regexp">/p&gt;</span></span><br><span class="line"><span class="hljs-regexp">    &lt;/</span>div&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样一来就会涉及到下面两个问题</p>
+<ul>
+<li><code>useContext</code> 的组件总会在 <code>context</code> 值变化时重新渲染， 所以 <code>&lt;MyContext.Provider&gt;</code> 包裹的越多，层级越深，性能会造成影响</li>
+<li><code>&lt;MyContext.Provider&gt;</code> 的 <code>value</code> 发生变化时候，包裹的组件无论是否订阅 <code>content value</code>，所有组件都会从新渲染</li>
+</ul>
+<p>所以在这种情况下，我们自然而然的可以想到，如果组件没有订阅的话，是不是可以避免不必要的渲染，答案是有的，我们可以使用 <code>React.memo()</code> 来进行优化，我们将 <code>B</code> 组件调整如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> B = React.memo(<span class="hljs-function">(<span class="hljs-params">props</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>B 组件的内容<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>但是需要注意的是，默认情况下 <code>React.memo()</code> 只会对复杂对象做浅层对比，如果你想要控制对比过程，那么请将自定义的比较函数通过第二个参数传入来实现，更多详细内容可以参考 <a href="https://github.com/facebook/react/issues/15156" target="_blank" rel="noopener">Preventing rerenders with React.memo and useContext hook</a></p>
+<h2 id="useReducer"><a href="#useReducer" class="headerlink" title="useReducer()"></a>useReducer()</h2><p><code>React</code> 本身不提供状态管理功能，通常我们需要借住一些第三方库（比如 <code>Redux</code>）来进行实现，而 <code>Redux</code> 的核心概念是，组件不能直接修改共享状态，而是需要发出 <code>Action</code> 与状态管理器通信，状态管理器收到 <code>Action</code> 以后，使用 <code>Reducer</code> 函数计算出新的状态进行返回</p>
+<p>通常 <code>Reducer</code> 函数的形式是 <code>(state, action) =&gt; newState</code>，而 <code>useReducers()</code> 钩子就是用来引入 <code>Reducer</code> 功能的，比如下面这个计数器的示例</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> React, &#123; useReducer &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> myReducer = <span class="hljs-function">(<span class="hljs-params">state, action</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">switch</span> (action.type) &#123;</span><br><span class="line">    <span class="hljs-keyword">case</span> <span class="hljs-string">'add'</span>:</span><br><span class="line">      <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">        ...state,</span><br><span class="line">        count: state.count + <span class="hljs-number">1</span></span><br><span class="line">      &#125;</span><br><span class="line">    <span class="hljs-keyword">case</span> <span class="hljs-string">'dec'</span>:</span><br><span class="line">      <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">        ...state,</span><br><span class="line">        count: state.count - <span class="hljs-number">1</span></span><br><span class="line">      &#125;</span><br><span class="line">    <span class="hljs-keyword">case</span> <span class="hljs-string">'reset'</span>:</span><br><span class="line">      <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">        ...state,</span><br><span class="line">        count: action.payload || <span class="hljs-number">0</span></span><br><span class="line">      &#125;</span><br><span class="line">    <span class="hljs-keyword">default</span>:</span><br><span class="line">      <span class="hljs-keyword">return</span> state</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">App</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> [state, dispatch] = useReducer(myReducer, &#123; <span class="hljs-attr">count</span>: <span class="hljs-number">10</span> &#125;)</span><br><span class="line">  <span class="hljs-keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;p&gt;&#123;state.count&#125;&lt;<span class="hljs-regexp">/p&gt;</span></span><br><span class="line"><span class="hljs-regexp">      &lt;button onClick=&#123;_ =&gt; dispatch(&#123; type: 'reset' &#125;)&#125;&gt;重置&lt;/</span>button&gt;</span><br><span class="line">      &lt;button onClick=&#123;_ =&gt; dispatch(&#123; <span class="hljs-attr">type</span>: <span class="hljs-string">'add'</span> &#125;)&#125;&gt;增加&lt;<span class="hljs-regexp">/button&gt;</span></span><br><span class="line"><span class="hljs-regexp">      &lt;button onClick=&#123;_ =&gt; dispatch(&#123; type: 'dec' &#125;)&#125;&gt;减少&lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="hljs-regexp">/div&gt;</span></span><br><span class="line"><span class="hljs-regexp">  )</span></span><br><span class="line"><span class="hljs-regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>以上就是 <code>useReducer</code> 的简单用法，可以发现其相对于 <code>Redux</code> 而言代码简化了不少，所以 <code>useReducer()</code> 在这些方面是可以取代 <code>Redux</code> 的，但是它并没有提供例如中间件（<code>middleware</code>）和时间旅行（<code>time travel</code>）等功能，所以还是根据实际情况来进行使用</p>
+<h2 id="useEffect"><a href="#useEffect" class="headerlink" title="useEffect()"></a>useEffect()</h2><p><code>useEffect()</code> 主要用来引入具有副作用的操作，比如数据获取、订阅或者手动修改过 <code>DOM</code> 等操作就可以称之为副作用，这里我们就以数据请求为例，在之前我们处理数据请求一般都是放在 <code>componentDidMount</code> 当中来进行的，但是现在我们可以放在 <code>useEffect()</code> 当中来进行，<code>useEffect()</code> 的用法如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// 只要组件 render 后就会执行</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// 只有 count 改变时才会执行</span></span><br><span class="line">&#125;, [count])</span><br></pre></td></tr></table></figure>
+
+<p><code>useEffect()</code> 接受两个参数</p>
+<ul>
+<li>第一个参数是一个回调函数，在第组件一次 <code>render</code> 和之后的每次 <code>update</code> 后运行，<code>React</code> 保证在 <code>DOM</code> 已经更新完成之后才会运行回调</li>
+<li>第二个参数是一个状态依赖数组，当配置了状态依赖项后，只有检测到配置的状态变化时，才会调用回调函数，第二个参数可以省略，这时每次组件渲染时，就会重新执行 <code>useEffect()</code></li>
+</ul>
+<p>另外关于 <code>useEffect()</code> 的执行顺序，有下面几点需要我们注意</p>
+<ul>
+<li>正常情况下，<code>useEffect()</code> 会在 <code>render</code> 后按照前后顺序执行</li>
+<li><code>useEffect()</code> 内部执行是异步的</li>
+<li><code>useEffect()</code> 的回调函数也是按照先后顺序同时执行的</li>
+</ul>
+<p>下面我们就先来看一个使用 <code>useEffect()</code> 的示例，如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> React, &#123; useState, useEffect &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> Book = <span class="hljs-function">(<span class="hljs-params">&#123; id &#125;</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> [loading, setLoading] = useState(<span class="hljs-literal">true</span>)</span><br><span class="line">  <span class="hljs-keyword">const</span> [book, setBook] = useState(&#123;&#125;)</span><br><span class="line"></span><br><span class="line">  useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    setLoading(<span class="hljs-literal">true</span>)</span><br><span class="line">    fetch(<span class="hljs-string">`http://rap2api.taobao.org/app/mock/251195/list/<span class="hljs-subst">$&#123;id&#125;</span>/`</span>)</span><br><span class="line">      .then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> res.json())</span><br><span class="line">      .then(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> &#123;</span><br><span class="line">        setBook(data)</span><br><span class="line">        setLoading(<span class="hljs-literal">false</span>)</span><br><span class="line">      &#125;)</span><br><span class="line">  &#125;, [id])</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (loading === <span class="hljs-literal">true</span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Loading ...<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;p&gt;&#123;book.title&#125;&lt;<span class="hljs-regexp">/p&gt;</span></span><br><span class="line"><span class="hljs-regexp">    &lt;/</span>div&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">App</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> [show, setShow] = useState(<span class="hljs-string">'1'</span>)</span><br><span class="line">  <span class="hljs-keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;Book id=&#123;show&#125; /&gt;</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;button onClick=&#123;_ =&gt; setShow(<span class="hljs-string">'1'</span>)&#125;&gt;第一页&lt;<span class="hljs-regexp">/button&gt;</span></span><br><span class="line"><span class="hljs-regexp">        &lt;button onClick=&#123;_ =&gt; setShow('2')&#125;&gt;第二页&lt;/</span>button&gt;</span><br><span class="line">      &lt;<span class="hljs-regexp">/div&gt;</span></span><br><span class="line"><span class="hljs-regexp">    &lt;/</span>div&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在上面示例当中，我们传入 <code>[id]</code> 作为 <code>useEffect</code> 第二个参数，如果 <code>id</code> 的值在重新渲染的时候没有发生变化，<code>React</code> 会跳过这个 <code>effect</code>，这就实现了性能的优化，不过这里也需要注意</p>
+<ul>
+<li>如果你要使用此优化方式，请确保数组中包含了所有外部作用域中会随时间变化并且在 <code>effect</code> 中会使用的变量，否则你的代码会引用到先前渲染中的旧变量，即数组最好包含所有在 <code>effect</code> 当中使用的可能变化的变量</li>
+<li>如果想执行只运行一次的 <code>effect</code>（仅在组件挂载和卸载时执行），可以传递一个空数组（<code>[]</code>）作为第二个参数，这就告诉 <code>React</code> 你的 <code>effect</code> 不依赖于 <code>props</code> 或 <code>state</code> 中的任何值，所以它永远都不需要重复执行</li>
+</ul>
+<p>所以我们可以利用传递空数组的特性来模拟 <code>componentDidMount</code> 和 <code>componentWillUnmount</code>，其中 <code>componentDidMount</code> 等价于 <code>useEffect</code> 的回调仅在页面初始化完成后执行一次，当 <code>useEffect</code> 的第二个参数传入一个空数组时可以实现这个效果，但是我们最好忘掉生命周期，只记副作用</p>
+<p>同时，<code>useEffect()</code> 的第一个参数还可以返回一个函数，当页面渲染了下一次更新的结果后，执行下一次 <code>useEffect()</code> 之前，会调用这个函数（组件卸载的时候也会执行清除操作），这个函数常常用来对上一次调用 <code>useEffect()</code> 进行清理</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// 这里是某些操作</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">cleanup</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// 命名为 cleanup 是为了表明此函数的目的，但其实也可以返回一个箭头函数或者给起一个别的名字</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>下面是一个具体的示例</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">HookTest</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> [count, setCount] = useState(<span class="hljs-number">0</span>)</span><br><span class="line">  useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'执行...'</span>, count)</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'清理...'</span>, count)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, [count])</span><br><span class="line">  <span class="hljs-keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;p&gt;You clicked &#123;count&#125; times&lt;<span class="hljs-regexp">/p&gt;</span></span><br><span class="line"><span class="hljs-regexp">      &lt;button onClick=&#123;() =&gt; &#123; setCount(count + 1); setNumber(number + 1) &#125;&#125;&gt;Click me&lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="hljs-regexp">/div&gt;</span></span><br><span class="line"><span class="hljs-regexp">  )</span></span><br><span class="line"><span class="hljs-regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>在控制台当中我们看到对应的输出，但是如果加上浏览器渲染的情况，结果应该是这样的</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">渲染  ==&gt; <span class="hljs-number">1</span></span><br><span class="line">执行  ==&gt; <span class="hljs-number">1</span></span><br><span class="line">渲染  ==&gt; <span class="hljs-number">2</span></span><br><span class="line">清理  ==&gt; <span class="hljs-number">1</span></span><br><span class="line">执行  ==&gt; <span class="hljs-number">2</span></span><br><span class="line">渲染  ==&gt; <span class="hljs-number">3</span></span><br><span class="line">清理  ==&gt; <span class="hljs-number">2</span></span><br><span class="line">执行  ==&gt; <span class="hljs-number">3</span></span><br><span class="line">渲染  ==&gt; <span class="hljs-number">4</span></span><br><span class="line">清理  ==&gt; <span class="hljs-number">3</span></span><br><span class="line">执行  ==&gt; <span class="hljs-number">4</span></span><br></pre></td></tr></table></figure>
+
+<p>那么这里就存在一个问题了，那就是为什么在浏览器渲染完后，再执行清理方法的时候还能找到上次的 <code>state</code> 呢？原因很简单，因为我们在 <code>useEffect</code> 中返回的是一个函数，这形成了一个闭包，这能保证我们上一次执行函数存储的变量不被销毁和污染，可以参考下面的代码来进行理解</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> flag = <span class="hljs-number">1</span></span><br><span class="line"><span class="hljs-keyword">var</span> clean</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">effect</span>(<span class="hljs-params">flag</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(flag)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">clean = effect(flag)</span><br><span class="line">flag = <span class="hljs-number">2</span></span><br><span class="line">clean()</span><br><span class="line"></span><br><span class="line">clean = effect(flag)</span><br><span class="line">flag = <span class="hljs-number">3</span></span><br><span class="line">clean()</span><br><span class="line"></span><br><span class="line">clean = effect(flag)</span><br></pre></td></tr></table></figure>
+
+<p>执行后的结果是下面这样的</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">effect  ==&gt; <span class="hljs-number">1</span></span><br><span class="line">clean   ==&gt; <span class="hljs-number">1</span></span><br><span class="line">effect  ==&gt; <span class="hljs-number">2</span></span><br><span class="line">clean   ==&gt; <span class="hljs-number">2</span></span><br><span class="line">effect  ==&gt; <span class="hljs-number">3</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="useRef"><a href="#useRef" class="headerlink" title="useRef()"></a>useRef()</h2><p>使用 <code>useRef Hook</code>，我们可以轻松的获取到 <code>dom</code> 的 <code>ref</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Input</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> inputEl = useRef(<span class="hljs-literal">null</span>)</span><br><span class="line">  <span class="hljs-keyword">const</span> onButtonClick = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    inputEl.current.focus()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;input ref=&#123;inputEl&#125; type=<span class="hljs-string">"text"</span> /&gt;</span><br><span class="line">      &lt;button onClick=&#123;onButtonClick&#125;&gt;Focus the input&lt;<span class="hljs-regexp">/button&gt;</span></span><br><span class="line"><span class="hljs-regexp">    &lt;/</span>div&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里需要注意的是 <code>useRef()</code> 并不仅仅可以用来当作获取 <code>ref</code> 使用，使用 <code>useRef</code> 产生的 <code>ref</code> 的 <code>current</code> 属性是可变的，这意味着你可以用它来保存一个任意值</p>
+<p>同样的，我们也可以使用 <code>useRef()</code> 来模拟 <code>componentDidUpdate</code>，<code>componentDidUpdate</code> 就相当于除去第一次调用的 <code>useEffect</code>，我们可以借助 <code>useRef</code> 生成一个标识，来记录是否为第一次执行</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">useDidUpdate</span>(<span class="hljs-params">callback, prop</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> init = useRef(<span class="hljs-literal">true</span>)</span><br><span class="line">  useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (init.current) &#123;</span><br><span class="line">      init.current = <span class="hljs-literal">false</span></span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> callback()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, prop)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>简单总结一下就是</p>
+<ul>
+<li><code>useRef</code> 返回一个可变的 <code>ref</code> 对象，它会在每次渲染时返回同一个 <code>ref</code> 对象，在整个组件的生命周期内是唯一的</li>
+<li><code>useRef</code> 可以保存任何可变的值，即也可以存储那些不需要引起页面重新渲染的数据</li>
+<li>如果你刻意地想要从某些异步回调中读取最新的 <code>state</code>，你可以用一个 <code>ref</code> 来保存它，修改它，并从中读取（关于这点可以参考官方文档当中的 <a href="https://zh-hans.reactjs.org/docs/hooks-faq.html#is-there-something-like-instance-variables" target="_blank" rel="noopener">有类似实例变量的东西吗？</a>）</li>
+</ul>
+<h2 id="自定义-Hook"><a href="#自定义-Hook" class="headerlink" title="自定义 Hook"></a>自定义 Hook</h2><p>在看完了官方提供的一些 <code>Hook</code> 以后，下面我们来看看自定义 <code>Hook</code>，其实像之前我们介绍过的 <code>HOC</code> 和 <code>Mixin</code> 一样，我们同样可以通过自定义的 <code>Hook</code> 将组件中类似的状态逻辑抽取出来</p>
+<p>自定义 <code>Hook</code> 的实现比较简单，我们只需要定义一个函数，并且把相应需要的状态和 <code>effect</code> 封装进去，同时 <code>Hook</code> 之间也是可以相互引用的，使用 <code>use</code> 开头命名自定义 <code>Hook</code>，这样可以方便 <code>eslint</code> 进行检查，下面我们来看几个具体的 <code>Hook</code> 封装</p>
+<h4 id="日志打点"><a href="#日志打点" class="headerlink" title="日志打点"></a>日志打点</h4><p>我们可以使用上面封装的生命周期 <code>Hook</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> useLogger = <span class="hljs-function">(<span class="hljs-params">componentName, ...params</span>) =&gt;</span> &#123;</span><br><span class="line">  useDidMount(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">$&#123;componentName&#125;</span> 初始化`</span>, ...params)</span><br><span class="line">  &#125;)</span><br><span class="line">  useUnMount(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">$&#123;componentName&#125;</span> 卸载`</span>, ...params)</span><br><span class="line">  &#125;)</span><br><span class="line">  useDidUpdate(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`<span class="hljs-subst">$&#123;componentName&#125;</span> 更新`</span>, ...params)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Page1</span>(<span class="hljs-params">props</span>) </span>&#123;</span><br><span class="line">  useLogger(<span class="hljs-string">'Page1'</span>, props)</span><br><span class="line">  <span class="hljs-keyword">return</span> (<span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="修改页面标题"><a href="#修改页面标题" class="headerlink" title="修改页面标题"></a>修改页面标题</h4><p>根据不同的页面名称修改页面标题内容</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">useTitle</span>(<span class="hljs-params">title</span>) </span>&#123;</span><br><span class="line">  useEffect(</span><br><span class="line">    () =&gt; &#123;</span><br><span class="line">      <span class="hljs-built_in">document</span>.title = title</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (<span class="hljs-built_in">document</span>.title = <span class="hljs-string">'首页'</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    [title]</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Page1</span>(<span class="hljs-params">props</span>) </span>&#123;</span><br><span class="line">  useTitle(<span class="hljs-string">'Page1'</span>)</span><br><span class="line">  <span class="hljs-keyword">return</span> (<span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="双向绑定"><a href="#双向绑定" class="headerlink" title="双向绑定"></a>双向绑定</h4><p>关于双向绑定的需求，平常在业务当中可能是会经常遇到的，所以这里我们简单总结一下 <code>HOC</code>、<code>Render Props</code> 和 <code>Hook</code> 的三种实现方式</p>
+<h6 id="HOC"><a href="#HOC" class="headerlink" title="HOC"></a>HOC</h6><p>我们首先来看看 <code>HOC</code> 的实现方式，首先我们定义了一个高阶组件 <code>HocInput</code> 和一个普通组件 <code>Input</code>，在返回的时候我们使用高阶组件 <code>HocInput()</code> 将 <code>Input</code> 包裹以后在进行返回</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> HocInput = <span class="hljs-function"><span class="hljs-params">WrapperComponent</span> =&gt;</span></span><br><span class="line">  <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">React</span>.<span class="hljs-title">Component</span> </span>&#123;</span><br><span class="line">    state = &#123;</span><br><span class="line">      value: <span class="hljs-keyword">this</span>.props.initialValue</span><br><span class="line">    &#125;</span><br><span class="line">    onChange = <span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.setState(&#123; <span class="hljs-attr">value</span>: e.target.value &#125;)</span><br><span class="line">      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.props.onChange) &#123;</span><br><span class="line">        <span class="hljs-keyword">this</span>.props.onChange(e.target.value)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    render() &#123;</span><br><span class="line">      <span class="hljs-keyword">const</span> newProps = &#123;</span><br><span class="line">        value: <span class="hljs-keyword">this</span>.state.value,</span><br><span class="line">        onChange: <span class="hljs-keyword">this</span>.onChange</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">WrapperComponent</span> &#123;<span class="hljs-attr">...newProps</span>&#125; /&gt;</span></span></span><br><span class="line"><span class="hljs-xml">    &#125;</span></span><br><span class="line"><span class="hljs-xml">  &#125;</span></span><br><span class="line"><span class="hljs-xml"></span></span><br><span class="line"><span class="hljs-xml">const Input = props =&gt; (</span></span><br><span class="line"><span class="hljs-xml">  <span class="hljs-tag">&lt;&gt;</span></span></span><br><span class="line"><span class="hljs-xml">    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>&#123;props.value&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span></span><br><span class="line">    &lt;input placeholder="input" &#123;...props&#125; /&gt;</span><br><span class="line">  &lt;/&gt;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">export default HocInput(Input)</span><br></pre></td></tr></table></figure>
+
+<p>然后像下面这样使用既可</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;HocInput initialValue=<span class="hljs-string">"init"</span> onChange=&#123;val =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`HocInput`</span>, val) &#125; /&gt;</span><br></pre></td></tr></table></figure>
+
+<h6 id="Render-Props"><a href="#Render-Props" class="headerlink" title="Render Props"></a>Render Props</h6><p>与 <code>HOC</code> 不同的是，我们这次在 <code>render()</code> 的时候返回的是 <code>this.props.children()</code>，<code>props</code> 接受两个参数，初始值 <code>initialValue</code> 以及 <code>onChange</code> 方法</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">HocBind</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">React</span>.<span class="hljs-title">Component</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(props) &#123;</span><br><span class="line">    <span class="hljs-keyword">super</span>(props)</span><br><span class="line">    <span class="hljs-keyword">this</span>.state = &#123;</span><br><span class="line">      value: props.initialValue</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  onChange = <span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.setState(&#123; <span class="hljs-attr">value</span>: e.target.value &#125;)</span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.props.onChange) &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.props.onChange(e.target.value)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> (</span><br><span class="line">      &lt;&gt;</span><br><span class="line">        &#123;<span class="hljs-keyword">this</span>.props.children(&#123;</span><br><span class="line">          value: <span class="hljs-keyword">this</span>.state.value,</span><br><span class="line">          onChange: <span class="hljs-keyword">this</span>.onChange</span><br><span class="line">        &#125;)&#125;</span><br><span class="line">      &lt;<span class="hljs-regexp">/&gt;</span></span><br><span class="line"><span class="hljs-regexp">    )</span></span><br><span class="line"><span class="hljs-regexp">  &#125;</span></span><br><span class="line"><span class="hljs-regexp">&#125;</span></span><br><span class="line"><span class="hljs-regexp"></span></span><br><span class="line"><span class="hljs-regexp">export default HocBind</span></span><br></pre></td></tr></table></figure>
+
+<p>使用</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;HocBind initialValue=<span class="hljs-string">"init"</span> onChange=&#123;val =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`HocBind`</span>, val) &#125; &gt;</span><br><span class="line">  &#123;props =&gt; (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      &lt;p&gt;&#123;props.value&#125;&lt;<span class="hljs-regexp">/p&gt;</span></span><br><span class="line"><span class="hljs-regexp">      &lt;input placeholder="input" &#123;...props&#125; /</span>&gt;</span><br><span class="line">    &lt;<span class="hljs-regexp">/&gt;</span></span><br><span class="line"><span class="hljs-regexp">  )&#125;</span></span><br><span class="line"><span class="hljs-regexp">&lt;/</span>HocBind&gt;</span><br></pre></td></tr></table></figure>
+
+<h6 id="Hook"><a href="#Hook" class="headerlink" title="Hook"></a>Hook</h6><p>最后我们再来看看 <code>Hook</code> 的实现方式，我们定义了一个 <code>useBind</code> 方法，接受一个 <code>initialValue</code> 参数作为默认输入，使用的时候我们使用 <code>inputProps</code> 来接收调用 <code>useBind()</code> 以后的返回值，然后在使用的时候我们就可以直接用 <code>inputProps.value</code>，然后将剩余的 <code>props</code>（也就是 <code>onChange</code>）传递给 <code>input</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> React, &#123; Component, useState &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">useBind</span>(<span class="hljs-params">initialValue</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> [value, setValue] = useState(initialValue || <span class="hljs-string">''</span>)</span><br><span class="line">  <span class="hljs-keyword">const</span> onChange = <span class="hljs-function"><span class="hljs-params">e</span> =&gt;</span> &#123;</span><br><span class="line">    setValue(e.target.value)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> &#123; value, onChange &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">InputBind</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> inputProps = useBind(<span class="hljs-string">'init'</span>)</span><br><span class="line">  <span class="hljs-keyword">return</span> (</span><br><span class="line">    &lt;&gt;</span><br><span class="line">      &lt;p&gt;&#123;inputProps.value&#125;&lt;<span class="hljs-regexp">/p&gt;</span></span><br><span class="line"><span class="hljs-regexp">      &lt;input &#123;...inputProps&#125; /</span>&gt;</span><br><span class="line">    &lt;<span class="hljs-regexp">/&gt;</span></span><br><span class="line"><span class="hljs-regexp">  )</span></span><br><span class="line"><span class="hljs-regexp">&#125;</span></span><br><span class="line"><span class="hljs-regexp"></span></span><br><span class="line"><span class="hljs-regexp">class App extends Component &#123;</span></span><br><span class="line"><span class="hljs-regexp">  render() &#123;</span></span><br><span class="line"><span class="hljs-regexp">    return (</span></span><br><span class="line"><span class="hljs-regexp">      &lt;InputBind /</span>&gt;</span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> App</span><br></pre></td></tr></table></figure>
+
+<h6 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h6><p>最后我们再来比较一下上面的几种实现方式，<code>HOC</code> 和 <code>Render Props</code> 的方式都会侵入代码，使得代码阅读性下降，也不够优雅，组件内部暴露的 <code>value</code> 值，在外部也很难拿到，反观 <code>Hook</code> 的写法，逻辑完全解耦，使用场景最大化且不侵入代码，在组件顶层可以拿到双向绑定的值，比之前优雅很多，所以说</p>
+<ul>
+<li>使用 <code>Hook</code> 可读性高，也易于维护</li>
+<li>使用 <code>Hook</code> 不会侵入代码，不会造成嵌套</li>
+<li>使用 <code>Hook</code>，<code>UI</code> 和逻辑彻底拆分，更容易复用</li>
+</ul>
+<h4 id="数据请求"><a href="#数据请求" class="headerlink" title="数据请求"></a>数据请求</h4><p>最后我们再来看一个稍微复杂点的示例，即封装我们自己的 <code>fetch</code> 方法，也就是自定义 <code>useFetch</code>，因为封装请求数据的逻辑也是我们最为常见的用法，下面来看看第一个版本的实现</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">useFetch</span>(<span class="hljs-params">fetch, params</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> [data, setData] = useState(&#123;&#125;)</span><br><span class="line">  <span class="hljs-keyword">const</span> fetchApi = useCallback(<span class="hljs-keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> fetch(params)</span><br><span class="line">    <span class="hljs-keyword">if</span> (res.code === <span class="hljs-number">1</span>) &#123;</span><br><span class="line">      setData(res.data)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, [fetch, params])</span><br><span class="line">  useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    fetchApi()</span><br><span class="line">  &#125;, [fetchApi])</span><br><span class="line">  <span class="hljs-keyword">return</span> data</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> getUrl = <span class="hljs-function"><span class="hljs-params">params</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> url = <span class="hljs-string">`url`</span> + objToString(params)</span><br><span class="line">  <span class="hljs-keyword">return</span> fetch(url).then(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> res.json())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getUserCode</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> data = useFetch(getUrl, &#123; <span class="hljs-attr">user</span>: <span class="hljs-string">'zhangsan'</span> &#125;)</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>&#123;data.userCode&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看上去似乎没有什么问题，但是运行以后却会发现，无限循环，浏览器崩溃了，那么问题到底出在哪里呢？其实我们仔细排查后就会发现，问题是出在 <code>useCallback</code> 上，首先我们调用 <code>useFetch(getUrl, { user: &#39;zhangsan&#39; })</code> 的时候，<code>useFetch()</code> 的第二个参数 <code>params</code> 是被 <code>useCallback</code> 所依赖的，我们先来梳理一下执行流程，如下</p>
+<ol>
+<li><code>render</code></li>
+<li>执行 <code>useEffect</code></li>
+<li>调用 <code>useCallback</code> 方法</li>
+<li>更新 <code>data</code></li>
+<li><code>render</code></li>
+<li><code>useEffect</code></li>
+<li>调用 <code>useCallback</code> 方法判断依赖是否变化来确定是否跳过这次执行</li>
+<li>…</li>
+</ol>
+<p>看到问题所在了吗，因为对于 <code>useCallback</code> 来说 <code>params</code> 对象每次都是新的对象，所以这个渲染流程会一直执行，造成死循环，要解决上面的问题，我们可以使用我们之前提到过的 <code>useMemo</code>，<code>useMemo</code> 的作用就是帮助我们缓存 <code>params</code> 且返回一个之前记忆的值，当 <code>useMemo</code> 的依赖值没有变化的时候，记忆的值就是不变的，所以 <code>useCallback</code> 会跳过此次执行</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> params = useMemo(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> (&#123; <span class="hljs-attr">user</span>: <span class="hljs-string">'zhangsan'</span> &#125;), [])</span><br><span class="line"><span class="hljs-keyword">const</span> data = useFetch(getUrl, params)</span><br></pre></td></tr></table></figure>
+
+<p>虽然我们的问题解决了，但是可以发现，我们每次在使用 <code>useFetch</code> 的时候都需要先使用 <code>useMemo</code> 将 <code>params</code> 包裹一遍，十分繁琐，那么有没有更好的解决办法呢？方法肯定是有的，在这种情况下我们就可以利用 <code>useState</code> 来帮助我们缓存 <code>params</code>，当它没有变化的时候，<code>useCallback</code> 和 <code>useEffect</code> 都会认为它是不变的，所以会跳过执行回调</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">useFetch</span>(<span class="hljs-params">fetch, params</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> [data, setData] = useState(&#123;&#125;)</span><br><span class="line">  <span class="hljs-keyword">const</span> [newParams] = useState(params)</span><br><span class="line">  <span class="hljs-keyword">const</span> fetchApi = useCallback(<span class="hljs-keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> fetch(newParams)</span><br><span class="line">    <span class="hljs-keyword">if</span> (res.code === <span class="hljs-number">1000</span>) &#123;</span><br><span class="line">      setData(res.data)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, [fetch, newParams])</span><br><span class="line"></span><br><span class="line">  useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    fetchApi()</span><br><span class="line">  &#125;, [fetchApi])</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> data</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// USE</span></span><br><span class="line"><span class="hljs-keyword">const</span> data = useFetch(getUrl, &#123; <span class="hljs-attr">user</span>: <span class="hljs-string">'zhangsan'</span> &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>任务虽然完成了，但是看上去显然不够通用，比如我们需要更新参数，又或者在不改变参数的情况下，手动点击刷新页面按钮等，所以最后我们再来调整一下，以便让其变得更为通用一些，最终版本代码如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">useFetch</span>(<span class="hljs-params">fetch, params, visible = true</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> [data, setData] = useState(&#123;&#125;)</span><br><span class="line">  <span class="hljs-keyword">const</span> [loading, setLoading] = useState(<span class="hljs-literal">false</span>)</span><br><span class="line">  <span class="hljs-keyword">const</span> [newParams, setNewParams] = useState(params)</span><br><span class="line">  <span class="hljs-keyword">const</span> fetchApi = useCallback(<span class="hljs-keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (visible) &#123;</span><br><span class="line">      setLoading(<span class="hljs-literal">true</span>)</span><br><span class="line">      <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> fetch(newParams)</span><br><span class="line">      <span class="hljs-keyword">if</span> (res.code === <span class="hljs-number">1000</span>) &#123;</span><br><span class="line">        setData(res.data)</span><br><span class="line">      &#125;</span><br><span class="line">      setLoading(<span class="hljs-literal">false</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, [fetch, newParams, visible])</span><br><span class="line"></span><br><span class="line">  useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    fetchApi()</span><br><span class="line">  &#125;, [fetchApi])</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">const</span> doFetch = useCallback(<span class="hljs-function"><span class="hljs-params">rest</span> =&gt;</span> &#123;</span><br><span class="line">    setNewParams(rest)</span><br><span class="line">  &#125;, [])</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">const</span> reFetch = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    setNewParams(<span class="hljs-built_in">Object</span>.assign(&#123;&#125;, newParams))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> &#123; loading, data, doFetch, reFetch &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Hook-的好处"><a href="#Hook-的好处" class="headerlink" title="Hook 的好处"></a>Hook 的好处</h2><p>我们在上面介绍了许多 <code>Hook</code> 的相关内容，包括如何定义，如何使用，下面我们就来看看它相对于 <code>HOC</code> 和 <code>Mixin</code> 所具备的一些优点</p>
+<h4 id="减少状态逻辑复用的风险"><a href="#减少状态逻辑复用的风险" class="headerlink" title="减少状态逻辑复用的风险"></a>减少状态逻辑复用的风险</h4><p><code>Hook</code> 和 <code>Mixin</code> 在用法上有一定的相似之处，但是 <code>Mixin</code> 引入的逻辑和状态是可以相互覆盖的，而多个 <code>Hook</code> 之间互不影响，这让我们不需要在把一部分精力放在防止避免逻辑复用的冲突上，<br>在不遵守约定的情况下使用 <code>HOC</code> 也有可能带来一定冲突，比如 <code>props</code> 覆盖等等，使用 <code>Hook</code> 则可以避免这些问题</p>
+<h4 id="避免地狱式嵌套"><a href="#避免地狱式嵌套" class="headerlink" title="避免地狱式嵌套"></a>避免地狱式嵌套</h4><p>大量使用 <code>HOC</code> 的情况下让我们的代码变得嵌套层级非常深，使用 <code>Hook</code>，我们可以实现扁平式的状态逻辑复用，而避免了大量的组件嵌套</p>
+<h4 id="让组件更容易理解"><a href="#让组件更容易理解" class="headerlink" title="让组件更容易理解"></a>让组件更容易理解</h4><p>在使用 <code>Class</code> 组件构建我们的程序时，他们各自拥有自己的状态，业务逻辑的复杂使这些组件变得越来越庞大，各个生命周期中会调用越来越多的逻辑，越来越难以维护，使用 <code>Hook</code>，可以让你更大限度的将公用逻辑抽离，将一个组件分割成更小的函数，而不是强制基于生命周期方法进行分割</p>
+<h4 id="使用函数代替class"><a href="#使用函数代替class" class="headerlink" title="使用函数代替class"></a>使用函数代替class</h4><p>相比函数，编写一个 <code>Class</code> 可能需要掌握更多的知识，需要注意的点也越多，比如 <code>this</code> 指向、绑定事件等等，另外计算机理解一个函数比理解一个 <code>Class</code> 更快，<code>Hook</code> 让你可以在 <code>Class</code> 之外使用更多 <code>React</code> 的新特性</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://zh-hans.reactjs.org/docs/hooks-intro.html" target="_blank" rel="noopener">Hook 简介</a></li>
+<li><a href="https://www.ruanyifeng.com/blog/2019/09/react-hooks.html" target="_blank" rel="noopener">React Hooks 入门教程</a></li>
+<li><a href="https://juejin.im/post/6844903815762673671" target="_blank" rel="noopener">从Mixin到HOC再到Hook</a></li>
+</ul>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/React/">React</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/10/25/React/15/">
+                <span class="level-item">React 中的 HOC</span>
+                <i class="level-item fa fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="comment-container"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: '584b59de0d23cd48fbdd',
+        clientSecret: '5554c9aab0a640015867806f438bd2e10f297e5a',
+        id: '2d10700281e11dda6af1b867005aab09',
+        repo: 'gitalk',
+        owner: 'heptaluan',
+        admin: "heptaluan"
+    })
+    gitalk.render('comment-container')
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <figure class="avatar image is-128x128 has-mb-6">
+                            <img class="is-rounded" src="https://gitee.com/heptaluan/backups/raw/master/cdn/avatar.png" alt="heptaluan">
+                        </figure>
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        heptaluan
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Torches@Aimer
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>WuHan China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <!-- <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        163
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        10
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        10
+                    </p>
+                </div>
+            </div>
+        </nav> -->
+        <!-- <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/ppoffice" target="_blank">
+                关注我</a>
+        </div> -->
+        
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#为什么要使用-Hook">
+        <span class="has-mr-6">1</span>
+        <span>为什么要使用 Hook</span>
+        </a></li><li>
+        <a class="is-flex" href="#什么是-Hook">
+        <span class="has-mr-6">2</span>
+        <span>什么是 Hook</span>
+        </a></li><li>
+        <a class="is-flex" href="#useState">
+        <span class="has-mr-6">3</span>
+        <span>useState()</span>
+        </a></li><li>
+        <a class="is-flex" href="#useContext">
+        <span class="has-mr-6">4</span>
+        <span>useContext()</span>
+        </a></li><li>
+        <a class="is-flex" href="#useReducer">
+        <span class="has-mr-6">5</span>
+        <span>useReducer()</span>
+        </a></li><li>
+        <a class="is-flex" href="#useEffect">
+        <span class="has-mr-6">6</span>
+        <span>useEffect()</span>
+        </a></li><li>
+        <a class="is-flex" href="#useRef">
+        <span class="has-mr-6">7</span>
+        <span>useRef()</span>
+        </a></li><li>
+        <a class="is-flex" href="#自定义-Hook">
+        <span class="has-mr-6">8</span>
+        <span>自定义 Hook</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#日志打点">
+        <span class="has-mr-6">8.1</span>
+        <span>日志打点</span>
+        </a></li><li>
+        <a class="is-flex" href="#修改页面标题">
+        <span class="has-mr-6">8.2</span>
+        <span>修改页面标题</span>
+        </a></li><li>
+        <a class="is-flex" href="#双向绑定">
+        <span class="has-mr-6">8.3</span>
+        <span>双向绑定</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#HOC">
+        <span class="has-mr-6">8.3.1</span>
+        <span>HOC</span>
+        </a></li><li>
+        <a class="is-flex" href="#Render-Props">
+        <span class="has-mr-6">8.3.2</span>
+        <span>Render Props</span>
+        </a></li><li>
+        <a class="is-flex" href="#Hook">
+        <span class="has-mr-6">8.3.3</span>
+        <span>Hook</span>
+        </a></li><li>
+        <a class="is-flex" href="#对比">
+        <span class="has-mr-6">8.3.4</span>
+        <span>对比</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#数据请求">
+        <span class="has-mr-6">8.4</span>
+        <span>数据请求</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#Hook-的好处">
+        <span class="has-mr-6">9</span>
+        <span>Hook 的好处</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#减少状态逻辑复用的风险">
+        <span class="has-mr-6">9.1</span>
+        <span>减少状态逻辑复用的风险</span>
+        </a></li><li>
+        <a class="is-flex" href="#避免地狱式嵌套">
+        <span class="has-mr-6">9.2</span>
+        <span>避免地狱式嵌套</span>
+        </a></li><li>
+        <a class="is-flex" href="#让组件更容易理解">
+        <span class="has-mr-6">9.3</span>
+        <span>让组件更容易理解</span>
+        </a></li><li>
+        <a class="is-flex" href="#使用函数代替class">
+        <span class="has-mr-6">9.4</span>
+        <span>使用函数代替class</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#参考">
+        <span class="has-mr-6">10</span>
+        <span>参考</span>
+        </a></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+        
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Angular/">
+            <span class="level-start">
+                <span class="level-item">Angular</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">16</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/CSS/">
+            <span class="level-start">
+                <span class="level-item">CSS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">16</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Essay/">
+            <span class="level-start">
+                <span class="level-item">Essay</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">31</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/HTML/">
+            <span class="level-start">
+                <span class="level-item">HTML</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/HTTP/">
+            <span class="level-start">
+                <span class="level-item">HTTP</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">12</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/JavaScript/">
+            <span class="level-start">
+                <span class="level-item">JavaScript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">48</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Node-js/">
+            <span class="level-start">
+                <span class="level-item">Node.js</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">16</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/React/">
+            <span class="level-start">
+                <span class="level-item">React</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">15</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Vue/">
+            <span class="level-start">
+                <span class="level-item">Vue</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/jQuery/">
+            <span class="level-start">
+                <span class="level-item">jQuery</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Angular/" style="font-size: 16.67px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16.67px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/HTTP/" style="font-size: 13.33px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16.67px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 11.67px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.67px;">jQuery</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow  ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/10/31/React/16/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg" alt="React 中的 Hook">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-30T16:00:00.000Z">2020-10-31</time></div>
+                    <a href="/2020/10/31/React/16/" class="has-link-black-ter is-size-6">React 中的 Hook</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/10/25/React/15/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/15.jpg" alt="React 中的 HOC">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-24T16:00:00.000Z">2020-10-25</time></div>
+                    <a href="/2020/10/25/React/15/" class="has-link-black-ter is-size-6">React 中的 HOC</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/10/24/React/14/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
+                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/10/23/React/13/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg" alt="React-Redux 的实现">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-22T16:00:00.000Z">2020-10-23</time></div>
+                    <a href="/2020/10/23/React/13/" class="has-link-black-ter is-size-6">React-Redux 的实现</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/10/11/React/11/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/11.jpg" alt="React 查漏补缺">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-10T16:00:00.000Z">2020-10-11</time></div>
+                    <a href="/2020/10/11/React/11/" class="has-link-black-ter is-size-6">React 查漏补缺</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Angular/">
+                        <span class="tag">Angular</span>
+                        <span class="tag is-grey">16</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/CSS/">
+                        <span class="tag">CSS</span>
+                        <span class="tag is-grey">16</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Essay/">
+                        <span class="tag">Essay</span>
+                        <span class="tag is-grey">31</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/HTML/">
+                        <span class="tag">HTML</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/HTTP/">
+                        <span class="tag">HTTP</span>
+                        <span class="tag is-grey">12</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/JavaScript/">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag is-grey">48</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Node-js/">
+                        <span class="tag">Node.js</span>
+                        <span class="tag is-grey">16</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/React/">
+                        <span class="tag">React</span>
+                        <span class="tag is-grey">15</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Vue/">
+                        <span class="tag">Vue</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/jQuery/">
+                        <span class="tag">jQuery</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <!-- <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="React 中的 Hook" height="28">
+                
+                </a> -->
+                <p class="is-size-7">
+                &copy; 2016 - 2020
+                Made with ✿  heptaluan&nbsp;
+                
+                </p>
+            </div>
+            <!-- <div class="level-end">
+            
+            </div> -->
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fa fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
