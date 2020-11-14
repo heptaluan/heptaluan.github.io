@@ -16,7 +16,7 @@
 <meta property="og:description" content="本章主要用于记录一些 React 相关知识点，因为最近在复习 React 相关内容，发现版本迭代了许多，废弃了很多 API，也添加了一些新的方法（比如生命周期钩子等），所以就简单的在这里汇总整理一下，也算是查漏补缺">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/11.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.328Z">
+<meta property="og:updated_time" content="2020-11-14T14:59:32.278Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="React 查漏补缺">
 <meta name="twitter:description" content="本章主要用于记录一些 React 相关知识点，因为最近在复习 React 相关内容，发现版本迭代了许多，废弃了很多 API，也添加了一些新的方法（比如生命周期钩子等），所以就简单的在这里汇总整理一下，也算是查漏补缺">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    16 分钟 读完 (大约 2432 个字)
+                    20 分钟 读完 (大约 2934 个字)
                 </span>
                 
                 
@@ -269,6 +269,16 @@ var _hmt = _hmt || [];
 <blockquote>
 <p><code>React</code> 管得到的就是异步，管不到的就是同步</p>
 </blockquote>
+<h2 id="使用-React-Hook-来检查网络连接状态"><a href="#使用-React-Hook-来检查网络连接状态" class="headerlink" title="使用 React Hook 来检查网络连接状态"></a>使用 React Hook 来检查网络连接状态</h2><p>我们都知道，在 <code>JavaScript</code> 当中有一个 <a href="https://developer.mozilla.org/en-US/docs/Web/API/Navigator" target="_blank" rel="noopener">Navigator</a> 对象，它包含当前浏览器的状态和特性，比如定位、<code>userAgent</code> 和一些其他的属性，其中就包括当前是否处于网络连接状态，这里我们需要获取的就是 <code>onLine</code> 这个属性（这里需要注意它是驼峰命名的形式），下面我们就来看看如何在 <code>Hook</code> 中来使用</p>
+<p>显然我们的首要任务是需要一些状态来跟踪记录我们是否在线的状态以及把它从我们的自定义 <code>Hook</code> 中 <code>return</code> 出来，如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">useNetwork</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> [isOnline, setOnline] = useState(<span class="hljs-built_in">window</span>.navigator.onLine)</span><br><span class="line">  <span class="hljs-keyword">return</span> isOnline</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当组件正常挂载时这样做没有问题，但是如果当用户在渲染完成之后掉线我们该怎么做呢？所幸的是，我们可以监听两个事件，触发时以更新状态，为了达到这个效果我们需要使用 <code>useEffect Hook</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">useNetwork</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> [isOnline, setNetwork] = useState(<span class="hljs-built_in">window</span>.navigator.onLine)</span><br><span class="line">  useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">'offline'</span>, _ =&gt; setNetwork(<span class="hljs-built_in">window</span>.navigator.onLine))</span><br><span class="line">    <span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">'online'</span>, _ =&gt; setNetwork(<span class="hljs-built_in">window</span>.navigator.onLine))</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="hljs-keyword">return</span> isOnline</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如你所见我们监听了两个事件，<code>offline</code> 和 <code>online</code>（这里就不是驼峰命名的形式了），当事件触发的时候会随之更新状态，但是我们都知道在处理 <code>useEffect</code> 的时候应该 <code>return</code> 一个清理函数，这样 <code>React</code> 就可以帮助我们移除事件的监听，所以我们就不能直接在 <code>addEventListener</code> 当中使用箭头函数的方式了，而是应该传递同一个函数，这样 <code>React</code> 才能明确是哪一个监听器应该被移除，下面是我们最终版本的代码</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">useNetwork</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> [isOnline, setNetwork] = useState(<span class="hljs-built_in">window</span>.navigator.onLine)</span><br><span class="line">  <span class="hljs-keyword">const</span> updateNetwork = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    setNetwork(<span class="hljs-built_in">window</span>.navigator.onLine)</span><br><span class="line">  &#125;</span><br><span class="line">  useEffect(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">'offline'</span>, updateNetwork)</span><br><span class="line">    <span class="hljs-built_in">window</span>.addEventListener(<span class="hljs-string">'online'</span>, updateNetwork)</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-built_in">window</span>.removeEventListener(<span class="hljs-string">'offline'</span>, updateNetwork)</span><br><span class="line">      <span class="hljs-built_in">window</span>.removeEventListener(<span class="hljs-string">'online'</span>, updateNetwork)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="hljs-keyword">return</span> isOnline</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
         </div>
         
@@ -379,7 +389,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        163
+                        164
                     </p>
                 </div>
             </div>
@@ -468,7 +478,11 @@ var _hmt = _hmt || [];
         <a class="is-flex" href="#总结">
         <span class="has-mr-6">4.6</span>
         <span>总结</span>
-        </a></li></ul></li></ul>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#使用-React-Hook-来检查网络连接状态">
+        <span class="has-mr-6">5</span>
+        <span>使用 React Hook 来检查网络连接状态</span>
+        </a></li></ul>
         </div>
     </div>
 </div>
@@ -548,7 +562,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">React</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">15</span>
+                <span class="level-item tag">16</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Vue/">
@@ -578,7 +592,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 16.67px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16.67px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/HTTP/" style="font-size: 13.33px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16.67px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 11.67px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.67px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 16px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18px;">Essay</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/HTTP/" style="font-size: 14px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16px;">Node.js</a> <a href="/tags/React/" style="font-size: 16px;">React</a> <a href="/tags/Vue/" style="font-size: 12px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 12px;">jQuery</a>
     </div>
 </div>
 
@@ -592,6 +606,25 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/11/07/React/17/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="深入 useEffect">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-06T16:00:00.000Z">2020-11-07</time></div>
+                    <a href="/2020/11/07/React/17/" class="has-link-black-ter is-size-6">深入 useEffect</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -669,25 +702,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/11/React/11/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/11.jpg" alt="React 查漏补缺">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-10T16:00:00.000Z">2020-10-11</time></div>
-                    <a href="/2020/10/11/React/11/" class="has-link-black-ter is-size-6">React 查漏补缺</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -699,6 +713,17 @@ var _hmt = _hmt || [];
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2020/10/">
@@ -1304,7 +1329,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/React/">
                         <span class="tag">React</span>
-                        <span class="tag is-grey">15</span>
+                        <span class="tag is-grey">16</span>
                     </a>
                 </div>
                 

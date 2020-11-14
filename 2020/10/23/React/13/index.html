@@ -16,7 +16,7 @@
 <meta property="og:description" content="接上回 Redux 的实现，我们在之前的章节当中，从一个简单的示例开始一步一步推导出 Redux 的实现方式，但是之前我们也提到过，它其实跟 React.js 一点关系都没有，所以在本章当中我们会把 React.js 和 Redux 结合起来，用 Redux 模式帮助我们来管理 React.js 的应用状态">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.329Z">
+<meta property="og:updated_time" content="2020-11-14T14:59:32.279Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="React-Redux 的实现">
 <meta name="twitter:description" content="接上回 Redux 的实现，我们在之前的章节当中，从一个简单的示例开始一步一步推导出 Redux 的实现方式，但是之前我们也提到过，它其实跟 React.js 一点关系都没有，所以在本章当中我们会把 React.js 和 Redux 结合起来，用 Redux 模式帮助我们来管理 React.js 的应用状态">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    39 分钟 读完 (大约 5849 个字)
+                    39 分钟 读完 (大约 5853 个字)
                 </span>
                 
                 
@@ -282,7 +282,7 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'react'</span>;</span><br><span class="line"><span class="hljs-keyword">import</span> ReactDOM <span class="hljs-keyword">from</span> <span class="hljs-string">'react-dom'</span>;</span><br><span class="line"><span class="hljs-keyword">import</span> <span class="hljs-string">'./index.css'</span>;</span><br><span class="line"><span class="hljs-keyword">import</span> App <span class="hljs-keyword">from</span> <span class="hljs-string">'./App'</span>;</span><br><span class="line"><span class="hljs-keyword">import</span> <span class="hljs-string">'antd/dist/antd.css'</span>;</span><br><span class="line"><span class="hljs-keyword">import</span> &#123; Provider &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./Provider'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createStore</span>(<span class="hljs-params">reducer</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> state = <span class="hljs-literal">null</span></span><br><span class="line">  <span class="hljs-keyword">const</span> listeners = []</span><br><span class="line">  <span class="hljs-keyword">const</span> subscribe = <span class="hljs-function">(<span class="hljs-params">listener</span>) =&gt;</span> listeners.push(listener)</span><br><span class="line">  <span class="hljs-keyword">const</span> getState = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> state</span><br><span class="line">  <span class="hljs-keyword">const</span> dispatch = <span class="hljs-function">(<span class="hljs-params">action</span>) =&gt;</span> &#123;</span><br><span class="line">    state = reducer(state, action)</span><br><span class="line">    listeners.forEach(<span class="hljs-function">(<span class="hljs-params">listener</span>) =&gt;</span> listener())</span><br><span class="line">  &#125;</span><br><span class="line">  dispatch(&#123;&#125;)</span><br><span class="line">  <span class="hljs-keyword">return</span> &#123; getState, dispatch, subscribe &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> themeReducer = <span class="hljs-function">(<span class="hljs-params">state, action</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (!state) <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">    themeColor: <span class="hljs-string">'red'</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">switch</span> (action.type) &#123;</span><br><span class="line">    <span class="hljs-keyword">case</span> <span class="hljs-string">'CHANGE_COLOR'</span>:</span><br><span class="line">      <span class="hljs-keyword">return</span> &#123; ...state, <span class="hljs-attr">themeColor</span>: action.themeColor &#125;</span><br><span class="line">    <span class="hljs-keyword">default</span>:</span><br><span class="line">      <span class="hljs-keyword">return</span> state</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> store = createStore(themeReducer)</span><br><span class="line"></span><br><span class="line">ReactDOM.render(</span><br><span class="line">  &lt;Provider store=&#123;store&#125;&gt;</span><br><span class="line">    &lt;App /&gt;</span><br><span class="line">  &lt;<span class="hljs-regexp">/Provider&gt;,</span></span><br><span class="line"><span class="hljs-regexp">  document.getElementById('root')</span></span><br><span class="line"><span class="hljs-regexp">)</span></span><br></pre></td></tr></table></figure>
 
 <p>至此，我们的整个流程就算是走通了</p>
-<h2 id="组件划分"><a href="#组件划分" class="headerlink" title="组件划分"></a>组件划分</h2><p>最后我们再来回过头看一下我们设计的组件，我们在之前的 <a href="http://localhost:4000/2019/04/02/React/02/#React-Redux" target="_blank" rel="noopener">Redux、Flux 和 React-Redux 三者之间的区别</a> 章节当中曾经介绍过，<code>React-Redux</code> 将所有组件分成了两大类，<code>UI</code> 组件和容器组件，<code>UI</code> 组件基本只做一件事情，那就是根据 <code>props</code> 来进行渲染，而容器组件则是负责应用的逻辑、数据，把所有相关的 <code>UI</code> 组件组合起来，通过 <code>props</code> 控制它们</p>
+<h2 id="组件划分"><a href="#组件划分" class="headerlink" title="组件划分"></a>组件划分</h2><p>最后我们再来回过头看一下我们设计的组件，我们在之前的 <a href="https://heptaluan.github.io/2019/04/02/React/02/#React-Redux" target="_blank" rel="noopener">Redux、Flux 和 React-Redux 三者之间的区别</a> 章节当中曾经介绍过，<code>React-Redux</code> 将所有组件分成了两大类，<code>UI</code> 组件和容器组件，<code>UI</code> 组件基本只做一件事情，那就是根据 <code>props</code> 来进行渲染，而容器组件则是负责应用的逻辑、数据，把所有相关的 <code>UI</code> 组件组合起来，通过 <code>props</code> 控制它们</p>
 <p>但是我们观察我们的 <code>Header</code> 组件，这个组件其实在执行 <code>connect</code> 之前它一直都是 <code>UI</code> 组件，就是因为 <code>connect</code> 了导致它和 <code>context</code> 扯上了关系，导致它变成容器组件了，也使得这个组件没有了很好的复用性，所以我们需要来重构一下，我们在 <code>src</code> 目录下新建两个文件夹 <code>components</code> 和 <code>containers</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">├─ App                         </span><br><span class="line">│  ├─ components          </span><br><span class="line">│  └─ containers</span><br></pre></td></tr></table></figure>
 
@@ -305,7 +305,7 @@ var _hmt = _hmt || [];
 <p>而每个组件需要的数据和需要触发的 <code>action</code> 都不一样，所以我们调整了 <code>connect</code>，让它可以接受两个参数 <code>mapStateToProps</code> 和 <code>mapDispatchToProps</code>，分别用于告诉 <code>connect</code> 这个组件需要什么数据和需要触发什么 <code>action</code></p>
 <p>最后为了把所有关于 <code>context</code> 的代码完全从我们业务逻辑里面清除掉，我们构建了一个 <code>Provider</code> 组件，<code>Provider</code> 作为所有组件树的根节点，外界可以通过 <code>props</code> 给它提供 <code>store</code>，它会把 <code>store</code> 放到自己的 <code>context</code> 里面，好让子组件 <code>connect</code> 的时候都能够获取到</p>
 <p>最后的最后，我们将我们的组件重新的划分了一遍，分为了 <code>UI</code> 组件和容器组件，<code>UI</code> 组件基本只做一件事情，那就是根据 <code>props</code> 来进行渲染，而容器组件则是负责应用的逻辑、数据，把所有相关的 <code>UI</code> 组件组合起来，通过 <code>props</code> 控制它们</p>
-<p>当然，我们实现的这版 <code>React-Redux</code> 也是存在着一定问题的，比如不相关的数据变化的时候其实所有组件都会重新渲染的，不过在这里我们就不详细展开了，想了解更多的话可以参考之前整理过的一篇系列文章 <a href="http://localhost:4000/2019/12/23/React/09/" target="_blank" rel="noopener">Virtual DOM 与 Diff 算法内容总结</a> 来了解更多，但是通过上面的示例，我们知道了为什么要 <code>connect</code>，为什么要 <code>mapStateToProps</code> 和 <code>mapDispatchToProps</code>，以及什么是 <code>Provider</code>，这样在接触官方的 <code>React-Redux</code> 的时候就会变得上手十分简单</p>
+<p>当然，我们实现的这版 <code>React-Redux</code> 也是存在着一定问题的，比如不相关的数据变化的时候其实所有组件都会重新渲染的，不过在这里我们就不详细展开了，想了解更多的话可以参考之前整理过的一篇系列文章 <a href="https://heptaluan.github.io/2019/12/23/React/09/" target="_blank" rel="noopener">Virtual DOM 与 Diff 算法内容总结</a> 来了解更多，但是通过上面的示例，我们知道了为什么要 <code>connect</code>，为什么要 <code>mapStateToProps</code> 和 <code>mapDispatchToProps</code>，以及什么是 <code>Provider</code>，这样在接触官方的 <code>React-Redux</code> 的时候就会变得上手十分简单</p>
 
         </div>
         
@@ -416,7 +416,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        163
+                        164
                     </p>
                 </div>
             </div>
@@ -565,7 +565,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">React</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">15</span>
+                <span class="level-item tag">16</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Vue/">
@@ -595,7 +595,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 16.67px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16.67px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/HTTP/" style="font-size: 13.33px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16.67px;">Node.js</a> <a href="/tags/React/" style="font-size: 15px;">React</a> <a href="/tags/Vue/" style="font-size: 11.67px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.67px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 16px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18px;">Essay</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/HTTP/" style="font-size: 14px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16px;">Node.js</a> <a href="/tags/React/" style="font-size: 16px;">React</a> <a href="/tags/Vue/" style="font-size: 12px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 12px;">jQuery</a>
     </div>
 </div>
 
@@ -609,6 +609,25 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/11/07/React/17/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="深入 useEffect">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-06T16:00:00.000Z">2020-11-07</time></div>
+                    <a href="/2020/11/07/React/17/" class="has-link-black-ter is-size-6">深入 useEffect</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -686,25 +705,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/11/React/11/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/11.jpg" alt="React 查漏补缺">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-10T16:00:00.000Z">2020-10-11</time></div>
-                    <a href="/2020/10/11/React/11/" class="has-link-black-ter is-size-6">React 查漏补缺</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -716,6 +716,17 @@ var _hmt = _hmt || [];
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2020/10/">
@@ -1321,7 +1332,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/React/">
                         <span class="tag">React</span>
-                        <span class="tag is-grey">15</span>
+                        <span class="tag is-grey">16</span>
                     </a>
                 </div>
                 
