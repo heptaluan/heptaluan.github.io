@@ -16,7 +16,7 @@
 <meta property="og:description" content="算是一些手写 API，常用方法的一些汇总，反正就是面试可能涉及到的一些手写功能可能都会有所涉及，不仅仅只是为了面试所用，也算是在这里做下汇总记录，方便以后可以快速查询（可以直接参考左边目录）">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/45.jpg">
-<meta property="og:updated_time" content="2020-11-07T14:22:54.543Z">
+<meta property="og:updated_time" content="2020-11-21T14:21:30.096Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中一些常用方法的实现">
 <meta name="twitter:description" content="算是一些手写 API，常用方法的一些汇总，反正就是面试可能涉及到的一些手写功能可能都会有所涉及，不仅仅只是为了面试所用，也算是在这里做下汇总记录，方便以后可以快速查询（可以直接参考左边目录）">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    1 小时 读完 (大约 9507 个字)
+                    1 小时 读完 (大约 9958 个字)
                 </span>
                 
                 
@@ -520,6 +520,14 @@ var _hmt = _hmt || [];
 
 <h4 id="Promise-版本-Ajax"><a href="#Promise-版本-Ajax" class="headerlink" title="Promise 版本 Ajax"></a>Promise 版本 Ajax</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getJSON</span>(<span class="hljs-params">url</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> xhr = <span class="hljs-keyword">new</span> XMLHttpRequest()</span><br><span class="line">    xhr.open(<span class="hljs-string">'GET'</span>, url, <span class="hljs-literal">true</span>)</span><br><span class="line">    xhr.onreadystatechange = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.readyState === <span class="hljs-number">4</span>) &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.status === <span class="hljs-number">200</span>) &#123;</span><br><span class="line">          resolve(<span class="hljs-keyword">this</span>.responseText, <span class="hljs-keyword">this</span>)</span><br><span class="line">        &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">          <span class="hljs-keyword">var</span> resJson = &#123; <span class="hljs-attr">code</span>: <span class="hljs-keyword">this</span>.status, <span class="hljs-attr">response</span>: <span class="hljs-keyword">this</span>.response &#125;</span><br><span class="line">          reject(resJson, <span class="hljs-keyword">this</span>)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    xhr.send()</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 使用</span></span><br><span class="line">getJSON(url).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(data)</span><br><span class="line">&#125;).catch(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">status</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Error: <span class="hljs-subst">$&#123;status&#125;</span>`</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
+<h4 id="终止请求"><a href="#终止请求" class="headerlink" title="终止请求"></a>终止请求</h4><p>我们在上面提到了 <code>Ajax</code>，所以在这里我们就来多看一点，那就是如何终止请求，目前来说，使用较多的请求数据有两种方式，一种是 <code>Ajax</code>，另一种就是 <code>fetch</code>，我们先来看看在 <code>Ajax</code> 当中终止请求的方式，方法很简单，当我们由于某种原因（比如重复请求）想要终止它的时候，我们只需要调用 <code>abort()</code> 即可</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xhr.abort()</span><br></pre></td></tr></table></figure>
+
+<p>但是对于 <code>fetch</code> 来说，我们主要使用的是 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/AbortSignal" target="_blank" rel="noopener">AbortSignal</a> 这个接口，在 <code>MDN</code> 上的介绍是，<code>AbortSignal</code> 接口表示一个信号对象（<code>signal object</code>），它允许通过 <code>AbortController</code> 对象与 <code>DOM</code> 请求（如 <code>Fetch</code>）进行通信并在需要时将其中止</p>
+<p>看到这里是不是有一些眉目了，我们只需要使用 <code>AbortController()</code> 构造函数创建一个控制器，然后使用 <code>AbortController.signal</code> 属性就可以了，当获取请求被启动时，我们在请求的选项对象中传递 <code>AbortSignal</code> 作为一个选项，这将信号和控制器与获取请求相关联，并允许我们通过调用 <code>AbortController.abort()</code> 来中止它，代码如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> controller = <span class="hljs-keyword">new</span> AbortController()</span><br><span class="line"><span class="hljs-keyword">const</span> signal = controller.signal</span><br><span class="line"><span class="hljs-built_in">console</span>.log(signal, <span class="hljs-string">`signal 的初始状态`</span>)</span><br><span class="line"></span><br><span class="line">signal.addEventListener(<span class="hljs-string">'abort'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(signal, <span class="hljs-string">`signal 的中断状态`</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  controller.abort()</span><br><span class="line">&#125;, <span class="hljs-number">2000</span>)</span><br><span class="line"></span><br><span class="line">fetch(<span class="hljs-string">'/api'</span>, &#123; signal &#125;)</span><br><span class="line">  .then(<span class="hljs-function">(<span class="hljs-params">res</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(res, <span class="hljs-string">'请求成功'</span>)</span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
+
+<p>但是也有一个需要注意的地方，那就是虽然 <code>AbortController</code> 已经诞生很长时间了，但是目前在 <code>MDN</code> 上还是被标注为实验性技术，所以还是需要根据实际使用场景来考虑是否使用</p>
 <h4 id="getElementsByClassName"><a href="#getElementsByClassName" class="headerlink" title="getElementsByClassName()"></a>getElementsByClassName()</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getElementsByClassName</span>(<span class="hljs-params">classname</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-built_in">document</span>.querySelectorAll) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-built_in">document</span>.querySelectorAll(<span class="hljs-string">'.'</span> + classname)</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> elements = <span class="hljs-built_in">document</span>.getElementsByTagName(<span class="hljs-string">'*'</span>)</span><br><span class="line">    <span class="hljs-keyword">var</span> reg = <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">'(^|\\s)'</span> + classname + <span class="hljs-string">'(\\s|$)'</span>)</span><br><span class="line">    <span class="hljs-keyword">var</span> results = []</span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>, length = elements.length; i &lt; length; i++) &#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (reg.test(elements[i].className)) &#123;</span><br><span class="line">        results.push(elements[i])</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> results</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
@@ -632,7 +640,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        164
+                        165
                     </p>
                 </div>
             </div>
@@ -894,8 +902,12 @@ var _hmt = _hmt || [];
         <span class="has-mr-6">13.3</span>
         <span>Promise 版本 Ajax</span>
         </a></li><li>
-        <a class="is-flex" href="#getElementsByClassName">
+        <a class="is-flex" href="#终止请求">
         <span class="has-mr-6">13.4</span>
+        <span>终止请求</span>
+        </a></li><li>
+        <a class="is-flex" href="#getElementsByClassName">
+        <span class="has-mr-6">13.5</span>
         <span>getElementsByClassName()</span>
         </a></li></ul></li></ul>
         </div>
@@ -961,7 +973,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">48</span>
+                <span class="level-item tag">49</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -1021,6 +1033,25 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/11/15/JavaScript/55/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-14T16:00:00.000Z">2020-11-15</time></div>
+                    <a href="/2020/11/15/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中 Promise 的实现</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -1098,25 +1129,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/23/React/13/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg" alt="React-Redux 的实现">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-22T16:00:00.000Z">2020-10-23</time></div>
-                    <a href="/2020/10/23/React/13/" class="has-link-black-ter is-size-6">React-Redux 的实现</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1135,7 +1147,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1730,7 +1742,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">48</span>
+                        <span class="tag is-grey">49</span>
                     </a>
                 </div>
                 
