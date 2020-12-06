@@ -16,7 +16,7 @@
 <meta property="og:description" content="在一些基于类的语言（比如 Java）当中，继承（inheritance/extends）提供了两个有用的服务，如果一个新的类与一个已存在的类大部分相似，那么你只需说明其不同点即可，JavaScript 是一门弱类型语言，从不需要类型转换，它可以模拟那些基于类的模式，同时它也支持其他更具表现力的模式">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/20.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.296Z">
+<meta property="og:updated_time" content="2020-12-04T02:09:11.040Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的继承">
 <meta name="twitter:description" content="在一些基于类的语言（比如 Java）当中，继承（inheritance/extends）提供了两个有用的服务，如果一个新的类与一个已存在的类大部分相似，那么你只需说明其不同点即可，JavaScript 是一门弱类型语言，从不需要类型转换，它可以模拟那些基于类的模式，同时它也支持其他更具表现力的模式">
@@ -195,7 +195,7 @@ var _hmt = _hmt || [];
 
 <p>但是上面这种方式是存在一定缺点的，那就是类式继承是继承不到父类原型上的属性和方法</p>
 <h2 id="原型继承"><a href="#原型继承" class="headerlink" title="原型继承"></a>原型继承</h2><p>原型继承有别于类式继承，因为继承不在对象本身，而在对象的原型上（<code>prototype</code>），每一个对象都有原型，在浏览器中它体现在一个隐藏的 <code>__proto__</code> 属性上，在一些现代浏览器中你可以更改它们（不过不太建议这样操作）</p>
-<p>它的原理是直接让子类的原型对象指向父类实例，当子类实例找不到对应的属性和方法时，就会往它的原型对象，也就是父类实例上找，如果没有找到，它会再次往下继续查找，这样逐级查找，一直找到了要找的方法，这些查找的原型构成了该对象的原型链条（最后指向 <code>Object.prototype.__proto__</code> 也就是 <code>null</code>），类似于下面这样</p>
+<p>它的原理是直接让子类的原型对象指向父类实例，当子类实例找不到对应的属性和方法时，就会往它的原型对象，也就是父类实例上找，如果没有找到，它会再次往下继续查找，这样逐级查找，一直找到了要找的方法，这些查找的原型构成了该对象的原型链条（最后指向 <code>Object.prototype.__proto__</code> 也就是 <code>Null</code>），类似于下面这样</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Foo</span>(<span class="hljs-params"></span>) </span>&#123;&#125;</span><br><span class="line"><span class="hljs-keyword">var</span> f1 = <span class="hljs-keyword">new</span> Foo()</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// f1 的 __proto__ 是指向 Foo.prototype 的</span></span><br><span class="line">f1.__proto__ === Foo.prototype</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 而 Foo.prototype.__proto__ 又是指向 Object.prototype</span></span><br><span class="line">Foo.prototype.__proto__ === <span class="hljs-built_in">Object</span>.prototype</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 而 Object.prototype.__proto__ 则是指向 null 的</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.prototype.__proto__ === <span class="hljs-literal">null</span></span><br></pre></td></tr></table></figure>
 
 <p>下面我们再来看看原型继承的例子，如下</p>
@@ -219,7 +219,7 @@ var _hmt = _hmt || [];
 <p>但这种方式存在一个问题，由于子类原型和父类原型指向同一个对象，我们对子类原型的操作会影响到父类原型，例如给 <code>Child.prototype</code> 增加一个 <code>getName()</code> 方法，那么会导致 <code>Parent.prototype</code> 也增加或被覆盖一个 <code>getName()</code> 方法，为了解决这个问题，我们在这里可以使用 <code>Obeject.create()</code> 这个方法来进行创建</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Parent</span>(<span class="hljs-params">name</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.name = [name]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Parent.prototype.getName = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Child</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  Parent.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'zhangsan'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Child.prototype = <span class="hljs-built_in">Object</span>.create(Parent.prototype)</span><br><span class="line">Child.prototype.constructor = Child</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> child = <span class="hljs-keyword">new</span> Child()</span><br><span class="line"><span class="hljs-keyword">const</span> parent = <span class="hljs-keyword">new</span> Parent()</span><br><span class="line">child.getName()   <span class="hljs-comment">// ['zhangsan']</span></span><br><span class="line">parent.getName()  <span class="hljs-comment">// 报错, 找不到getName()</span></span><br></pre></td></tr></table></figure>
 
-<p>以上便是我们最终完善后的继承方式，也称为寄生组合式继承，它是目前最为成熟的继承方式，在 <code>babel</code> 对 <code>ES6</code> 继承的转化当中也是使用了寄生组合式继承</p>
+<p>以上便是我们最终完善后的继承方式，也称为寄生组合式继承，它是目前最为成熟的继承方式，在 <code>Babel</code> 对 <code>ES6</code> 继承的转化当中也是使用了寄生组合式继承</p>
 <blockquote>
 <p>关于 <code>Object.create()</code> 方法更为详细的用法可以参考 <a href="https://heptaluan.github.io/2017/03/03/JavaScript/07/" target="_blank" rel="noopener">Object.create()</a></p>
 </blockquote>
@@ -339,7 +339,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -440,7 +440,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -527,6 +527,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -601,25 +620,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -638,7 +638,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1212,7 +1212,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

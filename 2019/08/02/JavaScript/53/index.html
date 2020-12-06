@@ -16,7 +16,7 @@
 <meta property="og:description" content="算是一些手写 API，常用方法的一些汇总，反正就是面试可能涉及到的一些手写功能可能都会有所涉及，不仅仅只是为了面试所用，也算是在这里做下汇总记录，方便以后可以快速查询（可以直接参考左边目录）">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/45.jpg">
-<meta property="og:updated_time" content="2020-11-21T14:21:30.096Z">
+<meta property="og:updated_time" content="2020-11-29T15:18:43.352Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中一些常用方法的实现">
 <meta name="twitter:description" content="算是一些手写 API，常用方法的一些汇总，反正就是面试可能涉及到的一些手写功能可能都会有所涉及，不仅仅只是为了面试所用，也算是在这里做下汇总记录，方便以后可以快速查询（可以直接参考左边目录）">
@@ -488,7 +488,7 @@ var _hmt = _hmt || [];
 <h4 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h4><p>适配器模式是将一个接口转换成客户希望的另一个接口，使接口不兼容的那些类可以一起工作，我们在生活中就常常有使用适配器的场景，例如出境旅游插头插座不匹配，这时我们就需要使用转换插头，也就是适配器来帮我们解决问题</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Adaptee</span> </span>&#123;</span><br><span class="line">  test() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-string">'旧接口'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Target</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>() &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.adaptee = <span class="hljs-keyword">new</span> Adaptee()</span><br><span class="line">  &#125;</span><br><span class="line">  test() &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> info = <span class="hljs-keyword">this</span>.adaptee.test()</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-string">`适配<span class="hljs-subst">$&#123;info&#125;</span>`</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> target = <span class="hljs-keyword">new</span> Target()</span><br><span class="line"><span class="hljs-built_in">console</span>.log(target.test())</span><br></pre></td></tr></table></figure>
 
-<h2 id="装饰器模式"><a href="#装饰器模式" class="headerlink" title="装饰器模式"></a>装饰器模式</h2><p>装饰器模式，可以理解为对类的一个包装，动态地拓展类的功能，<code>ES7</code> 的装饰器语法以及 <code>React</code> 中的高阶组件（<code>HoC</code>）都是这一模式的实现，<code>react-redux</code> 的 <code>connect()</code> 也运用了装饰器模式，这里以 <code>ES7</code> 的装饰器为例</p>
+<h2 id="装饰器模式"><a href="#装饰器模式" class="headerlink" title="装饰器模式"></a>装饰器模式</h2><p>装饰器模式，可以理解为对类的一个包装，动态地拓展类的功能，<code>ES7</code> 的装饰器语法以及 <code>React</code> 中的高阶组件（<code>HoC</code>）都是这一模式的实现，<code>React-Redux</code> 的 <code>connect()</code> 也运用了装饰器模式，这里以 <code>ES7</code> 的装饰器为例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">info</span>(<span class="hljs-params">target</span>) </span>&#123;</span><br><span class="line">  target.prototype.name = <span class="hljs-string">'张三'</span></span><br><span class="line">  target.prototype.age = <span class="hljs-number">10</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@info</span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Man</span> </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> man = <span class="hljs-keyword">new</span> Man()</span><br><span class="line">man.name <span class="hljs-comment">// 张三</span></span><br></pre></td></tr></table></figure>
 
 <hr>
@@ -640,7 +640,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -949,7 +949,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -1036,6 +1036,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -1110,25 +1129,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1147,7 +1147,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1721,7 +1721,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

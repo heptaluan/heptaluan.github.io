@@ -16,7 +16,7 @@
 <meta property="og:description" content="当我们在 Angular 中给属性绑定一个变量的时候，主要有下面三种绑定方式  [property] = &amp;quot;variable&amp;quot; property = &amp;quot;&amp;quot; [attr.property] = &amp;quot;xxx&amp;quot;  下面我们就看看它们之间的区别">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.245Z">
+<meta property="og:updated_time" content="2020-12-04T02:37:42.779Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular 属性绑定 [] 和 {{}} 的差异">
 <meta name="twitter:description" content="当我们在 Angular 中给属性绑定一个变量的时候，主要有下面三种绑定方式  [property] = &amp;quot;variable&amp;quot; property = &amp;quot;&amp;quot; [attr.property] = &amp;quot;xxx&amp;quot;  下面我们就看看它们之间的区别">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    14 分钟 读完 (大约 2130 个字)
+                    14 分钟 读完 (大约 2138 个字)
                 </span>
                 
                 
@@ -204,14 +204,14 @@ var _hmt = _hmt || [];
 
 <p><code>str</code> 是一个字符串，并且我们通过 <code>input</code> 或者 <code>button</code> 来改变 <code>str</code> 的值的时候，两者在页面上的显示和控制台的打印都是正常的，看起来并没有什么差异，但是在 <code>str</code> 还没有赋值之前，前者打印的是 <code>undefined</code>，而后者打印的是空字符串，也许这样并不能看出什么，所以我们试着传递一个对象过去，这下便可以看出区别了，前者可以正常的显式我们传递的对象，比如 <code>{a: 1, b: 2}</code>，但是后者显式的却是 <code>&#39;[Object Object]&#39;</code></p>
 <h2 id="HTML-attribute-和-DOM-property"><a href="#HTML-attribute-和-DOM-property" class="headerlink" title="HTML attribute 和 DOM property"></a>HTML attribute 和 DOM property</h2><p>在 <code>Angular</code> 中还有一种 <code>attribute</code> 绑定，写法为 <code>[attr.Attribute]=&quot;variable&quot;</code>，那么它和 <code>[property]=&quot;variable&quot;</code> 的区别又在哪里呢？</p>
-<p>在看它们两者的区别之前我们先来了解一下 <code>HTML attribute</code> 和 <code>DOM property</code> 两者的区别，这里虽然涉及到一些 <code>HTML</code> 当中的知识，但是仍然适用于 <code>Angular</code> 当中遇到的情况，在本章节当中我们约定，使用 <strong>特性</strong> 来代指 <code>attribute</code> ，使用 <strong>属性</strong> 来代指 <code>property</code>，当我们在书写 <code>HTML</code> 代码的时候，我们为 <code>HTML</code> 元素设置特性，例如</p>
+<p>在看它们两者的区别之前我们先来了解一下 <code>HTML attribute</code> 和 <code>DOM property</code> 两者的区别，这里虽然涉及到一些 <code>HTML</code> 当中的知识，但是仍然适用于 <code>Angular</code> 当中遇到的情况，在本章节当中我们约定，使用「特性」来代指 <code>attribute</code> ，使用「属性」来代指 <code>property</code>，当我们在书写 <code>HTML</code> 代码的时候，我们为 <code>HTML</code> 元素设置特性，例如</p>
 <figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"name"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"zhangsan"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>我们写了一个 <code>input</code> 标签，并给他定义了两个特性（<code>id</code> 和 <code>value</code>），当浏览器解析这段代码的时候，会把 <code>HTML</code> 源码解析为 <code>DOM</code> 对象，确切的说是解析为 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLInputElement" target="_blank" rel="noopener">HTMLInputElement</a> 对象，<code>HTMLInputElement</code> 的继承关系是</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">HTMLInputElement</span><br><span class="line">  ↓</span><br><span class="line">HTMLElement</span><br><span class="line">  ↓</span><br><span class="line">Element</span><br><span class="line">  ↓</span><br><span class="line">Node</span><br><span class="line">  ↓</span><br><span class="line">EventTarget</span><br><span class="line">  ↓</span><br><span class="line"><span class="hljs-built_in">Object</span></span><br></pre></td></tr></table></figure>
 
-<p>通过查看文档会发现，<code>HTMLInputElement</code> 的原型上定义了很多属性和方法，例如 <code>form</code>，<code>name</code>，<code>type</code>，<code>alt</code>，<code>checked</code>，<code>src</code>，<code>value</code> 等等，还有从 <code>HTMLElement</code> 继承来的 <code>id</code>，<code>title</code>，<code>clientTop</code> 等等，如果仔细寻找，就不难发现其中就有我们为 <code>input</code> 标签定义的特性 <code>id</code> 和 <code>value</code>，这是因为 <strong>当浏览器解析网页时，将 HTML 特性映射为了 DOM 属性</strong></p>
-<p>而 <code>Element</code> 类还有一个 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Element/attributes" target="_blank" rel="noopener">Element.attributes</a> 属性，里面包含了所有的特性，但是，<strong>HTML attribute 和 DOM property 并不总是一对一的关系</strong>，在下面我们会看到</p>
+<p>通过查看文档会发现，<code>HTMLInputElement</code> 的原型上定义了很多属性和方法，例如 <code>form</code>，<code>name</code>，<code>type</code>，<code>alt</code>，<code>checked</code>，<code>src</code>，<code>value</code> 等等，还有从 <code>HTMLElement</code> 继承来的 <code>id</code>，<code>title</code>，<code>clientTop</code> 等等，如果仔细寻找，就不难发现其中就有我们为 <code>input</code> 标签定义的特性 <code>id</code> 和 <code>value</code>，这是因为当浏览器解析网页时，将 <code>HTML</code> 特性映射为了 <code>DOM</code> 的「属性」</p>
+<p>而 <code>Element</code> 类还有一个 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Element/attributes" target="_blank" rel="noopener">Element.attributes</a> 属性，里面包含了所有的特性，但是 <code>HTML attribute</code> 和 <code>DOM property</code> 并不总是一对一的关系，在下面我们会看到</p>
 <h4 id="DOM-属性"><a href="#DOM-属性" class="headerlink" title="DOM 属性"></a>DOM 属性</h4><p>当浏览器解析完 <code>HTML</code> 后，生成的 <code>DOM</code> 是一个继承自 <code>Object</code> 的常规 <code>JavaScript</code> 对象，因此我们可以像操作任何 <code>JavaScript</code> 对象那样来操作 <code>DOM</code> 对象</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Element.foo = <span class="hljs-string">'bar'</span></span><br><span class="line">Element.user = &#123; <span class="hljs-attr">name</span>: <span class="hljs-string">'zhangsan'</span>, <span class="hljs-attr">age</span>: <span class="hljs-string">'22'</span>&#125;</span><br></pre></td></tr></table></figure>
 
@@ -219,7 +219,7 @@ var _hmt = _hmt || [];
 <h4 id="HTML-特性"><a href="#HTML-特性" class="headerlink" title="HTML 特性"></a>HTML 特性</h4><p>和 <code>DOM</code> 属性类似，除了那些规范里定义的标准特性外，<code>HTML</code> 也可以添加非标准的属性，例如</p>
 <figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"name"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"zhangsan"</span> <span class="hljs-attr">foo</span>=<span class="hljs-string">"bar"</span> /&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>当 <code>HTML</code> 特性映射为 <code>DOM</code> 属性时，<strong>只映射标准属性，访问非标准属性将得到 undefined</strong></p>
+<p>当 <code>HTML</code> 特性映射为 <code>DOM</code> 属性时，「只映射标准属性」，访问非标准属性将得到 <code>undefined</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> el = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'name'</span>)</span><br><span class="line">el.foo === <span class="hljs-literal">undefined</span></span><br></pre></td></tr></table></figure>
 
 <p>好在 <code>DOM</code> 对象也提供了操作特性的 <code>API</code></p>
@@ -228,12 +228,12 @@ var _hmt = _hmt || [];
 <p>以上 <code>API</code> 定义在 <code>Element</code> 上，根据 <code>HTML</code> 规范，标签以及特性名是不区分大小写的，因此以下代码是一样的</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Element.getAttribute(<span class="hljs-string">'id'</span>)</span><br><span class="line">Element.getAttribute(<span class="hljs-string">'ID'</span>)</span><br><span class="line">Element.getAttribute(<span class="hljs-string">'iD'</span>)</span><br></pre></td></tr></table></figure>
 
-<p>并且 <strong>特性永远都是字符串或 null</strong>，如果我们为特性设置非字符串的值，则引擎会将此值转换为字符串，属性是具有类型的</p>
+<p>并且特性永远都是字符串或 <code>Null</code>，如果我们为特性设置非字符串的值，则引擎会将此值转换为字符串，属性是具有类型的</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Element.getAttribute(<span class="hljs-string">'checked'</span>) === <span class="hljs-string">''</span>          <span class="hljs-comment">// 特性是字符串</span></span><br><span class="line">Element.checked === <span class="hljs-literal">false</span>                       <span class="hljs-comment">// 属性是 boolean 类型的值</span></span><br><span class="line"></span><br><span class="line">Element.getAttribute(<span class="hljs-string">'style'</span>) === <span class="hljs-string">'color:blue'</span>  <span class="hljs-comment">// 特性是字符串</span></span><br><span class="line"><span class="hljs-keyword">typeof</span> Element.style === <span class="hljs-string">'object'</span>               <span class="hljs-comment">// 属性是 CSSStyleDeclaration 对象</span></span><br></pre></td></tr></table></figure>
 
 <p>即使都是字符串，属性和特性也可能不同，有一个例外就是 <code>href</code></p>
 <ul>
-<li><code>HTML attribute</code>，对于 <code>href</code> 返回 <code>html</code> 设置的值</li>
+<li><code>HTML attribute</code>，对于 <code>href</code> 返回 <code>HTML</code> 设置的值</li>
 <li><code>DOM property</code>，对于 <code>href</code> 返回解析后的完整 <code>url</code></li>
 </ul>
 <h4 id="特性和属性的同步"><a href="#特性和属性的同步" class="headerlink" title="特性和属性的同步"></a>特性和属性的同步</h4><p>当标准的特性更新时，对应的属性也会更新，反之亦然，但是 <code>input.value</code> 的同步是单向的，只是 <code>attribute ==&gt; property</code>，当修改特性时，属性也会更新，但是修改属性后，特性却还是原值</p>
@@ -266,7 +266,7 @@ var _hmt = _hmt || [];
 <p>实际上在渲染视图之前，<code>Angular</code> 把这些插值表达式翻译成相应的属性绑定，还有就是，它依然可以用于执行 <code>Angular</code> 的模板语法，例如</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">property=<span class="hljs-string">"&#123;&#123;fun()&#125;&#125;"</span></span><br><span class="line"></span><br><span class="line">property=<span class="hljs-string">"&#123;&#123;a ? b : c&#125;&#125;"</span></span><br></pre></td></tr></table></figure>
 
-<p>只是它会做多一步，把 <code>return</code> 的值转换成 <code>string</code></p>
+<p>只是它会做多一步，把 <code>return</code> 的值转换成 <code>String</code></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="https://stackoverflow.com/questions/6003819/what-is-the-difference-between-properties-and-attributes-in-html" target="_blank" rel="noopener">What is the difference between properties and attributes in HTML?</a></li>
 <li><a href="https://stackoverflow.com/questions/5874652/prop-vs-attr" target="_blank" rel="noopener">.prop() vs .attr()</a></li>
@@ -384,7 +384,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -509,7 +509,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -596,6 +596,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -670,25 +689,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -707,7 +707,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1281,7 +1281,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

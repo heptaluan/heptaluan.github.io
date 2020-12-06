@@ -16,7 +16,7 @@
 <meta property="og:description" content="在 ES6 中的 Class 其实可以看作是一个语法糖，它的绝大部分功能，ES5 都可以做到，新的 Class 写法只是让对象原型的写法更加清晰、更像面向对象编程的语法而已，比如下面这个例子">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/19.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.295Z">
+<meta property="og:updated_time" content="2020-12-04T02:09:20.842Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ES6 中的 Class">
 <meta name="twitter:description" content="在 ES6 中的 Class 其实可以看作是一个语法糖，它的绝大部分功能，ES5 都可以做到，新的 Class 写法只是让对象原型的写法更加清晰、更像面向对象编程的语法而已，比如下面这个例子">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    15 分钟 读完 (大约 2269 个字)
+                    15 分钟 读完 (大约 2281 个字)
                 </span>
                 
                 
@@ -191,13 +191,13 @@ var _hmt = _hmt || [];
 
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// ES6 写法</span></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(name) &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.name = name</span><br><span class="line">  &#125;</span><br><span class="line">  say() &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.name)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES5 写法</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Person</span>(<span class="hljs-params">name</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.name = name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.say = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 两种写法的结果是一致的</span></span><br><span class="line"><span class="hljs-keyword">var</span> p = <span class="hljs-keyword">new</span> Person(<span class="hljs-string">'zhangsan'</span>)</span><br><span class="line">p.say()  <span class="hljs-comment">// zhangsan</span></span><br></pre></td></tr></table></figure>
 
-<p>我们可以看到 <code>ES5</code> 的构造函数 <code>Person</code>，对应 <code>ES6</code> 的 <code>Person</code> 类的 <code>constructor</code> 方法，不过需要注意的是，<strong>Class 的内部所有定义的方法，都是不可枚举的（non-enumerable）</strong>，比如在上面的例子当中</p>
+<p>我们可以看到 <code>ES5</code> 的构造函数 <code>Person</code>，对应 <code>ES6</code> 的 <code>Person</code> 类的 <code>constructor</code> 方法，不过需要注意的是，「<code>Class</code> 的内部所有定义的方法，都是不可枚举的（<code>non-enumerable</code>）」，比如在上面的例子当中</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// ES6 当中</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.keys(Person.prototype)                 <span class="hljs-comment">// []</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.getOwnPropertyNames(Person.prototype)  <span class="hljs-comment">// ['constructor', 'sayHello']</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES5 当中</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.keys(Person.prototype)                 <span class="hljs-comment">// ['say']</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.getOwnPropertyNames(Person.prototype)  <span class="hljs-comment">// ['constructor', 'sayHello']</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h2><p>静态方法一般用来提供一些工具方法，所有在类中定义的方法，都会被实例继承，如果在一个方法前，加上 <code>static</code> 关键字，就表示该方法不会被实例继承，而是直接通过类来调用，这就称为 <strong>静态方法</strong></p>
+<h2 id="静态方法"><a href="#静态方法" class="headerlink" title="静态方法"></a>静态方法</h2><p>静态方法一般用来提供一些工具方法，所有在类中定义的方法，都会被实例继承，如果在一个方法前，加上 <code>static</code> 关键字，就表示该方法不会被实例继承，而是直接通过类来调用，这就称为「静态方法」</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// ES6 中</span></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">static</span> say() &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`hello`</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES5 中</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Person</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line">Person.say = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`hello`</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 两者执行结果是一致的</span></span><br><span class="line">Person.say()  <span class="hljs-comment">// hello</span></span><br><span class="line"><span class="hljs-keyword">var</span> p = <span class="hljs-keyword">new</span> Person()</span><br><span class="line">p.say()       <span class="hljs-comment">// p.say is not a function</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="静态属性"><a href="#静态属性" class="headerlink" title="静态属性"></a>静态属性</h2><p><code>Class</code> 内部 <strong>只有静态方法，没有静态属性</strong>，静态属性指的是 <code>Class</code> 本身的属性，即 <code>Class.propName</code>，而不是定义在实例对象（<code>this</code>）上的属性，以前，我们添加静态属性只可以这样</p>
+<h2 id="静态属性"><a href="#静态属性" class="headerlink" title="静态属性"></a>静态属性</h2><p><code>Class</code> 内部「只有静态方法，没有静态属性」，静态属性指的是 <code>Class</code> 本身的属性，即 <code>Class.propName</code>，而不是定义在实例对象（<code>this</code>）上的属性，以前，我们添加静态属性只可以这样</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// ES6 中</span></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Foo</span> </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line">Foo.prop = <span class="hljs-number">1</span></span><br><span class="line">Foo.prop  <span class="hljs-comment">// 1</span></span><br></pre></td></tr></table></figure>
 
 <p>然而现在有一个提案，对实例属性和静态属性都规定了新的写法，而且 <code>Babel</code> 已经支持，所以现在我们可以写成</p>
@@ -206,7 +206,7 @@ var _hmt = _hmt || [];
 <p>对应到 <code>ES5</code> 就是</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Person</span>(<span class="hljs-params"></span>) </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line">Person.prop = <span class="hljs-number">1</span></span><br><span class="line"></span><br><span class="line">Person.prop  <span class="hljs-comment">// 1</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="私有方法"><a href="#私有方法" class="headerlink" title="私有方法"></a>私有方法</h2><p><code>ES6</code> <strong>不提供</strong> 私有方法，只能通过变通方法模拟实现，一种做法是在命名上加以区别</p>
+<h2 id="私有方法"><a href="#私有方法" class="headerlink" title="私有方法"></a>私有方法</h2><p><code>ES6</code>「不提供」私有方法，只能通过变通方法模拟实现，一种做法是在命名上加以区别</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Widget</span> </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 公有方法</span></span><br><span class="line">  foo(baz) &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>._bar(baz)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 私有方法</span></span><br><span class="line">  _bar(baz) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.snaf = baz</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>另一种方法就是索性将私有方法移出模块，因为模块内部的所有方法都是对外可见的</p>
@@ -215,7 +215,7 @@ var _hmt = _hmt || [];
 <p>有一种方法是利用 <code>Symbol</code> 值的唯一性，将私有方法的名字命名为一个 <code>Symbol</code> 值</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> bar = <span class="hljs-built_in">Symbol</span>(<span class="hljs-string">'bar'</span>)</span><br><span class="line"><span class="hljs-keyword">const</span> snaf = <span class="hljs-built_in">Symbol</span>(<span class="hljs-string">'snaf'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">myClass</span> </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 公有方法</span></span><br><span class="line">  foo(baz) &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>[bar](baz)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 私有方法</span></span><br><span class="line">  [bar](baz) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>[snaf] = baz</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="私有属性"><a href="#私有属性" class="headerlink" title="私有属性"></a>私有属性</h2><p>与私有方法一样，<code>ES6</code> <strong>不支持</strong> 私有属性，但是可以通过 <code>WeakMap</code> 来实现私有属性</p>
+<h2 id="私有属性"><a href="#私有属性" class="headerlink" title="私有属性"></a>私有属性</h2><p>与私有方法一样，<code>ES6</code>「不支持」私有属性，但是可以通过 <code>WeakMap</code> 来实现私有属性</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> privateData = <span class="hljs-keyword">new</span> <span class="hljs-built_in">WeakMap</span>()</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Person</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(name, age) &#123;</span><br><span class="line">    privateData.set(<span class="hljs-keyword">this</span>, &#123;</span><br><span class="line">      name,</span><br><span class="line">      age</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  getName() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> privateData.get(<span class="hljs-keyword">this</span>).name</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  getAge() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> privateData.get(<span class="hljs-keyword">this</span>).age</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> p = <span class="hljs-keyword">new</span> Person(<span class="hljs-string">'zhangsan'</span>, <span class="hljs-number">20</span>)</span><br><span class="line"></span><br><span class="line">p.name       <span class="hljs-comment">// undefined</span></span><br><span class="line">p.getName()  <span class="hljs-comment">// zhangsan</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="getters-amp-setters"><a href="#getters-amp-setters" class="headerlink" title="getters &amp; setters"></a>getters &amp; setters</h2><p>与 <code>ES5</code> 一样，在 <code>Class</code> 的内部可以使用 <code>get</code> 和 <code>set</code> 关键字，对某个属性设置存值函数和取值函数，拦截该属性的存取行为</p>
@@ -252,7 +252,7 @@ var _hmt = _hmt || [];
 <h2 id="继承目标"><a href="#继承目标" class="headerlink" title="继承目标"></a>继承目标</h2><p><code>extends</code> 关键字后面可以跟多种类型的值</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">B</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">A</span> </span>&#123; &#125;</span><br></pre></td></tr></table></figure>
 
-<p>上面代码的 <code>A</code>，只要是一个有 <code>prototype</code> 属性的函数，就能被 <code>B</code> 继承，由于函数都有 <code>prototype</code> 属性（一般情况下，排除一些箭头函数或者 <code>bind(null)</code> 之类的操作），因此 <code>A</code> 可以是任意函数，除了函数之外，<code>A</code> 的值还可以是 <code>null</code>，当 <code>extend null</code> 的时候</p>
+<p>上面代码的 <code>A</code>，只要是一个有 <code>prototype</code> 属性的函数，就能被 <code>B</code> 继承，由于函数都有 <code>prototype</code> 属性（一般情况下，排除一些箭头函数或者 <code>bind(null)</code> 之类的操作），因此 <code>A</code> 可以是任意函数，除了函数之外，<code>A</code> 的值还可以是 <code>Null</code>，当 <code>extend null</code> 的时候</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">A</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">null</span> </span>&#123; &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(A.__proto__ === <span class="hljs-built_in">Function</span>.prototype)   <span class="hljs-comment">// true</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(A.prototype.__proto__ === <span class="hljs-literal">undefined</span>)  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="super-关键字"><a href="#super-关键字" class="headerlink" title="super 关键字"></a>super 关键字</h2><ul>
@@ -260,7 +260,7 @@ var _hmt = _hmt || [];
 <li><code>super</code> 作为函数调用时<ul>
 <li><code>super</code> 作为函数调用时，代表父类的构造函数（子类的构造函数必须执行一次 <code>super</code> 函数）</li>
 <li>虽然代表了父类的构造函数，但是 <code>super</code> 内部的 <code>this</code> 指的是子类的实例（相当于 <code>Father.prototype.constructor.call(this)</code>）</li>
-<li>作为函数时，<code>super()</code> 只能用在 <strong>子类</strong> 的构造函数之中，用在其他地方就会报错</li>
+<li>作为函数时，<code>super()</code> 只能用在「子类」的构造函数之中，用在其他地方就会报错</li>
 </ul>
 </li>
 <li><code>super</code> 作为对象调用时<ul>
@@ -392,7 +392,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -513,7 +513,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -600,6 +600,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -674,25 +693,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -711,7 +711,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1285,7 +1285,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

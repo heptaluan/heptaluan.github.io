@@ -16,7 +16,7 @@
 <meta property="og:description" content="按照惯例，我们先来看看 IntersectionObserver 到底是个什么东西，MDN 上的介绍的是，IntersectionObserver 接口（从属于 Intersection Observer API），提供了一种异步观察目标元素与其祖先元素或顶级文档视窗（viewport）交叉状态的方法，祖先元素与视窗（viewport）被称为根（root） 当一个 IntersectionObse">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/46.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.307Z">
+<meta property="og:updated_time" content="2020-11-29T15:30:26.238Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IntersectionObserver">
 <meta name="twitter:description" content="按照惯例，我们先来看看 IntersectionObserver 到底是个什么东西，MDN 上的介绍的是，IntersectionObserver 接口（从属于 Intersection Observer API），提供了一种异步观察目标元素与其祖先元素或顶级文档视窗（viewport）交叉状态的方法，祖先元素与视窗（viewport）被称为根（root） 当一个 IntersectionObse">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    16 分钟 读完 (大约 2410 个字)
+                    16 分钟 读完 (大约 2411 个字)
                 </span>
                 
                 
@@ -192,7 +192,7 @@ var _hmt = _hmt || [];
 
 <p>看上去云里雾里的，其实简单的总结一下，所谓的 <code>IntersectionObserver</code> 说的就是一种监听目标元素与其祖先或视窗交叉状态的手段，也就是观察一个元素是否在视窗可见</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/41.png" alt></p>
-<p>如上图，交叉了就是说明当前元素在视窗里，当前就是可见的了，但是有一点特别需要注意的就是 <strong>必须是子元素跟父（祖先）元素发生交叉，如果你想检查两个非父子关系的交叉，是不可以的</strong></p>
+<p>如上图，交叉了就是说明当前元素在视窗里，当前就是可见的了，但是有一点特别需要注意的就是，必须是子元素跟父（祖先）元素发生交叉，如果你想检查两个非父子关系的交叉，是不可以的</p>
 <blockquote>
 <p>本文所有示例可见 <a href="https://heptaluan.github.io/demos/blog/IntersectionObserver.html" target="_blank" rel="noopener">IntersectionObserver</a></p>
 </blockquote>
@@ -252,12 +252,21 @@ var _hmt = _hmt || [];
 <p>如下图所示</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/44.png" alt></p>
 <h4 id="options"><a href="#options" class="headerlink" title="options"></a>options</h4><p>几个比较常用的参数如下</p>
-<h6 id="root"><a href="#root" class="headerlink" title="root"></a>root</h6><p>用于观察的根元素，默认是浏览器的视口，也可以指定具体元素，指定元素的时候用于观察的元素必须是指定元素的子元素</p>
-<h6 id="threshold"><a href="#threshold" class="headerlink" title="threshold"></a>threshold</h6><p>用来指定交叉比例，决定什么时候触发回调函数，是一个数组，默认是 <code>[0]</code></p>
+<ul>
+<li><code>root</code></li>
+</ul>
+<p>用于观察的根元素，默认是浏览器的视口，也可以指定具体元素，指定元素的时候用于观察的元素必须是指定元素的子元素</p>
+<ul>
+<li><code>threshold</code></li>
+</ul>
+<p>用来指定交叉比例，决定什么时候触发回调函数，是一个数组，默认是 <code>[0]</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> options = &#123;</span><br><span class="line">  root: <span class="hljs-literal">null</span>,</span><br><span class="line">  threshold: [<span class="hljs-number">0</span>, <span class="hljs-number">0.5</span>, <span class="hljs-number">1</span>]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> io = <span class="hljs-keyword">new</span> IntersectionObserver(callback, options)</span><br><span class="line">io.observe(<span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'img'</span>))</span><br></pre></td></tr></table></figure>
 
 <p>上面代码，我们指定了交叉比例为 <code>[0, 0.5, 1]</code>，当观察元素 <code>img</code> 处于 <code>0%</code>、<code>50%</code>、<code>100%</code> 时候就会触发回调函数</p>
-<h6 id="rootMargin"><a href="#rootMargin" class="headerlink" title="rootMargin"></a>rootMargin</h6><p>用来扩大或者缩小视窗的的大小，使用 <code>CSS</code> 的定义方法，<code>10px 10px 30px 20px</code> 表示 <code>top</code>、<code>right</code>、<code>bottom</code> 和 <code>left</code> 的值</p>
+<ul>
+<li><code>rootMargin</code></li>
+</ul>
+<p>用来扩大或者缩小视窗的的大小，使用 <code>CSS</code> 的定义方法，<code>10px 10px 30px 20px</code> 表示 <code>top</code>、<code>right</code>、<code>bottom</code> 和 <code>left</code> 的值</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> options = &#123;</span><br><span class="line">  root: <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'.box'</span>),</span><br><span class="line">  threshold: [<span class="hljs-number">0</span>, <span class="hljs-number">0.5</span>, <span class="hljs-number">1</span>],</span><br><span class="line">  rootMargin: <span class="hljs-string">'30px 100px 20px'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>为了方便理解，可以参考下图</p>
@@ -424,7 +433,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -481,19 +490,7 @@ var _hmt = _hmt || [];
         <a class="is-flex" href="#options">
         <span class="has-mr-6">1.3</span>
         <span>options</span>
-        </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#root">
-        <span class="has-mr-6">1.3.1</span>
-        <span>root</span>
-        </a></li><li>
-        <a class="is-flex" href="#threshold">
-        <span class="has-mr-6">1.3.2</span>
-        <span>threshold</span>
-        </a></li><li>
-        <a class="is-flex" href="#rootMargin">
-        <span class="has-mr-6">1.3.3</span>
-        <span>rootMargin</span>
-        </a></li></ul></li></ul></li><li>
+        </a></li></ul></li><li>
         <a class="is-flex" href="#实际应用">
         <span class="has-mr-6">2</span>
         <span>实际应用</span>
@@ -561,7 +558,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -648,6 +645,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -722,25 +738,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -759,7 +756,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1333,7 +1330,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

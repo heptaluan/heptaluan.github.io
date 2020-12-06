@@ -16,7 +16,7 @@
 <meta property="og:description" content="本章我们继续来看 Node.js 当中的 EventEmitter 模块，在 Node.js 当中许多对象都会分发事件，比如一个 net.Server 对象会在每次有新连接时触发一个事件，一个 fs.readStream 对象会在文件被打开的时候触发一个事件，然而所有这些产生事件的对象都是 events.EventEmitter 的实例 本文主要分为以下几个部分，首先先介绍一下 EventEmit">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/06.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.316Z">
+<meta property="og:updated_time" content="2020-11-29T15:18:12.465Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Node.js 中的 EventEmitter 模块">
 <meta name="twitter:description" content="本章我们继续来看 Node.js 当中的 EventEmitter 模块，在 Node.js 当中许多对象都会分发事件，比如一个 net.Server 对象会在每次有新连接时触发一个事件，一个 fs.readStream 对象会在文件被打开的时候触发一个事件，然而所有这些产生事件的对象都是 events.EventEmitter 的实例 本文主要分为以下几个部分，首先先介绍一下 EventEmit">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    44 分钟 读完 (大约 6625 个字)
+                    44 分钟 读完 (大约 6629 个字)
                 </span>
                 
                 
@@ -235,8 +235,8 @@ var _hmt = _hmt || [];
 </ul>
 <p>那么信息中介是如何过滤消息呢？在发布/订阅模型中，订阅者通常接收所有发布的消息的一个子集，选择接受和处理的消息的过程被称作过滤，有两种常用的过滤形式，基于主题的和基于内容的</p>
 <ul>
-<li>在 <strong>基于主题</strong> 的系统中，消息被发布到主题或命名通道上，订阅者将收到其订阅的主题上的所有消息，并且所有订阅同一主题的订阅者将接收到同样的消息，发布者负责定义订阅者所订阅的消息类别</li>
-<li>在 <strong>基于内容</strong> 的系统中，订阅者定义其感兴趣的消息的条件，只有当消息的属性或内容满足订阅者定义的条件时，消息才会被投递到该订阅者，订阅者需要负责对消息进行分类</li>
+<li>在「基于主题」的系统中，消息被发布到主题或命名通道上，订阅者将收到其订阅的主题上的所有消息，并且所有订阅同一主题的订阅者将接收到同样的消息，发布者负责定义订阅者所订阅的消息类别</li>
+<li>在「基于内容」的系统中，订阅者定义其感兴趣的消息的条件，只有当消息的属性或内容满足订阅者定义的条件时，消息才会被投递到该订阅者，订阅者需要负责对消息进行分类</li>
 </ul>
 <p>一些系统支持两者的混合，即发布者发布消息到主题上，而订阅者将基于内容的订阅注册到一个或多个主题上，基于主题的通信基础结构图如下</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/node/16.png" alt></p>
@@ -345,7 +345,7 @@ var _hmt = _hmt || [];
 <p>上述 <code>let x = x</code> 赋值语句的错误会被捕获，这里提异常处理，那么跟事件有什么关系呢？<code>Node.js</code> 中有一个特殊的事件 <code>error</code>，如果异常没有被捕获，就会触发 <code>process</code> 的 <code>uncaughtException</code> 事件抛出，如果你没有注册该事件的监听器（即该事件没有被处理），则 <code>Node.js</code> 会在控制台打印该异常的堆栈信息，并结束进程（崩溃），比如</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> events = <span class="hljs-built_in">require</span>(<span class="hljs-string">'events'</span>)</span><br><span class="line"><span class="hljs-keyword">var</span> emitter = <span class="hljs-keyword">new</span> events.EventEmitter()</span><br><span class="line"></span><br><span class="line">emitter.emit(<span class="hljs-string">'error'</span>)</span><br></pre></td></tr></table></figure>
 
-<p>在上述代码中没有监听 <code>error</code> 的事件函数，因此会触发 <code>process</code> 的 <code>uncaughtException</code> 事件，从而打印异常堆栈信息，并结束进程，对于阻塞或者说非异步的异常捕获，<code>try catch</code> 是没有问题的，但是问题在于 <strong>try catch 不能捕获非阻塞或者异步函数里面的异常</strong>，举例来说</p>
+<p>在上述代码中没有监听 <code>error</code> 的事件函数，因此会触发 <code>process</code> 的 <code>uncaughtException</code> 事件，从而打印异常堆栈信息，并结束进程，对于阻塞或者说非异步的异常捕获，<code>try catch</code> 是没有问题的，但是问题在于 <code>try catch</code> 不能捕获非阻塞或者异步函数里面的异常，举例来说</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">try</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// 第二个 x 在使用前未定义，会抛出异常</span></span><br><span class="line">  <span class="hljs-keyword">let</span> x = x</span><br><span class="line">&#125; <span class="hljs-keyword">catch</span> (e) &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'该异常已经被捕获'</span>)</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(e)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>上述代码中，因为 <code>try</code> 方法里面是同步的，因此可以捕获异常，但是如果 <code>try</code> 方法里面有异步的函数</p>
@@ -402,16 +402,16 @@ var _hmt = _hmt || [];
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/09/12/CSS/11/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/09/22/Node/07/">
                 <i class="level-item fa fa-chevron-left"></i>
-                <span class="level-item">CSS 常见布局方式</span>
+                <span class="level-item">Node.js 中的 Buffer 模块</span>
             </a>
         </div>
         
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2019/09/01/Node/05/">
-                <span class="level-item">什么是 Node.js</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/09/12/CSS/11/">
+                <span class="level-item">CSS 常见布局方式</span>
                 <i class="level-item fa fa-chevron-right"></i>
             </a>
         </div>
@@ -487,7 +487,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -636,7 +636,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -723,6 +723,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -797,25 +816,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -834,7 +834,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1408,7 +1408,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

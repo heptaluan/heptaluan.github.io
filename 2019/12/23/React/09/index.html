@@ -16,7 +16,7 @@
 <meta property="og:description" content="之前我们借住 HcySunYang/vue-design 分了三部分分别介绍了 Virtual DOM 与 diff 算法相关内容，如下  什么是 Virtual DOM？ 渲染器 渲染器的核心 Diff 算法  本章是在之前的基础之上，将分散的代码汇总一下，做一下整体上的梳理，也算是一个小小的总结">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.327Z">
+<meta property="og:updated_time" content="2020-11-29T15:14:26.363Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Virtual DOM 与 Diff 算法内容总结">
 <meta name="twitter:description" content="之前我们借住 HcySunYang/vue-design 分了三部分分别介绍了 Virtual DOM 与 diff 算法相关内容，如下  什么是 Virtual DOM？ 渲染器 渲染器的核心 Diff 算法  本章是在之前的基础之上，将分散的代码汇总一下，做一下整体上的梳理，也算是一个小小的总结">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    35 分钟 读完 (大约 5195 个字)
+                    35 分钟 读完 (大约 5199 个字)
                 </span>
                 
                 
@@ -197,7 +197,7 @@ var _hmt = _hmt || [];
 
 
 
-<h2 id="使用-VNode-来描述真实-DOM"><a href="#使用-VNode-来描述真实-DOM" class="headerlink" title="使用 VNode 来描述真实 DOM"></a>使用 VNode 来描述真实 DOM</h2><p>在第一部分当中，我们主要介绍了如何使用 <code>VNode</code> 来描述真实的 <code>DOM</code>，其主要分为五类，分别是 <strong>html/svg 元素、组件、纯文本、Fragment 以及 Portal</strong>，然后我们使用了 <code>flags</code> 来作为 <code>VNode</code> 的标识，使用位运算符来标记上面五类不同的元素</p>
+<h2 id="使用-VNode-来描述真实-DOM"><a href="#使用-VNode-来描述真实-DOM" class="headerlink" title="使用 VNode 来描述真实 DOM"></a>使用 VNode 来描述真实 DOM</h2><p>在第一部分当中，我们主要介绍了如何使用 <code>VNode</code> 来描述真实的 <code>DOM</code>，其主要分为五类，分别是 <code>html/svg</code> 元素、组件、纯文本、<code>Fragment</code> 以及 <code>Portal</code>，然后我们使用了 <code>flags</code> 来作为 <code>VNode</code> 的标识，使用位运算符来标记上面五类不同的元素</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// flags.js</span></span><br><span class="line"><span class="hljs-keyword">const</span> VNodeFlags = &#123;</span><br><span class="line">  <span class="hljs-comment">// html 标签</span></span><br><span class="line">  ELEMENT_HTML: <span class="hljs-number">1</span>,</span><br><span class="line">  <span class="hljs-comment">// SVG 标签</span></span><br><span class="line">  ELEMENT_SVG: <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">1</span>,</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 普通有状态组件</span></span><br><span class="line">  COMPONENT_STATEFUL_NORMAL: <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">2</span>,</span><br><span class="line">  <span class="hljs-comment">// 需要被keepAlive的有状态组件</span></span><br><span class="line">  COMPONENT_STATEFUL_SHOULD_KEEP_ALIVE: <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">3</span>,</span><br><span class="line">  <span class="hljs-comment">// 已经被keepAlive的有状态组件</span></span><br><span class="line">  COMPONENT_STATEFUL_KEPT_ALIVE: <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">4</span>,</span><br><span class="line">  <span class="hljs-comment">// 函数式组件</span></span><br><span class="line">  COMPONENT_FUNCTIONAL: <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">5</span>,</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 纯文本</span></span><br><span class="line">  TEXT: <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">6</span>,</span><br><span class="line">  <span class="hljs-comment">// Fragment</span></span><br><span class="line">  FRAGMENT: <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">7</span>,</span><br><span class="line">  <span class="hljs-comment">// Portal</span></span><br><span class="line">  PORTAL: <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">8</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// html 和 svg 都是标签元素，可以用 ELEMENT 表示</span></span><br><span class="line">VNodeFlags.ELEMENT = VNodeFlags.ELEMENT_HTML | VNodeFlags.ELEMENT_SVG</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 普通有状态组件、需要被keepAlive的有状态组件、已经被keepAlice的有状态组件 都是有状态组件，统一用 COMPONENT_STATEFUL 表示</span></span><br><span class="line">VNodeFlags.COMPONENT_STATEFUL =</span><br><span class="line">  VNodeFlags.COMPONENT_STATEFUL_NORMAL |</span><br><span class="line">  VNodeFlags.COMPONENT_STATEFUL_SHOULD_KEEP_ALIVE |</span><br><span class="line">  VNodeFlags.COMPONENT_STATEFUL_KEPT_ALIVE</span><br><span class="line">  </span><br><span class="line"><span class="hljs-comment">// 有状态组件 和  函数式组件都是组件，用 COMPONENT 表示</span></span><br><span class="line">VNodeFlags.COMPONENT =</span><br><span class="line">  VNodeFlags.COMPONENT_STATEFUL | VNodeFlags.COMPONENT_FUNCTIONAL</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> ChildrenFlags = &#123;</span><br><span class="line">  <span class="hljs-comment">// 未知的 children 类型</span></span><br><span class="line">  UNKNOWN_CHILDREN: <span class="hljs-number">0</span>,</span><br><span class="line">  <span class="hljs-comment">// 没有 children</span></span><br><span class="line">  NO_CHILDREN: <span class="hljs-number">1</span>,</span><br><span class="line">  <span class="hljs-comment">// children 是单个 VNode</span></span><br><span class="line">  SINGLE_VNODE: <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">1</span>,</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// children 是多个拥有 key 的 VNode</span></span><br><span class="line">  KEYED_VNODES: <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">2</span>,</span><br><span class="line">  <span class="hljs-comment">// children 是多个没有 key 的 VNode</span></span><br><span class="line">  NONE_KEYED_VNODES: <span class="hljs-number">1</span> &lt;&lt; <span class="hljs-number">3</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ChildrenFlags.MULTIPLE_VNODES =</span><br><span class="line">  ChildrenFlags.KEYED_VNODES | ChildrenFlags.NONE_KEYED_VNODES</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> &#123; VNodeFlags, ChildrenFlags &#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="辅助创建-VNode-的-h-函数"><a href="#辅助创建-VNode-的-h-函数" class="headerlink" title="辅助创建 VNode 的 h 函数"></a>辅助创建 VNode 的 h 函数</h2><p>当我们拥有了 <code>VNode</code> 以后，接下来就需要一个辅助我们创建 <code>VNode</code> 的 <code>h</code> 函数，利用它来生成我们的 <code>VNode</code> 对象</p>
@@ -217,10 +217,10 @@ var _hmt = _hmt || [];
 <blockquote>
 <p>这里需要注意，采用不同的算法只需要替换 <code>patchChildren</code> 函数当中的新旧 <code>children</code> 中都有多个子节点的情况下的分支判断即可</p>
 </blockquote>
-<h4 id="React-所采用-Diff-算法"><a href="#React-所采用-Diff-算法" class="headerlink" title="React 所采用 Diff 算法"></a>React 所采用 Diff 算法</h4><p><code>React</code> 当中所采用的方式是利用 <code>key</code> 来尽可能的复用 <code>DOM</code> 元素，然后在遍历当中使用 <strong>最大索引值</strong> 的概念来确定需要移动的元素，接着在内层循环当中采用标记变量的方式来确定是否需要挂载新的元素，最后在外层循环结束之后，再遍历一次旧的节点，如果在新节点当中找不到相对应的，则删除掉对应节点</p>
+<h4 id="React-所采用-Diff-算法"><a href="#React-所采用-Diff-算法" class="headerlink" title="React 所采用 Diff 算法"></a>React 所采用 Diff 算法</h4><p><code>React</code> 当中所采用的方式是利用 <code>key</code> 来尽可能的复用 <code>DOM</code> 元素，然后在遍历当中使用「最大索引值」的概念来确定需要移动的元素，接着在内层循环当中采用标记变量的方式来确定是否需要挂载新的元素，最后在外层循环结束之后，再遍历一次旧的节点，如果在新节点当中找不到相对应的，则删除掉对应节点</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">patchChildren</span>(<span class="hljs-params">prevChildFlags, nextChildFlags, prevChildren, nextChildren, container</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">switch</span> (prevChildFlags) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// ... 省略（见上方）</span></span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 只有当新旧子节点的类型都是多个子节点时，核心 Diff 算法才派得上用场</span></span><br><span class="line">    <span class="hljs-keyword">default</span>:</span><br><span class="line">      <span class="hljs-keyword">switch</span> (nextChildFlags) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-comment">// ... 省略（见上方）</span></span><br><span class="line"></span><br><span class="line">        <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">         *  react 所采用 diff 算法</span></span><br><span class="line"><span class="hljs-comment">         */</span></span><br><span class="line">        <span class="hljs-keyword">default</span>:</span><br><span class="line">          <span class="hljs-keyword">let</span> lastIndex = <span class="hljs-number">0</span></span><br><span class="line">          <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; nextChildren.length; i++) &#123;</span><br><span class="line">            <span class="hljs-keyword">const</span> nextVNode = nextChildren[i]</span><br><span class="line">            <span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>,</span><br><span class="line">              find = <span class="hljs-literal">false</span></span><br><span class="line">            <span class="hljs-keyword">for</span> (j; j &lt; prevChildren.length; j++) &#123;</span><br><span class="line">              <span class="hljs-keyword">const</span> prevVNode = prevChildren[j]</span><br><span class="line">              <span class="hljs-keyword">if</span> (nextVNode.key === prevVNode.key) &#123;</span><br><span class="line">                find = <span class="hljs-literal">true</span></span><br><span class="line">                patch(prevVNode, nextVNode, container)</span><br><span class="line">                <span class="hljs-keyword">if</span> (j &lt; lastIndex) &#123;</span><br><span class="line">                  <span class="hljs-comment">// 需要移动</span></span><br><span class="line">                  <span class="hljs-keyword">const</span> refNode = nextChildren[i - <span class="hljs-number">1</span>].el.nextSibling</span><br><span class="line">                  container.insertBefore(prevVNode.el, refNode)</span><br><span class="line">                  <span class="hljs-keyword">break</span></span><br><span class="line">                &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">                  <span class="hljs-comment">// 更新 lastIndex</span></span><br><span class="line">                  lastIndex = j</span><br><span class="line">                &#125;</span><br><span class="line">              &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="hljs-keyword">if</span> (!find) &#123;</span><br><span class="line">              <span class="hljs-comment">// 挂载新节点</span></span><br><span class="line">              <span class="hljs-keyword">const</span> refNode =</span><br><span class="line">                i - <span class="hljs-number">1</span> &lt; <span class="hljs-number">0</span></span><br><span class="line">                  ? prevChildren[<span class="hljs-number">0</span>].el</span><br><span class="line">                  : nextChildren[i - <span class="hljs-number">1</span>].el.nextSibling</span><br><span class="line">              mount(nextVNode, container, <span class="hljs-literal">false</span>, refNode)</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="hljs-comment">// 移除已经不存在的节点</span></span><br><span class="line">          <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; prevChildren.length; i++) &#123;</span><br><span class="line">            <span class="hljs-keyword">const</span> prevVNode = prevChildren[i]</span><br><span class="line">            <span class="hljs-keyword">const</span> has = nextChildren.find(</span><br><span class="line">              nextVNode =&gt; nextVNode.key === prevVNode.key</span><br><span class="line">            )</span><br><span class="line">            <span class="hljs-keyword">if</span> (!has) &#123;</span><br><span class="line">              <span class="hljs-comment">// 移除</span></span><br><span class="line">              container.removeChild(prevVNode.el)</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="hljs-keyword">break</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="hljs-keyword">break</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="Vue2-所采用-Diff-算法"><a href="#Vue2-所采用-Diff-算法" class="headerlink" title="Vue2 所采用 Diff 算法"></a>Vue2 所采用 Diff 算法</h4><p><code>Vue2</code> 所采用的是<strong>双端比较</strong>的算法，借鉴于开源项目 <a href="https://github.com/snabbdom/snabbdom" target="_blank" rel="noopener">snabbdom</a>，原理是使用四个变量分别存储新旧两个端点的位置索引，在结合四个位置索引所指向的 <code>VNode</code>，依次从两端开始进行比较，根据四次比较当中的各种情况进行不同的处理方式，对于经过四次比较依然没有找到可复用的节点的非理想情况，则采用再次遍历旧的节点的方式分情况进行处理</p>
+<h4 id="Vue2-所采用-Diff-算法"><a href="#Vue2-所采用-Diff-算法" class="headerlink" title="Vue2 所采用 Diff 算法"></a>Vue2 所采用 Diff 算法</h4><p><code>Vue2</code> 所采用的是「双端比较」的算法，借鉴于开源项目 <a href="https://github.com/snabbdom/snabbdom" target="_blank" rel="noopener">snabbdom</a>，原理是使用四个变量分别存储新旧两个端点的位置索引，在结合四个位置索引所指向的 <code>VNode</code>，依次从两端开始进行比较，根据四次比较当中的各种情况进行不同的处理方式，对于经过四次比较依然没有找到可复用的节点的非理想情况，则采用再次遍历旧的节点的方式分情况进行处理</p>
 <ul>
 <li>如果寻找到与第一个新节点当中拥有相同 <code>key</code> 值的元素，就会将其更新，并且将该节点置为 <code>undefined</code>，后续过程则会跳过这个状态</li>
 <li>如果没有寻找到，这说明是一个全新的节点，挂载即可，为了避免遗漏，会在循环完毕之后再次进行判断，如果还存在没有被处理的全新节点，则一样会被挂载</li>
@@ -346,7 +346,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -455,7 +455,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -542,6 +542,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -616,25 +635,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -653,7 +653,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1227,7 +1227,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

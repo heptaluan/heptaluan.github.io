@@ -16,7 +16,7 @@
 <meta property="og:description" content="最近看了 zepto 设计和源码分析 ，感觉有耳目一新的感觉，作者没有老套的去讲各个方法怎么实现的，能做些什么，而是讲了许多为什么源码要这样去设计，这样设计有什么好处，也分享了一些自己的看源码心得 一口气看完，收货良多，不光了解了 Zepto 的设计理念，同时也重温了 JavaScript 原型链的一些相关知识，在此记录一些笔记和涉及到的一些知识点，同时也感谢作者分享了加注版本的 zepto 源码">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/34.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.303Z">
+<meta property="og:updated_time" content="2020-11-29T15:30:05.754Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Zepto 架构设计">
 <meta name="twitter:description" content="最近看了 zepto 设计和源码分析 ，感觉有耳目一新的感觉，作者没有老套的去讲各个方法怎么实现的，能做些什么，而是讲了许多为什么源码要这样去设计，这样设计有什么好处，也分享了一些自己的看源码心得 一口气看完，收货良多，不光了解了 Zepto 的设计理念，同时也重温了 JavaScript 原型链的一些相关知识，在此记录一些笔记和涉及到的一些知识点，同时也感谢作者分享了加注版本的 zepto 源码">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    12 分钟 读完 (大约 1817 个字)
+                    12 分钟 读完 (大约 1819 个字)
                 </span>
                 
                 
@@ -224,7 +224,7 @@ var _hmt = _hmt || [];
 <p>这就是为何数组会有 <code>concat</code>、<code>push</code> 等方法，因为这些方法都存在于 <code>Array.prototype</code> 中，这也就解释了为什么 <code>Zepto</code> 取得的元素数组（<code>$(&#39;p&#39;)</code> 返回的是一个元素数组）上会有类似 <code>addClass</code> 等方法了，原因就是 <code>__proto__</code> 肯定是被修改过的，而不仅仅是 <code>Array.prototype</code>，这样再去看上面的 <code>zepto.Z</code> 函数就很明了了，新版的 <code>zepto.Z</code> 函数如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Z</span>(<span class="hljs-params">dom, selector</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> i, len = dom ? dom.length : <span class="hljs-number">0</span></span><br><span class="line">  <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; len; i++) <span class="hljs-keyword">this</span>[i] = dom[i]</span><br><span class="line">  <span class="hljs-keyword">this</span>.length = len</span><br><span class="line">  <span class="hljs-keyword">this</span>.selector = selector || <span class="hljs-string">''</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">zepto.Z = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">dom, selector</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Z(dom, selector)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$.fn = &#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">zepto.Z.prototype = Z.prototype = $.fn</span><br></pre></td></tr></table></figure>
 
-<p>相较于老版，新版的 <code>zepto.Z</code> 函数直接将构造函数的原型修改了，即 <code>Z.prototype = $.fn</code>，经过这样一改，构造函数再 <code>new</code> 出来的对象的隐式原型 <code>__proto__</code> 自然就指向了 <code>$.fn</code>，而这时返回的是一个<strong>对象数组</strong>，相对于之前的单纯数组，本质上更灵活一些</p>
+<p>相较于老版，新版的 <code>zepto.Z</code> 函数直接将构造函数的原型修改了，即 <code>Z.prototype = $.fn</code>，经过这样一改，构造函数再 <code>new</code> 出来的对象的隐式原型 <code>__proto__</code> 自然就指向了 <code>$.fn</code>，而这时返回的是一个「对象数组」，相对于之前的单纯数组，本质上更灵活一些</p>
 <h2 id="区别如下"><a href="#区别如下" class="headerlink" title="区别如下"></a>区别如下</h2><p>之前的 <code>zepto.Z</code> 函数</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/10.png" alt></p>
 <p>现在的 <code>zepto.Z</code> 函数</p>
@@ -340,7 +340,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -437,7 +437,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -524,6 +524,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -598,25 +617,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -635,7 +635,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1209,7 +1209,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

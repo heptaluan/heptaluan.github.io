@@ -16,7 +16,7 @@
 <meta property="og:description" content="最近在工作当中遇到了关于前端字体优化的问题，主要是公司有一款产品是一个在线的编辑工具，其中可以提供给用户各种不同的字体来进行编辑操作，所以在载入编辑区的过程当中会变得十分缓慢，所以特意抽了些时间研究了一下，在这里顺便记录一下">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/03.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.258Z">
+<meta property="og:updated_time" content="2020-12-04T02:02:25.508Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="前端字体优化">
 <meta name="twitter:description" content="最近在工作当中遇到了关于前端字体优化的问题，主要是公司有一款产品是一个在线的编辑工具，其中可以提供给用户各种不同的字体来进行编辑操作，所以在载入编辑区的过程当中会变得十分缓慢，所以特意抽了些时间研究了一下，在这里顺便记录一下">
@@ -233,7 +233,7 @@ var _hmt = _hmt || [];
 <blockquote>
 <p>注意需要指定 <code>?#font-spider</code> 后缀，关于这个属性，上面已经介绍过了</p>
 </blockquote>
-<p>配置完成了以后，就可以在当前路径下，或者要压缩字体的 <code>html</code> 文件下执行以下操作</p>
+<p>配置完成了以后，就可以在当前路径下，或者要压缩字体的 <code>HTML</code> 文件下执行以下操作</p>
 <figure class="highlight console hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">font-spider ./demo/*.html</span><br></pre></td></tr></table></figure>
 
 <p>这时，<code>font-spider</code> 就会帮助我们将页面依赖的字体将会自动压缩好，并且原 <code>.ttf</code> 字体是会备份的，下面是尝试过程当中遇到的一些坑</p>
@@ -297,9 +297,12 @@ var _hmt = _hmt || [];
 <li><code>Chrome</code> 和 <code>Firefox</code> 会暂停字体呈现最多 <code>3</code> 秒钟，<code>3</code> 秒钟之后它们会使用一种备用字体，并且字体下载完成之后，它们会立即使用下载的字体重新呈现一次文本</li>
 <li>如果请求字体还不可用，<code>IE</code> 会立即使用备用字体呈现，并在字体下载完成之后马上重新呈现</li>
 </ul>
-<p>可以发现，这里有一个微观的过程就是字体显示时间线，简单的理解就是分为 <strong>字体阻止期 ==&gt; 字体交换期 ==&gt; 字体失败期</strong>，如果我们希望能够让浏览器更早一些的显示出正确字体的文字，那么就需要优化字体载入的时间</p>
+<p>可以发现，这里有一个微观的过程就是字体显示时间线，简单的理解就是分为</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">字体阻止期 ==&gt; 字体交换期 ==&gt; 字体失败期</span><br></pre></td></tr></table></figure>
+
+<p>如果我们希望能够让浏览器更早一些的显示出正确字体的文字，那么就需要优化字体载入的时间</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/03-02.png" alt></p>
-<p>所以在这种情况下，我们就可以利用 <code>&lt;link rel=preload&gt;</code> 来提前加载字体文件，我们就可以把 <code>&lt;link rel=preload&gt;</code> 放到 <code>HTML</code> 的 <code>&lt;head&gt;&lt;/head&gt;</code> 中，让浏览器提前下载字体文件，而不用等 <code>DOM</code> 树完成后等 <code>CSS</code> 下载后才去请求，由于下载字体使用了额外的 <code>http</code> 请求，因此 <code>http/2</code> 可以大幅提高性能，它不需要受六个并发 <code>http</code> 请求的限制</p>
+<p>所以在这种情况下，我们就可以利用 <code>&lt;link rel=preload&gt;</code> 来提前加载字体文件，我们就可以把 <code>&lt;link rel=preload&gt;</code> 放到 <code>HTML</code> 的 <code>&lt;head&gt;&lt;/head&gt;</code> 中，让浏览器提前下载字体文件，而不用等 <code>DOM</code> 树完成后等 <code>CSS</code> 下载后才去请求，由于下载字体使用了额外的 <code>HTTP</code> 请求，因此 <code>http/2</code> 可以大幅提高性能，它不需要受六个并发 <code>HTTP</code> 请求的限制</p>
 <p>当然也可以采用动态加载的方式，也就是下面这样</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">preLoad</span>(<span class="hljs-params">href</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> preloadLink = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'link'</span>)</span><br><span class="line">  preloadLink.href = href</span><br><span class="line">  preloadLink.rel = <span class="hljs-string">'preload'</span></span><br><span class="line">  preloadLink.as = <span class="hljs-string">'font'</span></span><br><span class="line">  preloadLink.type = <span class="hljs-string">'font/woff'</span></span><br><span class="line">  preloadLink.crossorigin = <span class="hljs-string">'anonymous'</span></span><br><span class="line">  <span class="hljs-built_in">document</span>.head.appendChild(preloadLink)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -448,7 +451,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -565,7 +568,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -652,6 +655,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -726,25 +748,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -763,7 +766,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1337,7 +1340,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

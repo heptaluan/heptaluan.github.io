@@ -16,7 +16,7 @@
 <meta property="og:description" content="在前文（为什么要使用依赖注入）当中，我们简单的介绍了依赖注入的基本概念和 Angular 当中的一个简单的依赖注入实例，所以在本章，我们就来深入的了解一下 Angular 当中的依赖注入到底是什么东西 其实简单来说，依赖注入（DI）就是一种设计模式，它也是 Angular 的核心，在 Angular 当中我们一般使用 Provider 来描述与 Token 关联的依赖对象的创建方式，创建方式有四种">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/03.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.239Z">
+<meta property="og:updated_time" content="2020-12-04T02:37:42.866Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular 中的依赖注入">
 <meta name="twitter:description" content="在前文（为什么要使用依赖注入）当中，我们简单的介绍了依赖注入的基本概念和 Angular 当中的一个简单的依赖注入实例，所以在本章，我们就来深入的了解一下 Angular 当中的依赖注入到底是什么东西 其实简单来说，依赖注入（DI）就是一种设计模式，它也是 Angular 的核心，在 Angular 当中我们一般使用 Provider 来描述与 Token 关联的依赖对象的创建方式，创建方式有四种">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    33 分钟 读完 (大约 4963 个字)
+                    33 分钟 读完 (大约 4967 个字)
                 </span>
                 
                 
@@ -196,7 +196,7 @@ var _hmt = _hmt || [];
 
 <p>这里就涉及到两个比较重要的概念</p>
 <ul>
-<li><code>provide: SomeClass</code>，代表要提供的注入内容是什么，这时我们会把设定的类别当作是一个 <code>token</code>，在之后则是选择要使用这个 <code>token</code>，而这个 <code>token</code> 的具体内容到到底是什么？则是由 <code>useXXXX</code> 来决定的</li>
+<li><code>provide: SomeClass</code>，代表要提供的注入内容是什么，这时我们会把设定的类别当作是一个 <code>Token</code>，在之后则是选择要使用这个 <code>Token</code>，而这个 <code>Token</code> 的具体内容到到底是什么？则是由 <code>useXXXX</code> 来决定的</li>
 <li><code>useXXXX: ...</code>，<code>useXXXX</code> 其实是代表了多种设定，也就是上方我们提到的 <code>useClass</code>，<code>useValue</code>，<code>useExisting</code> 和 <code>useFactory</code></li>
 </ul>
 <p>下面我们就一个一个来进行介绍</p>
@@ -206,7 +206,7 @@ var _hmt = _hmt || [];
 <p>这里有一个需要注意的地方，就是 <code>Type&lt;any&gt;</code> 这个类型，在 <code>Angular</code> 当中分为 <code>Type</code> 类型和非 <code>Type</code> 类似，两者的区别主要在于注入方式的不同，即非 <code>Type</code> 类型的参数只能用 <code>@Inject(Something)</code> 的方式注入，接口的定义是下面这样的</p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> Type&lt;T&gt; <span class="hljs-keyword">extends</span> Function &#123; <span class="hljs-keyword">new</span> (...args: <span class="hljs-built_in">any</span>[]): T &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isType</span>(<span class="hljs-params">v: <span class="hljs-built_in">any</span></span>): <span class="hljs-title">v</span> <span class="hljs-title">is</span> <span class="hljs-title">Type</span>&lt;<span class="hljs-title">any</span>&gt; </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">typeof</span> v === <span class="hljs-string">'function'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>下面我们再说回 <code>useClass</code>，通常我们最常用的是 <code>useClass</code> 方法，代表的是使用某个类别，来当做产生 <code>token</code> 的实体，如下</p>
+<p>下面我们再说回 <code>useClass</code>，通常我们最常用的是 <code>useClass</code> 方法，代表的是使用某个类别，来当做产生 <code>Token</code> 的实体，如下</p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@NgModule</span>(&#123;</span><br><span class="line">  providers: [</span><br><span class="line">    &#123; provide: SomeClass, useClass: AnotherClass &#125;</span><br><span class="line">  ],</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
 <p>当程式内要注入 <code>SomeClass</code> 时，<code>Angular</code> 的核心程式就会改成以 <code>AnotherClass</code> 来建立新的实体，另外当 <code>provide</code> 和 <code>useClass</code> 相同时，可以直接简写，因此以下两段程式码是完全一样的</p>
@@ -234,8 +234,8 @@ var _hmt = _hmt || [];
 <p>在上面的示例当中涉及到一个 <code>multi</code> 属性，关于 <code>Multi providers</code>，它的作用是可以让我们使用相同的 <code>Token</code> 去注册多个 <code>Provider</code></p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> SOME_TOKEN: OpaqueToken = <span class="hljs-keyword">new</span> OpaqueToken(<span class="hljs-string">'SomeToken'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> injector = ReflectiveInjector.resolveAndCreate([</span><br><span class="line">  provide(SOME_TOKEN, &#123; useValue: <span class="hljs-string">'dependency one'</span>, multi: <span class="hljs-literal">true</span> &#125;),</span><br><span class="line">  provide(SOME_TOKEN, &#123; useValue: <span class="hljs-string">'dependency two'</span>, multi: <span class="hljs-literal">true</span> &#125;)</span><br><span class="line">])</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// dependencies == ['dependency one', 'dependency two']</span></span><br><span class="line"><span class="hljs-keyword">var</span> dependencies = injector.get(SOME_TOKEN)</span><br></pre></td></tr></table></figure>
 
-<p>我们使用 <code>multi: true</code> 来告诉 <code>Angular</code> 的依赖注入系统，我们设置的 <code>provider</code> 是 <code>multi provider</code>，这样一来我们可以使用相同的 <code>token</code> 值来注册不同的 <code>provider</code>，当我们使用对应的 <code>token</code> 去获取依赖项的时候，我们获取的是已注册的依赖对象列表</p>
-<p>至于为什么要使用 <code>multi provider</code> 的原因，这是因为如果使用同一个 <code>token</code> 去注册 <code>provider</code>，后面注册的 <code>provider</code> 将会覆盖前面已经注册的 <code>probider</code>，此外，<code>Angular</code> 使用 <code>multi provider</code> 这种机制，为我们提供了可插拔的钩子（<code>pluggable hooks</code>）</p>
+<p>我们使用 <code>multi: true</code> 来告诉 <code>Angular</code> 的依赖注入系统，我们设置的 <code>provider</code> 是 <code>multi provider</code>，这样一来我们可以使用相同的 <code>Token</code> 值来注册不同的 <code>provider</code>，当我们使用对应的 <code>Token</code> 去获取依赖项的时候，我们获取的是已注册的依赖对象列表</p>
+<p>至于为什么要使用 <code>multi provider</code> 的原因，这是因为如果使用同一个 <code>Token</code> 去注册 <code>provider</code>，后面注册的 <code>provider</code> 将会覆盖前面已经注册的 <code>probider</code>，此外，<code>Angular</code> 使用 <code>multi provider</code> 这种机制，为我们提供了可插拔的钩子（<code>pluggable hooks</code>）</p>
 <blockquote>
 <p>另外需要注意的是 <code>multi provider</code> 是不能和普通的 <code>provider</code> 混用的</p>
 </blockquote>
@@ -246,7 +246,7 @@ var _hmt = _hmt || [];
 <li>在 <code>NgModule</code> 或 <code>Component</code> 中注册 <code>providers</code></li>
 <li>使用构造注入的方式，注入与 <code>Token</code> 关联的依赖对象</li>
 </ol>
-<p>下面是一个示例，封装 <code>http</code> 服务，比如在每个 <code>Http</code> 的请求头中添加 <code>token</code>（类似拦截器）</p>
+<p>下面是一个示例，封装 <code>HTTP</code> 服务，比如在每个 <code>HTTP</code> 的请求头中添加 <code>Token</code>（类似拦截器）</p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 封装 http 为一个服务</span></span><br><span class="line"><span class="hljs-meta">@Injectable</span>()</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ApiService &#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"></span></span><br><span class="line"><span class="hljs-params">    <span class="hljs-keyword">public</span> http: Http</span></span><br><span class="line"><span class="hljs-params">  </span>) &#123;&#125;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 然后在使用的 Module 当中进行注入</span></span><br><span class="line"><span class="hljs-meta">@NgModule</span>(&#123;</span><br><span class="line">  providers: [</span><br><span class="line">    &#123; provide: ApiService, usdClass: ApiService &#125;</span><br><span class="line">  ],</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 然后在组件当中进行注入后使用</span></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> HomePage &#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"></span></span><br><span class="line"><span class="hljs-params">    <span class="hljs-keyword">public</span> apiService: ApiService</span></span><br><span class="line"><span class="hljs-params">  </span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.apiService.get(url)</span><br><span class="line">      .map(<span class="hljs-function"><span class="hljs-params">res</span> =&gt;</span> res.json())</span><br><span class="line">      .subscribe(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="hljs-built_in">console</span>.log(v)</span><br><span class="line">      &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>下面是一些需要注意的地方</p>
@@ -261,14 +261,14 @@ var _hmt = _hmt || [];
 <h2 id="Forward-Reference"><a href="#Forward-Reference" class="headerlink" title="Forward Reference"></a>Forward Reference</h2><p>在开发过程中我们可能会遇到类似下面这样的问题</p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Injectable</span>()</span><br><span class="line"><span class="hljs-keyword">class</span> Socket &#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> buffer: Buffer</span>) &#123; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(Buffer)  <span class="hljs-comment">// undefined</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">@Injectable</span>()</span><br><span class="line"><span class="hljs-keyword">class</span> Buffer &#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-meta">@Inject</span>(BUFFER_SIZE) <span class="hljs-keyword">private</span> size: <span class="hljs-built_in">Number</span></span>) &#123; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(Buffer)  <span class="hljs-comment">// [Function: Buffer]</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 运行后报错</span></span><br><span class="line"><span class="hljs-comment">// Error: Cannot resolve all parameters for Socket(undefined).</span></span><br><span class="line"><span class="hljs-comment">// Make sure they all have valid type or annotations</span></span><br></pre></td></tr></table></figure>
 
-<p>这时因为我们编写的代码最终都会被转义为 <code>ES5</code> 来运行，所以在编译阶段 <strong>变量声明和函数声明会自动提升，而函数表达式不会自动提升</strong></p>
+<p>这时因为我们编写的代码最终都会被转义为 <code>ES5</code> 来运行，所以在编译阶段「变量声明和函数声明会自动提升，而函数表达式不会自动提升」</p>
 <p>如果要解决上面的问题，最简单的处理方式是交换类定义的顺序，或者还可以使用 <code>Angular</code> 提供的 <code>forward reference</code> 特性，<code>Angular</code> 通过引入 <code>forwardRef</code> 让我们可以在使用构造注入的时候，使用尚未定义的依赖对象类型，如果不使用 <code>forwardRef</code> 就会遇到上面那样的问题</p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; forwardRef &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular2/core'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">@Injectable</span>()</span><br><span class="line"><span class="hljs-keyword">class</span> Socket &#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"></span></span><br><span class="line"><span class="hljs-params">    <span class="hljs-meta">@Inject</span>(forwardRef(() =&gt; Buffer))</span></span><br><span class="line"><span class="hljs-params">    <span class="hljs-keyword">private</span> buffer</span></span><br><span class="line"><span class="hljs-params">  </span>) &#123; &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">class</span> Buffer &#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-meta">@Inject</span>(BUFFER_SIZE) <span class="hljs-keyword">private</span> size: <span class="hljs-built_in">Number</span></span>) &#123; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="forwardRef-原理分析"><a href="#forwardRef-原理分析" class="headerlink" title="forwardRef 原理分析"></a>forwardRef 原理分析</h2><p>下面我们来看看 <code>forwardRef</code> 到底做了些什么，如下</p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// @angular/core/src/di/forward_ref.ts</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * Allows to refer to references which are not yet defined.</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">forwardRef</span>(<span class="hljs-params">forwardRefFn: ForwardRefFn</span>): <span class="hljs-title">Type</span>&lt;<span class="hljs-title">any</span>&gt; </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// forwardRefFn: () =&gt; Buffer</span></span><br><span class="line">  <span class="hljs-comment">// 当调用 forwardRef 方法时，我们只是在 forwardRefFn 函数对象上，增加了一个私有属性__forward_ref__</span></span><br><span class="line">  (&lt;<span class="hljs-built_in">any</span>&gt;forwardRefFn).__forward_ref__ = forwardRef</span><br><span class="line">  <span class="hljs-comment">// 然后覆写了函数的 toString 方法</span></span><br><span class="line">  (&lt;<span class="hljs-built_in">any</span>&gt;forwardRefFn).toString = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; <span class="hljs-keyword">return</span> stringify(<span class="hljs-keyword">this</span>()) &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> (&lt;Type&lt;<span class="hljs-built_in">any</span>&gt;&gt;&lt;<span class="hljs-built_in">any</span>&gt;forwardRefFn)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * Lazily retrieves the reference value from a forwardRef.</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-comment">// 用来解析通过 forwardRef 包装过的引用值</span></span><br><span class="line"><span class="hljs-comment">// 由依赖注入系统调用，当解析 Provider 和创建依赖对象的时候，会自动调用该函数</span></span><br><span class="line"><span class="hljs-comment">// 如下</span></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resolveForwardRef</span>(<span class="hljs-params"><span class="hljs-keyword">type</span>: <span class="hljs-built_in">any</span></span>): <span class="hljs-title">any</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-keyword">type</span> === <span class="hljs-string">'function'</span> &amp;&amp; <span class="hljs-keyword">type</span>.hasOwnProperty(<span class="hljs-string">'__forward_ref__'</span>) &amp;&amp;</span><br><span class="line">    <span class="hljs-keyword">type</span>.__forward_ref__ === forwardRef) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> (&lt;ForwardRefFn&gt;<span class="hljs-keyword">type</span>)()  <span class="hljs-comment">// Call forwardRefFn get Buffer </span></span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">type</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">/********************************************************************/</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// @angular/core/src/di/reflective_provider.ts</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * 解析Provider</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resolveReflectiveFactory</span>(<span class="hljs-params">provider: NormalizedProvider</span>): <span class="hljs-title">ResolvedReflectiveFactory</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> factoryFn: <span class="hljs-built_in">Function</span></span><br><span class="line">  <span class="hljs-keyword">let</span> resolvedDeps: ReflectiveDependency[]</span><br><span class="line">  ...</span><br><span class="line">  <span class="hljs-keyword">if</span> (provider.useClass) &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> useClass = resolveForwardRef(provider.useClass)</span><br><span class="line">    factoryFn = reflector.factory(useClass)</span><br><span class="line">    resolvedDeps = _dependenciesFor(useClass)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">/********************************************************************/</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * 构造依赖对象</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">constructDependencies</span>(<span class="hljs-params"></span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">  typeOrFunc: <span class="hljs-built_in">any</span>, dependencies: <span class="hljs-built_in">any</span>[]</span>): <span class="hljs-title">ReflectiveDependency</span>[] </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (!dependencies) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> _dependenciesFor(typeOrFunc)</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> params: <span class="hljs-built_in">any</span>[][] = dependencies.map(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> [t])</span><br><span class="line">    <span class="hljs-keyword">return</span> dependencies.map(<span class="hljs-function"><span class="hljs-params">t</span> =&gt;</span> _extractToken(typeOrFunc, t, params))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * 抽取Token</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">_extractToken</span>(<span class="hljs-params"></span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">  typeOrFunc: <span class="hljs-built_in">any</span>, metadata: <span class="hljs-built_in">any</span>[] | <span class="hljs-built_in">any</span>, params: <span class="hljs-built_in">any</span>[][]</span>): <span class="hljs-title">ReflectiveDependency</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  token = resolveForwardRef(token)</span><br><span class="line">  <span class="hljs-keyword">if</span> (token != <span class="hljs-literal">null</span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> _createDependency(token, optional, visibility)</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">throw</span> noAnnotationError(typeOrFunc, params)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="inject-装饰器"><a href="#inject-装饰器" class="headerlink" title="inject 装饰器"></a>inject 装饰器</h2><p>在 <code>Angular</code> 中，<code>Inject</code> 是 <strong>参数装饰器，主要用来在类的构造函数中描述</strong> 非 <code>Type</code> 类型的参数对象，在 <code>Angular</code> 中的 <code>Type</code> 类型如下所示</p>
+<h2 id="inject-装饰器"><a href="#inject-装饰器" class="headerlink" title="inject 装饰器"></a>inject 装饰器</h2><p>在 <code>Angular</code> 中，<code>Inject</code> 是「参数装饰器」，主要用来在类的构造函数中描述非 <code>Type</code> 类型的参数对象，在 <code>Angular</code> 中的 <code>Type</code> 类型如下所示</p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// Type类型 - @angular/core/src/type.ts</span></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> Type = <span class="hljs-built_in">Function</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isType</span>(<span class="hljs-params">v: <span class="hljs-built_in">any</span></span>): <span class="hljs-title">v</span> <span class="hljs-title">is</span> <span class="hljs-title">Type</span>&lt;<span class="hljs-title">any</span>&gt; </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">typeof</span> v === <span class="hljs-string">'function'</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> Type&lt;T&gt; <span class="hljs-keyword">extends</span> Function &#123; <span class="hljs-keyword">new</span> (...args: <span class="hljs-built_in">any</span>[]): T &#125;</span><br></pre></td></tr></table></figure>
 
 <p><code>Angular</code> 中常用的非 <code>Type</code> 类型 <code>Token</code> 有字符串（常量）、<code>OpaqueToken</code> 对象、<code>InjectionToken</code> 对象等，后两者对象的构造如下</p>
@@ -303,7 +303,7 @@ var _hmt = _hmt || [];
 <ul>
 <li>当一个提供器声明在模块当中时（<code>Module</code>），对于该模块下的所有组件是可见的，所有组件都是可以注入的，即在当前模块的 <code>@NgModule</code> 当中的 <code>providers</code> 当中进行注入之后，当前模块下所有组件可用</li>
 <li>当一个提供器声明在组件当中时（<code>Component</code>），只对声明它的组件及其子组件可见，其他组件不可注入</li>
-<li>当在模块（<code>Module</code>）和组件（<code>Component</code>）当中声明的提供器具有相同的 <code>token</code>（<code>key</code>）的时候，那么组件当中的提供器会覆盖声明在模块当中的提供器（就近原则）</li>
+<li>当在模块（<code>Module</code>）和组件（<code>Component</code>）当中声明的提供器具有相同的 <code>Token</code>（<code>key</code>）的时候，那么组件当中的提供器会覆盖声明在模块当中的提供器（就近原则）</li>
 </ul>
 <p>一般情况下优先将服务提供器声明在模块当中</p>
 <ul>
@@ -449,7 +449,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -606,7 +606,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -693,6 +693,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -767,25 +786,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -804,7 +804,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1378,7 +1378,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

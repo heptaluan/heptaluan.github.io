@@ -16,7 +16,7 @@
 <meta property="og:description" content="Reflect 对象与 Proxy 对象一样，也是 ES6 为了操作对象而提供的新 API">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/43.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.305Z">
+<meta property="og:updated_time" content="2020-12-04T02:37:42.795Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Reflect 对象">
 <meta name="twitter:description" content="Reflect 对象与 Proxy 对象一样，也是 ES6 为了操作对象而提供的新 API">
@@ -209,8 +209,8 @@ var _hmt = _hmt || [];
 <h2 id="Reflect-defineProperty-target-propertyKey-attributes"><a href="#Reflect-defineProperty-target-propertyKey-attributes" class="headerlink" title="Reflect.defineProperty(target, propertyKey, attributes)"></a>Reflect.defineProperty(target, propertyKey, attributes)</h2><p>与 <code>Object.defineProperty</code> 相似，不过如果 <code>Object.defineProperty</code> 的属性定义失败了，就会抛出一个错误，而 <code>Reflect.defineProperty</code> 如果定义属性失败的话就会返回 <code>false</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> obj = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> result = <span class="hljs-built_in">Reflect</span>.defineProperty(obj, <span class="hljs-string">'name'</span>, &#123;</span><br><span class="line">  configurable: <span class="hljs-literal">true</span>,</span><br><span class="line">  enumerable: <span class="hljs-literal">true</span>,</span><br><span class="line">  value: <span class="hljs-string">'happy'</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(result)  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="Reflect-getPrototypeOf-target"><a href="#Reflect-getPrototypeOf-target" class="headerlink" title="Reflect.getPrototypeOf(target)"></a>Reflect.getPrototypeOf(target)</h2><p>与 <code>Object.getPrototypeOf</code> 方法是一样的，都是返回一个对象的原型，也就是内部的 <code>[[Prototype]]</code> 属性的值，如果要获取原型的那个值不是一个对象，那么函数 <code>Reflect.getPrototypeOf</code> 会抛出一个异常，对于给定对象的原型，如果没有继承的属性，则返回 <code>null</code></p>
-<h2 id="Reflect-ownKeys-target"><a href="#Reflect-ownKeys-target" class="headerlink" title="Reflect.ownKeys(target)"></a>Reflect.ownKeys(target)</h2><p>返回由目标对象自身的属性键组成的数组，包括 <code>symbol</code> 的值</p>
+<h2 id="Reflect-getPrototypeOf-target"><a href="#Reflect-getPrototypeOf-target" class="headerlink" title="Reflect.getPrototypeOf(target)"></a>Reflect.getPrototypeOf(target)</h2><p>与 <code>Object.getPrototypeOf</code> 方法是一样的，都是返回一个对象的原型，也就是内部的 <code>[[Prototype]]</code> 属性的值，如果要获取原型的那个值不是一个对象，那么函数 <code>Reflect.getPrototypeOf</code> 会抛出一个异常，对于给定对象的原型，如果没有继承的属性，则返回 <code>Null</code></p>
+<h2 id="Reflect-ownKeys-target"><a href="#Reflect-ownKeys-target" class="headerlink" title="Reflect.ownKeys(target)"></a>Reflect.ownKeys(target)</h2><p>返回由目标对象自身的属性键组成的数组，包括 <code>Symbol</code> 的值</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> a = <span class="hljs-built_in">Symbol</span>.for(<span class="hljs-string">'a'</span>)</span><br><span class="line"><span class="hljs-keyword">let</span> b = <span class="hljs-built_in">Symbol</span>.for(<span class="hljs-string">'b'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> obj = &#123;</span><br><span class="line">  [a]: <span class="hljs-number">10</span>,</span><br><span class="line">  [b]: <span class="hljs-number">20</span>,</span><br><span class="line">  key1: <span class="hljs-number">30</span>,</span><br><span class="line">  key2: <span class="hljs-number">40</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.getOwnPropertyNames(obj)    <span class="hljs-comment">// [ 'key1', 'key2' ]</span></span><br><span class="line"><span class="hljs-built_in">Object</span>.getOwnPropertySymbols(obj)  <span class="hljs-comment">// [ Symbol(a), Symbol(b) ]</span></span><br><span class="line"><span class="hljs-built_in">Reflect</span>.ownKeys(obj)               <span class="hljs-comment">// [ 'key1', 'key2', Symbol(a), Symbol(b) ]</span></span><br></pre></td></tr></table></figure>
 
 
@@ -323,7 +323,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -424,7 +424,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -511,6 +511,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -585,25 +604,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -622,7 +622,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1196,7 +1196,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

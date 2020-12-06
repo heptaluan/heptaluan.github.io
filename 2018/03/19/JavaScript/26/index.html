@@ -16,7 +16,7 @@
 <meta property="og:description" content="最后更新于 2020-11-14  最近在回过头来看之前整理过的 Promise 相关内容，发现有许多不完善或是遗漏的地方，所以打算抽些时间重新的梳理一下 Promise 相关内容，从什么是 Promise 开始，到它的各种使用方式，最后我们再来手动模拟实现一个 Promise 了解一下它的运行过程（整理完发现内容较多，所以另起篇幅，见 Promise 的实现），下面就让我们先从为什么要使用 P">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/26.jpg">
-<meta property="og:updated_time" content="2020-11-21T14:21:30.095Z">
+<meta property="og:updated_time" content="2020-11-29T15:30:05.756Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的 Promise">
 <meta name="twitter:description" content="最后更新于 2020-11-14  最近在回过头来看之前整理过的 Promise 相关内容，发现有许多不完善或是遗漏的地方，所以打算抽些时间重新的梳理一下 Promise 相关内容，从什么是 Promise 开始，到它的各种使用方式，最后我们再来手动模拟实现一个 Promise 了解一下它的运行过程（整理完发现内容较多，所以另起篇幅，见 Promise 的实现），下面就让我们先从为什么要使用 P">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    1 小时 读完 (大约 8102 个字)
+                    1 小时 读完 (大约 8112 个字)
                 </span>
                 
                 
@@ -189,7 +189,7 @@ var _hmt = _hmt || [];
             <blockquote>
 <p>最后更新于 <code>2020-11-14</code></p>
 </blockquote>
-<p>最近在回过头来看之前整理过的 <code>Promise</code> 相关内容，发现有许多不完善或是遗漏的地方，所以打算抽些时间重新的梳理一下 <code>Promise</code> 相关内容，从什么是 <code>Promise</code> 开始，到它的各种使用方式，最后我们再来手动模拟实现一个 <code>Promise</code> 了解一下它的运行过程（整理完发现内容较多，所以另起篇幅，见 <a href="http://localhost:4000/2020/11/15/JavaScript/55/" target="_blank" rel="noopener">Promise 的实现</a>），下面就让我们先从为什么要使用 <code>Promise</code> 开始看起</p>
+<p>最近在回过头来看之前整理过的 <code>Promise</code> 相关内容，发现有许多不完善或是遗漏的地方，所以打算抽些时间重新的梳理一下 <code>Promise</code> 相关内容，从什么是 <code>Promise</code> 开始，到它的各种使用方式，最后我们再来手动模拟实现一个 <code>Promise</code> 了解一下它的运行过程（整理完发现内容较多，所以另起篇幅，见 <a href="https://heptaluan.github.io/2020/11/15/JavaScript/55/" target="_blank" rel="noopener">Promise 的实现</a>），下面就让我们先从为什么要使用 <code>Promise</code> 开始看起</p>
 <a id="more"></a>
 
 
@@ -208,7 +208,7 @@ var _hmt = _hmt || [];
 <li>只有三种状态，未完成，完成（<code>fulfilled</code>）和失败（<code>rejected</code>）</li>
 <li>状态可以由未完成转换成完成，或者未完成转换成失败</li>
 <li>状态转换只发生一次</li>
-<li>状态转换完成后就是外部 <strong>不可变</strong> 的值，我们可以安全地把这个值传递给第三方，并确信它不会被有意无意的修改（特别是对于多方查看同一个 <code>Promise</code> 状态转换的情况）</li>
+<li>状态转换完成后就是外部「不可变」的值，我们可以安全地把这个值传递给第三方，并确信它不会被有意无意的修改（特别是对于多方查看同一个 <code>Promise</code> 状态转换的情况）</li>
 </ul>
 <p>下面我们就来看看如何使用 <code>Promise</code> 来改写我们之前的读取文件的示例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">readFile</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">resolve, reject</span>) </span>&#123;</span><br><span class="line">    fs.readFile(<span class="hljs-string">'1.txt'</span>, <span class="hljs-string">'utf-8'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err, data</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (err) &#123;</span><br><span class="line">        reject(err)</span><br><span class="line">      &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">        resolve(data)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">readFile().then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(data)</span><br><span class="line">&#125;).catch(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">err</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(err)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
@@ -365,7 +365,7 @@ var _hmt = _hmt || [];
 <h4 id="Promise-和-setTimeout"><a href="#Promise-和-setTimeout" class="headerlink" title="Promise 和 setTimeout"></a>Promise 和 setTimeout</h4><p>最后我们再来看看平常可能会经常遇到的一类问题，那就是 <code>Promise</code> 和 <code>setTimeout</code> 的执行先后顺序的问题，先来看下面这个示例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">1</span>)</span><br><span class="line">&#125;, <span class="hljs-number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">resolve</span>) </span>&#123;</span><br><span class="line">  resolve()</span><br><span class="line">&#125;).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">2</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
-<p>执行结果依次为 <code>2</code> 和 <code>1</code>，至于为什么会这样，简单来说就是 <code>Promise</code> 的任务会在当前事件循环末尾中执行，而 <code>setTimeout</code> 中的任务是在下一次事件循环执行，所以 <code>Promise</code> 的执行顺序是高于 <code>setTimeout</code> 的，至于原因，则是因为在 <code>ES6</code> 当中，有一个新的概念建立在 <strong>事件循环队列</strong> 之上，叫做 <strong>任务队列</strong></p>
+<p>执行结果依次为 <code>2</code> 和 <code>1</code>，至于为什么会这样，简单来说就是 <code>Promise</code> 的任务会在当前事件循环末尾中执行，而 <code>setTimeout</code> 中的任务是在下一次事件循环执行，所以 <code>Promise</code> 的执行顺序是高于 <code>setTimeout</code> 的，至于原因，则是因为在 <code>ES6</code> 当中，有一个新的概念建立在「事件循环队列」之上，叫做「任务队列」</p>
 <p>简单的理解就是，它是挂在事件循环队列的每个 <code>Tick</code> 之后的一个队列，在事件循环的每个 <code>Tick</code> 中，可能出现的异步动作不会导致一个完整的新事件添加到事件循环队列中，而会在当前 <code>Tick</code> 的任务队列末尾添加一个项目（任务）</p>
 <p>一个任务可能引起更多任务被添加到同一个队列末尾，所以理论上说，任务循环可能无限循环（一个任务总是添加另一个任务，以此类推）进而导致程序的无限循环，无法转移到下一个事件循环 <code>Tick</code>，从概念上看，这和代码中的无限循环（类似 <code>while(true)</code>）的体验几乎是一样的</p>
 <p>有了以上的了解以后，我们再来看看下面这个稍微复杂点的的综合案例</p>
@@ -382,7 +382,7 @@ var _hmt = _hmt || [];
 <p>都被改写成了 <code>Promise</code>，但是首先需要明确的是，<code>Promise</code> 的任务会在当前事件循环末尾中执行，而 <code>setTimeout</code> 中的任务是在下一次事件循环执行，首先是一个 <code>setTimeout</code>，所以其中的任务是会在下一次事件循环中才会执行，因此开始肯定不会输出 <code>1</code>，然后是一个 <code>Promise</code>，里面的函数是会立即执行的，所以首先输出 <code>2</code> 和 <code>3</code></p>
 <p>这里需要注意的是，<code>Promise</code> 的 <code>then</code> 应当会放到当前 <code>Tick</code> 的最后，但是还是在当前 <code>Tick</code> 中（而不是下一次事件循环），所以会先输出 <code>5</code> 然后才会输出 <code>4</code>，最后轮到下一个 <code>Tick</code> 才会输出 <code>1</code>，所以结果为 <code>2 3 5 4 1</code>，至于最后一个，和第七个的原理是一样的，结果为 <code>2 3 5 4 1 6</code></p>
 <blockquote>
-<p>关于 <code>Promise</code> 和 <code>setTimeout</code> 两者间具体的差异可以参考之前整理过的 <a href="http://localhost:4000/2018/08/12/JavaScript/30/" target="_blank" rel="noopener">JavaScript 并发模型</a> 来了解更多</p>
+<p>关于 <code>Promise</code> 和 <code>setTimeout</code> 两者间具体的差异可以参考之前整理过的 <a href="https://heptaluan.github.io/2018/08/12/JavaScript/30/" target="_blank" rel="noopener">JavaScript 并发模型</a> 来了解更多</p>
 </blockquote>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="http://liubin.org/promises-book/" target="_blank" rel="noopener">JavaScript Promise 迷你书</a></li>
@@ -499,7 +499,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -636,7 +636,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -723,6 +723,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -797,25 +816,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -834,7 +834,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1408,7 +1408,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

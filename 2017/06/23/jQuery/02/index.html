@@ -16,7 +16,7 @@
 <meta property="og:description" content="因为最近在项目当中使用 jQuery 比较多，所以打算抽点时间去研究一下 jQuery 源码，深入了解一下，主要参考的是 jQuery 技术内幕，大致的梳理了一下，以便自己更好的来进行理解，如果想要了解更多更为详细的内容可以参考原书籍">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/02.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.334Z">
+<meta property="og:updated_time" content="2020-12-04T02:00:52.412Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jQuery 源码的总体架构">
 <meta name="twitter:description" content="因为最近在项目当中使用 jQuery 比较多，所以打算抽点时间去研究一下 jQuery 源码，深入了解一下，主要参考的是 jQuery 技术内幕，大致的梳理了一下，以便自己更好的来进行理解，如果想要了解更多更为详细的内容可以参考原书籍">
@@ -194,14 +194,14 @@ var _hmt = _hmt || [];
 
 <p><code>jQuery</code> 的最外层是一个自调用匿名函数，通过定义一个匿名函数，创建了一个私有的命名空间，该命名空间的变量和方法，不会破坏全局的命名空间，参数中传入 <code>window</code> 变量，使得 <code>window</code> 由全局变量变为局部变量，当在 <code>jQuery</code> 代码块中访问 <code>window</code> 时，不需要将作用域链回退到顶层作用域，这样可以更快的访问 <code>window</code>，更重要的是将 <code>window</code> 作为参数传入，可以在压缩代码时进行优化，传入 <code>undefined</code> 是因为在自调用匿名函数的作用域内，确保 <code>undefined</code> 是真的未定义，因为 <code>undefined</code> 在某些浏览器下是能够被重写或是被赋予新的值</p>
 <p>下面我们就来看看它最为重要的一个方法，也就是构造函数 <code>jQuery()</code>，它一共有七种用法，如下</p>
-<h2 id="jQuery-selector-context"><a href="#jQuery-selector-context" class="headerlink" title="jQuery(selector, context)"></a>jQuery(selector, context)</h2><p>接收一个 <code>CSS</code> 选择器表达式（<code>selector</code>）和可选的选择器上下文（<code>context</code>），返回一个包含了匹配的 <code>DOM</code> 元素的 <code>jQuery</code> 对象，例如，在一个事件监听函数中，可以像下面这样限制查找范围</p>
+<h2 id="jQuery-selector-context"><a href="#jQuery-selector-context" class="headerlink" title="jQuery(selector, context)"></a>jQuery(selector, context)</h2><p>接收一个 <code>CSS</code> 选择器表达式（<code>selector</code>）和可选的选择器上下文（<code>Context</code>），返回一个包含了匹配的 <code>DOM</code> 元素的 <code>jQuery</code> 对象，例如，在一个事件监听函数中，可以像下面这样限制查找范围</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="hljs-string">'div.foo'</span>).click(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 限定查找范围</span></span><br><span class="line">  $(<span class="hljs-string">'span'</span>, <span class="hljs-keyword">this</span>).addClass(<span class="hljs-string">'bar'</span>)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li>如果选择器表达式 <code>selector</code> 是简单的 <code>&quot;#id&quot;</code> ，且没有指定上下文 <code>context</code>，则调用浏览器原生方法 <code>document.getElementById()</code> 查找属性 <code>id</code> 等于指定值的元素</li>
+<li>如果选择器表达式 <code>selector</code> 是简单的 <code>&quot;#id&quot;</code> ，且没有指定上下文 <code>Context</code>，则调用浏览器原生方法 <code>document.getElementById()</code> 查找属性 <code>id</code> 等于指定值的元素</li>
 <li>如果是比 <code>&quot;#id&quot;</code> 复杂的选择器表达式或指定了上下文，则通过 <code>jQuery</code> 方法 <code>.find()</code> 查找，因此 <code>$(&#39;span&#39;, this)</code> 等价于 <code>$(this).find(&#39;span&#39;)</code></li>
 </ul>
-<h2 id="jQuery-html-ownerDocument-和-jQuery-html-props"><a href="#jQuery-html-ownerDocument-和-jQuery-html-props" class="headerlink" title="jQuery(html, ownerDocument) 和 jQuery(html, props)"></a>jQuery(html, ownerDocument) 和 jQuery(html, props)</h2><p>用所提供的 <code>html</code> 代码创建 <code>DOM</code> 元素</p>
+<h2 id="jQuery-html-ownerDocument-和-jQuery-html-props"><a href="#jQuery-html-ownerDocument-和-jQuery-html-props" class="headerlink" title="jQuery(html, ownerDocument) 和 jQuery(html, props)"></a>jQuery(html, ownerDocument) 和 jQuery(html, props)</h2><p>用所提供的 <code>HTML</code> 代码创建 <code>DOM</code> 元素</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/*   </span></span><br><span class="line"><span class="hljs-comment"> *   两种方式都可以往 body 中插入 div</span></span><br><span class="line"><span class="hljs-comment"> *   1，$('&lt;div&gt;').appendTo('body')</span></span><br><span class="line"><span class="hljs-comment"> *   2，$('&lt;div&gt;&lt;/div&gt;').appendTo('body')</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 多标签嵌套</span></span><br><span class="line">$(<span class="hljs-string">'&lt;div&gt;&lt;span&gt;foo&lt;/span&gt;&lt;/div&gt;'</span>).appendTo(<span class="hljs-string">'body'</span>)</span><br></pre></td></tr></table></figure>
 
 <h2 id="jQuery-element-or-elementsArray"><a href="#jQuery-element-or-elementsArray" class="headerlink" title="jQuery(element or elementsArray)"></a>jQuery(element or elementsArray)</h2><p>如果传入一个 <code>DOM</code> 元素或 <code>DOM</code> 元素数组，则把 <code>DOM</code> 元素封装到 <code>jQuery</code> 对象中并返回</p>
@@ -325,7 +325,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -438,7 +438,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -525,6 +525,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -599,25 +618,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -636,7 +636,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1210,7 +1210,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

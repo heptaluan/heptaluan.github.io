@@ -16,7 +16,7 @@
 <meta property="og:description" content="最后更新于 2020-02-01  JavaScript 的一大特点就是单线程，这意味着在任何时候只能有一段代码执行，JavaScript 主线程在运行时，会建立一个执行同步代码的栈和执行异步代码的队列，在深入展开之前，我们先来了解一些前置知识，包括单线程执行机制和 JavaScript 中堆和栈的相关概念（堆和栈的相关概念可以参考 体系结构与操作系统 当中的相关章节）">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/30.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.301Z">
+<meta property="og:updated_time" content="2020-11-29T15:30:26.238Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 并发模型">
 <meta name="twitter:description" content="最后更新于 2020-02-01  JavaScript 的一大特点就是单线程，这意味着在任何时候只能有一段代码执行，JavaScript 主线程在运行时，会建立一个执行同步代码的栈和执行异步代码的队列，在深入展开之前，我们先来了解一些前置知识，包括单线程执行机制和 JavaScript 中堆和栈的相关概念（堆和栈的相关概念可以参考 体系结构与操作系统 当中的相关章节）">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    44 分钟 读完 (大约 6563 个字)
+                    44 分钟 读完 (大约 6567 个字)
                 </span>
                 
                 
@@ -193,13 +193,13 @@ var _hmt = _hmt || [];
 <a id="more"></a>
 
 
-<h2 id="单线程执行机制"><a href="#单线程执行机制" class="headerlink" title="单线程执行机制"></a>单线程执行机制</h2><p><code>JavaScript</code> 属于单线程，程序按顺序执行，本质上执行的是基于浏览器的一个事件队列，要执行的函数和触发事件的回调函数都被放在这个队列中，但是浏览器是 <strong>事件驱动的、异步的、多线程的</strong></p>
+<h2 id="单线程执行机制"><a href="#单线程执行机制" class="headerlink" title="单线程执行机制"></a>单线程执行机制</h2><p><code>JavaScript</code> 属于单线程，程序按顺序执行，本质上执行的是基于浏览器的一个事件队列，要执行的函数和触发事件的回调函数都被放在这个队列中，但是浏览器是「事件驱动的、异步的、多线程的」</p>
 <p>浏览器内部有一个事件轮询（<code>Event Loop</code>），是一个大的内部消息循环，会轮询大的消息队列并执行，也就是 <code>JavaScript</code> 要处理的事件队列，是浏览器维护的，浏览器至少有四个线程（不同浏览器会有差异）</p>
 <ul>
 <li><code>JavaScript</code> 引擎线程</li>
 <li>界面渲染线程</li>
 <li>浏览器事件触发线程</li>
-<li><code>http</code> 请求线程</li>
+<li><code>HTTP</code> 请求线程</li>
 </ul>
 <p>而在 <code>JavaScript</code> 当中我们一般比较熟悉的的异步操作有 <code>setTimeout</code> 和 <code>Ajax</code>，来看看它们之间的区别</p>
 <ul>
@@ -350,7 +350,7 @@ var _hmt = _hmt || [];
 <h2 id="关于-requestAnimationFrame"><a href="#关于-requestAnimationFrame" class="headerlink" title="关于 requestAnimationFrame"></a>关于 requestAnimationFrame</h2><p>先说结论，<code>requestAnimationFrame</code> 其实不属于 <code>task</code>，它只是浏览器渲染过程的一步，和 <code>task/microtask</code> 的执行是分离的，至于为什么会这样，我们则需要深入的去了解一下 <code>requestAnimationFrame</code> 这个接口，详细可以参考 <a href="https://www.cnblogs.com/onepixel/p/7078617.html" target="_blank" rel="noopener">requestAnimationFrame 知多少</a> 和 <a href="https://stackoverflow.com/questions/43050448/when-will-requestanimationframe-be-executed" target="_blank" rel="noopener">When will requestAnimationFrame be executed</a>，我们在这里只简单的总结一下</p>
 <ul>
 <li><code>setTimeout</code> 的执行时间并不是确定的，在 <code>JavaScript</code> 中，<code>setTimeout</code> 任务被放进了异步队列中，只有当主线程上的任务执行完以后，才会去检查该队列里的任务是否需要开始执行，所以 <code>setTimeout</code> 的实际执行时机一般要比其设定的时间晚一些</li>
-<li>与 <code>setTimeout</code> 相比，<code>requestAnimationFrame</code> 最大的优势是 <strong>由系统来决定回调函数的执行时机</strong>，系统每次绘制之前会主动调用 <code>requestAnimationFrame</code> 中的回调函数，如果系统绘制率是 <code>60Hz</code>，那么回调函数就每 <code>16.7ms</code> 被执行一次，如果绘制频率是 <code>75Hz</code>，那么这个间隔时间就变成了 <code>1000 / 75 = 13.3ms</code>，换句话说就是 <code>requestAnimationFrame</code> 的执行步伐跟着系统的绘制频率走，它能保证回调函数在屏幕每一次的绘制间隔中只被执行一次，这样就不会引起丢帧现象，也不会导致动画出现卡顿的问题</li>
+<li>与 <code>setTimeout</code> 相比，<code>requestAnimationFrame</code> 最大的优势是「由系统来决定回调函数的执行时机」，系统每次绘制之前会主动调用 <code>requestAnimationFrame</code> 中的回调函数，如果系统绘制率是 <code>60Hz</code>，那么回调函数就每 <code>16.7ms</code> 被执行一次，如果绘制频率是 <code>75Hz</code>，那么这个间隔时间就变成了 <code>1000 / 75 = 13.3ms</code>，换句话说就是 <code>requestAnimationFrame</code> 的执行步伐跟着系统的绘制频率走，它能保证回调函数在屏幕每一次的绘制间隔中只被执行一次，这样就不会引起丢帧现象，也不会导致动画出现卡顿的问题</li>
 </ul>
 <p>至于具体是什么样的流程，我们可以参考规范当中的 <a href="https://html.spec.whatwg.org/multipage/webappapis.html#event-loop-processing-model" target="_blank" rel="noopener">事件循环处理模型</a>，简化后的流程是下面这样</p>
 <ul>
@@ -512,7 +512,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -657,7 +657,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -744,6 +744,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -818,25 +837,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -855,7 +855,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1429,7 +1429,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

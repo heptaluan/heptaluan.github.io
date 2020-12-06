@@ -16,7 +16,7 @@
 <meta property="og:description" content="最近在梳理 JavaScript 相关知识，发现 V8 引擎机制相关内容还是较多的而且在之前工作的过程当中也是涉及比较少的，所以就抽些时间出来，在这里大致的整理一下，关于 JavaScript 的其他内容可以参考 JavaScript 知识梳理 和 前端知识体系整理，本章大致内容有下面这些">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/54.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.311Z">
+<meta property="og:updated_time" content="2020-12-04T02:37:42.885Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="V8 引擎机制">
 <meta name="twitter:description" content="最近在梳理 JavaScript 相关知识，发现 V8 引擎机制相关内容还是较多的而且在之前工作的过程当中也是涉及比较少的，所以就抽些时间出来，在这里大致的整理一下，关于 JavaScript 的其他内容可以参考 JavaScript 知识梳理 和 前端知识体系整理，本章大致内容有下面这些">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    1 小时 读完 (大约 8528 个字)
+                    1 小时 读完 (大约 8532 个字)
                 </span>
                 
                 
@@ -241,7 +241,7 @@ var _hmt = _hmt || [];
 <p>可以明显看出 <code>Ignition + TurboFan</code> 架构比 <code>Full-codegen + Crankshaft</code> 架构内存降低一半多，我们可以再来看看网页速度提升对比</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/54-04.png" alt></p>
 <p>可以明显看出 <code>Ignition + TurboFan</code> 架构比 <code>Full-codegen + Crankshaft</code> 架构 <code>70%</code> 网页速度是有提升的</p>
-<h2 id="解析器与-AST"><a href="#解析器与-AST" class="headerlink" title="解析器与 AST"></a>解析器与 AST</h2><p>学过编译原理的同学可以知道，<code>JavaScript</code> 文件只是一个源码，机器是无法执行的，词法分析就是把源码的字符串分割出来，生成一系列的 <code>token</code>，如下图可知不同的字符串对应不同的 <code>token</code> 类型</p>
+<h2 id="解析器与-AST"><a href="#解析器与-AST" class="headerlink" title="解析器与 AST"></a>解析器与 AST</h2><p>学过编译原理的同学可以知道，<code>JavaScript</code> 文件只是一个源码，机器是无法执行的，词法分析就是把源码的字符串分割出来，生成一系列的 <code>Token</code>，如下图可知不同的字符串对应不同的 <code>Token</code> 类型</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/54-05.png" alt></p>
 <p>词法分析完后，接下来的阶段就是进行语法分析，语法分析语法分析的输入就是词法分析的输出，输出是 <code>AST</code> 抽象语法树，当程序出现语法错误的时候，<code>V8</code> 在语法分析阶段抛出异常</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/54-06.png" alt></p>
@@ -298,7 +298,7 @@ var _hmt = _hmt || [];
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/54-12.png" alt></p>
 <p>其中前两层属于上层</p>
 <ul>
-<li><code>Node Standard Library</code>，是我们每天都在用的标准库，如 <code>http</code>，<code>Buffer</code> 模块</li>
+<li><code>Node Standard Library</code>，是我们每天都在用的标准库，如 <code>HTTP</code>，<code>Buffer</code> 模块</li>
 <li><code>Node Bindings</code>，是沟通 <code>JavaScript</code> 和 <code>C++</code> 的桥梁，封装 <code>V8</code> 和 <code>Libuv</code> 的细节，向上层提供基础 <code>API</code> 服务</li>
 </ul>
 <p>第三层是支撑 <code>Node.js</code> 运行的关键，由 <code>C/C++</code> 实现</p>
@@ -306,9 +306,9 @@ var _hmt = _hmt || [];
 <li><code>V8</code> 是 <code>Google</code> 开发的 <code>JavaScript</code> 引擎，提供 <code>JavaScript</code> 运行环境，可以说它就是 <code>Node.js</code> 的发动机</li>
 <li><code>Libuv</code> 是专门为 <code>Node.js</code> 开发的一个封装库，提供跨平台的异步 <code>I/O</code> 能力（详细可以参考 <a href="https://heptaluan.github.io/2019/07/05/Node/04/" target="_blank" rel="noopener">libuv</a>）</li>
 <li><code>C-ares</code> 提供了异步处理 <code>DNS</code> 相关的能力</li>
-<li><code>http_parser</code>、<code>OpenSSL</code>、<code>zlib</code> 等提供包括 <code>http</code> 解析、<code>SSL</code>、数据压缩等其他的能力</li>
+<li><code>http_parser</code>、<code>OpenSSL</code>、<code>zlib</code> 等提供包括 <code>HTTP</code> 解析、<code>SSL</code>、数据压缩等其他的能力</li>
 </ul>
-<p>我们上面简单了解了垃圾回收机制以及内存结构分配，那么现在就有一个问题，我们该如何判断是否可以进行回收了呢？其实在 <code>JavaScript</code> 当中主要有两种方式来进行判断，它们分别是 <strong>标记清除</strong> 和 <strong>引用计数</strong></p>
+<p>我们上面简单了解了垃圾回收机制以及内存结构分配，那么现在就有一个问题，我们该如何判断是否可以进行回收了呢？其实在 <code>JavaScript</code> 当中主要有两种方式来进行判断，它们分别是「标记清除」和「引用计数」</p>
 <h4 id="标记清除"><a href="#标记清除" class="headerlink" title="标记清除"></a>标记清除</h4><p>当变量进入环境（例如，在函数中声明一个变量）时，就将这个变量标记为进入环境，从逻辑上讲，永远不能释放进入环境的变量所占用的内存，因为只要执行流进入相应的环境，就可能会用到它们，而当变量离开环境时，则将其标记为离开环境</p>
 <p>可以使用任何方式来标记变量，比如，可以通过翻转某个特殊的位来记录一个变量何时进入环境，或者使用一个进入环境的变量列表及一个离开环境的变量列表来跟踪哪个变量发生了变化，如何标记变量并不重要，关键在于采取什么策略</p>
 <ol>
@@ -527,7 +527,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -700,7 +700,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -787,6 +787,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -861,25 +880,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -898,7 +898,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1472,7 +1472,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

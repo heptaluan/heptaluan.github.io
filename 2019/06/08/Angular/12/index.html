@@ -16,7 +16,7 @@
 <meta property="og:description" content="在之前的文章当中我们简单的介绍了 什么是 rxjs 以及一些常见的操作符使用场景，那么在本章当中，我们就在之前的基础上来看看另外几个比较常用的高阶操作符，关于更多的操作符的详细内容可以参见官方文档 rxjs">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/12.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.244Z">
+<meta property="og:updated_time" content="2020-12-04T02:02:25.458Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="rxjs 中的高阶操作符">
 <meta name="twitter:description" content="在之前的文章当中我们简单的介绍了 什么是 rxjs 以及一些常见的操作符使用场景，那么在本章当中，我们就在之前的基础上来看看另外几个比较常用的高阶操作符，关于更多的操作符的详细内容可以参见官方文档 rxjs">
@@ -255,7 +255,7 @@ var _hmt = _hmt || [];
 <p>按照之前的操作，我们应当去 <code>subscribe</code> 一下，但是这里使用了 <code>Async Pipe</code>，就不需要那么多麻烦的操作</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 直接定义一个流</span></span><br><span class="line">memberRestlts$: Observable&lt;User[]&gt;</span><br></pre></td></tr></table></figure>
 
-<p>然后让本地这个流等于我们组合后的流，然后在 <code>html</code> 模版当中便可以直接使用，别忘了加上 <code>| async</code></p>
+<p>然后让本地这个流等于我们组合后的流，然后在 <code>HTML</code> 模版当中便可以直接使用，别忘了加上 <code>| async</code></p>
 <h2 id="取消订阅释放资源"><a href="#取消订阅释放资源" class="headerlink" title="取消订阅释放资源"></a>取消订阅释放资源</h2><p>在 <code>Angular</code> 当中，我们如果使用了数据流的话，一般会在使用完毕后在 <code>ngOnDestroy()</code> 生命周期当中去销毁这个流以节约性能，如下</p>
 <figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">getUserInfoSubscription = <span class="hljs-keyword">new</span> Subscription()</span><br><span class="line"></span><br><span class="line">ngOnInit() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.getUserInfoSubscription.add(<span class="hljs-keyword">this</span>._store.select(fromRoot.getUserInfo).filter(<span class="hljs-function"><span class="hljs-params">user</span> =&gt;</span> !!user).subscribe(<span class="hljs-function"><span class="hljs-params">user</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// ...</span></span><br><span class="line">  &#125;))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ngOnDestroy(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.getUserInfoSubscription.unsubscribe()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ...</span></span><br></pre></td></tr></table></figure>
 
@@ -268,7 +268,7 @@ var _hmt = _hmt || [];
 
 <h4 id="interval-amp-fromEvent"><a href="#interval-amp-fromEvent" class="headerlink" title="interval() &amp; fromEvent()"></a>interval() &amp; fromEvent()</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">constructor</span>(private element : ElementRef) &#123; &#125;</span><br><span class="line"></span><br><span class="line">interval: Subscription</span><br><span class="line">click: Subscription</span><br><span class="line"></span><br><span class="line">ngOnInit() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.interval = Observable.interval(<span class="hljs-number">1000</span>).subscribe(<span class="hljs-built_in">console</span>.log)</span><br><span class="line">  <span class="hljs-keyword">this</span>.click = Observable</span><br><span class="line">    .fromEvent(<span class="hljs-keyword">this</span>.element.nativeElement, <span class="hljs-string">'click'</span>)</span><br><span class="line">    .subscribe(<span class="hljs-built_in">console</span>.log)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ngOnDestroy() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.interval.unsubscribe()</span><br><span class="line">  <span class="hljs-keyword">this</span>.click.unsubscribe()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="Redux-Store"><a href="#Redux-Store" class="headerlink" title="Redux Store"></a>Redux Store</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">constructor</span>(private store: Store) &#123; &#125;</span><br><span class="line"></span><br><span class="line">todos: Subscription</span><br><span class="line"></span><br><span class="line">ngOnInit() &#123;</span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * select(key : string) &#123;</span></span><br><span class="line"><span class="hljs-comment">   *   return this.map(state =&gt; state[key]).distinctUntilChanged()</span></span><br><span class="line"><span class="hljs-comment">   * &#125;</span></span><br><span class="line"><span class="hljs-comment">  */</span></span><br><span class="line">  <span class="hljs-keyword">this</span>.todos = <span class="hljs-keyword">this</span>.store.select(<span class="hljs-string">'todos'</span>).subscribe(<span class="hljs-built_in">console</span>.log)  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ngOnDestroy() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.todos.unsubscribe()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Redux-Store"><a href="#Redux-Store" class="headerlink" title="Redux Store"></a>Redux Store</h4><figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> store: Store</span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line">todos: Subscription</span><br><span class="line"></span><br><span class="line">ngOnInit() &#123;</span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * select(key : string) &#123;</span></span><br><span class="line"><span class="hljs-comment">   *   return this.map(state =&gt; state[key]).distinctUntilChanged()</span></span><br><span class="line"><span class="hljs-comment">   * &#125;</span></span><br><span class="line"><span class="hljs-comment">  */</span></span><br><span class="line">  <span class="hljs-keyword">this</span>.todos = <span class="hljs-keyword">this</span>.store.select(<span class="hljs-string">'todos'</span>).subscribe(<span class="hljs-built_in">console</span>.log)  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ngOnDestroy() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.todos.unsubscribe()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="无需手动释放资源场景"><a href="#无需手动释放资源场景" class="headerlink" title="无需手动释放资源场景"></a>无需手动释放资源场景</h2><p>简单来说主要分为以下两种，所以大部分情况下还是需要我们手动的去取消订阅释放资源</p>
 <ul>
@@ -284,7 +284,7 @@ var _hmt = _hmt || [];
 <p>如果需要手动移除事件监听的话，可以使用以下的方式</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// subscribe</span></span><br><span class="line"><span class="hljs-keyword">this</span>.handler = <span class="hljs-keyword">this</span>.renderer.listen(<span class="hljs-string">'document'</span>, <span class="hljs-string">'click'</span>, event =&gt;&#123;...&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// unsubscribe</span></span><br><span class="line"><span class="hljs-keyword">this</span>.handler()</span><br></pre></td></tr></table></figure>
 
-<h4 id="Finite-Observable"><a href="#Finite-Observable" class="headerlink" title="Finite Observable"></a>Finite Observable</h4><p>当你使用 <code>http</code> 服务或 <code>timer Observable</code> 对象时，你也不需要手动执行取消订阅操作</p>
+<h4 id="Finite-Observable"><a href="#Finite-Observable" class="headerlink" title="Finite Observable"></a>Finite Observable</h4><p>当你使用 <code>HTTP</code> 服务或 <code>timer Observable</code> 对象时，你也不需要手动执行取消订阅操作</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ngOnInit() &#123;</span><br><span class="line">  <span class="hljs-comment">// 表示 1s 后发出值，然后就结束了</span></span><br><span class="line">  Observable.timer(<span class="hljs-number">1000</span>).subscribe(<span class="hljs-built_in">console</span>.log)</span><br><span class="line">  <span class="hljs-keyword">this</span>.http.get(<span class="hljs-string">'http://api.com'</span>).subscribe(<span class="hljs-built_in">console</span>.log)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
@@ -397,7 +397,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -550,7 +550,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -637,6 +637,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -711,25 +730,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -748,7 +748,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1322,7 +1322,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

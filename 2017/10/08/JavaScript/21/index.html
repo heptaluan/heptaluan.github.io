@@ -16,7 +16,7 @@
 <meta property="og:description" content="一般来说，一个函数是可以通过外部代码调用的一个子程序（或在递归的情况下由内部函数调用），像程序本身一样，一个函数由称为函数体的一系列语句组成，值可以传递给一个函数，函数也可以返回一个值">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/21.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.296Z">
+<meta property="og:updated_time" content="2020-12-04T02:09:11.057Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的函数">
 <meta name="twitter:description" content="一般来说，一个函数是可以通过外部代码调用的一个子程序（或在递归的情况下由内部函数调用），像程序本身一样，一个函数由称为函数体的一系列语句组成，值可以传递给一个函数，函数也可以返回一个值">
@@ -239,7 +239,7 @@ var _hmt = _hmt || [];
 <p>以上是一个求阶乘的函数，递归调用的函数名称和原有函数名耦合在一起，如果将这个函数名称更改以后，递归就会失效</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> fn = factorial</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 此时不会报错</span></span><br><span class="line">fn(<span class="hljs-number">5</span>)  <span class="hljs-comment">// 120</span></span><br><span class="line"></span><br><span class="line">factorial = <span class="hljs-literal">null</span></span><br><span class="line"></span><br><span class="line">fn(<span class="hljs-number">5</span>)  <span class="hljs-comment">// 报错</span></span><br></pre></td></tr></table></figure>
 
-<p>此时由于 <code>fn</code> 函数依然使用 <code>factorial</code> 这个名称来调用，但是 <code>factorial</code> 已经指向 <code>null</code> 了，所以会报错，如上情况就需要使用 <code>arguments.callee</code> 方法来调用</p>
+<p>此时由于 <code>fn</code> 函数依然使用 <code>factorial</code> 这个名称来调用，但是 <code>factorial</code> 已经指向 <code>Null</code> 了，所以会报错，如上情况就需要使用 <code>arguments.callee</code> 方法来调用</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">factorial</span>(<span class="hljs-params">num</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (num &lt;= <span class="hljs-number">1</span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-number">1</span></span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// 以下就实现了函数名的解耦，在 JavaScript 中通常都是使用这种方式来做递归</span></span><br><span class="line">    <span class="hljs-keyword">return</span> num * <span class="hljs-built_in">arguments</span>.callee(num - <span class="hljs-number">1</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">fn(<span class="hljs-number">5</span>)  <span class="hljs-comment">// 120</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="函数中的-this"><a href="#函数中的-this" class="headerlink" title="函数中的 this"></a>函数中的 this</h2><p>当需要创建一个函数对象的时候，设置函数对象的属性和方法需要通过 <code>this</code> 关键字来引用，但是特别注意 <code>this</code> 关键字在调用的时候会根据不同的调用对象而变得不同</p>
@@ -249,7 +249,7 @@ var _hmt = _hmt || [];
 <h2 id="函数的返回值"><a href="#函数的返回值" class="headerlink" title="函数的返回值"></a>函数的返回值</h2><p>当一个函数被调用的时候，它从第一个语句开始执行，并在遇到关闭函数体的 <code>}</code> 时结束，从而是的函数把控制权交还给调用该函数的程序部分，<code>return</code> 语句可用来使函数提前返回，当 <code>return</code> 被执行的时候，函数立即返回而不再执行余下的语句，一个函数总是有一个返回值，如果没有指定返回值，则返回 <code>unfefined</code></p>
 <p>如果函数在前面加上 <code>new</code> 前缀的方式来调用，且返回值不是一个对象，则返回 <code>this</code>（该新对象），简单的总结就是，如果一个构造函数不写 <code>return</code> 语句，则系统会自动帮你返回一个对象，但是如果写了 <code>return</code> 语句，则</p>
 <ul>
-<li>如果 <code>return</code> 的是一个基本类型的值（比如 <code>string</code>，<code>number</code>），则会忽略这个 <code>return</code>，该返回什么还是返回什么，但是会阻止构造函数接下来的执行</li>
+<li>如果 <code>return</code> 的是一个基本类型的值（比如 <code>String</code>，<code>Number</code>），则会忽略这个 <code>return</code>，该返回什么还是返回什么，但是会阻止构造函数接下来的执行</li>
 <li>如果 <code>return</code> 了一个引用类型，则原有的 <code>return</code> 会被覆盖</li>
 </ul>
 <h2 id="一些函数的实例"><a href="#一些函数的实例" class="headerlink" title="一些函数的实例"></a>一些函数的实例</h2><p>下面我们来几个比较常见的排序的示例，在平常开发当中也是经常会遇到的</p>
@@ -370,7 +370,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -499,7 +499,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -586,6 +586,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -660,25 +679,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -697,7 +697,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1271,7 +1271,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

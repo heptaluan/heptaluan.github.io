@@ -16,7 +16,7 @@
 <meta property="og:description" content="之前我们曾经介绍过了 作用域与执行上下文栈 的相关内容，这一章我们就来看看与其联系十分密切的闭包">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.293Z">
+<meta property="og:updated_time" content="2020-12-04T02:09:11.053Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的闭包">
 <meta name="twitter:description" content="之前我们曾经介绍过了 作用域与执行上下文栈 的相关内容，这一章我们就来看看与其联系十分密切的闭包">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    38 分钟 读完 (大约 5644 个字)
+                    38 分钟 读完 (大约 5652 个字)
                 </span>
                 
                 
@@ -195,7 +195,7 @@ var _hmt = _hmt || [];
 </blockquote>
 <p>看起来有点绕，换个说法，简而言之，闭包就是</p>
 <ol>
-<li><strong>闭包就是函数的局部变量集合，只是这些局部变量在函数返回后会继续存在</strong></li>
+<li>「闭包就是函数的局部变量集合，只是这些局部变量在函数返回后会继续存在」</li>
 <li>闭包就是就是函数的堆栈在函数返回后并不释放，我们也可以理解为这些函数堆栈并不在栈上分配而是在堆上分配</li>
 <li>简单来说，当在一个函数内返回了另外一个函数的时候就会产生闭包</li>
 </ol>
@@ -211,7 +211,7 @@ var _hmt = _hmt || [];
 <li>变量环境（<code>The VariableEnvironment</code>）</li>
 <li><code>this</code> 绑定</li>
 </ul>
-<p>我们可以将文法环境想象成一个对象，该对象包含了两个重要组件，环境记录（<code>Enviroment Recode</code>），和外部引用（指针），环境记录包含了函数内部声明的局部变量和参数变量，外部引用指向了外部函数对象的上下文执行场景，全局的上下文场景中此引用值为 <code>null</code>，这样的数据结构就构成了一个单向的链表，每个引用都指向外层的上下文场景</p>
+<p>我们可以将文法环境想象成一个对象，该对象包含了两个重要组件，环境记录（<code>Enviroment Recode</code>），和外部引用（指针），环境记录包含了函数内部声明的局部变量和参数变量，外部引用指向了外部函数对象的上下文执行场景，全局的上下文场景中此引用值为 <code>Null</code>，这样的数据结构就构成了一个单向的链表，每个引用都指向外层的上下文场景</p>
 <p>比如上面的例子，<code>sayHello</code> 函数在最下层，上层是函数 <code>greeting</code>，最外层是全局场景</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/27.png" alt></p>
 <p>当 <code>sayHello</code> 被调用的时候，<code>sayHello</code> 会通过上下文场景找到局部变量 <code>text</code> 的值，因此在屏幕的对话框中显示出 <code>Hello Closure</code></p>
@@ -264,8 +264,8 @@ var _hmt = _hmt || [];
 
 <p>以上就是偏函数应用，我们创造一个新函数，让现有的一些参数值固定，从而使函数更加灵活，我们来看一下与柯里化之间的区别</p>
 <ul>
-<li><strong>柯里化</strong> 是将一个多参数函数转换成多个单参数函数，也就是将一个 <code>n</code> 元函数转换成 <code>n</code> 个一元函数</li>
-<li><strong>偏函数</strong> 则是固定一个函数的一个或者多个参数，也就是将一个 <code>n</code> 元函数转换成一个 <code>n - x</code> 元函数</li>
+<li>「柯里化」是将一个多参数函数转换成多个单参数函数，也就是将一个 <code>n</code> 元函数转换成 <code>n</code> 个一元函数</li>
+<li>「偏函数」则是固定一个函数的一个或者多个参数，也就是将一个 <code>n</code> 元函数转换成一个 <code>n - x</code> 元函数</li>
 </ul>
 <p>那么问题来了，按照上面的示例所示，要实现偏函数应用，我们直接使用 <code>bind</code> 不就好了吗，但是了解过 <code>bind</code> 的原理就应该会知道，<code>bind</code> 是会改变 <code>this</code> 的指向的，所以，我们就来实现一个通用的偏函数，这里需要注意，<code>this</code> 的指向是不改变的</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// ES5 写法</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">partial</span>(<span class="hljs-params">fn</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> args = [].slice.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">1</span>)</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> newArgs = args.concat([].slice.call(<span class="hljs-built_in">arguments</span>))</span><br><span class="line">    <span class="hljs-keyword">return</span> fn.apply(<span class="hljs-keyword">this</span>, newArgs)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES6 写法</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">partial</span>(<span class="hljs-params">fn, ...args</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...newArgs</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> fn.call(<span class="hljs-keyword">this</span>, ...args, ...newArgs)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -327,21 +327,21 @@ var _hmt = _hmt || [];
 
 <p>在上述代码中，<code>result</code> 实际上就是闭包 <code>f2</code> 函数，它一共运行了两次，第一次的值是 <code>999</code>，第二次的值是 <code>1000</code>，这证明了，函数 <code>f1</code> 中的局部变量 <code>n</code> 一直保存在内存中，并没有在 <code>f1</code> 调用后被自动清除</p>
 <p>原因在于 <code>f1</code> 是 <code>f2</code> 的父函数，而 <code>f2</code> 被赋给了一个全局变量，这导致 <code>f2</code> 始终在内存中，而 <code>f2</code> 的存在依赖于 <code>f1</code> ，因此 <code>f1</code> 也始终在内存中，不会在调用结束后，被垃圾回收机制（<code>garbage-collection</code>）回收</p>
-<p>这段代码中另一个值得注意的地方，就是 <code>nAdd = function () { n += 1 }</code> 这一行，首先在 <code>nAdd</code> 前面没有使用 <code>var</code> 关键字，因此 <code>nAdd</code> 是一个全局变量，而不是局部变量，其次，<code>nAdd</code> 的值是一个 <strong>匿名函数</strong>（<code>anonymous-function</code>），而这个匿名函数本身也是一个闭包，所以 <code>nAdd</code> 相当于是一个 <code>setter</code>，可以在函数外部对函数内部的局部变量进行操作</p>
+<p>这段代码中另一个值得注意的地方，就是 <code>nAdd = function () { n += 1 }</code> 这一行，首先在 <code>nAdd</code> 前面没有使用 <code>var</code> 关键字，因此 <code>nAdd</code> 是一个全局变量，而不是局部变量，其次，<code>nAdd</code> 的值是一个 「匿名函数」（<code>anonymous-function</code>），而这个匿名函数本身也是一个闭包，所以 <code>nAdd</code> 相当于是一个 <code>setter</code>，可以在函数外部对函数内部的局部变量进行操作</p>
 <h4 id="实例七：闭包中的-this"><a href="#实例七：闭包中的-this" class="headerlink" title="实例七：闭包中的 this"></a>实例七：闭包中的 this</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 第一种情况</span></span><br><span class="line"><span class="hljs-keyword">var</span> name = <span class="hljs-string">'The Window'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> object = &#123;</span><br><span class="line">  name: <span class="hljs-string">'My Object'</span>,</span><br><span class="line">  getNameFunc: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.name</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">alert(object.getNameFunc()())</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 第二种情况</span></span><br><span class="line"><span class="hljs-keyword">var</span> name = <span class="hljs-string">'The Window'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> object = &#123;</span><br><span class="line">  name: <span class="hljs-string">'My Object'</span>,</span><br><span class="line">  getNameFunc: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span></span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> that.name</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">alert(object.getNameFunc()())</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li>第一个打印结果为 <code>The window</code>，因为第一个 <code>this</code> 为全局对象，所以 <code>alert</code> 处理的 <code>name</code> 为 <code>The window</code></li>
-<li>第二个打印结果为 <code>My Object</code>，因为第二个 <code>that</code> 为 <code>object</code> 对象，所以 <code>alert</code> 处理的 <code>name</code> 为 <code>My object</code>，因为在调用前用 <code>that</code> 保存了 <code>object</code> 自己的 <code>this</code>，所以在闭包内可以调用</li>
+<li>第二个打印结果为 <code>My Object</code>，因为第二个 <code>that</code> 为 <code>Object</code> 对象，所以 <code>alert</code> 处理的 <code>name</code> 为 <code>My object</code>，因为在调用前用 <code>that</code> 保存了 <code>Object</code> 自己的 <code>this</code>，所以在闭包内可以调用</li>
 </ul>
 <h4 id="实例八：闭包中的作用域"><a href="#实例八：闭包中的作用域" class="headerlink" title="实例八：闭包中的作用域"></a>实例八：闭包中的作用域</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 第一种情况</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params">x</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> tmp = <span class="hljs-number">3</span></span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bar</span>(<span class="hljs-params">y</span>) </span>&#123;</span><br><span class="line">    alert(x + y + (++tmp))</span><br><span class="line">  &#125;</span><br><span class="line">  bar(<span class="hljs-number">10</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">foo(<span class="hljs-number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 第二种情况</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params">x</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> tmp = <span class="hljs-number">3</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">y</span>) </span>&#123;</span><br><span class="line">    alert(x + y + (++tmp))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> bar = foo(<span class="hljs-number">2</span>) <span class="hljs-comment">// bar 现在是一个闭包</span></span><br><span class="line">bar(<span class="hljs-number">10</span>)  <span class="hljs-comment">// 16</span></span><br><span class="line">bar(<span class="hljs-number">10</span>)  <span class="hljs-comment">// 17</span></span><br></pre></td></tr></table></figure>
 
 <p>在第一种情况当中，不管执行多少次，输出当值都为 <code>16</code>，因为 <code>bar</code> 能访问 <code>foo</code> 的参数 <code>x</code>，也能访问 <code>foo</code> 的变量 <code>tmp</code>，但这还不是闭包，只有当你 <code>return</code> 的是内部 <code>function</code> 时，就是一个闭包（即这时才会产生一个闭包）</p>
 <p>关于第二种情况，虽然 <code>bar</code> 不直接处于 <code>foo</code> 的内部作用域，但 <code>bar</code> 还是能访问 <code>x</code> 和 <code>tmp</code>，但是由于 <code>tmp</code> 仍存在于 <code>bar</code> 闭包的内部，所以它还是会自加 <code>1</code>，而且你每次调用 <code>bar</code> 时它都会自加 <code>1</code></p>
-<p>上面的 <code>x</code> 是一个字面值（值传递），和 <code>JavaScript</code> 里其他的字面值一样，当调用 <code>foo</code> 时，实参 <code>x</code> 的值被复制了一份，复制的那一份作为了 <code>foo</code> 的参数 <code>x</code>，那么问题来了，<code>JavaScript</code> 里处理 <code>object</code> 时是用到引用传递的，那么，你调用 <code>foo</code> 时传递一个 <code>object</code>，<code>foo</code> 函数 <code>return</code> 的闭包也会引用最初那个 <code>object</code>，也就有了下面的第三种情况</p>
+<p>上面的 <code>x</code> 是一个字面值（值传递），和 <code>JavaScript</code> 里其他的字面值一样，当调用 <code>foo</code> 时，实参 <code>x</code> 的值被复制了一份，复制的那一份作为了 <code>foo</code> 的参数 <code>x</code>，那么问题来了，<code>JavaScript</code> 里处理 <code>Object</code> 时是用到引用传递的，那么，你调用 <code>foo</code> 时传递一个 <code>Object</code>，<code>foo</code> 函数 <code>return</code> 的闭包也会引用最初那个 <code>Object</code>，也就有了下面的第三种情况</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 第三种情况</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params">x</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> tmp = <span class="hljs-number">3</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">y</span>) </span>&#123;</span><br><span class="line">    alert(x + y + tmp)</span><br><span class="line">    x.memb = x.memb ? x.memb + <span class="hljs-number">1</span> : <span class="hljs-number">1</span></span><br><span class="line">    alert(x.memb)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> age = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Number</span>(<span class="hljs-number">2</span>)</span><br><span class="line"><span class="hljs-keyword">var</span> bar = foo(age)  <span class="hljs-comment">// bar 现在是一个引用了 age 的闭包</span></span><br><span class="line"></span><br><span class="line">bar(<span class="hljs-number">10</span>)</span><br></pre></td></tr></table></figure>
 
-<p>不出我们意料，每次运行 <code>bar(10)</code>，<code>x.memb</code> 都会自加 <code>1</code>，但需要注意的是 <code>x</code> 每次都指向同一个 <code>object</code>，运行两次 <code>bar(10)</code> 后，<code>age.memb</code> 会变成 <code>2</code>，这里还有一个不用 <code>return</code> 关键字的闭包例子</p>
+<p>不出我们意料，每次运行 <code>bar(10)</code>，<code>x.memb</code> 都会自加 <code>1</code>，但需要注意的是 <code>x</code> 每次都指向同一个 <code>Object</code>，运行两次 <code>bar(10)</code> 后，<code>age.memb</code> 会变成 <code>2</code>，这里还有一个不用 <code>return</code> 关键字的闭包例子</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">closureExample</span>(<span class="hljs-params">objID, text, timedelay</span>) </span>&#123;</span><br><span class="line">  setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">document</span>.getElementById(objID).innerHTML = text</span><br><span class="line">  &#125;, timedelay)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">closureExample(<span class="hljs-string">'myDiv'</span>, <span class="hljs-string">'Closure is created'</span>, <span class="hljs-number">500</span>)</span><br></pre></td></tr></table></figure>
 
 <blockquote>
@@ -471,7 +471,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -616,7 +616,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -703,6 +703,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -777,25 +796,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -814,7 +814,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1388,7 +1388,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

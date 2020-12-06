@@ -16,7 +16,7 @@
 <meta property="og:description" content="最近在梳理计算机网络相关知识，刚好梳理到 HTTPS 这一块，关于 HTTPS，在我的概念中就是更安全，需要服务器配置证书，但是到底什么是 HTTPS，为什么会更安全，整套流程又是如何实现的，在脑子里没有具体的概念，所以打算抽些时间，通过参考一些文章，来梳理一下 HTTPS 整套机制的实现，更多内容可以参考 计算机网络知识梳理 和 前端知识体系整理，本文主要通过以下三个方面来进行梳理  HTTP">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/09.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.280Z">
+<meta property="og:updated_time" content="2020-11-29T15:17:24.511Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HTTPS 是如何进行加密的">
 <meta name="twitter:description" content="最近在梳理计算机网络相关知识，刚好梳理到 HTTPS 这一块，关于 HTTPS，在我的概念中就是更安全，需要服务器配置证书，但是到底什么是 HTTPS，为什么会更安全，整套流程又是如何实现的，在脑子里没有具体的概念，所以打算抽些时间，通过参考一些文章，来梳理一下 HTTPS 整套机制的实现，更多内容可以参考 计算机网络知识梳理 和 前端知识体系整理，本文主要通过以下三个方面来进行梳理  HTTP">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    32 分钟 读完 (大约 4746 个字)
+                    32 分钟 读完 (大约 4758 个字)
                 </span>
                 
                 
@@ -234,13 +234,13 @@ var _hmt = _hmt || [];
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/09-02.png" alt></p>
 <p>在采用 <code>SSL</code> 后，<code>HTTP</code> 就拥有了 <code>HTTPS</code> 的加密、证书和完整性保护这些功能，也就是说 <code>HTTP</code> 加上加密处理和认证以及完整性保护后即是 <code>HTTPS</code> </p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/09-03.png" alt></p>
-<p><code>HTTPS</code> 协议的主要功能基本都依赖于 <code>TLS/SSL</code> 协议，<code>TLS/SSL</code> 的功能实现主要依赖于三类基本算法，<strong>散列函数</strong>、<strong>对称加密</strong> 和 <strong>非对称加密</strong>，其利用非对称加密实现身份认证和密钥协商，对称加密算法采用协商的密钥对数据加密，基于散列函数验证信息的完整性</p>
+<p><code>HTTPS</code> 协议的主要功能基本都依赖于 <code>TLS/SSL</code> 协议，<code>TLS/SSL</code> 的功能实现主要依赖于三类基本算法，「散列函数」、「对称加密」和「非对称加密」，其利用非对称加密实现身份认证和密钥协商，对称加密算法采用协商的密钥对数据加密，基于散列函数验证信息的完整性</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/09-04.png" alt></p>
 <p>下面我们就来看看 <code>HTTPS</code> 是如何解决我们上面提到过的几个问题</p>
 <h4 id="解决内容可能被窃听的问题（加密）"><a href="#解决内容可能被窃听的问题（加密）" class="headerlink" title="解决内容可能被窃听的问题（加密）"></a>解决内容可能被窃听的问题（加密）</h4><p>主要有三种方式</p>
 <h6 id="对称加密"><a href="#对称加密" class="headerlink" title="对称加密"></a>对称加密</h6><p>这种方式加密和解密同用一个密钥，加密和解密都会用到密钥，没有密钥就无法对密码解密，反过来说，任何人只要持有密钥就能解密了，但是此时我们虽然对数据进行加密了，但是随之会产生一些问题</p>
 <p>以对称加密方式加密时必须将密钥也发给对方，可究竟怎样才能安全地转交？在互联网上转发密钥时，如果通信被监听那么密钥就可会落人攻击者之手，同时也就失去了加密的意义，另外还得设法安全地保管接收到的密钥</p>
-<h6 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h6><p>在对称加密的路上走不通了，我们换个思路，还有一种加密方式叫 <strong>非对称加密</strong>，采用非对称加密时，客户端和服务端均拥有一个公钥和私钥顾名思义，私有密钥不能让其他任何人知道，而公开密钥则可以随意发布，任何人都可以获得</p>
+<h6 id="非对称加密"><a href="#非对称加密" class="headerlink" title="非对称加密"></a>非对称加密</h6><p>在对称加密的路上走不通了，我们换个思路，还有一种加密方式叫「非对称加密」，采用非对称加密时，客户端和服务端均拥有一个公钥和私钥顾名思义，私有密钥不能让其他任何人知道，而公开密钥则可以随意发布，任何人都可以获得</p>
 <p>使用公开密钥加密方式，发送密文的一方使用对方的公开密钥进行加密处理，对方收到被加密的信息后，再使用自己的私有密钥进行解密，利用这种方式，不需要发送用来解密的私有密钥，也不必担心密钥被攻击者窃听而盗走</p>
 <p>非对称加密的特点是信息传输一对多，服务器只需要维持一个私钥就能够和多个客户端进行加密通信，但是这种方式也是存在一定缺点的</p>
 <ul>
@@ -249,7 +249,7 @@ var _hmt = _hmt || [];
 <li>使用非对称加密在数据加密解密过程需要消耗一定时间，降低了数据传输效率</li>
 </ul>
 <h6 id="对称加密-非对称加密"><a href="#对称加密-非对称加密" class="headerlink" title="对称加密 + 非对称加密"></a>对称加密 + 非对称加密</h6><p>这种方式也是 <code>HTTPS</code> 采用的方式，使用对称密钥的好处是解密的效率比较快，使用非对称密钥的好处是可以使得传输的内容不能被破解，因为就算你拦截到了数据，但是没有对应的私钥，也是不能破解内容的，所以我们可以将对称加密与非对称加密结合起来，充分利用两者各自的优势，在交换密钥环节使用非对称加密方式，之后的建立通信交换报文阶段则使用对称加密方式</p>
-<p>具体做法是，发送密文的一方使用对方的公钥进行加密处理 <strong>对称的密钥</strong>，然后对方用自己的私钥解密拿到 <strong>对称的密钥</strong>，这样可以确保交换的密钥是安全的前提下，使用对称加密方式进行通信，所以 <code>HTTPS</code> 采用对称加密和非对称加密两者并用的混合加密机制</p>
+<p>具体做法是，发送密文的一方使用对方的公钥进行加密处理「对称的密钥」，然后对方用自己的私钥解密拿到「对称的密钥」，这样可以确保交换的密钥是安全的前提下，使用对称加密方式进行通信，所以 <code>HTTPS</code> 采用对称加密和非对称加密两者并用的混合加密机制</p>
 <h4 id="解决报文可能遭篡改问题（数字签名）"><a href="#解决报文可能遭篡改问题（数字签名）" class="headerlink" title="解决报文可能遭篡改问题（数字签名）"></a>解决报文可能遭篡改问题（数字签名）</h4><p>网络传输过程中需要经过很多中间节点，虽然数据无法被解密，但可能被篡改，那如何校验数据的完整性呢？在这种情况下我们就可以考虑使用校验数字签名，通常数字签名有两种功效</p>
 <ul>
 <li>能确定消息确实是由发送方签名并发出来的，因为别人假冒不了发送方的签名</li>
@@ -413,7 +413,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -566,7 +566,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -653,6 +653,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -727,25 +746,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -764,7 +764,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1338,7 +1338,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

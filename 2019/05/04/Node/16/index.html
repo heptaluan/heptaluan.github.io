@@ -16,7 +16,7 @@
 <meta property="og:description" content="最后更新于 2020-01-05  最近在深入学习 Node.js，有涉及到这一部分内容，翻出来重新更新整理一下，主要涉及到浏览器与 Node.js 当中的进程与线程相关知识，建议在阅读本文之前先了解一下 体系结构与操作系统 当中的进程和线程相关概念">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.321Z">
+<meta property="og:updated_time" content="2020-11-29T15:30:05.755Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Node.js 中的多进程">
 <meta name="twitter:description" content="最后更新于 2020-01-05  最近在深入学习 Node.js，有涉及到这一部分内容，翻出来重新更新整理一下，主要涉及到浏览器与 Node.js 当中的进程与线程相关知识，建议在阅读本文之前先了解一下 体系结构与操作系统 当中的进程和线程相关概念">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    1 小时 读完 (大约 7016 个字)
+                    1 小时 读完 (大约 7022 个字)
                 </span>
                 
                 
@@ -193,7 +193,7 @@ var _hmt = _hmt || [];
 <a id="more"></a>
 
 
-<h2 id="Node-js-中的进程"><a href="#Node-js-中的进程" class="headerlink" title="Node.js 中的进程"></a>Node.js 中的进程</h2><p>对于操作系统来说，一个任务就是进程（<code>process</code>），比如打开一个浏览器就是启动了一个浏览器进程，打开一个记事本就启动了一个记事本进程，有些进程还不止同时干一件事，比如 <code>word</code>，它可以同时进行打字、拼写检查，打印等，在一个进程的内部，要同时干多件事，就需要同时运行多个子任务，我们把进程内的这些子任务称为线程（<code>thread</code>），由于每个进程至少要干一件事，所以 <strong>一个进程至少有一个线程</strong>，当然也可以有多个，也可以多个线程同时执行</p>
+<h2 id="Node-js-中的进程"><a href="#Node-js-中的进程" class="headerlink" title="Node.js 中的进程"></a>Node.js 中的进程</h2><p>对于操作系统来说，一个任务就是进程（<code>process</code>），比如打开一个浏览器就是启动了一个浏览器进程，打开一个记事本就启动了一个记事本进程，有些进程还不止同时干一件事，比如 <code>word</code>，它可以同时进行打字、拼写检查，打印等，在一个进程的内部，要同时干多件事，就需要同时运行多个子任务，我们把进程内的这些子任务称为线程（<code>thread</code>），由于每个进程至少要干一件事，所以「一个进程至少有一个线程」，当然也可以有多个，也可以多个线程同时执行</p>
 <blockquote>
 <p>简单来说就是，线程是最小的执行单元，而进程由至少一个线程组成</p>
 </blockquote>
@@ -207,8 +207,8 @@ var _hmt = _hmt || [];
 <p>运行完成后可以发现，页面会处于很长时间的空白状态，而执行完成以后会发现，计算耗时会有 <code>13554.335ms</code> 左右（处理器不同可能造成结果有所不同），不过不用担心，在后面我们会使用 <code>child_process.fork</code> 来实现多个进程来处理</p>
 <h2 id="Node-js-的线程与进程"><a href="#Node-js-的线程与进程" class="headerlink" title="Node.js 的线程与进程"></a>Node.js 的线程与进程</h2><p><code>Node.js</code> 是 <code>JavaScript</code> 在服务端的运行环境，构建在 <code>Chrome</code> 的 <code>V8</code> 引擎之上，基于事件驱动、非阻塞 <code>I/O</code> 模型，充分利用操作系统提供的异步 <code>I/O</code> 进行多任务的执行，适合于 <code>I/O</code> 密集型的应用场景，因为异步，程序无需阻塞等待结果返回，而是基于回调通知的机制，原本同步模式等待的时间，则可以用来处理其它任务</p>
 <ul>
-<li>在单核 <code>CPU</code> 系统之上一般采用 <strong>单进程 + 单线程</strong> 的模式来开发</li>
-<li>在多核 <code>CPU</code> 系统之上，可以用过 <code>child_process.fork</code> 开启多个进程（在 <code>v0.8</code> 版本之后新增了 <code>Cluster</code> 来实现多进程架构），即 <strong>多进程 + 单线程</strong> 模式</li>
+<li>在单核 <code>CPU</code> 系统之上一般采用「单进程 + 单线程」的模式来开发</li>
+<li>在多核 <code>CPU</code> 系统之上，可以用过 <code>child_process.fork</code> 开启多个进程（在 <code>v0.8</code> 版本之后新增了 <code>Cluster</code> 来实现多进程架构），即「多进程 + 单线程」模式</li>
 </ul>
 <p>不过需要注意的是，开启多进程不是为了解决高并发，而是主要为了解决单进程模式下 <code>Node.js</code> 的 <code>CPU</code> 利用率不足的情况，充分利用多核 <code>CPU</code> 的性能</p>
 <h2 id="process"><a href="#process" class="headerlink" title="process"></a>process</h2><p><code>Node.js</code> 中的进程（<code>process</code>）是一个全局对象，无需 <code>require</code> 直接使用，给我们提供了当前进程中的相关信息</p>
@@ -526,7 +526,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -723,7 +723,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -810,6 +810,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -884,25 +903,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -921,7 +921,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1495,7 +1495,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

@@ -16,7 +16,7 @@
 <meta property="og:description" content="本章我们主要来看 jQuery 当中的一些辅助函数，内容比较多，分为两部分介绍">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/04.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.336Z">
+<meta property="og:updated_time" content="2020-12-04T02:12:30.598Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="jQuery 中的辅助方法（上）">
 <meta name="twitter:description" content="本章我们主要来看 jQuery 当中的一些辅助函数，内容比较多，分为两部分介绍">
@@ -207,10 +207,10 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 先把可能存在的 window.jQuery 和 $ 备份到局部变量 _jQuery 和 _$ 上</span></span><br><span class="line">_jQuery = <span class="hljs-built_in">window</span>.jQuery,</span><br><span class="line"></span><br><span class="line">_$ = <span class="hljs-built_in">window</span>.$,</span><br><span class="line"></span><br><span class="line">jQuery.extend(&#123;</span><br><span class="line">  noConflict: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">deep</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// 只有当前 jQuery 库持有全局变量 $ 的情况下，才会释放 $ 的控制权给前一个 JavaScript 库</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">window</span>.$ === jQuery) &#123;</span><br><span class="line">      <span class="hljs-built_in">window</span>.$ = _$</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 只有在当前 jQuery 库持有全局变量 jQuery 的情况下，才会释放 jQuery 的控制权给前一个 JavaScript 库</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (deep &amp;&amp; <span class="hljs-built_in">window</span>.jQuery === jQuery) &#123;</span><br><span class="line">      <span class="hljs-built_in">window</span>.jQuery = _jQuery</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">return</span> jQuery</span><br><span class="line">  &#125;</span><br><span class="line">&#125;),</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ...略</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">window</span>.jQuery = <span class="hljs-built_in">window</span>.$ = jQuery</span><br></pre></td></tr></table></figure>
 
 <p>如果有必要（例如，在一个页面中使用多个版本的 <code>jQuery</code> 库，但很少有这样的必要），也可以释放全局变量 <code>jQuery</code> 的控制权，只需要给这个方法传入参数 <code>true</code> 即可，从 <code>jQuery 1.6</code> 开始增加了对 <code>window.$ === jQuery</code> 的检测，如果不检测，则每次调用 <code>jQuery.noConflict()</code> 时都会释放 <code>$</code> 给前一个 <code>JavaScript</code> 库，不过建议页面当中还是只保持一个对于 <code>$</code> 的引用，因为当页面中有两个以上定义了 <code>$</code> 的 <code>JavaScript</code> 库时，对 <code>$</code> 的管理将会变得混乱</p>
-<h2 id="jQuery-isFunction-obj-，-jQuery-isArray-obj"><a href="#jQuery-isFunction-obj-，-jQuery-isArray-obj" class="headerlink" title="jQuery.isFunction(obj)， jQuery.isArray(obj)"></a>jQuery.isFunction(obj)， jQuery.isArray(obj)</h2><p>这两个方法主要用于判断传入的参数是否是函数（数组），这两个方法的实现依赖方法 <code>jQuery.type(obj)</code>，通过返回值是否是 <code>function</code> 或者 <code>array</code> 来进行判断</p>
+<h2 id="jQuery-isFunction-obj-，-jQuery-isArray-obj"><a href="#jQuery-isFunction-obj-，-jQuery-isArray-obj" class="headerlink" title="jQuery.isFunction(obj)， jQuery.isArray(obj)"></a>jQuery.isFunction(obj)， jQuery.isArray(obj)</h2><p>这两个方法主要用于判断传入的参数是否是函数（数组），这两个方法的实现依赖方法 <code>jQuery.type(obj)</code>，通过返回值是否是 <code>function</code> 或者 <code>Array</code> 来进行判断</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">isFunction: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> jQuery.type(obj) === <span class="hljs-string">'function'</span></span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line">isArray: <span class="hljs-built_in">Array</span>.isArray || <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">obj</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> jQuery.type(obj) === <span class="hljs-string">'array'</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
 
-<h2 id="jQuery-type-obj"><a href="#jQuery-type-obj" class="headerlink" title="jQuery.type(obj)"></a>jQuery.type(obj)</h2><p>这个方法主要用于判断参数的 <code>JavaScript</code> 类型，在平常的开发当中也是经常会遇到的，如果参数是 <code>undefined</code> 或 <code>null</code>，返回 <code>&#39;undefined&#39;</code> 或 <code>&#39;null&#39;</code>（注意是字符串类型），如果参数是内部对象，则返回对应的字符串名称，其他一律返回 <code>object</code></p>
+<h2 id="jQuery-type-obj"><a href="#jQuery-type-obj" class="headerlink" title="jQuery.type(obj)"></a>jQuery.type(obj)</h2><p>这个方法主要用于判断参数的 <code>JavaScript</code> 类型，在平常的开发当中也是经常会遇到的，如果参数是 <code>undefined</code> 或 <code>Null</code>，返回 <code>&#39;undefined&#39;</code> 或 <code>&#39;null&#39;</code>（注意是字符串类型），如果参数是内部对象，则返回对应的字符串名称，其他一律返回 <code>Object</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">type: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">obj</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 若为 undefined/null ==&gt; 转换为字符串 'undefined'/'null'</span></span><br><span class="line">  <span class="hljs-keyword">return</span> obj == <span class="hljs-literal">null</span> ? <span class="hljs-built_in">String</span>(obj)</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 以上的返回值形式为 [object class]，其中 class 是内部对象类</span></span><br><span class="line">  <span class="hljs-comment">// 例如 Object.prototype.toString.call(true) 会返回 [object Boolean] </span></span><br><span class="line">  <span class="hljs-comment">// 然后从对象 class2type 中取出 [object class] 对应的小写字符串并返回</span></span><br><span class="line">  : class2type[toString.call(obj)]</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 如果未取到则一律返回 object</span></span><br><span class="line">  || <span class="hljs-string">'object'</span></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
 
 <p>下面是原型方法 <code>toString()</code> 和 <code>class2type</code> 的定义及初始化</p>
@@ -379,7 +379,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -500,7 +500,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -587,6 +587,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -661,25 +680,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -698,7 +698,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1272,7 +1272,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

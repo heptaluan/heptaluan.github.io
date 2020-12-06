@@ -16,7 +16,7 @@
 <meta property="og:description" content="最近在开发过程中，遇到了 ExpressionChangedAfterItHasBeenCheckedError 这个错误，网上搜索一翻后，发现各种说法众说纷纭，所有抽出时间深入了解一下这个错误，做一下总结，也可以避免以后在遇到这个问题的时候不知道怎么处理">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/07.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.241Z">
+<meta property="og:updated_time" content="2020-12-04T01:55:46.651Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular 中的 ExpressionChangedAfterItHasBeenCheckedError">
 <meta name="twitter:description" content="最近在开发过程中，遇到了 ExpressionChangedAfterItHasBeenCheckedError 这个错误，网上搜索一翻后，发现各种说法众说纷纭，所有抽出时间深入了解一下这个错误，做一下总结，也可以避免以后在遇到这个问题的时候不知道怎么处理">
@@ -198,7 +198,7 @@ var _hmt = _hmt || [];
 <li>运行子 <code>component</code> 的变化监测流程（<code>List1</code>）</li>
 <li>调用所有子 <code>component/directive</code> 上的 <code>ngAfterViewInit</code> 生命周期</li>
 </ol>
-<p>这里需要注意，在每一步操作之后，<code>Angular</code> 都会保存与这次操作有关的 <code>values</code> 值，这个值被存在组件 <code>view</code> 的 <code>oldValues</code> 属性中，在开发模式下，所有组件完成变化监测之后 <code>Angular</code> 会开始下一个监测流程，第二次监测流程并不会再次执行上面列出的变化监测流程，而会比较之前变化监测循环保存的值（存在 <code>oldValues</code> 中的）与当前监测流程的值是否一致（标记为 <code>List2</code>）</p>
+<p>这里需要注意，在每一步操作之后，<code>Angular</code> 都会保存与这次操作有关的 <code>values</code> 值，这个值被存在组件 <code>View</code> 的 <code>oldValues</code> 属性中，在开发模式下，所有组件完成变化监测之后 <code>Angular</code> 会开始下一个监测流程，第二次监测流程并不会再次执行上面列出的变化监测流程，而会比较之前变化监测循环保存的值（存在 <code>oldValues</code> 中的）与当前监测流程的值是否一致（标记为 <code>List2</code>）</p>
 <ol>
 <li>检查被传递到子组件的 <code>values</code>（<code>oldValues</code>）与当前组件要被用于更新的 <code>values</code>（<code>instance.value</code>）是否一致</li>
 <li>检查被用于更新 <code>DOM</code> 元素的 <code>values</code>（<code>oldValues</code>）与当前要被用于这些组件更新的 <code>values</code>（<code>instance.value</code>）是否一致</li>
@@ -213,7 +213,7 @@ var _hmt = _hmt || [];
 <p>然后在模板中加入 <code>B</code> 组件，并且通过输入属性绑定给 <code>B</code> 组件输入 <code>text</code> 属性</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// A 组件当中使用 B 组件</span></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'a-comp'</span>,</span><br><span class="line">  template: <span class="hljs-string">`</span></span><br><span class="line"><span class="hljs-string">    &lt;span&gt;&#123;&#123;name&#125;&#125;&lt;/span&gt;</span></span><br><span class="line"><span class="hljs-string">    &lt;b-comp [text]="text"&gt;&lt;/b-comp&gt;</span></span><br><span class="line"><span class="hljs-string">  `</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AComponent</span> </span>&#123;</span><br><span class="line">  name = <span class="hljs-string">'I am A component'</span></span><br><span class="line">  text = <span class="hljs-string">'A message for the child component'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>那么 <code>Angular</code> 在开始变化监测后会发生什么呢？按照上面的流程，<code>List1</code> 变化监测会从 <code>A</code> 组件开始检查，第一步将 <code>text</code> 表达式中的 <code>A message for the child component</code> 向下传递到 <code>B</code> 组件，并且将这个值存在 <code>view</code> 上</p>
+<p>那么 <code>Angular</code> 在开始变化监测后会发生什么呢？按照上面的流程，<code>List1</code> 变化监测会从 <code>A</code> 组件开始检查，第一步将 <code>text</code> 表达式中的 <code>A message for the child component</code> 向下传递到 <code>B</code> 组件，并且将这个值存在 <code>View</code> 上</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">view.oldValues[<span class="hljs-number">0</span>] = <span class="hljs-string">'A message for the child component'</span></span><br></pre></td></tr></table></figure>
 
 <p>然后到了变化监测列表里的第二步，调用相应的生命周期函数，接下来再执行第三步，将 <code>name</code> 表达式解析为 <code>I am A component</code> 文本，将解析好的值更新到 <code>DOM</code> 上，并且存入 <code>oldValues</code></p>
@@ -249,10 +249,10 @@ var _hmt = _hmt || [];
 <h4 id="异步更新"><a href="#异步更新" class="headerlink" title="异步更新"></a>异步更新</h4><p>你应该注意到一件事，不管是变化监测还是第二次的验证 <code>digest</code> 都是同步执行的，这意味着如果我们在代码中异步更新属性的值，那么在第二次验证循环运行时这些属性是不会被改变的，那么也就不会报错了</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">BComponent</span> </span>&#123;</span><br><span class="line">  name = <span class="hljs-string">'I am B component'</span></span><br><span class="line">  @Input() text</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(private parent: AppComponent) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit() &#123;</span><br><span class="line">    setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.parent.text = <span class="hljs-string">'updated text'</span></span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ngAfterViewInit() &#123;</span><br><span class="line">    setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.parent.name = <span class="hljs-string">'updated name'</span></span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>确实没有错误抛出，<code>setTimeout</code> 将函数加入 <code>macrotask</code> 队列中，函数会在下一个 <code>VM</code> 周期里被调用，也可以通过使用 <code>promise</code> 里的 <code>then</code> 回调将函数加入当前 <code>VM</code> 周期其他同步代码被执行完之后</p>
+<p>确实没有错误抛出，<code>setTimeout</code> 将函数加入 <code>Macrotask</code> 队列中，函数会在下一个 <code>VM</code> 周期里被调用，也可以通过使用 <code>Promise</code> 里的 <code>then</code> 回调将函数加入当前 <code>VM</code> 周期其他同步代码被执行完之后</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-literal">null</span>).then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">this</span>.parent.name = <span class="hljs-string">'updated name'</span>)</span><br></pre></td></tr></table></figure>
 
-<p><code>Promise.then</code> 并不会被放入 <code>macrotask</code>，而是创建一个 <code>microtask</code>，<code>microtask</code> 队列将在当前周期中所有同步代码被执行完毕之后执行，因此属性的更新会发生在验证步骤之后</p>
+<p><code>Promise.then</code> 并不会被放入 <code>Macrotask</code>，而是创建一个 <code>Microtask</code>，<code>Microtask</code> 队列将在当前周期中所有同步代码被执行完毕之后执行，因此属性的更新会发生在验证步骤之后</p>
 <blockquote>
 <p>另外补充一个知识点，给 <code>EventEmitter</code> 传一个 <code>true</code> 能使事件的 <code>emit</code> 变为异步</p>
 </blockquote>
@@ -390,7 +390,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -515,7 +515,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -602,6 +602,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -676,25 +695,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -713,7 +713,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1287,7 +1287,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

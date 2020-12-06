@@ -16,7 +16,7 @@
 <meta property="og:description" content="CSS 的 float（浮动），会使元素向左或向右移动，其周围的元素也会重新排列，但是本质上来说，float 一般是用于图像的，比如文字环绕图片的效果，但它在布局时一样非常有用，下面是一些需要注意的地方">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/01.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.248Z">
+<meta property="og:updated_time" content="2020-12-04T02:00:52.468Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="清除浮动之 clearfix 的原理和方法">
 <meta name="twitter:description" content="CSS 的 float（浮动），会使元素向左或向右移动，其周围的元素也会重新排列，但是本质上来说，float 一般是用于图像的，比如文字环绕图片的效果，但它在布局时一样非常有用，下面是一些需要注意的地方">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    9 分钟 读完 (大约 1408 个字)
+                    9 分钟 读完 (大约 1414 个字)
                 </span>
                 
                 
@@ -198,8 +198,8 @@ var _hmt = _hmt || [];
 <h2 id="问题的由来"><a href="#问题的由来" class="headerlink" title="问题的由来"></a>问题的由来</h2><p>有这样一种情形，在一个容器（<code>container</code>）中，有两个浮动的子元素</p>
 <figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"float:left;width:45%;"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"float:right;width:45%;"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>在浏览器中一运行，就会出现意想不到的结果，实际视图是子元素显示在父容器的 <strong>外部</strong></p>
-<h2 id="问题的原因与浮动定位有关"><a href="#问题的原因与浮动定位有关" class="headerlink" title="问题的原因与浮动定位有关"></a>问题的原因与浮动定位有关</h2><p>在 <code>CSS</code> 规范中，浮动定位 <strong>不属于</strong> 正常的页面流（<code>page flow</code>），是 <strong>独立定位</strong> 的，所以，只含有浮动元素的父容器，在显示时不考虑子元素的位置，就当它们不存在一样，这就造成了显示出来，父容器好像空容器一样，但是解决的方法有很多种，下面我们就一种一种来看</p>
+<p>在浏览器中一运行，就会出现意想不到的结果，实际视图是子元素显示在父容器的「外部」</p>
+<h2 id="问题的原因与浮动定位有关"><a href="#问题的原因与浮动定位有关" class="headerlink" title="问题的原因与浮动定位有关"></a>问题的原因与浮动定位有关</h2><p>在 <code>CSS</code> 规范中，浮动定位「不属于」正常的页面流（<code>page flow</code>），是「独立定位」的，所以，只含有浮动元素的父容器，在显示时不考虑子元素的位置，就当它们不存在一样，这就造成了显示出来，父容器好像空容器一样，但是解决的方法有很多种，下面我们就一种一种来看</p>
 <h2 id="解决方法一，添加空元素"><a href="#解决方法一，添加空元素" class="headerlink" title="解决方法一，添加空元素"></a>解决方法一，添加空元素</h2><p>经典的解决方法，就是在浮动元素下方添加一个非浮动元素</p>
 <figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"float:left;width:45%;"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"float:right;width:45%;"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"clear:both;"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
@@ -207,7 +207,7 @@ var _hmt = _hmt || [];
 <h2 id="解决方法二，浮动的父容器"><a href="#解决方法二，浮动的父容器" class="headerlink" title="解决方法二，浮动的父容器"></a>解决方法二，浮动的父容器</h2><p>另一种思路是，索性将父容器也改成浮动定位，这样它就可以带着子元素一起浮动了</p>
 <figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"float:left;"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"float:left;width:45%;"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"float:right;width:45%;"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
-<p>这种方法不用修改 <code>html</code> 代码，但是缺点在于父容器变成浮动以后，会影响到后面元素的定位，而且有时候，父容器是定位死的，无法变成浮动</p>
+<p>这种方法不用修改 <code>HTML</code> 代码，但是缺点在于父容器变成浮动以后，会影响到后面元素的定位，而且有时候，父容器是定位死的，无法变成浮动</p>
 <h2 id="解决方法三，浮动元素的自动-clearing"><a href="#解决方法三，浮动元素的自动-clearing" class="headerlink" title="解决方法三，浮动元素的自动 clearing"></a>解决方法三，浮动元素的自动 clearing</h2><p>让父容器变得可以自动清理（<code>clearing</code>）子元素的浮动，从而能够识别出浮动子元素的位置，不会出现显示上的差错，要做到这点，只要为父容器加上一条 <code>&#39;overflow: hidden&#39;</code> 的 <code>CSS</code> 语句就行了，至于为什么加上 <code>&#39;overflow: hidden&#39;</code> 就可以解决此类问题，可以参考 <a href="https://developer.mozilla.org/zh-CN/docs/Web/Guide/CSS/Block_formatting_context" target="_blank" rel="noopener">块格式化上下文| MDN</a></p>
 <figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"overflow: hidden;"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"float:left;width:45%;"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"float:right;width:45%;"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
@@ -349,7 +349,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -466,7 +466,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -553,6 +553,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -627,25 +646,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -664,7 +664,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1238,7 +1238,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

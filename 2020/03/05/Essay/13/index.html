@@ -16,7 +16,7 @@
 <meta property="og:description" content="递归（Recursion algorithm）在计算机科学中是指一种通过重复将问题分解为同类的子问题而解决问题的方法，递归式方法可以被用于解决很多的计算机科学问题，因此它是计算机科学中十分重要的一个概念，绝大多数编程语言支持函数的自调用，在这些语言中函数可以通过调用自身来进行递归，在平常可以说是经常可以听到的概念，今天我们就来深入的了解一下，什么是递归，以及递归的一些相关应用">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.jpg">
-<meta property="og:updated_time" content="2020-11-01T16:13:39.263Z">
+<meta property="og:updated_time" content="2020-11-29T15:30:05.753Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="递归">
 <meta name="twitter:description" content="递归（Recursion algorithm）在计算机科学中是指一种通过重复将问题分解为同类的子问题而解决问题的方法，递归式方法可以被用于解决很多的计算机科学问题，因此它是计算机科学中十分重要的一个概念，绝大多数编程语言支持函数的自调用，在这些语言中函数可以通过调用自身来进行递归，在平常可以说是经常可以听到的概念，今天我们就来深入的了解一下，什么是递归，以及递归的一些相关应用">
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    29 分钟 读完 (大约 4418 个字)
+                    30 分钟 读完 (大约 4426 个字)
                 </span>
                 
                 
@@ -190,7 +190,7 @@ var _hmt = _hmt || [];
 <a id="more"></a>
 
 
-<h2 id="什么是递归"><a href="#什么是递归" class="headerlink" title="什么是递归"></a>什么是递归</h2><p>简单来说，在编程语言中，函数直接或间接调用函数本身，则该函数称为 <strong>递归函数</strong>，我们可以用数学代入法来理解，假设我们用递归来算阶乘 <code>f(n)</code>，常用的方式是这样的</p>
+<h2 id="什么是递归"><a href="#什么是递归" class="headerlink" title="什么是递归"></a>什么是递归</h2><p>简单来说，在编程语言中，函数直接或间接调用函数本身，则该函数称为「递归函数」，我们可以用数学代入法来理解，假设我们用递归来算阶乘 <code>f(n)</code>，常用的方式是这样的</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">factorial</span>(<span class="hljs-params">n</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> n === <span class="hljs-number">1</span> ? <span class="hljs-number">1</span> : n * factorial(n - <span class="hljs-number">1</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 也可以使用箭头函数来进行简化</span></span><br><span class="line"><span class="hljs-keyword">const</span> factorial = <span class="hljs-function">(<span class="hljs-params">x</span>) =&gt;</span> (x == <span class="hljs-number">0</span> ? <span class="hljs-number">1</span> : x * factorial(x - <span class="hljs-number">1</span>))</span><br></pre></td></tr></table></figure>
 
 <p>我们可以发现，在 <code>f</code> 的里面再次用到了 <code>f</code>，我们把它展开了来看看</p>
@@ -198,7 +198,7 @@ var _hmt = _hmt || [];
 
 <p>也就是下图这样</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/13-01.png" alt></p>
-<p>通过上面的拆解，我们可以发现，其实就是先递进，再回归，而这就是「<strong>递归</strong>」</p>
+<p>通过上面的拆解，我们可以发现，其实就是先递进，再回归，而这就是「递归」</p>
 <h2 id="斐波那契数列"><a href="#斐波那契数列" class="headerlink" title="斐波那契数列"></a>斐波那契数列</h2><p>我们下面来看一个实际的应用场景，也算是递归的经典应用场景，那就是斐波那契数列，我们先来看看不使用递归如何来实现斐波那契（<code>Fibonacci</code>）数列，如下</p>
 <figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">int</span> i;</span><br><span class="line">  <span class="hljs-keyword">int</span> a[<span class="hljs-number">40</span>];</span><br><span class="line"></span><br><span class="line">  a[<span class="hljs-number">0</span>] = <span class="hljs-number">0</span>;</span><br><span class="line">  a[<span class="hljs-number">1</span>] = <span class="hljs-number">1</span>;</span><br><span class="line">  <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d %d "</span>, a[<span class="hljs-number">0</span>], a[<span class="hljs-number">1</span>]);</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">for</span> (i = <span class="hljs-number">2</span>; i &lt; <span class="hljs-number">40</span>; i++) &#123;</span><br><span class="line">    a[i] = a[i - <span class="hljs-number">1</span>] + a[i - <span class="hljs-number">2</span>];</span><br><span class="line">    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d "</span>, a[i]);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -219,7 +219,7 @@ var _hmt = _hmt || [];
 
 <h2 id="递归定义"><a href="#递归定义" class="headerlink" title="递归定义"></a>递归定义</h2><p>之前我们通过了斐波那契数列的示例简单的了解了一下什么是递归，下面我们就来看看递归的具体含义</p>
 <blockquote>
-<p>在高级语言中，函数自己调用和调用其他函数并没有本质的不同，我们把一个直接调用自己或通过一系列的调用语句间接地调用自己的函数，称作 <strong>递归函数</strong>，不过，递归程序最怕的就是陷入永不结束的无穷递归中，所以需要注意，每个递归定义必须至少有一个条件，当满足这个条件时递归不再进行，即函数不再调用自身而是返回值，比如之前我们的 <code>Fbi</code> 函数结束条件就是 <code>i &lt; 2</code></p>
+<p>在高级语言中，函数自己调用和调用其他函数并没有本质的不同，我们把一个直接调用自己或通过一系列的调用语句间接地调用自己的函数，称作「递归函数」，不过，递归程序最怕的就是陷入永不结束的无穷递归中，所以需要注意，每个递归定义必须至少有一个条件，当满足这个条件时递归不再进行，即函数不再调用自身而是返回值，比如之前我们的 <code>Fbi</code> 函数结束条件就是 <code>i &lt; 2</code></p>
 </blockquote>
 <p>之前我们对比了两种实现斐波那契的代码，迭代和递归的区别是</p>
 <ul>
@@ -267,7 +267,7 @@ var _hmt = _hmt || [];
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/13-04.gif" alt></p>
 <h2 id="八皇后问题"><a href="#八皇后问题" class="headerlink" title="八皇后问题"></a>八皇后问题</h2><p>最后我们再来看一下八皇后问题，八皇后问题是一个古老而著名的问题，是回溯算法的典型例题，问题是这样的，在 <code>8 x 8</code> 格的国际象棋上摆放八个皇后，使其不能互相攻击，即任意两个皇后都不能处于同一行、同一列或同一斜线上，问有多少种摆法？如下图，便是其中一种实现方式</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/13-05.png" alt></p>
-<p>那么到底什么是 <strong>回溯法</strong> 呢？我们慢慢来看，我们首先将棋盘调整的小一些，这样比较方便描述，结果如下</p>
+<p>那么到底什么是「回溯法」呢？我们慢慢来看，我们首先将棋盘调整的小一些，这样比较方便描述，结果如下</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/13-06.png" alt></p>
 <p>那么现在问题变成了 <code>4</code> 皇后问题了，现在我们把第一个皇后放在第一个格子，被涂黑的地方是不能放皇后的，便成为了下面这样的方式</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/13-07.png" alt></p>
@@ -277,7 +277,7 @@ var _hmt = _hmt || [];
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/13-09.png" alt></p>
 <p>这时可以发现，第三个皇后只有一个位置可选，但是当第三个皇后占据第三行蓝色空位时，第四行皇后无路可走，于是也会发生错误，所以这是我们就需要再次返回上层调整三号皇后的位置，但是三号皇后没有别的地方可以安排，所以继续返回到第二层来进行调整，但是二号皇后也是同样的情况，那么我们只能调整一号皇后的位置了，于是我们将一号皇后的位置稍微调整一下以便我们继续搜索，也就是下图这样的情况</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/13-10.png" alt></p>
-<p>说到这里，应该就已经对 <strong>回溯法</strong> 已经有了基本概念，下面我们就来看看如何使用代码来进行实现</p>
+<p>说到这里，应该就已经对「回溯法」已经有了基本概念，下面我们就来看看如何使用代码来进行实现</p>
 <figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;math.h&gt;</span></span></span><br><span class="line"><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">int</span> n = <span class="hljs-number">8</span>;</span><br><span class="line"><span class="hljs-keyword">int</span> total = <span class="hljs-number">0</span>;</span><br><span class="line"><span class="hljs-keyword">int</span> *c = <span class="hljs-keyword">new</span> <span class="hljs-keyword">int</span>(n);</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">is_ok</span><span class="hljs-params">(<span class="hljs-keyword">int</span> row)</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> j = <span class="hljs-number">0</span>; j != row; j++) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (c[row] == c[j] || row - c[row] == j - c[j] || row + c[row] == j + c[j])</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">queen</span><span class="hljs-params">(<span class="hljs-keyword">int</span> row)</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (row == n)</span><br><span class="line">    total++;</span><br><span class="line">  <span class="hljs-keyword">else</span></span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> col = <span class="hljs-number">0</span>; col != n; col++) &#123;</span><br><span class="line">      c[row] = col;</span><br><span class="line">      <span class="hljs-keyword">if</span> (is_ok(row))</span><br><span class="line">        queen(row + <span class="hljs-number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">  queen(<span class="hljs-number">0</span>);</span><br><span class="line">  <span class="hljs-built_in">cout</span> &lt;&lt; total;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>其实代码主要的逻辑就是下面的十行代码</p>
@@ -408,7 +408,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -517,7 +517,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -604,6 +604,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -678,25 +697,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -715,7 +715,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1289,7 +1289,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 

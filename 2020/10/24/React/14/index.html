@@ -16,7 +16,7 @@
 <meta property="og:description" content="最近在复习到 React 高阶组件相关内容的时候，发现之前比较常见的 Mixin 已经差不多被废弃了，而 HOC 相关内容也渐渐的在被 Hook 所替代，只能感叹变化太快 所以在这里打算重新的从头梳理一下，将之前博客当中关于 React 的一些过时内容也删减整合一下，也算是重新的温习一下 React 当中的几种状态逻辑复用的方式，也就是 Mixin，HOC 和 Hook 它们几者的实现原理、使用方">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg">
-<meta property="og:updated_time" content="2020-11-14T14:59:32.281Z">
+<meta property="og:updated_time" content="2020-11-29T15:30:05.753Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="React 中的 Mixin">
 <meta name="twitter:description" content="最近在复习到 React 高阶组件相关内容的时候，发现之前比较常见的 Mixin 已经差不多被废弃了，而 HOC 相关内容也渐渐的在被 Hook 所替代，只能感叹变化太快 所以在这里打算重新的从头梳理一下，将之前博客当中关于 React 的一些过时内容也删减整合一下，也算是重新的温习一下 React 当中的几种状态逻辑复用的方式，也就是 Mixin，HOC 和 Hook 它们几者的实现原理、使用方">
@@ -207,7 +207,7 @@ var _hmt = _hmt || [];
 <p>看完了 <code>Mixin</code> 的基本使用方式以后我们再来看看如何在 <code>React</code> 中应用 <code>Mixin</code></p>
 <h2 id="React-中的-Mixin"><a href="#React-中的-Mixin" class="headerlink" title="React 中的 Mixin"></a>React 中的 Mixin</h2><p><code>React</code> 当中也提供了 <code>Mixin</code> 的实现，如果完全不同的组件有相似的功能，我们可以引入来实现代码复用，但是只有在使用 <code>createClass</code> 来创建 <code>React</code> 组件时才可以使用，因为在 <code>React</code> 组件的 <code>ES6</code> 写法中它已经被废弃掉了</p>
 <p>例如下面的例子，很多组件或页面都需要记录用户行为，性能指标等，如果我们在每个组件都引入写日志的逻辑，会产生大量重复代码，通过 <code>Mixin</code> 我们可以解决这一问题</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> Mixin = &#123;</span><br><span class="line">  log: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'log'</span>)</span><br><span class="line">  &#125;,</span><br><span class="line">  componentDidMount: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'in'</span>)</span><br><span class="line">  &#125;,</span><br><span class="line">  componentWillUnmount: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'out'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> Foo = React.createClass(&#123;</span><br><span class="line">  mixins: [Mixin],</span><br><span class="line">  render: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> (&lt;div&gt;&lt;/div&gt;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> Bar = React.createClass(&#123;</span><br><span class="line">  mixins: [Mixin],</span><br><span class="line">  render: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> (&lt;div&gt;&lt;/div&gt;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> Mixin = &#123;</span><br><span class="line">  log: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'log'</span>)</span><br><span class="line">  &#125;,</span><br><span class="line">  componentDidMount: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'in'</span>)</span><br><span class="line">  &#125;,</span><br><span class="line">  componentWillUnmount: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'out'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> Foo = React.createClass(&#123;</span><br><span class="line">  mixins: [Mixin],</span><br><span class="line">  render: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> (<span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> Bar = React.createClass(&#123;</span><br><span class="line">  mixins: [Mixin],</span><br><span class="line">  render: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> (<span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
 <p>不过这种使用方式已经过时了，不再推荐使用</p>
 <h2 id="Mixin-带来的危害"><a href="#Mixin-带来的危害" class="headerlink" title="Mixin 带来的危害"></a>Mixin 带来的危害</h2><p><code>React</code> 官方文档在 <a href="https://react.docschina.org/blog/2016/07/13/mixins-considered-harmful.html" target="_blank" rel="noopener">Mixins Considered Harmful</a> 一文中提到了 <code>Mixin</code> 带来了危害</p>
@@ -327,7 +327,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        165
+                        166
                     </p>
                 </div>
             </div>
@@ -420,7 +420,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTML/">
@@ -507,6 +507,25 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
@@ -581,25 +600,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/24/React/14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.jpg" alt="React 中的 Mixin">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-23T16:00:00.000Z">2020-10-24</time></div>
-                    <a href="/2020/10/24/React/14/" class="has-link-black-ter is-size-6">React 中的 Mixin</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -618,7 +618,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十一月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1192,7 +1192,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 
