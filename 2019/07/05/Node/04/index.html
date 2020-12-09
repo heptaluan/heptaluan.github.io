@@ -7,20 +7,20 @@
 
 
 
-    <meta name="description" content="本文主要借助 libuv 来简单的了解一下 Node.js 中的事件轮询机制相关概念，注意与浏览器中的 event loop 区分开来，下面我们就先来看看什么是 libuv  关于浏览器中的 event loop 详细可见 JavaScript 并发模型">
+    <meta name="description" content="本文主要借助 libuv 来简单的了解一下 Node.js 中的事件轮询机制相关概念，注意与浏览器中的 Event Loop 区分开来，下面我们就先来看看什么是 libuv  关于浏览器中的 Event Loop 详细可见 JavaScript 并发模型">
 <meta name="keywords" content="Node.js">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Node.js 中的事件轮询机制">
 <meta property="og:url" content="http://yoursite.com/2019/07/05/Node/04/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="本文主要借助 libuv 来简单的了解一下 Node.js 中的事件轮询机制相关概念，注意与浏览器中的 event loop 区分开来，下面我们就先来看看什么是 libuv  关于浏览器中的 event loop 详细可见 JavaScript 并发模型">
+<meta property="og:description" content="本文主要借助 libuv 来简单的了解一下 Node.js 中的事件轮询机制相关概念，注意与浏览器中的 Event Loop 区分开来，下面我们就先来看看什么是 libuv  关于浏览器中的 Event Loop 详细可见 JavaScript 并发模型">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/04.jpg">
-<meta property="og:updated_time" content="2020-11-29T15:30:05.755Z">
+<meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/04.webp">
+<meta property="og:updated_time" content="2020-12-09T03:22:48.785Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Node.js 中的事件轮询机制">
-<meta name="twitter:description" content="本文主要借助 libuv 来简单的了解一下 Node.js 中的事件轮询机制相关概念，注意与浏览器中的 event loop 区分开来，下面我们就先来看看什么是 libuv  关于浏览器中的 event loop 详细可见 JavaScript 并发模型">
-<meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/04.jpg">
+<meta name="twitter:description" content="本文主要借助 libuv 来简单的了解一下 Node.js 中的事件轮询机制相关概念，注意与浏览器中的 Event Loop 区分开来，下面我们就先来看看什么是 libuv  关于浏览器中的 Event Loop 详细可见 JavaScript 并发模型">
+<meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/04.webp">
 
 
 
@@ -154,7 +154,7 @@ var _hmt = _hmt || [];
     
     <div class="card-image">
         <span class="image is-7by1">
-            <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/04.jpg" alt="Node.js 中的事件轮询机制">
+            <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/04.webp" alt="Node.js 中的事件轮询机制">
         </span>
     </div>
     
@@ -186,9 +186,9 @@ var _hmt = _hmt || [];
             
         </h1>
         <div class="content">
-            <p>本文主要借助 <code>libuv</code> 来简单的了解一下 <code>Node.js</code> 中的事件轮询机制相关概念，注意与浏览器中的 <code>event loop</code> 区分开来，下面我们就先来看看什么是 <code>libuv</code></p>
+            <p>本文主要借助 <code>libuv</code> 来简单的了解一下 <code>Node.js</code> 中的事件轮询机制相关概念，注意与浏览器中的 <code>Event Loop</code> 区分开来，下面我们就先来看看什么是 <code>libuv</code></p>
 <blockquote>
-<p>关于浏览器中的 <code>event loop</code> 详细可见 <a href="https://heptaluan.github.io/2018/08/12/JavaScript/30/" target="_blank" rel="noopener">JavaScript 并发模型</a></p>
+<p>关于浏览器中的 <code>Event Loop</code> 详细可见 <a href="https://heptaluan.github.io/2018/08/12/JavaScript/30/" target="_blank" rel="noopener">JavaScript 并发模型</a></p>
 </blockquote>
 <a id="more"></a>
 
@@ -199,14 +199,14 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'timeout 0'</span>) &#125;, <span class="hljs-number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'outter'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// outter</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// timeout 0</span></span><br></pre></td></tr></table></figure>
 
 <p>想要深挖为什么会出现这样的结果，要首先来研究一下 <code>libuv</code> 的事件轮询机制</p>
-<h2 id="事件轮询机制"><a href="#事件轮询机制" class="headerlink" title="事件轮询机制"></a>事件轮询机制</h2><p>事件轮询机制是一个执行模型，在不同的地方有不同的实现，浏览器和 <code>Node.js</code> 基于不同的技术实现了各自的 <code>event loop</code>，但是不要混淆 <code>Node.js</code> 和浏览器中的 <code>event loop</code></p>
+<h2 id="事件轮询机制"><a href="#事件轮询机制" class="headerlink" title="事件轮询机制"></a>事件轮询机制</h2><p>事件轮询机制是一个执行模型，在不同的地方有不同的实现，浏览器和 <code>Node.js</code> 基于不同的技术实现了各自的 <code>Event Loop</code>，但是不要混淆 <code>Node.js</code> 和浏览器中的 <code>Event Loop</code></p>
 <blockquote>
-<p>再次强调，<code>Node.js</code> 和浏览器的 <code>event loop</code> 是两个有明确区分的事物，不能混为一谈</p>
+<p>再次强调，<code>Node.js</code> 和浏览器的 <code>Event Loop</code> 是两个有明确区分的事物，不能混为一谈</p>
 </blockquote>
-<p>简单来讲，<code>Node.js</code> 的 <code>event</code> 是基于 <code>libuv</code>，而浏览器的 <code>event loop</code> 则在 <a href="https://html.spec.whatwg.org/multipage/webappapis.html#event-loops" target="_blank" rel="noopener">HTML 5</a> 的规范中明确定义，<code>libuv</code> 已经对 <code>event loop</code> 作出了实现，而 <code>HTML 5</code> 规范中只是定义了浏览器中 <code>event loop</code> 的模型，具体实现留给了浏览器厂商</p>
-<p>在 <code>libuv</code> 中，有一个句柄（<code>handle</code>）的概念，每个句柄中存储数据和回调函数之类的信息，句柄在使用前要添加到对应的队列（<code>queue</code>）或者堆（<code>heap</code>）中，其实只有定时器句柄使用了 <a href="https://zh.wikipedia.org/wiki/%E6%9C%80%E5%A4%A7%E2%80%94%E6%9C%80%E5%B0%8F%E5%A0%86" target="_blank" rel="noopener">最小堆</a> 的数据结构，其他句柄使用队列的数据结构进行存储，<code>libuv</code> 在进行每一次事件轮询的时候都会从每个类型的句柄中，取出关联的队列或者堆结构进行处理，流程图如下所示</p>
+<p>简单来讲，<code>Node.js</code> 的 <code>event</code> 是基于 <code>libuv</code>，而浏览器的 <code>Event Loop</code> 则在 <a href="https://html.spec.whatwg.org/multipage/webappapis.html#event-loops" target="_blank" rel="noopener">HTML 5</a> 的规范中明确定义，<code>libuv</code> 已经对 <code>Event Loop</code> 作出了实现，而 <code>HTML 5</code> 规范中只是定义了浏览器中 <code>Event Loop</code> 的模型，具体实现留给了浏览器厂商</p>
+<p>在 <code>libuv</code> 中，有一个句柄（<code>handle</code>）的概念，每个句柄中存储数据和回调函数之类的信息，句柄在使用前要添加到对应的队列（<code>Queue</code>）或者堆（<code>Heap</code>）中，其实只有定时器句柄使用了 <a href="https://zh.wikipedia.org/wiki/%E6%9C%80%E5%A4%A7%E2%80%94%E6%9C%80%E5%B0%8F%E5%A0%86" target="_blank" rel="noopener">最小堆</a> 的数据结构，其他句柄使用队列的数据结构进行存储，<code>libuv</code> 在进行每一次事件轮询的时候都会从每个类型的句柄中，取出关联的队列或者堆结构进行处理，流程图如下所示</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/node/05.png" alt></p>
-<p><code>Node.js</code> 的 <code>event loop</code> 分为六个阶段，每个阶段的作用如下</p>
+<p><code>Node.js</code> 的 <code>Event Loop</code> 分为六个阶段，每个阶段的作用如下</p>
 <ul>
 <li><code>timers</code>，执行 <code>setTimeout()</code> 和 <code>setInterval()</code> 中到期的 <code>callback</code></li>
 <li><code>I/O callbacks</code>，上一轮循环中有少数的 <code>I/O callback</code> 会被延迟到这一轮的这一阶段执行</li>
@@ -218,7 +218,7 @@ var _hmt = _hmt || [];
 <p>如果想要具体了解其内部执行流程，可以参考这篇文章中的 <a href="https://cnodejs.org/topic/5a9108d78d6e16e56bb80882" target="_blank" rel="noopener">源码解析部分</a>，我们这里只是简单介绍一下其执行的流程，上面的图片可以简化成下面的流程</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">   ┌───────────────────────┐</span><br><span class="line">┌─&gt;│        timers       │</span><br><span class="line">│  └──────────┬────────────┘</span><br><span class="line">│  ┌──────────┴────────────┐</span><br><span class="line">│  │     I/O callbacks   │</span><br><span class="line">│  └──────────┬────────────┘</span><br><span class="line">│  ┌──────────┴────────────┐</span><br><span class="line">│  │     idle, prepare   │</span><br><span class="line">│  └──────────┬────────────┘      ┌────────────────┐</span><br><span class="line">│  ┌──────────┴────────────┐      │   incoming:   │</span><br><span class="line">│  │         poll        │&lt;──────┤  connections, │</span><br><span class="line">│  └──────────┬────────────┘      │   data, etc.  │</span><br><span class="line">│  ┌──────────┴────────────┐      └────────────────┘</span><br><span class="line">│  │        check        │</span><br><span class="line">│  └──────────┬────────────┘</span><br><span class="line">│  ┌──────────┴────────────┐</span><br><span class="line">└──┤    close callbacks  │</span><br><span class="line">   └───────────────────────┘</span><br></pre></td></tr></table></figure>
 
-<p><code>event loop</code> 的每一次循环都需要依次经过上述的阶段，每个阶段都有自己的 <code>callback</code> 队列，每当进入某个阶段，都会从所属的队列中取出 <code>callback</code> 来执行，当队列为空或者被执行 <code>callback</code> 的数量达到系统的最大数量时，进入下一阶段，这六个阶段都执行完毕称为一轮循环，下面我们来分类查看</p>
+<p><code>Event Loop</code> 的每一次循环都需要依次经过上述的阶段，每个阶段都有自己的 <code>callback</code> 队列，每当进入某个阶段，都会从所属的队列中取出 <code>callback</code> 来执行，当队列为空或者被执行 <code>callback</code> 的数量达到系统的最大数量时，进入下一阶段，这六个阶段都执行完毕称为一轮循环，下面我们来分类查看</p>
 <h4 id="timers-阶段"><a href="#timers-阶段" class="headerlink" title="timers 阶段"></a>timers 阶段</h4><p>在 <code>timer</code> 阶段其实使用一个最小堆而不是队列来保存所有元素（其实也可以理解，因为 <code>timeout</code> 的 <code>callback</code> 是按照超时时间的顺序来调用的，并不是先进先出的队列逻辑），然后循环取出所有到期的 <code>callback</code> 执行</p>
 <h4 id="I-O-callbacks-阶段"><a href="#I-O-callbacks-阶段" class="headerlink" title="I/O callbacks 阶段"></a>I/O callbacks 阶段</h4><p>根据 <code>libuv</code> 的文档，一些应该在上轮循环 <code>poll</code> 阶段执行的 <code>callback</code>，因为某些原因不能执行，就会被延迟到这一轮的循环的 <code>I/O callbacks</code> 阶段执行，换句话说这个阶段执行的 <code>callbacks</code> 是上轮残留的</p>
 <h4 id="idle-和-prepare-阶段"><a href="#idle-和-prepare-阶段" class="headerlink" title="idle 和 prepare 阶段"></a>idle 和 prepare 阶段</h4><p><code>idle</code> 和 <code>prepare</code> 回调，仅仅在内部使用</p>
@@ -359,7 +359,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        166
+                        167
                     </p>
                 </div>
             </div>
@@ -504,7 +504,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">49</span>
+                <span class="level-item tag">50</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -569,7 +569,7 @@ var _hmt = _hmt || [];
             
             <a href="/2020/11/28/Essay/31/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.jpg" alt="矩形包围盒碰撞检测">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.webp" alt="矩形包围盒碰撞检测">
                 </p>
             </a>
             
@@ -588,7 +588,7 @@ var _hmt = _hmt || [];
             
             <a href="/2020/11/15/JavaScript/55/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.jpg" alt="JavaScript 中 Promise 的实现">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.webp" alt="JavaScript 中 Promise 的实现">
                 </p>
             </a>
             
@@ -607,7 +607,7 @@ var _hmt = _hmt || [];
             
             <a href="/2020/11/07/React/17/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.jpg" alt="深入 useEffect">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.webp" alt="深入 useEffect">
                 </p>
             </a>
             
@@ -626,7 +626,7 @@ var _hmt = _hmt || [];
             
             <a href="/2020/10/31/React/16/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.jpg" alt="React 中的 Hook">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.webp" alt="React 中的 Hook">
                 </p>
             </a>
             
@@ -645,7 +645,7 @@ var _hmt = _hmt || [];
             
             <a href="/2020/10/25/React/15/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/15.jpg" alt="React 中的 HOC">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/15.webp" alt="React 中的 HOC">
                 </p>
             </a>
             
@@ -1008,7 +1008,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">五月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1273,7 +1273,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">49</span>
+                        <span class="tag is-grey">50</span>
                     </a>
                 </div>
                 
