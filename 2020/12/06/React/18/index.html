@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+<title>深入 React Fiber - heptaluan&#39;s blog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="我们都知道，React 是一个用于构建用户交互界面的 JavaScript 库，其核心机制就是跟踪组件的状态变化，并将更新的状态映射到到新的界面，在 React 中，我们将此过程称之为「协调」（Reconcilation），我们调用 setState 方法来改变状态，而框架本身会去检查 state 或 props 是否已经更改来决定是否重新渲染组件，React 的官方文档对 协调机制 进行了良好的">
+<meta name="keywords" content="React">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入 React Fiber">
+<meta property="og:url" content="http://yoursite.com/2020/12/06/React/18/index.html">
+<meta property="og:site_name" content="heptaluan&#39;s blog">
+<meta property="og:description" content="我们都知道，React 是一个用于构建用户交互界面的 JavaScript 库，其核心机制就是跟踪组件的状态变化，并将更新的状态映射到到新的界面，在 React 中，我们将此过程称之为「协调」（Reconcilation），我们调用 setState 方法来改变状态，而框架本身会去检查 state 或 props 是否已经更改来决定是否重新渲染组件，React 的官方文档对 协调机制 进行了良好的">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/18.webp">
+<meta property="og:updated_time" content="2020-12-19T14:45:03.179Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入 React Fiber">
+<meta name="twitter:description" content="我们都知道，React 是一个用于构建用户交互界面的 JavaScript 库，其核心机制就是跟踪组件的状态变化，并将更新的状态映射到到新的界面，在 React 中，我们将此过程称之为「协调」（Reconcilation），我们调用 setState 方法来改变状态，而框架本身会去检查 state 或 props 是否已经更改来决定是否重新渲染组件，React 的官方文档对 协调机制 进行了良好的">
+<meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/18.webp">
+
+
+
+
+
+
+
+<link rel="icon" href="https://gitee.com/heptaluan/backups/raw/master/cdn/favicon.ico">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+<script>
+var _hmt = _hmt || [];
+(function() {
+    var hm = document.createElement("script");
+    hm.src = "//hm.baidu.com/hm.js?f0399d35b846ccd84f70acc7b232fb2e";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-2-column">
+    <!-- fork me on github -->
+<a id="forkMe" style="position: fixed;top: 0;right: 0;z-index: 31" href="https://github.com/heptaluan" target="_blank">
+    <svg style="color: #fff;fill: #a0a1a7;height: 80px;width: 80px;" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg>
+</a>
+
+<nav class="navbar navbar-main">
+    <div class="container">
+        <!-- <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="深入 React Fiber" height="28">
+            
+            </a>
+        </div> -->
+
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/target">Target</a>
+                
+                <a class="navbar-item" href="https://heptaluan.github.io/demos/">Demos</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fa fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-9-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-image">
+        <span class="image is-7by1">
+            <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/18.webp" alt="深入 React Fiber">
+        </span>
+    </div>
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <div class="level-item has-text-grey">2020-12-06</div>
+                <!-- <time class="level-item has-text-grey" datetime="2020-12-05T16:00:00.000Z">2020-12-06</time> -->
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/React/">React</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    1 小时 读完 (大约 9045 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                深入 React Fiber
+            
+        </h1>
+        <div class="content">
+            <p>我们都知道，<code>React</code> 是一个用于构建用户交互界面的 <code>JavaScript</code> 库，其核心机制就是跟踪组件的状态变化，并将更新的状态映射到到新的界面，在 <code>React</code> 中，我们将此过程称之为「协调」（<code>Reconcilation</code>），我们调用 <code>setState</code> 方法来改变状态，而框架本身会去检查 <code>state</code> 或 <code>props</code> 是否已经更改来决定是否重新渲染组件，<code>React</code> 的官方文档对 <a href="https://reactjs.org/docs/reconciliation.html" target="_blank" rel="noopener">协调机制</a> 进行了良好的抽象描述，即</p>
+<blockquote>
+<p><code>React</code> 的元素、生命周期、<code>render</code> 方法，以及应用于组件子元素的 <code>Diffing</code> 算法综合起到的作用，就是「协调」</p>
+</blockquote>
+<a id="more"></a>
+
+<p>我们将从 <code>render</code> 方法返回的不可变的 <code>React</code> 元素通常称为「虚拟 <code>DOM</code>」，但是除了「虚拟 <code>DOM</code>」之外，<code>React</code> 框架总是在内部维护一个实例来持有状态（如组件、<code>DOM</code> 节点等），从版本 <code>16</code> 开始， <code>React</code> 推出了新的内部实例树的实现方法，也就是我们经常听闻的 <code>Fiber</code> 算法，但是在本章当中我们并不会太过深入的去介绍源码相关内容，而是主要来探索一下这个所谓的 <code>Fiber</code> 到底是什么以及它出现的缘由和解决的一些问题</p>
+<h2 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h2><p>之所以会推出新的 <code>Fiber</code>，那就说明在之前的 <code>React</code> 版本当中是存在一定的问题的，那么下面我们就来先看看之前的版本当中到底是存在哪些问题，这个我们可以从官方提供的 <a href="https://claudiopro.github.io/react-fiber-vs-stack-demo/" target="_blank" rel="noopener">示例</a> 开始看起，运行效果如下</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/18-01.gif" alt></p>
+<p>至于根本原因，我们可以通过查看其对应的 <a href="https://github.com/claudiopro/react-fiber-vs-stack-demo" target="_blank" rel="noopener">源码</a> 来分析具体原因，通过观察源码我们可以发现，代码当中使用了 <code>requestAnimationFrame</code> 这个 <code>API</code>，关于 <code>requestAnimationFrame</code> 这个接口的使用我们就不介绍更多内容了，直接来看代码的实现，详细可以参考之前我们整理过的 <a href="http://localhost:4000/2018/06/11/JavaScript/38/#window-requestAnimationFrame" target="_blank" rel="noopener">requestAnimationFrame 的使用</a> 以及 <a href="http://localhost:4000/2018/08/12/JavaScript/30/#%E5%85%B3%E4%BA%8E-requestAnimationFrame" target="_blank" rel="noopener">并发模型中的 requestAnimationFrame</a></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> start = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>().getTime()</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">update</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  ReactDOM.render(</span><br><span class="line">    &lt;ExampleApplication elapsed=&#123;<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>().getTime() - start&#125; /&gt;,</span><br><span class="line">    <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'container'</span>)</span><br><span class="line">  )</span><br><span class="line">  requestAnimationFrame(update)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">requestAnimationFrame(update)</span><br></pre></td></tr></table></figure>
+
+<p>另外，为了每秒更新一次圆点中的数字，<code>ExampleApplication</code> 组件维护了一个 <code>seconds</code> 状态，使用 <code>setInterval</code> 每秒更新一次</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">componentDidMount() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.intervalID = setInterval(<span class="hljs-keyword">this</span>.tick, <span class="hljs-number">1000</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">tick() &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.setState(<span class="hljs-function"><span class="hljs-params">state</span> =&gt;</span> (&#123; </span><br><span class="line">    seconds: (state.seconds % <span class="hljs-number">10</span>) + <span class="hljs-number">1</span> </span><br><span class="line">  &#125;))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上效果之所以会卡顿，究其原因，对绝大多的浏览器来说，它的页面刷新频率取决于显示器的刷新频率，比如一台刷新频率是 <code>60FPS</code> 的显示器，<code>requestAnimationFrame</code> 会每 <code>16.66ms</code>（<code>1000ms / 60</code>）执行一次回调函数，但为了给主线程时间处理其他事务，一般要求产出一帧画面的时间不要超过 <code>10ms</code>，所以 <code>requestAnimationFrame</code> 的执行频率不会比显示器更高，但有可能更低</p>
+<p>默认情况下，<code>JavaSceipr</code> 运算、页面布局和页面绘制都是运行在浏览器的主线程当中，他们之间是互斥的关系，如果 <code>JavaSceipr</code> 运算持续占用主线程，页面就没法得到及时的更新，当我们调用 <code>setState</code> 更新页面的时候，<code>React</code> 会遍历应用的所有节点，计算出差异，然后再更新 <code>UI</code>，整个过程是一气呵成，不能被打断的，如果页面元素很多，整个过程占用的时机就可能超过 <code>16</code> 毫秒，这是就容易出现掉帧的现象，也就是说，其根本原因是因为大量的同步计算任务阻塞了浏览器的 <code>UI</code> 渲染</p>
+<p>而 <code>React</code> 的 <code>Reconcilation</code> 是 <code>CPU</code> 密集型的操作，旧版 <code>React</code> 通过「递归」的方式进行渲染，使用的是 <code>JavaSceipr</code> 引擎自身的函数调用栈，它会一直执行到栈空为止，也就是比对 <code>Virtual DOM</code> 树，找出需要变动的节点，然后同步更新它们，这个过程 <code>React</code> 称为 <code>Reconcilation</code>（协调）</p>
+<p>而 <code>React</code> 团队使用 <code>Fiber</code> 实现了自己的组件调用栈以后，它以链表的形式遍历组件树，可以灵活的暂停、继续和丢弃执行的任务，基本思路是将运算切割为多个步骤，分批完成，也就是说在完成一部分任务之后，将控制权交回给浏览器，让浏览器有时间进行页面的渲染，等浏览器忙完之后，再继续之前未完成的任务，所以使用 <code>Fiber</code> 架构的目的是让 <code>Reconcilation</code> 过程变成「可被中断」，适时地让出 <code>CPU</code> 执行权，让浏览器及时地响应用户的交互</p>
+<p>如下就是优化后的效果，我们可以明显感觉到，示例运行起来会比之前看上去流畅许多</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/18-02.gif" alt></p>
+<p>下面就让我们来深入的了解一下，到底什么是 <code>Fiber</code></p>
+<h2 id="什么是-Fiber"><a href="#什么是-Fiber" class="headerlink" title="什么是 Fiber"></a>什么是 Fiber</h2><p>那么什么是 <code>Fiber</code> 呢？其实 <code>Fiber</code> 是一种流程控制原语，它是一个非常底层的抽象描述，我们可以称其 <a href="https://zh.wikipedia.org/wiki/协程" target="_blank" rel="noopener">协程</a> 或者「纤程」，但是需要注意的是，协程和「线程」并不一样，协程本身是没有并发或者并行能力的（需要配合线程），它只是一种控制流程的让出机制，这里我们可以对比普通函数和 <code>Generator</code> 的运行方式，普通函数执行的过程中无法被中断和恢复，如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> tasks = []</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">run</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> task</span><br><span class="line">  <span class="hljs-keyword">while</span> (task = tasks.shift()) &#123;</span><br><span class="line">    execute(task)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>而 <code>Generator</code> 却是可以的</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> tasks = []</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">run</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> task</span><br><span class="line">  <span class="hljs-keyword">while</span> (task = tasks.shift()) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (hasHighPriorityEvent()) &#123;   <span class="hljs-comment">// 判断是否有高优先级事件需要处理，有的话让出控制权</span></span><br><span class="line">      <span class="hljs-keyword">yield</span></span><br><span class="line">    &#125;</span><br><span class="line">    execute(task)                   <span class="hljs-comment">// 处理完高优先级事件后，恢复函数调用栈，继续执行</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以我们可以发现，其实 <code>React Fiber</code> 的思想和协程的概念是契合的，也就是说 <code>React</code> 渲染的过程可以被中断，可以将控制权交回浏览器，让位给高优先级的任务，浏览器空闲后再恢复渲染，那么这里你可能会有一个疑问，那就是 <code>React</code> 是如何将控制权交回浏览器的呢？其实浏览器并没有抢占的条件，通常来说是 <code>React</code> 主动让出机制，这是因为</p>
+<ul>
+<li>一来浏览器中没有类似进程的概念，任务之间的界限很模糊，没有上下文，所以不具备中断或是恢复的条件</li>
+<li>二则是没有抢占的机制，我们无法中断一个正在执行的程序，所以我们只能采用类似协程这样控制权让出机制</li>
+</ul>
+<p>观察我们上面的代码，其实上面代码示例中的 <code>hasHighPriorityEvent()</code> 在目前浏览器中是无法实现的，因为我们没办法判断当前是否有更高优先级的任务等待被执行，从而让其让出机制，所以我们只能换一种思路，也就是通过「超时检查的机制」来让出控制权，即确定一个合理的运行时长，然后在合适的检查点检测是否超时（比如每执行一个小任务），如果超时就停止执行，将控制权交换给浏览器，而这个方式的实现主要依赖的是浏览器提供的 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestIdleCallback" target="_blank" rel="noopener">requestIdleCallback</a> 这个 <code>API</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">window</span>.requestIdleCallback(</span><br><span class="line">  callback: <span class="hljs-function">(<span class="hljs-params">dealine: IdleDeadline</span>) =&gt;</span> <span class="hljs-keyword">void</span>,</span><br><span class="line">  option?: &#123;<span class="hljs-attr">timeout</span>: number&#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p><code>IdleDeadline</code> 的接口如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">interface IdleDealine &#123;</span><br><span class="line">  didTimeout: boolean                   <span class="hljs-comment">// 表示任务执行是否超过约定时间</span></span><br><span class="line">  timeRemaining(): DOMHighResTimeStamp  <span class="hljs-comment">// 任务可供执行的剩余时间</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>单从名字上理解的话，<code>requestIdleCallback</code> 的意思是让浏览器在有空的时候就执行我们的回调，这个回调会传入一个期限，表示浏览器有多少时间供我们执行，为了不耽误事，我们最好在这个时间范围内执行完毕，现在我们知道了如何让出机制，那么浏览器什么时候有空呢？我们先来看一下浏览器在一帧（<code>Frame</code>，可以认为事件循环的一次循环）内可能会做什么事情，通常来说可能会做执行下列任务，而且它们的执行顺序基本是固定的</p>
+<ul>
+<li>处理用户输入事件</li>
+<li><code>JavaScript</code> 执行</li>
+<li><code>requestAnimation</code> 调用</li>
+<li>布局 <code>Layout</code></li>
+<li>绘制 <code>Paint</code></li>
+</ul>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/18-03.png" alt></p>
+<p>理想的一帧时间是 <code>16ms</code>，如果浏览器处理完上述的任务（布局和绘制之后）还有盈余时间，浏览器就会调用 <code>requestIdleCallback</code> 的回调，例如</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/18-04.png" alt></p>
+<p>但是在浏览器繁忙的时候，可能不会有盈余时间，这时候 <code>requestIdleCallback</code> 回调可能就不会被执行，所以在这种情况下可以通过 <code>requestIdleCallback</code> 的第二个参数指定一个超时时间</p>
+<blockquote>
+<p>另外不建议在 <code>requestIdleCallback</code> 中进行 <code>DOM</code> 操作，因为这可能导致样式重新计算或重新布局（比如操作 <code>DOM</code> 后马上调用 <code>getBoundingClientRect()</code>），这些时间很难预估的，很有可能导致回调执行超时，从而掉帧</p>
+</blockquote>
+<p>但是这个超时时间不是死的，低优先级的可以慢慢等待，高优先级的任务应该率先被执行，目前 <code>React</code> 预定义了五个优先级</p>
+<ul>
+<li><code>Immediate</code>（<code>-1</code>），这个优先级的任务会同步执行，或者说要马上执行且不能中断</li>
+<li><code>UserBlocking</code>（<code>250ms</code>），这些任务一般是用户交互的结果，需要即时得到反馈</li>
+<li><code>Normal</code>（<code>5s</code>），应对哪些不需要立即感受到的任务，例如网络请求</li>
+<li><code>Low</code>（<code>10s</code>），这些任务可以放后，但是最终应该得到执行，例如分析通知</li>
+<li><code>Idle</code>（没有超时时间），一些没有必要做的任务（比如隐藏的内容）</li>
+</ul>
+<p>但是目前 <code>requestIdleCallback</code> 只有 <code>Chrome</code> 支持，所以为了支持其它浏览器，<code>React</code> 干脆自己 <a href="https://github.com/facebook/react/tree/master/packages/scheduler/src/forks" target="_blank" rel="noopener">实现</a> 了一个，它是利用 <code>MessageChannel</code> 模拟将回调延迟到绘制操作之后执行，如下图</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/18-05.png" alt></p>
+<p>看到这里你可能会问，我们在上面提到过，使用 <code>Generator</code> 函数也是可以控制函数的执行流程，那么为什么官方不直接采用 <code>Generator</code> 的实现方式呢？关于这一点的原因，可以参考官方在 <a href="https://github.com/facebook/react/issues/7942" target="_blank" rel="noopener">Fiber Principles: Contributing To Fiber</a> 当中的回答，这里我们就不详细展开了</p>
+<p>其实我们上面介绍那么多，如果简单的理解的话，我们可以把 <code>Fiber</code> 认为是一种数据结构或者说执行单元（会在下面进行介绍），我们将它视作一个执行单元，每次执行完一个执行单元，<code>React</code> 就会检查现在还剩多少时间，如果没有时间就将控制权让出去，<code>React</code> 没有使用 <code>Generator</code> 这种让出机制，而是实现了自己的调度让出机制，这个机制就是基于 <code>Fiber</code> 这个执行单元的</p>
+<p>下面我们就来看看从 <code>React</code> 元素到 <code>Fiber</code> 节点是如何转化的，也就是 <code>React</code> 为 <code>Fiber</code> 架构做了哪些改造</p>
+<h2 id="Fiber-节点"><a href="#Fiber-节点" class="headerlink" title="Fiber 节点"></a>Fiber 节点</h2><p>我们都知道，<code>React</code> 元素并非真实的 <code>DOM</code> 节点或组件实例，而是一种描述方式，用于描述 <code>DOM</code> 元素的类型、拥有的属性以及包含的子元素，这也正是 <code>React</code> 的核心所在，<code>React</code> 将构建、渲染以及管理真实 <code>DOM</code> 树生命周期这些复杂的逻辑进行了抽象，从而避免了我们直接操作真实 <code>DOM</code> 而引起的巨大性能消耗</p>
+<p>在协调期间，从 <code>render</code> 方法返回的每个 <code>React</code> 元素的数据都会被合并到 <code>Fiber</code> 节点树中，每个 <code>React</code> 元素都有一个相应的 <code>Fiber</code> 节点，与 <code>React</code> 元素不同，不会在每次渲染时重新创建这些 <code>Fiber</code> ，这些是持有组件状态和 <code>DOM</code> 的可变数据结构</p>
+<p>因此，这意味着当我们调用 <code>ReactDOM.render()</code> 或 <code>setState()</code> 时，<code>React</code> 将执行协调，在 <code>setState</code> 的情况下，它执行遍历并通过将新树与已渲染的树进行区分来找出树中发生了什么变化，然后将这些更改应用于当前树，从而更新与 <code>setState()</code> 调用相关的 <code>state</code></p>
+<p>我们在之前提到过，旧版 <code>React</code> 是通过「递归」的方式进行渲染的，也就是说这是基于函数调用栈的协调算法，只不过这种依赖于调用栈的方式不能随意中断、也很难被恢复，不利于异步处理，这种调用栈，不是程序所能控制的，如果你要恢复递归现场，可能需要从头开始，恢复到之前的调用栈，所以针对于阵亡者情况就需要对 <code>React</code> 现有的数据结构进行调整，模拟函数调用栈，将之前需要递归进行处理的事情分解成增量的执行单元，将递归转换成迭代</p>
+<p><code>React</code> 目前的做法是使用链表，每个 <code>VirtualDOM</code> 节点内部现在使用 <code>Fiber</code> 表示，它的结构大概如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> type Fiber = &#123;     </span><br><span class="line">  type: any,              <span class="hljs-comment">// Fiber 类型信息</span></span><br><span class="line">  <span class="hljs-keyword">return</span>: Fiber | <span class="hljs-literal">null</span>,   <span class="hljs-comment">// 链表结构，指向父节点，或者 render 该节点的组件</span></span><br><span class="line">  child: Fiber | <span class="hljs-literal">null</span>,    <span class="hljs-comment">// 指向第一个子节点</span></span><br><span class="line">  sibling: Fiber | <span class="hljs-literal">null</span>,  <span class="hljs-comment">// 指向下一个兄弟节点</span></span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>用图片来展示这种关系会更直观一些</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/18-06.png" alt></p>
+<p>因为 <code>React</code> 为每个 <code>React</code> 元素创建一个 <code>Fiber</code> 节点，并且因为我们有一个这些元素组成的树，所以我们可以得到一个 <code>Fiber</code> 节点树，所有 <code>Fiber</code> 节点都通过链表连接，具体是使用 <code>Fiber</code> 节点上的 <code>child</code>、<code>sibling</code> 和 <code>return</code> 属性，至于它为什么以这种方式工作，可以参考 <a href="https://juejin.cn/post/6844903753347252237" target="_blank" rel="noopener">如何以及为什么 React Fiber 使用链表遍历组件树</a> 这篇文章，这里我们就不详细展开了</p>
+<p>下面我们来深入的了解一下 <code>Fiber</code> 当中的节点类型，它们有以下这些</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">interface Fiber &#123;            </span><br><span class="line">  <span class="hljs-comment">// 节点的类型信息</span></span><br><span class="line">  tag: WorkTag,              <span class="hljs-comment">// 标记 Fiber 类型，例如函数组件、类组件、宿主组件</span></span><br><span class="line">  type: any,                 <span class="hljs-comment">// 节点元素类型，是具体的类组件、函数组件、宿主组件（字符串）</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 结构信息</span></span><br><span class="line">  <span class="hljs-keyword">return</span>: Fiber | <span class="hljs-literal">null</span>,</span><br><span class="line">  child: Fiber | <span class="hljs-literal">null</span>,</span><br><span class="line">  sibling: Fiber | <span class="hljs-literal">null</span>,</span><br><span class="line">  key: <span class="hljs-literal">null</span> | string,        <span class="hljs-comment">// 子节点的唯一键，即我们渲染列表传入的 key 属性</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 节点实例的状态</span></span><br><span class="line">  <span class="hljs-comment">// 对于宿主组件，这里保存宿主组件的实例，例如 DOM 节点</span></span><br><span class="line">  <span class="hljs-comment">// 对于类组件来说，这里保存类组件的实例</span></span><br><span class="line">  <span class="hljs-comment">// 对于函数组件说，这里为空，因为函数组件没有实例</span></span><br><span class="line">  stateNode: any,</span><br><span class="line">  pendingProps: any,         <span class="hljs-comment">// 新的、待处理的props</span></span><br><span class="line">  memoizedProps: any,        <span class="hljs-comment">// 上一次渲染的props</span></span><br><span class="line">  memoizedState: any,        <span class="hljs-comment">// 上一次渲染的组件状态</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 副作用</span></span><br><span class="line">  effectTag: SideEffectTag,  <span class="hljs-comment">// 当前节点的副作用类型，例如节点更新、删除、移动</span></span><br><span class="line">  nextEffect: Fiber | <span class="hljs-literal">null</span>,  <span class="hljs-comment">// 和节点关系一样，React 同样使用链表来将所有有副作用的 Fiber 连接起来</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 指向旧树中的节点</span></span><br><span class="line">  alternate: Fiber | <span class="hljs-literal">null</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>Fiber</code> 包含的属性可以划分为五个部分</p>
+<ul>
+<li>结构信息，上面已经介绍过，<code>Fiber</code> 使用链表的形式来表示节点在树中的定位</li>
+<li>节点类型信息，<code>tag</code> 表示节点的分类、<code>type</code> 保存具体的类型值，如 <code>div</code>、<code>MyComp</code></li>
+<li>节点的状态，节点的组件实例 <code>props</code>、<code>state</code> 等，它们将影响组件的输出</li>
+<li>副作用，在协调过程中发现的副作用就保存在节点的 <code>effectTag</code> 中（类似打上标记），这里也使用了链表结构，将本次渲染的所有副作用节点都收集起来，通过 <code>nextEffect</code> 连接起来</li>
+<li><code>workInProgress</code>（<code>WIP</code>）树，<code>React</code> 在协调过程中会构建一颗新的树，可以认为是一颗表示当前工作进度的树，还有一颗表示已渲染界面的旧树，<code>React</code> 就是一边和旧树比对，一边构建 <code>WIP</code> 树的， <code>alternate</code> 指向旧树的同等节点（关于这点我们会在下面的渲染阶段当中来进行介绍）</li>
+</ul>
+<p>下面我们就来简单的看看各个属性的作用</p>
+<h4 id="type-和-key"><a href="#type-和-key" class="headerlink" title="type 和 key"></a>type 和 key</h4><p><code>Fiber</code> 的 <code>type</code> 和 <code>key</code> 对 <code>React</code> 元素起着同样的作用（实际上，<code>Fiber</code> 从一个元素创建时，这两个属性直接被复制过来），<code>type</code> 描述了它对应的组件，对于合成组件来说 <code>type</code> 是一个函数或者类组件本身，对于原生元素（<code>div</code>，<code>span</code> 等），它是一个字符串</p>
+<p>从概念上来说，<code>type</code> 是在执行时被栈帧追踪的函数（如在 <code>v = f(d)</code> 中），与 <code>type</code> 一起的 <code>key</code>，被用来在协调过程中决定 <code>Fiber</code> 是否可以再利用</p>
+<h4 id="child-和-sibling"><a href="#child-和-sibling" class="headerlink" title="child 和 sibling"></a>child 和 sibling</h4><p>表示当我们在组件上调用 <code>render()</code> 时返回的元素，例如</p>
+<figure class="highlight jsx hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> Name = <span class="hljs-function">(<span class="hljs-params">props</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> (&lt;div className="name"&gt;</span><br><span class="line">    &#123;props.name&#125;</span><br><span class="line">  &lt;/div&gt;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>&lt;Name&gt;</code> 的子元素是 <code>&lt;div&gt;</code>，因为它返回一个 <code>&lt;div&gt;</code> 元素，而 <code>sibling</code> 字段则对应 <code>render</code> 返回多个孩子节点的情况，如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> Name = <span class="hljs-function">(<span class="hljs-params">props</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> ([&lt;Child1 /&gt;, &lt;Child2 /&gt;])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在上述情况下，<code>&lt;Child1&gt;</code> 和 <code>&lt;Child2&gt;</code> 是父元素 <code>&lt;Name&gt;</code> 的子元素，这两个子元素组成一个单链表，<code>head</code> 指针指向第一个孩子节点，所以在上例中 <code>Parent</code> 的孩子节点是 <code>Child1</code>，<code>Child1</code> 的兄弟节点是 <code>Child2</code>，如果放到函数当中类比的话，可以认为一个子 <code>Fiber</code> 是一个尾调用函数</p>
+<h4 id="return"><a href="#return" class="headerlink" title="return"></a>return</h4><p><code>return</code> 是当前 <code>Fiber</code> 处理完成后需要返回的 <code>Fiber</code>，从概念上来说它对应栈帧返回的地址，从逻辑上讲，它是返回到父 <code>Fiber</code> 节点，因此可以理解为父 <code>Fiber</code>，如果一个 <code>Fiber</code> 有多个子 <code>Fiber</code>，每个子 <code>Fiber</code> 返回的 <code>Fiber</code> 都是它的父 <code>Fiber</code>，在上面示例中的 <code>Child1</code> 和 <code>Child2</code> 的 <code>return</code> 就是 <code>Parent</code></p>
+<h4 id="pendingProps-和-memoizedProps"><a href="#pendingProps-和-memoizedProps" class="headerlink" title="pendingProps 和 memoizedProps"></a>pendingProps 和 memoizedProps</h4><p>记忆化指存储函数执行结果的值，以便以后可以使用它，从而避免重新计算，<code>pendingProps</code> 表示传递给组件的 <code>props</code>，而 <code>memoizedProps</code> 在执行栈的末尾初始化，存储该节点的 <code>props</code></p>
+<p>当传入的 <code>pendingProps</code> 等于 <code>memoizedProps</code> 时，它表示 <code>Fiber</code> 之前的输出可以复用，从而避免不必要的工作</p>
+<h4 id="pendingWorkPriority"><a href="#pendingWorkPriority" class="headerlink" title="pendingWorkPriority"></a>pendingWorkPriority</h4><p>表示 <code>Fiber</code> 工作优先级的数字，除了为零的 <code>NoWork</code> 之外，数字越大优先级越低，例如可以使用以下函数检查某个 <code>Fiber</code> 的优先级是否至少与给定的级别一样高，调度程序使用优先级字段搜索要执行的下一个工作单元</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">matchesPriority</span>(<span class="hljs-params">fiber, priority</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> fiber.pendingWorkPriority !== <span class="hljs-number">0</span> &amp;&amp;</span><br><span class="line">    fiber.pendingWorkPriority &lt;= priority</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="渲染阶段与提交阶段"><a href="#渲染阶段与提交阶段" class="headerlink" title="渲染阶段与提交阶段"></a>渲染阶段与提交阶段</h2><p><code>React</code> 在两个主要阶段执行工作，它们是 <code>render</code> 和 <code>commit</code></p>
+<p>在第一个 <code>render</code> 阶段，<code>React</code> 通过 <code>setUpdate</code> 或 <code>React.render</code> 计划性的更新组件，并确定需要在 <code>UI</code> 中更新的内容，如果是初始渲染，<code>React</code> 会为 <code>render</code> 方法返回的每个元素创建一个新的 <code>Fiber</code> 节点，在后续更新中，现有 <code>React</code> 元素的 <code>Fiber</code> 节点将被重复使用和更新，这一阶段是为了得到标记了副作用的 <code>Fiber</code> 节点树，副作用描述了在下一个 <code>commit</code> 阶段需要完成的工作，在当前阶段，<code>React</code> 持有标记了副作用的 <code>Fiber</code> 树并将其应用于实例，它遍历副作用列表、执行 <code>DOM</code> 更新和用户可见的其他更改</p>
+<p>这里需要我们注意的是，「第一个 <code>render</code> 阶段的工作是可以异步执行的」，即</p>
+<blockquote>
+<p><code>React</code> 可以根据可用时间片来处理一个或多个 <code>Fiber</code> 节点，然后停下来暂存已完成的工作，并转而去处理某些事件，接着它再从它停止的地方继续执行，但有时候，它可能需要丢弃完成的工作并再次从顶部开始，由于在此阶段执行的工作不会导致任何用户可见的更改（如 <code>DOM</code> 更新），因此暂停行为才有了意义，与之相反的是，后续 <code>commit</code> 阶段始终是同步的，这是因为在此阶段执行的工作会导致用户可见的变化，例如 <code>DOM</code> 更新，这就是为什么 <code>React</code> 需要在一次单一过程中完成这些更新</p>
+</blockquote>
+<p>其实简单来说，渲染阶段可以认为是协调阶段，这个阶段可以被中断，处于这个阶段的时候 <code>React</code> 会找出所有节点变更，目的是得到标记了副作用的 <code>Fiber</code> 节点树，在这个过程当中以下生命周期钩子会在渲染阶段被调用</p>
+<ul>
+<li><code>constructor</code></li>
+<li><code>UNSAFE_componentWillMount</code>（弃用）</li>
+<li><code>UNSAFE_componentWillReceiveProps</code>（弃用）</li>
+<li><code>getDerivedStateFromProps</code></li>
+<li><code>shouldComponentUpdate</code></li>
+<li><code>UNSAFE_componentWillUpdate</code>（弃用）</li>
+<li><code>render</code></li>
+</ul>
+<p>因为 <code>render</code> 阶段不会产生像 <code>DOM</code> 更新这样的副作用，所以 <code>React</code> 可以异步处理组件的异步更新（甚至可能在多个线程中执行），也就是说在渲染阶段如果时间片用完，<code>React</code> 就会选择让出控制权，因为渲染阶段执行的工作不会导致任何用户可见的变更，所以在这个阶段让出控制权不会有什么问题，但是因为渲染阶段可能被中断、恢复，甚至重做，<code>React</code> 渲染阶段的生命周期钩子可能会被调用多次，例如 <code>componentWillMount</code> 可能会被调用两次，所以建议渲染阶段的生命周期钩子不要包含副作用，索性 <code>React</code> 就废弃了这部分可能包含副作用的生命周期方法，例如 <code>componentWillMount</code>、<code>componentWillUpdate</code> 等（这也是新版 <code>React</code> 的生命周期有所调整的原因）</p>
+<p>下面我们再来看看提交阶段涉及到的一些生命周期方法，它会将上一个阶段计算出来的需要处理的副作用（<code>Effect</code>）一次性执行了，这个阶段必须同步执行，不能被打断</p>
+<ul>
+<li><code>getSnapshotBeforeUpdate()</code>（严格来说这个是在进入 <code>commit</code> 阶段前调用）</li>
+<li><code>componentDidMount</code></li>
+<li><code>componentDidUpdate</code></li>
+<li><code>componentWillUnmount</code></li>
+</ul>
+<p>现在我们应该知道为什么说在提交阶段必须同步执行，不能中断的吧？因为我们要正确地处理各种副作用，包括 <code>DOM</code> 变更、还有在 <code>componentDidMount</code> 中发起的异步请求、<code>useEffect</code> 中定义的副作用等，因为有副作用，所以必须保证按照次序只调用一次，况且会有用户可以察觉到的变更，不容差池</p>
+<blockquote>
+<p>至于为什么要拆分两个阶段，可以参考 <a href="https://github.com/facebook/react/issues/13186#issuecomment-403959161" target="_blank" rel="noopener">What is meant within the README of create-subscription by async limitations? Can it be clarified?</a> 这篇文章</p>
+</blockquote>
+<p>下面我们就来详细看看其中用来遍历树和执行一些工作的通用算法</p>
+<h2 id="渲染阶段"><a href="#渲染阶段" class="headerlink" title="渲染阶段"></a>渲染阶段</h2><p>协调算法始终使用 <code>renderRoot</code> 函数从最顶层的 <code>HostRoot</code> 节点开始，不过 <code>React</code> 会略过已经处理过的 <code>Fiber</code> 节点，直到找到未完成工作的节点，例如如果在组件树中的深层组件中调用 <code>setState</code> 方法，则 <code>React</code> 将从顶部开始，但会快速跳过各个父项，直到它到达调用了 <code>setState</code> 方法的组件</p>
+<p>而且在第一次渲染之后，<code>React</code> 会得到一个 <code>Fiber</code> 树，这棵树是在 <code>Virtual DOM</code> 树的基础上增加额外的信息来生成的，它本质来说是一个链表，它反映了用于渲染 <code>UI</code> 的应用程序的状态，这棵树通常被称为 <code>current</code> 树（当前树）</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/18-07.png" alt></p>
+<p>当 <code>React</code> 开始处理更新时，它会构建一个所谓的 <code>workInProgress</code> 树（工作过程树），它反映了要刷新到屏幕的未来状态，这颗新树每生成一个新的节点，都会将控制权交回给主线程，去检查有没有优先级更高的任务需要执行，如果没有，则继续构建树的过程</p>
+<blockquote>
+<p><code>workInProgress</code> 树构建这种技术类似于图形化领域的双缓存（<code>Double Buffering</code>）技术，图形绘制引擎一般会使用双缓冲技术，先将图片绘制到一个缓冲区，再一次性传递给屏幕进行显示，这样可以防止屏幕抖动，优化渲染性能，放到 <code>React</code> 中，<code>workInProgress</code> 树就是一个缓冲，它在协调完毕后一次性提交给浏览器进行渲染，它可以减少内存分配和垃圾回收，<code>workInProgress</code> 的节点不完全是新的，比如某颗子树不需要变动，<code>React</code> 会克隆复用旧树中的子树，另外一个重要的场景就是异常的处理，比如当一个节点抛出异常，仍然可以继续沿用旧树的节点，避免整棵树挂掉</p>
+</blockquote>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/18-08.png" alt></p>
+<p>其中所有的 <code>Fiber</code> 节点都会在工作循环中进行处理，其中 <code>workLoop()</code> 是 <code>React</code> 开始构建树的地方</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">workLoop</span>(<span class="hljs-params">isYieldy</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (!isYieldy) &#123;</span><br><span class="line">    <span class="hljs-keyword">while</span> (nextUnitOfWork !== <span class="hljs-literal">null</span>) &#123;</span><br><span class="line">      nextUnitOfWork = performUnitOfWork(nextUnitOfWork)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在上面的代码中，<code>nextUnitOfWork</code> 持有 <code>workInProgress</code> 树中的 <code>Fiber</code> 节点的引用，这个树有一些工作要做，当 <code>React</code> 遍历 <code>Fiber</code> 树时，它会使用这个变量来知晓是否有任何其他 <code>Fiber</code> 节点具有未完成的工作，如果过程中有优先级更高的任务需要进行，则会丢弃正在生成的树，在空闲的时候再重新执行一遍</p>
+<p>当 <code>React</code> 遍历 <code>current</code> 树时，对于每个现有 <code>Fiber</code> 节点，<code>React</code> 会创建一个构成 <code>workInProgress</code> 树的备用节点，这一节点会使用 <code>render</code> 方法返回的 <code>React</code> 元素中的数据来创建，处理完更新并完成所有相关工作后，<code>React</code> 将准备好一个备用树以刷新到屏幕，一旦这个 <code>workInProgress</code> 树在屏幕上呈现，它就会变成 <code>current</code> 树，在处理完当前 <code>Fiber</code> 后，变量将持有树中下一个 <code>Fiber</code> 节点的引用或 <code>null</code>，在这种情况下，<code>React</code> 退出工作循环并准备好提交更改</p>
+<p>其中遍历树、初始化或完成工作主要用到下面四个函数</p>
+<ul>
+<li><code>performUnitOfWork()</code></li>
+<li><code>beginWork()</code></li>
+<li><code>completeUnitOfWork()</code></li>
+<li><code>completeWork()</code></li>
+</ul>
+<p>我们首先来看看 <code>performUnitOfWork</code> 和 <code>beginWork</code> 这两个函数</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">performUnitOfWork</span>(<span class="hljs-params">workInProgress</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> next = beginWork(workInProgress)</span><br><span class="line">  <span class="hljs-keyword">if</span> (next === <span class="hljs-literal">null</span>) &#123;</span><br><span class="line">    next = completeUnitOfWork(workInProgress)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> next</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">beginWork</span>(<span class="hljs-params">fiber: Fiber</span>): <span class="hljs-title">Fiber</span> | <span class="hljs-title">undefined</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (fiber.tag === WorkTag.HostComponent) &#123;</span><br><span class="line">    <span class="hljs-comment">// 宿主节点 diff</span></span><br><span class="line">    diffHostComponent(fiber)</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (fiber.tag === WorkTag.ClassComponent) &#123;</span><br><span class="line">    <span class="hljs-comment">// 类组件节点 diff</span></span><br><span class="line">    diffClassComponent(fiber)</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (fiber.tag === WorkTag.FunctionComponent) &#123;</span><br><span class="line">    <span class="hljs-comment">// 函数组件节点 diff</span></span><br><span class="line">    diffFunctionalComponent(fiber)</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// ... 其他类型节点</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> fiber.child</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>函数 <code>performUnitOfWork</code> 从 <code>workInProgress</code> 树接收一个 <code>Fiber</code> 节点，并通过调用 <code>beginWork</code> 函数启动工作，这个函数将启动所有 <code>Fiber</code> 执行工作所需要的活动，函数 <code>beginWork</code> 的作用主要是从来节点比对，它始终返回指向要在循环中处理的下一个子节点的指针或 <code>null</code></p>
+<p>如果有下一个子节点，它将被赋值给 <code>workLoop</code> 函数中的变量 <code>nextUnitOfWork</code>，但是如果没有子节点，<code>React</code> 知道它到达了分支的末尾，因此它可以完成当前节点，「一旦节点完成，它将需要为同层的其他节点执行工作，并在完成后回溯到父节点」，类似于下面这样</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">performUnitOfWork</span>(<span class="hljs-params">fiber: Fiber, topWork: Fiber</span>) </span>&#123;</span><br><span class="line">  </span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 如果存在子节点，那么下一个待处理的就是子节点</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (fiber.child) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> fiber.child</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 没有子节点了，上溯查找兄弟节点</span></span><br><span class="line">  <span class="hljs-keyword">let</span> temp = fiber</span><br><span class="line">  <span class="hljs-keyword">while</span> (temp) &#123;</span><br><span class="line">    <span class="hljs-comment">// 提交</span></span><br><span class="line">    completeWork(temp)</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 到顶层节点了, 退出</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (temp === topWork) &#123;</span><br><span class="line">      <span class="hljs-keyword">break</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 找到，下一个要处理的就是兄弟节点</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (temp.sibling) &#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> temp.sibling</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 没有, 继续上溯</span></span><br><span class="line">    temp = temp.return</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面来看看 <code>completeUnitOfWork</code> 函数执行的代码</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">completeUnitOfWork</span>(<span class="hljs-params">workInProgress</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> returnFiber = workInProgress.return</span><br><span class="line">    <span class="hljs-keyword">let</span> siblingFiber = workInProgress.sibling</span><br><span class="line">    nextUnitOfWork = completeWork(workInProgress)</span><br><span class="line">    <span class="hljs-keyword">if</span> (siblingFiber !== <span class="hljs-literal">null</span>) &#123;</span><br><span class="line">      <span class="hljs-comment">// If there is a sibling, return it to perform work for this sibling</span></span><br><span class="line">      <span class="hljs-keyword">return</span> siblingFiber</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (returnFiber !== <span class="hljs-literal">null</span>) &#123;</span><br><span class="line">      <span class="hljs-comment">// If there's no more work in this returnFiber, continue the loop to complete the parent.</span></span><br><span class="line">      workInProgress = returnFiber</span><br><span class="line">      <span class="hljs-keyword">continue</span></span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-comment">// We've reached the root.</span></span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 将所有打了 Effect 标记的节点串联起来</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">completeWork</span>(<span class="hljs-params">fiber</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> parent = fiber.return</span><br><span class="line">  <span class="hljs-comment">// 到达顶端</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (parent == <span class="hljs-literal">null</span> || fiber === topWork) &#123;</span><br><span class="line">    pendingCommit = fiber</span><br><span class="line">    <span class="hljs-keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">if</span> (fiber.effectTag != <span class="hljs-literal">null</span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (parent.nextEffect) &#123;</span><br><span class="line">      parent.nextEffect.nextEffect = fiber</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      parent.nextEffect = fiber</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (fiber.nextEffect) &#123;</span><br><span class="line">    parent.nextEffect = fiber.nextEffect</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到函数的核心就是一个大的 <code>while</code> 的循环，当 <code>workInProgress</code> 节点没有子节点时，<code>React</code> 会进入此函数，完成当前 <code>Fiber</code> 节点的工作后，它就会检查是否有同层节点，如果找的到，<code>React</code> 退出该函数并返回指向该同层节点的指针，它将被赋值给 <code>nextUnitOfWork</code> 变量，<code>React</code> 将从这个节点开始执行分支的工作</p>
+<p>这里我们需要注意的是，在当前节点上，<code>React</code> 只完成了前面的同层节点的工作，它尚未完成父节点的工作，只有在完成以子节点开始的所有分支后，才能完成父节点和回溯的工作</p>
+<p>从实现中也可以看出 <code>performUnitOfWork</code> 和 <code>completeUnitOfWork</code> 主要用于迭代目的，而主要活动则在 <code>beginWork</code> 和 <code>completeWork</code> 函数中进行，也如我们所见，这四个函数一起执行工作单元的工作，并且还控制当前正在完成的工作，也就是下图当中所示这般</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/18-09.png" alt></p>
+<h2 id="提交阶段"><a href="#提交阶段" class="headerlink" title="提交阶段"></a>提交阶段</h2><p>渲染阶段完成后，<code>React</code> 进入提交阶段，这一阶段从函数 <code>completeRoot</code> 开始，在这个阶段 <code>React</code> 更新 <code>DOM</code> 并调用变更生命周期之前及之后方法的地方，当 <code>React</code> 进入这个阶段时，它有两棵树和副作用列表，第一个树表示当前在屏幕上渲染的状态，然后在 <code>render</code> 阶段会构建一个备用树，它在源代码中称为 <code>finishedWork</code> 或 <code>workInProgress</code>，表示需要映射到屏幕上的状态，此备用树会用类似的方法通过 <code>child</code> 和 <code>sibling</code> 指针链接到 <code>current</code> 树</p>
+<p>然后在构造 <code>Fiber</code> 树的过程中，<code>Fiber Reconciler</code> 会将需要更新的节点信息都保存在 <code>Effect List</code> 当中，也就是所谓的副作用列表，它是 <code>finishedWork</code> 树的节点子集，通过 <code>nextEffect</code> 指针进行链接，需要注意的是，副作用列表是运行 <code>render</code> 阶段的「结果」，渲染的重点就是确定需要插入、更新或删除的节点，以及哪些组件需要调用其生命周期方法，这就是副作用列表告诉我们的内容，它页正是在 <code>commit</code> 阶段迭代的节点集合</p>
+<p>在 <code>commit</code> 阶段运行的主要函数是 <code>commitRoot</code>，它执行如下下操作</p>
+<ul>
+<li>在标记为 <code>Snapshot</code> 副作用的节点上调用 <code>getSnapshotBeforeUpdate</code> 生命周期</li>
+<li>在标记为 <code>Deletion</code> 副作用的节点上调用 <code>componentWillUnmount</code> 生命周期</li>
+<li>执行所有 <code>DOM</code> 插入、更新、删除操作</li>
+<li>将 <code>finishedWork</code> 树设置为 <code>current</code></li>
+<li>在标记为 <code>Placement</code> 副作用的节点上调用 <code>componentDidMount</code> 生命周期</li>
+<li>在标记为 <code>Update</code> 副作用的节点上调用 <code>componentDidUpdate</code> 生命周期</li>
+</ul>
+<p>在调用变更前方法 <code>getSnapshotBeforeUpdate</code> 之后，<code>React</code> 会在树中提交所有副作用，这会通过两波操作来完成</p>
+<ul>
+<li>第一波执行所有 <code>DOM</code>（宿主）插入、更新、删除和 <code>ref</code> 卸载，然后 <code>React</code> 将 <code>finishedWork</code> 树赋值给 <code>FiberRoot</code>，将 <code>workInProgress</code> 树标记为 <code>current</code> 树，这是在提交阶段的第一波之后、第二波之前完成的，因此在 <code>componentWillUnmount</code> 中前一个树仍然是 <code>current</code>，在 <code>componentDidMount/Update</code> 期间已完成工作是 <code>current</code></li>
+<li>第二波，<code>React</code> 调用所有其他生命周期方法和引用回调，这些方法单独传递执行，从而保证整个树中的所有放置、更新和删除能够被触发执行</li>
+</ul>
+<p>以下是运行上述步骤的函数的要点</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">commitRoot</span>(<span class="hljs-params">root, finishedWork</span>) </span>&#123;</span><br><span class="line">  commitBeforeMutationLifecycles()</span><br><span class="line">  commitAllHostEffects()</span><br><span class="line">  root.current = finishedWork</span><br><span class="line">  commitAllLifeCycles()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这些子函数中都实现了一个循环，该循环遍历副作用列表并检查副作用的类型，当它找到与函数目的相关的副作用时，就会执行，这里借用 <code>Lin Clark</code> 演讲当中的一张图（见 <a href="https://juejin.cn/post/6844903582622285831" target="_blank" rel="noopener">React Fiber</a>），我们可以清晰的发现这种变化</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/18-10.png" alt></p>
+<p>上图是协调完成后的状态，左边是旧树，右边是 <code>WIP</code> 树，对于需要变更的节点，都打上了标签，在提交阶段 <code>React</code> 就会将这些打上标签的节点应用变更</p>
+<h4 id="更新前的生命周期方法"><a href="#更新前的生命周期方法" class="headerlink" title="更新前的生命周期方法"></a>更新前的生命周期方法</h4><p>例如，这是在副作用树上遍历并检查节点是否具有 <code>Snapshot</code> 副作用的代码</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">commitBeforeMutationLifecycles</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">while</span> (nextEffect !== <span class="hljs-literal">null</span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> effectTag = nextEffect.effectTag</span><br><span class="line">    <span class="hljs-keyword">if</span> (effectTag &amp; Snapshot) &#123;</span><br><span class="line">      <span class="hljs-keyword">const</span> current = nextEffect.alternate</span><br><span class="line">      commitBeforeMutationLifeCycles(current, nextEffect)</span><br><span class="line">    &#125;</span><br><span class="line">    nextEffect = nextEffect.nextEffect</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对于一个类组件，这一副作用意味着会调用 <code>getSnapshotBeforeUpdate</code> 生命周期方法</p>
+<h4 id="DOM-更新"><a href="#DOM-更新" class="headerlink" title="DOM 更新"></a>DOM 更新</h4><p><code>commitAllHostEffects</code> 是 <code>React</code> 执行 <code>DOM</code> 更新的函数，该函数基本上定义了节点需要完成的操作类型，并执行这些操作</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">commitAllHostEffects</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">switch</span> (primaryEffectTag) &#123;</span><br><span class="line">    <span class="hljs-keyword">case</span> Placement: &#123;</span><br><span class="line">      commitPlacement(nextEffect)</span><br><span class="line">      ...</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">case</span> PlacementAndUpdate: &#123;</span><br><span class="line">      commitPlacement(nextEffect)</span><br><span class="line">      commitWork(current, nextEffect)</span><br><span class="line">      ...</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">case</span> Update: &#123;</span><br><span class="line">      commitWork(current, nextEffect)</span><br><span class="line">      ...</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">case</span> Deletion: &#123;</span><br><span class="line">      commitDeletion(nextEffect)</span><br><span class="line">      ...</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="更新后的生命周期方法"><a href="#更新后的生命周期方法" class="headerlink" title="更新后的生命周期方法"></a>更新后的生命周期方法</h4><p><code>commitAllLifecycles</code> 是 <code>React</code> 调用所有剩余生命周期方法的函数，在 <code>React</code> 的当前实现中，唯一会调用的变更方法就是 <code>componentDidUpdate</code></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="https://zhuanlan.zhihu.com/p/64354455" target="_blank" rel="noopener">剖析 useState 的执行过程</a></li>
+<li><a href="https://github.com/reactjs/react-basic#transformation" target="_blank" rel="noopener">Basic Theoretical Concepts</a></li>
+<li><a href="https://www.keisei.top/react-fiber-architecture/" target="_blank" rel="noopener">React Fiber 架构</a></li>
+<li><a href="https://segmentfault.com/a/1190000018250127" target="_blank" rel="noopener">React Fiber 原理介绍</a></li>
+<li><a href="https://blog.logrocket.com/deep-dive-into-react-fiber-internals/" target="_blank" rel="noopener">深入了解 React Fiber 内部实现</a></li>
+<li><a href="https://juejin.cn/post/6844904197008130062" target="_blank" rel="noopener">手写 React 的 Fiber 架构</a></li>
+<li><a href="http://www.cxymsg.com/guide/fiber.html#背景介绍" target="_blank" rel="noopener">React Fiber 架构解析</a></li>
+<li><a href="https://juejin.cn/post/6844903975112671239" target="_blank" rel="noopener">这可能是最通俗的 React Fiber 打开方式</a></li>
+</ul>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/React/">React</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/11/28/Essay/31/">
+                <span class="level-item">矩形包围盒碰撞检测</span>
+                <i class="level-item fa fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="comment-container"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: '584b59de0d23cd48fbdd',
+        clientSecret: '5554c9aab0a640015867806f438bd2e10f297e5a',
+        id: 'a85007cf1d8f115763857bcc7160b637',
+        repo: 'gitalk',
+        owner: 'heptaluan',
+        admin: "heptaluan"
+    })
+    gitalk.render('comment-container')
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    
+                        <figure class="avatar image is-128x128 has-mb-6">
+                            <img class="is-rounded" src="https://gitee.com/heptaluan/backups/raw/master/cdn/avatar.png" alt="heptaluan">
+                        </figure>
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        heptaluan
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Torches@Aimer
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>WuHan China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <!-- <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        168
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        10
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        10
+                    </p>
+                </div>
+            </div>
+        </nav> -->
+        <!-- <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/ppoffice" target="_blank">
+                关注我</a>
+        </div> -->
+        
+        
+    </div>
+</div>
+    
+        
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#存在的问题">
+        <span class="has-mr-6">1</span>
+        <span>存在的问题</span>
+        </a></li><li>
+        <a class="is-flex" href="#什么是-Fiber">
+        <span class="has-mr-6">2</span>
+        <span>什么是 Fiber</span>
+        </a></li><li>
+        <a class="is-flex" href="#Fiber-节点">
+        <span class="has-mr-6">3</span>
+        <span>Fiber 节点</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#type-和-key">
+        <span class="has-mr-6">3.1</span>
+        <span>type 和 key</span>
+        </a></li><li>
+        <a class="is-flex" href="#child-和-sibling">
+        <span class="has-mr-6">3.2</span>
+        <span>child 和 sibling</span>
+        </a></li><li>
+        <a class="is-flex" href="#return">
+        <span class="has-mr-6">3.3</span>
+        <span>return</span>
+        </a></li><li>
+        <a class="is-flex" href="#pendingProps-和-memoizedProps">
+        <span class="has-mr-6">3.4</span>
+        <span>pendingProps 和 memoizedProps</span>
+        </a></li><li>
+        <a class="is-flex" href="#pendingWorkPriority">
+        <span class="has-mr-6">3.5</span>
+        <span>pendingWorkPriority</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#渲染阶段与提交阶段">
+        <span class="has-mr-6">4</span>
+        <span>渲染阶段与提交阶段</span>
+        </a></li><li>
+        <a class="is-flex" href="#渲染阶段">
+        <span class="has-mr-6">5</span>
+        <span>渲染阶段</span>
+        </a></li><li>
+        <a class="is-flex" href="#提交阶段">
+        <span class="has-mr-6">6</span>
+        <span>提交阶段</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#更新前的生命周期方法">
+        <span class="has-mr-6">6.1</span>
+        <span>更新前的生命周期方法</span>
+        </a></li><li>
+        <a class="is-flex" href="#DOM-更新">
+        <span class="has-mr-6">6.2</span>
+        <span>DOM 更新</span>
+        </a></li><li>
+        <a class="is-flex" href="#更新后的生命周期方法">
+        <span class="has-mr-6">6.3</span>
+        <span>更新后的生命周期方法</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#参考">
+        <span class="has-mr-6">7</span>
+        <span>参考</span>
+        </a></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+        
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Angular/">
+            <span class="level-start">
+                <span class="level-item">Angular</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">16</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/CSS/">
+            <span class="level-start">
+                <span class="level-item">CSS</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">16</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Essay/">
+            <span class="level-start">
+                <span class="level-item">Essay</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">32</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/HTML/">
+            <span class="level-start">
+                <span class="level-item">HTML</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/HTTP/">
+            <span class="level-start">
+                <span class="level-item">HTTP</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">12</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/JavaScript/">
+            <span class="level-start">
+                <span class="level-item">JavaScript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">50</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Node-js/">
+            <span class="level-start">
+                <span class="level-item">Node.js</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">16</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/React/">
+            <span class="level-start">
+                <span class="level-item">React</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">17</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Vue/">
+            <span class="level-start">
+                <span class="level-item">Vue</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/jQuery/">
+            <span class="level-start">
+                <span class="level-item">jQuery</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Angular/" style="font-size: 15px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/HTTP/" style="font-size: 13.33px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 15px;">Node.js</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Vue/" style="font-size: 11.67px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.67px;">jQuery</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow  ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/12/06/React/18/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/18.webp" alt="深入 React Fiber">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-05T16:00:00.000Z">2020-12-06</time></div>
+                    <a href="/2020/12/06/React/18/" class="has-link-black-ter is-size-6">深入 React Fiber</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/11/28/Essay/31/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.webp" alt="矩形包围盒碰撞检测">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
+                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/11/15/JavaScript/55/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.webp" alt="JavaScript 中 Promise 的实现">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-14T16:00:00.000Z">2020-11-15</time></div>
+                    <a href="/2020/11/15/JavaScript/55/" class="has-link-black-ter is-size-6">JavaScript 中 Promise 的实现</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/11/07/React/17/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/17.webp" alt="深入 useEffect">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-06T16:00:00.000Z">2020-11-07</time></div>
+                    <a href="/2020/11/07/React/17/" class="has-link-black-ter is-size-6">深入 useEffect</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/10/31/React/16/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.webp" alt="React 中的 Hook">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-30T16:00:00.000Z">2020-10-31</time></div>
+                    <a href="/2020/10/31/React/16/" class="has-link-black-ter is-size-6">React 中的 Hook</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/02/">
+                <span class="level-start">
+                    <span class="level-item">二月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Angular/">
+                        <span class="tag">Angular</span>
+                        <span class="tag is-grey">16</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/CSS/">
+                        <span class="tag">CSS</span>
+                        <span class="tag is-grey">16</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Essay/">
+                        <span class="tag">Essay</span>
+                        <span class="tag is-grey">32</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/HTML/">
+                        <span class="tag">HTML</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/HTTP/">
+                        <span class="tag">HTTP</span>
+                        <span class="tag is-grey">12</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/JavaScript/">
+                        <span class="tag">JavaScript</span>
+                        <span class="tag is-grey">50</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Node-js/">
+                        <span class="tag">Node.js</span>
+                        <span class="tag is-grey">16</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/React/">
+                        <span class="tag">React</span>
+                        <span class="tag is-grey">17</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Vue/">
+                        <span class="tag">Vue</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/jQuery/">
+                        <span class="tag">jQuery</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <!-- <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="深入 React Fiber" height="28">
+                
+                </a> -->
+                <p class="is-size-7">
+                &copy; 2016 - 2020
+                Made with ✿  heptaluan&nbsp;
+                
+                </p>
+            </div>
+            <!-- <div class="level-end">
+            
+            </div> -->
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fa fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

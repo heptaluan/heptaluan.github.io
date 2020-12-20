@@ -16,7 +16,7 @@
 <meta property="og:description" content="在深入了解作用域之前，我们先来看看什么是变量提升">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/03.webp">
-<meta property="og:updated_time" content="2020-12-09T03:22:48.794Z">
+<meta property="og:updated_time" content="2020-12-11T14:45:54.564Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的作用域">
 <meta name="twitter:description" content="在深入了解作用域之前，我们先来看看什么是变量提升">
@@ -341,7 +341,7 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fun3</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'fun3'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fun2</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  fun3()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fun1</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  fun2()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fun1()</span><br></pre></td></tr></table></figure>
 
 <p>当执行一个函数的时候，就会创建一个执行上下文，并且压入执行上下文栈，当函数执行完毕的时候，就会将函数的执行上下文从栈中弹出，所以我们可以尝试使用伪代码来描述上述过程</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">ECStack.push(<span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">fun1</span>&gt;</span> functionContext)</span></span><br><span class="line"><span class="hljs-xml"></span></span><br><span class="line"><span class="hljs-xml">// fun1 中调用了 fun2，创建 fun2 的执行上下文</span></span><br><span class="line">ECStack.push(&lt;fun2&gt; functionContext)</span><br><span class="line"></span><br><span class="line">// fun2 还调用了 fun3</span><br><span class="line">ECStack.push(&lt;fun3&gt; functionContext)</span><br><span class="line"></span><br><span class="line">// fun3 执行完毕</span><br><span class="line">ECStack.pop()</span><br><span class="line"></span><br><span class="line">// fun2 执行完毕</span><br><span class="line">ECStack.pop()</span><br><span class="line"></span><br><span class="line">// fun1 执行完毕</span><br><span class="line">ECStack.pop()</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">ECStack.push(&lt;fun1&gt; functionContext)</span><br><span class="line"></span><br><span class="line">// fun1 中调用了 fun2，创建 fun2 的执行上下文</span><br><span class="line">ECStack.push(&lt;fun2&gt; functionContext)</span><br><span class="line"></span><br><span class="line">// fun2 还调用了 fun3</span><br><span class="line">ECStack.push(&lt;fun3&gt; functionContext)</span><br><span class="line"></span><br><span class="line">// fun3 执行完毕</span><br><span class="line">ECStack.pop()</span><br><span class="line"></span><br><span class="line">// fun2 执行完毕</span><br><span class="line">ECStack.pop()</span><br><span class="line"></span><br><span class="line">// fun1 执行完毕</span><br><span class="line">ECStack.pop()</span><br></pre></td></tr></table></figure>
 
 <p>但是需要注意的是，<code>JavaScript</code> 虽然执行完毕了，但是 <code>ECStack</code> 底层永远有个 <code>globalContext</code></p>
 <h2 id="作用域链"><a href="#作用域链" class="headerlink" title="作用域链"></a>作用域链</h2><p>在上面我们介绍 <code>AO</code> 部分概念的时候，我们曾经提到过，在查找变量的时候，会先从当前上下文的变量对象中查找，如果没有找到，就会从父级（词法层面上的父级）执行上下文的变量对象中查找，一直找到全局上下文的变量对象，也就是全局对象，这样由多个执行上下文的变量对象构成的链表就叫做「作用域链」</p>
@@ -499,7 +499,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        167
+                        168
                     </p>
                 </div>
             </div>
@@ -656,7 +656,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">React</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">17</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Vue/">
@@ -686,7 +686,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 16px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18px;">Essay</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/HTTP/" style="font-size: 14px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16px;">Node.js</a> <a href="/tags/React/" style="font-size: 16px;">React</a> <a href="/tags/Vue/" style="font-size: 12px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 12px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 15px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/HTTP/" style="font-size: 13.33px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 15px;">Node.js</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Vue/" style="font-size: 11.67px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.67px;">jQuery</a>
     </div>
 </div>
 
@@ -700,6 +700,25 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/12/06/React/18/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/18.webp" alt="深入 React Fiber">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-05T16:00:00.000Z">2020-12-06</time></div>
+                    <a href="/2020/12/06/React/18/" class="has-link-black-ter is-size-6">深入 React Fiber</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -777,25 +796,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/25/React/15/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/15.webp" alt="React 中的 HOC">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-24T16:00:00.000Z">2020-10-25</time></div>
-                    <a href="/2020/10/25/React/15/" class="has-link-black-ter is-size-6">React 中的 HOC</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -807,6 +807,17 @@ var _hmt = _hmt || [];
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2020/11/">
@@ -1423,7 +1434,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/React/">
                         <span class="tag">React</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">17</span>
                     </a>
                 </div>
                 

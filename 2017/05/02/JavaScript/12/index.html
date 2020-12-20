@@ -16,7 +16,7 @@
 <meta property="og:description" content="Object.defineProperty() 方法会直接在一个对象上定义一个新属性，或者修改一个已经存在的属性，并返回这个对象">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/12.webp">
-<meta property="og:updated_time" content="2020-12-09T03:22:48.831Z">
+<meta property="og:updated_time" content="2020-12-11T15:42:04.821Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Object.defineProperty()">
 <meta name="twitter:description" content="Object.defineProperty() 方法会直接在一个对象上定义一个新属性，或者修改一个已经存在的属性，并返回这个对象">
@@ -209,7 +209,7 @@ var _hmt = _hmt || [];
 <h2 id="Writable"><a href="#Writable" class="headerlink" title="Writable"></a>Writable</h2><p><code>writable</code> 决定是否可以修改属性的值</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> myObject = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.defineProperty(myObject, a, &#123;</span><br><span class="line">  value: <span class="hljs-number">2</span>,</span><br><span class="line">  writable: <span class="hljs-literal">false</span>,  <span class="hljs-comment">// 不可写</span></span><br><span class="line">  configurable: <span class="hljs-literal">true</span>,</span><br><span class="line">  enumerable: <span class="hljs-literal">true</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">myObject.a = <span class="hljs-number">3</span></span><br><span class="line"></span><br><span class="line">myObject.a  <span class="hljs-comment">// 2</span></span><br></pre></td></tr></table></figure>
 
-<p>如你所见，我们对于属性值的修改静默失败（<code>silently failed</code>），如果在严格模式（<code>&#39;use strict&#39;</code>）下，还会导致出错，简单来说，你可以把 <code>writable: false</code> 看作是属性不可改变，相当于空操作的 <code>setter</code>（后面会提到）</p>
+<p>如你所见，我们对于属性值的修改静默失败（<code>silently failed</code>），如果在严格模式（<code>use strict</code>）下，还会导致出错，简单来说，你可以把 <code>writable: false</code> 看作是属性不可改变，相当于空操作的 <code>setter</code>（后面会提到）</p>
 <h2 id="Configurable"><a href="#Configurable" class="headerlink" title="Configurable"></a>Configurable</h2><p>只有属性是可配置的，就可以使用 <code>defineProperty()</code> 方法来修改属性描述符</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> myObject = &#123;</span><br><span class="line">  a: <span class="hljs-number">2</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">myObject.a = <span class="hljs-number">3</span></span><br><span class="line">myObject.a  <span class="hljs-comment">// 3</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.defineProperty(myObject, <span class="hljs-string">'a'</span>, &#123;</span><br><span class="line">  value: <span class="hljs-number">4</span>,</span><br><span class="line">  writable: <span class="hljs-literal">true</span>,</span><br><span class="line">  configurable: <span class="hljs-literal">false</span>,  <span class="hljs-comment">// 不可配置</span></span><br><span class="line">  enumerable: <span class="hljs-literal">true</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">myObject.a     <span class="hljs-comment">// 4</span></span><br><span class="line">myObject.a = <span class="hljs-number">5</span></span><br><span class="line">myObject.a     <span class="hljs-comment">// 5</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.defineProperty(myObject, <span class="hljs-string">'a'</span>, &#123;</span><br><span class="line">  value: <span class="hljs-number">6</span>,</span><br><span class="line">  writable: <span class="hljs-literal">true</span>,</span><br><span class="line">  configurable: <span class="hljs-literal">true</span>,</span><br><span class="line">  enumerable: <span class="hljs-literal">true</span></span><br><span class="line">&#125;)  <span class="hljs-comment">// TypeError</span></span><br></pre></td></tr></table></figure>
 
@@ -227,7 +227,7 @@ var _hmt = _hmt || [];
 <ul>
 <li><code>Writable</code><ul>
 <li>如果在 <code>Object.defineProperty()</code> 中定义了 <code>writable: false</code>，重新给对象赋值的话是无效的</li>
-<li>严格模式（<code>&#39;use strict&#39;</code>）下，还会导致出错</li>
+<li>严格模式（<code>use strict</code>）下，还会导致出错</li>
 </ul>
 </li>
 <li><code>Configurable</code><ul>
@@ -398,7 +398,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        167
+                        168
                     </p>
                 </div>
             </div>
@@ -567,7 +567,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">React</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">17</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Vue/">
@@ -597,7 +597,7 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 16px;">Angular</a> <a href="/tags/CSS/" style="font-size: 16px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18px;">Essay</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/HTTP/" style="font-size: 14px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 16px;">Node.js</a> <a href="/tags/React/" style="font-size: 16px;">React</a> <a href="/tags/Vue/" style="font-size: 12px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 12px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 15px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/HTTP/" style="font-size: 13.33px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 15px;">Node.js</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Vue/" style="font-size: 11.67px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.67px;">jQuery</a>
     </div>
 </div>
 
@@ -611,6 +611,25 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/12/06/React/18/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/18.webp" alt="深入 React Fiber">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-05T16:00:00.000Z">2020-12-06</time></div>
+                    <a href="/2020/12/06/React/18/" class="has-link-black-ter is-size-6">深入 React Fiber</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -688,25 +707,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/25/React/15/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/15.webp" alt="React 中的 HOC">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-24T16:00:00.000Z">2020-10-25</time></div>
-                    <a href="/2020/10/25/React/15/" class="has-link-black-ter is-size-6">React 中的 HOC</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -718,6 +718,17 @@ var _hmt = _hmt || [];
             归档
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2020/11/">
@@ -1334,7 +1345,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/React/">
                         <span class="tag">React</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">17</span>
                     </a>
                 </div>
                 
