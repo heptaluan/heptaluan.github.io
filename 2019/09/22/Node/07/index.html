@@ -16,7 +16,7 @@
 <meta property="og:description" content="JavaScript 语言自身只有字符串数据类型，没有二进制数据类型，但在处理像 TCP 流或文件流时，必须使用到二进制数据，因此在 Node.js 中，定义了一个 Buffer 类，该类用来创建一个专门存放二进制数据的缓存区，但是在深入展开之前，我们先来了解一下 JavaScript 当中的 ArrayBuffer，来看看它与 Node.js 当中的 Buffer 到底有什么区别？">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/07.webp">
-<meta property="og:updated_time" content="2020-12-08T14:41:08.889Z">
+<meta property="og:updated_time" content="2021-01-01T12:30:51.671Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Node.js 中的 Buffer 模块">
 <meta name="twitter:description" content="JavaScript 语言自身只有字符串数据类型，没有二进制数据类型，但在处理像 TCP 流或文件流时，必须使用到二进制数据，因此在 Node.js 中，定义了一个 Buffer 类，该类用来创建一个专门存放二进制数据的缓存区，但是在深入展开之前，我们先来了解一下 JavaScript 当中的 ArrayBuffer，来看看它与 Node.js 当中的 Buffer 到底有什么区别？">
@@ -100,7 +100,7 @@ var _hmt = _hmt || [];
 </head>
 <body class="is-2-column">
     <!-- fork me on github -->
-<a id="forkMe" style="position: fixed;top: 0;right: 0;z-index: 31" href="https://github.com/heptaluan" target="_blank">
+<a title="Fork me on GitHub" id="forkMe" style="position: fixed;top: 0;right: 0;z-index: 31" href="https://github.com/heptaluan" target="_blank">
     <svg style="color: #fff;fill: #a0a1a7;height: 80px;width: 80px;" viewbox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg>
 </a>
 
@@ -333,7 +333,7 @@ var _hmt = _hmt || [];
 <p>为什么结果会变成一串数字，这就要从源码找起了，如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * Functionally equivalent to Buffer(arg, encoding) but throws a TypeError</span></span><br><span class="line"><span class="hljs-comment"> * if value is a number.</span></span><br><span class="line"><span class="hljs-comment"> * Buffer.from(str[, encoding])</span></span><br><span class="line"><span class="hljs-comment"> * Buffer.from(array)</span></span><br><span class="line"><span class="hljs-comment"> * Buffer.from(buffer)</span></span><br><span class="line"><span class="hljs-comment"> * Buffer.from(arrayBuffer[, byteOffset[, length]])</span></span><br><span class="line"><span class="hljs-comment">「/</span></span><br><span class="line"><span class="hljs-comment">Buffer.from = function from(value, encodingOrOffset, length) &#123;</span></span><br><span class="line"><span class="hljs-comment">  if (typeof value === "string") return fromString(value, encodingOrOffset)</span></span><br><span class="line"><span class="hljs-comment">  // 处理其它数据类型，省略异常处理等其它代码</span></span><br><span class="line"><span class="hljs-comment">  if (isAnyArrayBuffer(value))</span></span><br><span class="line"><span class="hljs-comment">    return fromArrayBuffer(value, encodingOrOffset, length)</span></span><br><span class="line"><span class="hljs-comment">  var b = fromObject(value)</span></span><br><span class="line"><span class="hljs-comment">&#125;</span></span><br></pre></td></tr></table></figure>
 
-<p>可以看出 <code>Buffer.from()</code> 工厂函数，支持基于多种数据类型（<code>String</code>、<code>Array</code>、<code>Buffer</code> 等）创建 <code>Buffer</code> 对象，对于字符串类型的数据，内部调用 <code>fromString(value, encodingOrOffset)</code> 方法来创建 <code>Buffer</code> 对象</p>
+<p>可以看出 <code>Buffer.from()</code> 工厂函数，支持基于多种数据类型（<code>string</code>、<code>Array</code>、<code>Buffer</code> 等）创建 <code>Buffer</code> 对象，对于字符串类型的数据，内部调用 <code>fromString(value, encodingOrOffset)</code> 方法来创建 <code>Buffer</code> 对象</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FastBuffer</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Uint8Array</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(arg1, arg2, arg3) &#123;</span><br><span class="line">    <span class="hljs-keyword">super</span>(arg1, arg2, arg3)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fromString</span>(<span class="hljs-params">string, encoding</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> length</span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> encoding !== <span class="hljs-string">"string"</span> || encoding.length === <span class="hljs-number">0</span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (string.length === <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> FastBuffer()</span><br><span class="line">    <span class="hljs-comment">// 若未设置编码，则默认使用 utf8 编码</span></span><br><span class="line">    encoding = <span class="hljs-string">"utf8"</span></span><br><span class="line">    <span class="hljs-comment">// 计算 string 的长度</span></span><br><span class="line">    length = byteLengthUtf8(string)</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// 基于指定的 encoding 计算 string 的长度</span></span><br><span class="line">    length = byteLength(string, encoding, <span class="hljs-literal">true</span>)</span><br><span class="line">    <span class="hljs-keyword">if</span> (length === <span class="hljs-number">-1</span>)</span><br><span class="line">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> errors.TypeError(<span class="hljs-string">"ERR_UNKNOWN_ENCODING"</span>, encoding)</span><br><span class="line">    <span class="hljs-keyword">if</span> (string.length === <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> FastBuffer()</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 当字符串所需字节数大于 4KB，则直接进行内存分配</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (length &gt;= Buffer.poolSize &gt;&gt;&gt; <span class="hljs-number">1</span>)</span><br><span class="line">    <span class="hljs-comment">// 创建 buffer 对象</span></span><br><span class="line">    <span class="hljs-keyword">return</span> createFromString(string, encoding)</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 当剩余的空间小于所需的字节长度，则先重新申请 8K 内存</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (length &gt; poolSize - poolOffset)</span><br><span class="line">    <span class="hljs-comment">// 上面提到过的 createPool() 方法</span></span><br><span class="line">    <span class="hljs-comment">// allocPool = createUnsafeArrayBuffer(8K)</span></span><br><span class="line">    <span class="hljs-comment">// poolOffset = 0</span></span><br><span class="line">    createPool()</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 创建 FastBuffer 对象，并写入数据</span></span><br><span class="line">  <span class="hljs-keyword">var</span> b = <span class="hljs-keyword">new</span> FastBuffer(allocPool, poolOffset, length)</span><br><span class="line">  <span class="hljs-keyword">const</span> actual = b.write(string, encoding)</span><br><span class="line">  <span class="hljs-keyword">if</span> (actual !== length) &#123;</span><br><span class="line">    <span class="hljs-comment">// byteLength() may overestimate. That's a rare case, though.</span></span><br><span class="line">    b = <span class="hljs-keyword">new</span> FastBuffer(allocPool, poolOffset, actual)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 更新 pool 的偏移，并执行字节对齐（关于字节对齐可见下方，也就是所谓的 alignPool() 方法）</span></span><br><span class="line">  poolOffset += actual</span><br><span class="line">  alignPool()</span><br><span class="line">  <span class="hljs-keyword">return</span> b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>简单的梳理如下，可以发现与上面的 <code>Buffer</code> 内存机制是相符的</p>
@@ -349,7 +349,7 @@ var _hmt = _hmt || [];
 
 <p>在 <code>Stream</code> 中我们是不需要手动去创建自己的缓冲区，在 <code>Node.js</code> 的流中将会自动创建</p>
 <h4 id="zlib-js"><a href="#zlib-js" class="headerlink" title="zlib.js"></a>zlib.js</h4><p><code>zlib.js</code> 为 <code>Node.js</code> 的核心库之一，其利用了缓冲区（<code>Buffer</code>）的功能来操作二进制数据流，提供了压缩或解压功能，见 <a href="https://github.com/nodejs/node/blob/master/lib/zlib.js" target="_blank" rel="noopener">zlib.js</a></p>
-<h4 id="加解密"><a href="#加解密" class="headerlink" title="加解密"></a>加解密</h4><p>在一些加解密算法中会遇到使用 <code>Buffer</code>，例如 <code>crypto.createCipheriv</code> 的第二个参数 <code>key</code> 为 <code>String</code> 或 <code>Buffer</code> 类型，使用 <code>Buffer.alloc()</code> 初始化一个实例，然后使用 <code>fill</code> 方法进行填充，语法为</p>
+<h4 id="加解密"><a href="#加解密" class="headerlink" title="加解密"></a>加解密</h4><p>在一些加解密算法中会遇到使用 <code>Buffer</code>，例如 <code>crypto.createCipheriv</code> 的第二个参数 <code>key</code> 为 <code>string</code> 或 <code>Buffer</code> 类型，使用 <code>Buffer.alloc()</code> 初始化一个实例，然后使用 <code>fill</code> 方法进行填充，语法为</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">buf.fill(value[, offset[, end]][, encoding])</span><br></pre></td></tr></table></figure>
 
 <ul>
@@ -502,7 +502,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        168
+                        169
                     </p>
                 </div>
             </div>
@@ -743,7 +743,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">React</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">17</span>
+                <span class="level-item tag">18</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Vue/">
@@ -787,6 +787,25 @@ var _hmt = _hmt || [];
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/12/19/React/19/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/19.webp" alt="Fiber 架构的简单实现">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-18T16:00:00.000Z">2020-12-19</time></div>
+                    <a href="/2020/12/19/React/19/" class="has-link-black-ter is-size-6">Fiber 架构的简单实现</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/React/">React</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -864,25 +883,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/10/31/React/16/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.webp" alt="React 中的 Hook">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-10-30T16:00:00.000Z">2020-10-31</time></div>
-                    <a href="/2020/10/31/React/16/" class="has-link-black-ter is-size-6">React 中的 Hook</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -901,7 +901,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">十二月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1521,7 +1521,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/React/">
                         <span class="tag">React</span>
-                        <span class="tag is-grey">17</span>
+                        <span class="tag is-grey">18</span>
                     </a>
                 </div>
                 
@@ -1562,7 +1562,7 @@ var _hmt = _hmt || [];
                 
                 </a> -->
                 <p class="is-size-7">
-                &copy; 2016 - 2020
+                &copy; 2016 - 2021
                 Made with ✿  heptaluan&nbsp;
                 
                 </p>
