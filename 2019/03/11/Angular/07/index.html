@@ -16,7 +16,7 @@
 <meta property="og:description" content="最近在开发过程中，遇到了 ExpressionChangedAfterItHasBeenCheckedError 这个错误，网上搜索一翻后，发现各种说法众说纷纭，所有抽出时间深入了解一下这个错误，做一下总结，也可以避免以后在遇到这个问题的时候不知道怎么处理">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/07.webp">
-<meta property="og:updated_time" content="2020-12-08T14:35:14.471Z">
+<meta property="og:updated_time" content="2021-01-16T14:34:39.284Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular 中的 ExpressionChangedAfterItHasBeenCheckedError">
 <meta name="twitter:description" content="最近在开发过程中，遇到了 ExpressionChangedAfterItHasBeenCheckedError 这个错误，网上搜索一翻后，发现各种说法众说纷纭，所有抽出时间深入了解一下这个错误，做一下总结，也可以避免以后在遇到这个问题的时候不知道怎么处理">
@@ -198,7 +198,7 @@ var _hmt = _hmt || [];
 <li>运行子 <code>component</code> 的变化监测流程（<code>List1</code>）</li>
 <li>调用所有子 <code>component/directive</code> 上的 <code>ngAfterViewInit</code> 生命周期</li>
 </ol>
-<p>这里需要注意，在每一步操作之后，<code>Angular</code> 都会保存与这次操作有关的 <code>values</code> 值，这个值被存在组件 <code>View</code> 的 <code>oldValues</code> 属性中，在开发模式下，所有组件完成变化监测之后 <code>Angular</code> 会开始下一个监测流程，第二次监测流程并不会再次执行上面列出的变化监测流程，而会比较之前变化监测循环保存的值（存在 <code>oldValues</code> 中的）与当前监测流程的值是否一致（标记为 <code>List2</code>）</p>
+<p>这里需要注意，在每一步操作之后，<code>Angular</code> 都会保存与这次操作有关的 <code>values</code> 值，这个值被存在组件 <code>view</code> 的 <code>oldValues</code> 属性中，在开发模式下，所有组件完成变化监测之后 <code>Angular</code> 会开始下一个监测流程，第二次监测流程并不会再次执行上面列出的变化监测流程，而会比较之前变化监测循环保存的值（存在 <code>oldValues</code> 中的）与当前监测流程的值是否一致（标记为 <code>List2</code>）</p>
 <ol>
 <li>检查被传递到子组件的 <code>values</code>（<code>oldValues</code>）与当前组件要被用于更新的 <code>values</code>（<code>instance.value</code>）是否一致</li>
 <li>检查被用于更新 <code>DOM</code> 元素的 <code>values</code>（<code>oldValues</code>）与当前要被用于这些组件更新的 <code>values</code>（<code>instance.value</code>）是否一致</li>
@@ -213,7 +213,7 @@ var _hmt = _hmt || [];
 <p>然后在模板中加入 <code>B</code> 组件，并且通过输入属性绑定给 <code>B</code> 组件输入 <code>text</code> 属性</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// A 组件当中使用 B 组件</span></span><br><span class="line">@Component(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'a-comp'</span>,</span><br><span class="line">  template: <span class="hljs-string">`</span></span><br><span class="line"><span class="hljs-string">    &lt;span&gt;&#123;&#123;name&#125;&#125;&lt;/span&gt;</span></span><br><span class="line"><span class="hljs-string">    &lt;b-comp [text]="text"&gt;&lt;/b-comp&gt;</span></span><br><span class="line"><span class="hljs-string">  `</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">AComponent</span> </span>&#123;</span><br><span class="line">  name = <span class="hljs-string">'I am A component'</span></span><br><span class="line">  text = <span class="hljs-string">'A message for the child component'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>那么 <code>Angular</code> 在开始变化监测后会发生什么呢？按照上面的流程，<code>List1</code> 变化监测会从 <code>A</code> 组件开始检查，第一步将 <code>text</code> 表达式中的 <code>A message for the child component</code> 向下传递到 <code>B</code> 组件，并且将这个值存在 <code>View</code> 上</p>
+<p>那么 <code>Angular</code> 在开始变化监测后会发生什么呢？按照上面的流程，<code>List1</code> 变化监测会从 <code>A</code> 组件开始检查，第一步将 <code>text</code> 表达式中的 <code>A message for the child component</code> 向下传递到 <code>B</code> 组件，并且将这个值存在 <code>view</code> 上</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">view.oldValues[<span class="hljs-number">0</span>] = <span class="hljs-string">'A message for the child component'</span></span><br></pre></td></tr></table></figure>
 
 <p>然后到了变化监测列表里的第二步，调用相应的生命周期函数，接下来再执行第三步，将 <code>name</code> 表达式解析为 <code>I am A component</code> 文本，将解析好的值更新到 <code>DOM</code> 上，并且存入 <code>oldValues</code></p>
@@ -390,7 +390,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        171
+                        173
                     </p>
                 </div>
             </div>
@@ -539,7 +539,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">52</span>
+                <span class="level-item tag">54</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -602,6 +602,44 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2021/01/10/JavaScript/59/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/59.webp" alt="在 React 当中使用 TypeScript">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-01-09T16:00:00.000Z">2021-01-10</time></div>
+                    <a href="/2021/01/10/JavaScript/59/" class="has-link-black-ter is-size-6">在 React 当中使用 TypeScript</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/01/09/JavaScript/58/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/58.webp" alt="深入 TypeScript 当中的泛型">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-01-08T16:00:00.000Z">2021-01-09</time></div>
+                    <a href="/2021/01/09/JavaScript/58/" class="has-link-black-ter is-size-6">深入 TypeScript 当中的泛型</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/01/01/JavaScript/57/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/57.webp" alt="深入 TypeScript">
@@ -657,44 +695,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/12/06/React/18/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/18.webp" alt="深入 React Fiber">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-05T16:00:00.000Z">2020-12-06</time></div>
-                    <a href="/2020/12/06/React/18/" class="has-link-black-ter is-size-6">深入 React Fiber</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/11/28/Essay/31/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.webp" alt="矩形包围盒碰撞检测">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
-                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -713,7 +713,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1330,7 +1330,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">52</span>
+                        <span class="tag is-grey">54</span>
                     </a>
                 </div>
                 

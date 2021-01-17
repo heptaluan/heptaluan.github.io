@@ -16,7 +16,7 @@
 <meta property="og:description" content="在 中间件 和 常用中间件的实现 章节当中，我们简单的介绍了一下中间件和洋葱模型的概念，然后我们手动实现了一个最基本的 Koa.js 框架，最后又看了一些比较常用的中间件，所以在本章当中，我们就来深入的了解一下 Koa.js 的源码，看看它与我们手动实现的版本有什么区别">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.webp">
-<meta property="og:updated_time" content="2021-01-01T12:30:51.673Z">
+<meta property="og:updated_time" content="2021-01-16T14:34:39.316Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Koa.js 源码解析">
 <meta name="twitter:description" content="在 中间件 和 常用中间件的实现 章节当中，我们简单的介绍了一下中间件和洋葱模型的概念，然后我们手动实现了一个最基本的 Koa.js 框架，最后又看了一些比较常用的中间件，所以在本章当中，我们就来深入的了解一下 Koa.js 的源码，看看它与我们手动实现的版本有什么区别">
@@ -245,7 +245,7 @@ var _hmt = _hmt || [];
 
 <p>这里主要涉及到三个方法</p>
 <h4 id="compose-this-middleware"><a href="#compose-this-middleware" class="headerlink" title="compose(this.middleware)"></a>compose(this.middleware)</h4><p>洋葱模型实现的核心</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * Compose `Middleware` returning a fully valid middleware comprised of all those which are passed.</span></span><br><span class="line"><span class="hljs-comment"> *</span></span><br><span class="line"><span class="hljs-comment"> * @param &#123;Array&#125; middleware</span></span><br><span class="line"><span class="hljs-comment"> * @return &#123;Function&#125;</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">compose</span>(<span class="hljs-params">middleware</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 参数校验</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(middleware)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">'Middleware stack must be an array!'</span>)</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> fn <span class="hljs-keyword">of</span> middleware) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> fn !== <span class="hljs-string">'function'</span>) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">'Middleware must be composed of functions!'</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;Object&#125; context</span></span><br><span class="line"><span class="hljs-comment">   * @return &#123;Promise&#125;</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">context, next</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// last called middleware #</span></span><br><span class="line">    <span class="hljs-keyword">let</span> index = <span class="hljs-number">-1</span></span><br><span class="line">    <span class="hljs-keyword">return</span> dispatch(<span class="hljs-number">0</span>)</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">dispatch</span>(<span class="hljs-params">i</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (i &lt;= index) <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.reject(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'next() called multiple times'</span>))</span><br><span class="line">      index = i</span><br><span class="line">      <span class="hljs-keyword">let</span> fn = middleware[i]</span><br><span class="line">      <span class="hljs-keyword">if</span> (i === middleware.length) fn = next</span><br><span class="line">      <span class="hljs-keyword">if</span> (!fn) <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve()</span><br><span class="line">      <span class="hljs-keyword">try</span> &#123;</span><br><span class="line">        <span class="hljs-comment">// 执行下一个中间件逻辑，并将 next 参数设置为 dispatch(i + 1)</span></span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve(fn(context, dispatch.bind(<span class="hljs-literal">null</span>, i + <span class="hljs-number">1</span>)))</span><br><span class="line">      &#125; <span class="hljs-keyword">catch</span> (err) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.reject(err)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * Compose `middleware` returning a fully valid middleware comprised of all those which are passed.</span></span><br><span class="line"><span class="hljs-comment"> *</span></span><br><span class="line"><span class="hljs-comment"> * @param &#123;Array&#125; middleware</span></span><br><span class="line"><span class="hljs-comment"> * @return &#123;Function&#125;</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">compose</span>(<span class="hljs-params">middleware</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 参数校验</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(middleware)) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">'Middleware stack must be an array!'</span>)</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> fn <span class="hljs-keyword">of</span> middleware) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> fn !== <span class="hljs-string">'function'</span>) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">'Middleware must be composed of functions!'</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;Object&#125; context</span></span><br><span class="line"><span class="hljs-comment">   * @return &#123;Promise&#125;</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">context, next</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// last called middleware #</span></span><br><span class="line">    <span class="hljs-keyword">let</span> index = <span class="hljs-number">-1</span></span><br><span class="line">    <span class="hljs-keyword">return</span> dispatch(<span class="hljs-number">0</span>)</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">dispatch</span>(<span class="hljs-params">i</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (i &lt;= index) <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.reject(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'next() called multiple times'</span>))</span><br><span class="line">      index = i</span><br><span class="line">      <span class="hljs-keyword">let</span> fn = middleware[i]</span><br><span class="line">      <span class="hljs-keyword">if</span> (i === middleware.length) fn = next</span><br><span class="line">      <span class="hljs-keyword">if</span> (!fn) <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve()</span><br><span class="line">      <span class="hljs-keyword">try</span> &#123;</span><br><span class="line">        <span class="hljs-comment">// 执行下一个中间件逻辑，并将 next 参数设置为 dispatch(i + 1)</span></span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve(fn(context, dispatch.bind(<span class="hljs-literal">null</span>, i + <span class="hljs-number">1</span>)))</span><br><span class="line">      &#125; <span class="hljs-keyword">catch</span> (err) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.reject(err)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>之前我们已经手动的实现了一个简化版本的了，这里就不详细展开了，可以参考之前的洋葱模型的实现章节，这里主要介绍其中两行代码</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">if</span> (i === middleware.length) fn = next</span><br><span class="line"><span class="hljs-keyword">if</span> (!fn) <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve()</span><br></pre></td></tr></table></figure>
@@ -253,7 +253,7 @@ var _hmt = _hmt || [];
 <p>在我们调用 <code>fnMiddleware</code> 是可以传入两个参数的，第二个可选参数表示最终的回调函数，比如</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fnMiddleware(ctx, () =&gt; &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`done`</span>, ctx)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
-<p>当 <code>i === middleware.length</code> 成立时，实际上所有传入的 <code>Middleware</code> 已经执行完，这个时候我们的 <code>fn = next</code> 表示 <code>fn</code> 被赋值给了这个传入的最终回调，接下来判断如果没有传入最终回调，那么整个中间件执行流程就到此结束</p>
+<p>当 <code>i === middleware.length</code> 成立时，实际上所有传入的 <code>middleware</code> 已经执行完，这个时候我们的 <code>fn = next</code> 表示 <code>fn</code> 被赋值给了这个传入的最终回调，接下来判断如果没有传入最终回调，那么整个中间件执行流程就到此结束</p>
 <h4 id="createContext-req-res"><a href="#createContext-req-res" class="headerlink" title="createContext(req, res)"></a>createContext(req, res)</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">createContext(req, res) &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> context = <span class="hljs-built_in">Object</span>.create(<span class="hljs-keyword">this</span>.context)</span><br><span class="line">  <span class="hljs-keyword">const</span> request = context.request = <span class="hljs-built_in">Object</span>.create(<span class="hljs-keyword">this</span>.request)</span><br><span class="line">  <span class="hljs-keyword">const</span> response = context.response = <span class="hljs-built_in">Object</span>.create(<span class="hljs-keyword">this</span>.response)</span><br><span class="line">  context.app = request.app = response.app = <span class="hljs-keyword">this</span></span><br><span class="line">  context.req = request.req = response.req = req</span><br><span class="line">  context.res = request.res = response.res = res</span><br><span class="line">  request.ctx = response.ctx = context</span><br><span class="line">  request.response = response</span><br><span class="line">  response.request = request</span><br><span class="line">  context.originalUrl = request.originalUrl = req.url</span><br><span class="line">  context.state = &#123;&#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> context</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>根据 <code>req</code> 和 <code>res</code> 封装中间件所需要的 <code>ctx</code>，简单来说就是将变量挂到 <code>Context</code> 上面，然后最后返回，但是这里需要注意区分</p>
@@ -416,7 +416,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        171
+                        173
                     </p>
                 </div>
             </div>
@@ -573,7 +573,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">52</span>
+                <span class="level-item tag">54</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -636,6 +636,44 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2021/01/10/JavaScript/59/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/59.webp" alt="在 React 当中使用 TypeScript">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-01-09T16:00:00.000Z">2021-01-10</time></div>
+                    <a href="/2021/01/10/JavaScript/59/" class="has-link-black-ter is-size-6">在 React 当中使用 TypeScript</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/01/09/JavaScript/58/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/58.webp" alt="深入 TypeScript 当中的泛型">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-01-08T16:00:00.000Z">2021-01-09</time></div>
+                    <a href="/2021/01/09/JavaScript/58/" class="has-link-black-ter is-size-6">深入 TypeScript 当中的泛型</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/01/01/JavaScript/57/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/57.webp" alt="深入 TypeScript">
@@ -691,44 +729,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/12/06/React/18/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/18.webp" alt="深入 React Fiber">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-05T16:00:00.000Z">2020-12-06</time></div>
-                    <a href="/2020/12/06/React/18/" class="has-link-black-ter is-size-6">深入 React Fiber</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/11/28/Essay/31/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.webp" alt="矩形包围盒碰撞检测">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
-                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -747,7 +747,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1364,7 +1364,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">52</span>
+                        <span class="tag is-grey">54</span>
                     </a>
                 </div>
                 

@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="我们在之前的文章当中梳理了 React Fiber 相关内容，了解了 Fiber 的基本作用以及它内部一些简单的运行原理，所以在本章当中我们来继续深入理解其原理，尝试尝试手动的模拟实现一个简易版本的 Fiber 架构，本文主要参考的是 Build your own React，内容有所调整，主要是为了方便自己理解，更多内容可以查看原文，下面我们就先从 JSX 开始看起  完整代码地址可见 Fibe">
+    <meta name="description" content="我们在之前的文章当中梳理了 React Fiber 相关内容，了解了 Fiber 的基本作用以及它内部一些简单的运行原理，所以在本章当中我们来继续深入理解其原理，尝试尝试手动的模拟实现一个简易版本的 Fiber 架构，本文主要参考的是 Build your own React，内容有所调整，主要是为了方便自己理解，更多详细内容可以查看原文，下面我们就先从 JSX 开始看起  完整代码地址可见 Fi">
 <meta name="keywords" content="React">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Fiber 架构的简单实现">
 <meta property="og:url" content="http://yoursite.com/2020/12/19/React/19/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="我们在之前的文章当中梳理了 React Fiber 相关内容，了解了 Fiber 的基本作用以及它内部一些简单的运行原理，所以在本章当中我们来继续深入理解其原理，尝试尝试手动的模拟实现一个简易版本的 Fiber 架构，本文主要参考的是 Build your own React，内容有所调整，主要是为了方便自己理解，更多内容可以查看原文，下面我们就先从 JSX 开始看起  完整代码地址可见 Fibe">
+<meta property="og:description" content="我们在之前的文章当中梳理了 React Fiber 相关内容，了解了 Fiber 的基本作用以及它内部一些简单的运行原理，所以在本章当中我们来继续深入理解其原理，尝试尝试手动的模拟实现一个简易版本的 Fiber 架构，本文主要参考的是 Build your own React，内容有所调整，主要是为了方便自己理解，更多详细内容可以查看原文，下面我们就先从 JSX 开始看起  完整代码地址可见 Fi">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/19.webp">
-<meta property="og:updated_time" content="2021-01-08T14:12:53.366Z">
+<meta property="og:updated_time" content="2021-01-16T14:34:39.336Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Fiber 架构的简单实现">
-<meta name="twitter:description" content="我们在之前的文章当中梳理了 React Fiber 相关内容，了解了 Fiber 的基本作用以及它内部一些简单的运行原理，所以在本章当中我们来继续深入理解其原理，尝试尝试手动的模拟实现一个简易版本的 Fiber 架构，本文主要参考的是 Build your own React，内容有所调整，主要是为了方便自己理解，更多内容可以查看原文，下面我们就先从 JSX 开始看起  完整代码地址可见 Fibe">
+<meta name="twitter:description" content="我们在之前的文章当中梳理了 React Fiber 相关内容，了解了 Fiber 的基本作用以及它内部一些简单的运行原理，所以在本章当中我们来继续深入理解其原理，尝试尝试手动的模拟实现一个简易版本的 Fiber 架构，本文主要参考的是 Build your own React，内容有所调整，主要是为了方便自己理解，更多详细内容可以查看原文，下面我们就先从 JSX 开始看起  完整代码地址可见 Fi">
 <meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/19.webp">
 
 
@@ -173,7 +173,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    1 小时 读完 (大约 9339 个字)
+                    1 小时 读完 (大约 9341 个字)
                 </span>
                 
                 
@@ -186,7 +186,7 @@ var _hmt = _hmt || [];
             
         </h1>
         <div class="content">
-            <p>我们在之前的文章当中梳理了 <a href="https://heptaluan.github.io/2020/12/06/React/18/" target="_blank" rel="noopener">React Fiber</a> 相关内容，了解了 <code>Fiber</code> 的基本作用以及它内部一些简单的运行原理，所以在本章当中我们来继续深入理解其原理，尝试尝试手动的模拟实现一个简易版本的 <code>Fiber</code> 架构，本文主要参考的是 <a href="https://pomb.us/build-your-own-react/" target="_blank" rel="noopener">Build your own React</a>，内容有所调整，主要是为了方便自己理解，更多内容可以查看原文，下面我们就先从 <code>JSX</code> 开始看起</p>
+            <p>我们在之前的文章当中梳理了 <a href="https://heptaluan.github.io/2020/12/06/React/18/" target="_blank" rel="noopener">React Fiber</a> 相关内容，了解了 <code>Fiber</code> 的基本作用以及它内部一些简单的运行原理，所以在本章当中我们来继续深入理解其原理，尝试尝试手动的模拟实现一个简易版本的 <code>Fiber</code> 架构，本文主要参考的是 <a href="https://pomb.us/build-your-own-react/" target="_blank" rel="noopener">Build your own React</a>，内容有所调整，主要是为了方便自己理解，更多详细内容可以查看原文，下面我们就先从 <code>JSX</code> 开始看起</p>
 <blockquote>
 <p>完整代码地址可见 <a href="https://github.com/heptaluan/react-example/tree/master/example/Fiber%20%E6%9E%B6%E6%9E%84%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0" target="_blank" rel="noopener">Fiber 架构的简单实现</a></p>
 </blockquote>
@@ -295,11 +295,11 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">commitRootImpl</span>(<span class="hljs-params">fiber</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (!fiber) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 不再直接获取，而是向上查找真正的 DOM</span></span><br><span class="line">  <span class="hljs-comment">// const parentDom = fiber.return.dom</span></span><br><span class="line">  <span class="hljs-keyword">let</span> parentFiber = fiber.return</span><br><span class="line">  <span class="hljs-keyword">while</span> (!parentFiber.dom) &#123;</span><br><span class="line">    parentFiber = parentFiber.return</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">const</span> parentDom = parentFiber.dom</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (fiber.effectTag === <span class="hljs-string">'REPLACEMENT'</span> &amp;&amp; fiber.dom) &#123;</span><br><span class="line">    parentDom.appendChild(fiber.dom)</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (fiber.effectTag === <span class="hljs-string">'DELETION'</span>) &#123;</span><br><span class="line">    <span class="hljs-comment">// 这里也不再使用 parentDom.removeChild(fiber.dom)</span></span><br><span class="line">    commitDeletion(fiber, parentDom)</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (fiber.effectTag === <span class="hljs-string">'UPDATE'</span> &amp;&amp; fiber.dom) &#123;</span><br><span class="line">    <span class="hljs-comment">// 更新DOM属性</span></span><br><span class="line">    updateDom(fiber.dom, fiber.alternate.props, fiber.props)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 递归操作子元素和兄弟元素</span></span><br><span class="line">  commitRootImpl(fiber.child)</span><br><span class="line">  commitRootImpl(fiber.sibling)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">commitDeletion</span>(<span class="hljs-params">fiber, domParent</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (fiber.dom) &#123;</span><br><span class="line">    <span class="hljs-comment">// DOM 存在，是普通节点</span></span><br><span class="line">    domParent.removeChild(fiber.dom)</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// DOM 不存在，是函数组件，向下递归查找真实 DOM</span></span><br><span class="line">    commitDeletion(fiber.child, domParent)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>现在我们可以传入函数组件了</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'./myReact'</span></span><br><span class="line"><span class="hljs-keyword">const</span> ReactDOM = React</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">App</span>(<span class="hljs-params">props</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> (&lt;div&gt;</span><br><span class="line">    &lt;h1 id="title"&gt;&#123;props.title&#125;&lt;/h1&gt;</span><br><span class="line">    &lt;a href="xxx"&gt;Jump&lt;/a&gt;</span><br><span class="line">    &lt;section&gt;</span><br><span class="line">      &lt;p&gt;</span><br><span class="line">        Article</span><br><span class="line">      &lt;/p&gt;</span><br><span class="line">    &lt;/section&gt;</span><br><span class="line">  &lt;/div&gt;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ReactDOM.render(</span><br><span class="line">  &lt;App /&gt;,</span><br><span class="line">  <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'root'</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'./myReact'</span></span><br><span class="line"><span class="hljs-keyword">const</span> ReactDOM = React</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">App</span>(<span class="hljs-params">props</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;h1 id=<span class="hljs-string">"title"</span>&gt;&#123;props.title&#125;&lt;<span class="hljs-regexp">/h1&gt;</span></span><br><span class="line"><span class="hljs-regexp">      &lt;a href="xxx"&gt;Jump&lt;/</span>a&gt;</span><br><span class="line">      &lt;section&gt;</span><br><span class="line">        &lt;p&gt;</span><br><span class="line">          Article</span><br><span class="line">        &lt;<span class="hljs-regexp">/p&gt;</span></span><br><span class="line"><span class="hljs-regexp">      &lt;/</span>section&gt;</span><br><span class="line">    &lt;<span class="hljs-regexp">/div&gt;</span></span><br><span class="line"><span class="hljs-regexp">  )</span></span><br><span class="line"><span class="hljs-regexp">&#125;</span></span><br><span class="line"><span class="hljs-regexp"></span></span><br><span class="line"><span class="hljs-regexp">ReactDOM.render(</span></span><br><span class="line"><span class="hljs-regexp">  &lt;App /</span>&gt;,</span><br><span class="line">  <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'root'</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
 <h2 id="实现-useState"><a href="#实现-useState" class="headerlink" title="实现 useState"></a>实现 useState</h2><p><code>useState</code> 是 <code>React Hooks</code> 里面的一个 <code>API</code>，相当于之前 <code>Class Component</code> 里面的 <code>state</code>，用来管理组件内部状态，现在我们已经有一个简化版的 <code>React</code> 了，我们也可以尝试下来实现这个 <code>API</code></p>
 <h4 id="简单版"><a href="#简单版" class="headerlink" title="简单版"></a>简单版</h4><p>我们还是从用法入手来实现最简单的功能，我们一般使用 <code>useState</code> 是这样的</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">App</span>(<span class="hljs-params">props</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> [count, setCount] = React.useState(<span class="hljs-number">1</span>)</span><br><span class="line">  <span class="hljs-keyword">const</span> onClickHandler = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    setCount(count + <span class="hljs-number">1</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> (&lt;div&gt;</span><br><span class="line">    &lt;h1&gt;Count: &#123;count&#125;&lt;/h1&gt;</span><br><span class="line">    &lt;button onClick=&#123;onClickHandler&#125;&gt;Count + 1&lt;/button&gt;</span><br><span class="line">  &lt;/div&gt;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">ReactDOM.render(</span><br><span class="line">  &lt;App /&gt;,</span><br><span class="line">  <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'root'</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">App</span>(<span class="hljs-params">props</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> [count, setCount] = React.useState(<span class="hljs-number">1</span>)</span><br><span class="line">  <span class="hljs-keyword">const</span> onClickHandler = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    setCount(count + <span class="hljs-number">1</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;h1&gt;Count: &#123;count&#125;&lt;<span class="hljs-regexp">/h1&gt;</span></span><br><span class="line"><span class="hljs-regexp">      &lt;button onClick=&#123;onClickHandler&#125;&gt;Count + 1&lt;/</span>button&gt;</span><br><span class="line">    &lt;<span class="hljs-regexp">/div&gt;</span></span><br><span class="line"><span class="hljs-regexp">  )</span></span><br><span class="line"><span class="hljs-regexp">&#125;</span></span><br><span class="line"><span class="hljs-regexp"></span></span><br><span class="line"><span class="hljs-regexp">ReactDOM.render(</span></span><br><span class="line"><span class="hljs-regexp">  &lt;App /</span>&gt;,</span><br><span class="line">  <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'root'</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
 <p>上述代码可以看出，我们的 <code>useState</code> 接收一个初始值，返回一个数组，里面有这个 <code>state</code> 的当前值和改变 <code>state</code> 的方法，但是需要注意的是 <code>App</code> 作为一个函数组件，每次 <code>render</code> 的时候都会运行，也就是说里面的局部变量每次 <code>render</code> 的时候都会重置，那我们的 <code>state</code> 就不能作为一个局部变量，而是应该作为一个全部变量来进行存储</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> state = <span class="hljs-literal">null</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">useState</span>(<span class="hljs-params">init</span>) </span>&#123;</span><br><span class="line">  state = state === <span class="hljs-literal">null</span> ? init : state</span><br><span class="line">  <span class="hljs-keyword">const</span> setState = <span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> &#123;   <span class="hljs-comment">// 修改 state 的方法</span></span><br><span class="line">    state = value</span><br><span class="line">    workInProgressRoot = &#123;      <span class="hljs-comment">// 只要修改了 state，我们就需要重新处理节点</span></span><br><span class="line">      dom: currentRoot.dom,</span><br><span class="line">      props: currentRoot.props,</span><br><span class="line">      alternate: currentRoot</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-comment">// 修改 nextUnitOfWork 指向 workInProgressRoot，这样下次就会处理这个节点了</span></span><br><span class="line">    nextUnitOfWork = workInProgressRoot</span><br><span class="line">    deletions = []</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> [state, setState]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -329,7 +329,7 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">'./myReact'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Count</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(props) &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.props = props</span><br><span class="line">    <span class="hljs-keyword">this</span>.state = &#123;</span><br><span class="line">      count: <span class="hljs-number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  onClickHandler = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.setState(&#123;</span><br><span class="line">      count: <span class="hljs-keyword">this</span>.state.count + <span class="hljs-number">1</span></span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> (</span><br><span class="line">      &lt;div&gt;</span><br><span class="line">        &lt;h3&gt;Class Component Count: &#123;<span class="hljs-keyword">this</span>.state.count&#125;&lt;<span class="hljs-regexp">/h3&gt;</span></span><br><span class="line"><span class="hljs-regexp">        &lt;button onClick=&#123;this.onClickHandler&#125;&gt;Count + 1&lt;/</span>button&gt;</span><br><span class="line">      &lt;<span class="hljs-regexp">/div&gt;</span></span><br><span class="line"><span class="hljs-regexp">    )</span></span><br><span class="line"><span class="hljs-regexp">  &#125;</span></span><br><span class="line"><span class="hljs-regexp">&#125;</span></span><br><span class="line"><span class="hljs-regexp"></span></span><br><span class="line"><span class="hljs-regexp">/</span><span class="hljs-regexp">/ export 的时候用 transfer 包装下</span></span><br><span class="line"><span class="hljs-regexp">export default React.transfer(Count)</span></span><br></pre></td></tr></table></figure>
 
 <p>然后使用的时候直接使用 <code>&lt;Count&gt;</code> 就行了</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">  &lt;Count&gt;&lt;/Count&gt;</span><br><span class="line">&lt;<span class="hljs-regexp">/div&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">  &lt;Count&gt;<span class="hljs-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">Count</span>&gt;</span></span></span><br><span class="line">&lt;<span class="hljs-regexp">/div&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>当然你也可以在 <code>React</code> 里面建一个空的 <code>Class Component</code>，让 <code>Count</code> 继承它，这样就更像了</p>
 <h2 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h2><p>汇总以后的代码如下，完整代码地址可见 <a href="https://github.com/heptaluan/react-example/tree/master/example/Fiber%20%E6%9E%B6%E6%9E%84%E7%9A%84%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0" target="_blank" rel="noopener">Fiber 架构的简单实现</a></p>
@@ -466,7 +466,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        171
+                        173
                     </p>
                 </div>
             </div>
@@ -643,7 +643,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">52</span>
+                <span class="level-item tag">54</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -706,6 +706,44 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2021/01/10/JavaScript/59/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/59.webp" alt="在 React 当中使用 TypeScript">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-01-09T16:00:00.000Z">2021-01-10</time></div>
+                    <a href="/2021/01/10/JavaScript/59/" class="has-link-black-ter is-size-6">在 React 当中使用 TypeScript</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/01/09/JavaScript/58/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/58.webp" alt="深入 TypeScript 当中的泛型">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-01-08T16:00:00.000Z">2021-01-09</time></div>
+                    <a href="/2021/01/09/JavaScript/58/" class="has-link-black-ter is-size-6">深入 TypeScript 当中的泛型</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/01/01/JavaScript/57/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/57.webp" alt="深入 TypeScript">
@@ -761,44 +799,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/12/06/React/18/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/18.webp" alt="深入 React Fiber">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-05T16:00:00.000Z">2020-12-06</time></div>
-                    <a href="/2020/12/06/React/18/" class="has-link-black-ter is-size-6">深入 React Fiber</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/11/28/Essay/31/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.webp" alt="矩形包围盒碰撞检测">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
-                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -817,7 +817,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1434,7 +1434,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">52</span>
+                        <span class="tag is-grey">54</span>
                     </a>
                 </div>
                 

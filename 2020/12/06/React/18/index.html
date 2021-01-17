@@ -16,7 +16,7 @@
 <meta property="og:description" content="我们都知道，React 是一个用于构建用户交互界面的 JavaScript 库，其核心机制就是跟踪组件的状态变化，并将更新的状态映射到到新的界面，在 React 中，我们将此过程称之为「协调」（Reconcilation），我们调用 setState 方法来改变状态，而框架本身会去检查 state 或 props 是否已经更改来决定是否重新渲染组件，React 的官方文档对 协调机制 进行了良好的">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/18.webp">
-<meta property="og:updated_time" content="2021-01-08T14:12:53.365Z">
+<meta property="og:updated_time" content="2021-01-16T14:34:39.335Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入 React Fiber">
 <meta name="twitter:description" content="我们都知道，React 是一个用于构建用户交互界面的 JavaScript 库，其核心机制就是跟踪组件的状态变化，并将更新的状态映射到到新的界面，在 React 中，我们将此过程称之为「协调」（Reconcilation），我们调用 setState 方法来改变状态，而框架本身会去检查 state 或 props 是否已经更改来决定是否重新渲染组件，React 的官方文档对 协调机制 进行了良好的">
@@ -192,7 +192,7 @@ var _hmt = _hmt || [];
 </blockquote>
 <a id="more"></a>
 
-<p>我们将从 <code>render</code> 方法返回的不可变的 <code>React</code> 元素通常称为「虚拟 <code>DOM</code>」，但是除了「虚拟 <code>DOM</code>」之外，<code>React</code> 框架总是在内部维护一个实例来持有状态（如组件、<code>DOM</code> 节点等），从版本 <code>16</code> 开始， <code>React</code> 推出了新的内部实例树的实现方法，也就是我们经常听闻的 <code>Fiber</code> 算法，但是在本章当中我们并不会太过深入的去介绍源码相关内容，而是主要来探索一下这个所谓的 <code>Fiber</code> 到底是什么以及它出现的缘由和解决的一些问题</p>
+<p>我们将从 <code>render</code> 方法返回的不可变的 <code>React</code> 元素通常称为「虚拟 <code>DOM</code>」，但是除了「虚拟 <code>DOM</code>」之外，<code>React</code> 框架总是在内部维护一个实例来持有状态（如组件、<code>DOM</code> 节点等），从版本 <code>16</code> 开始，<code>React</code> 推出了新的内部实例树的实现方法，也就是我们经常听闻的 <code>Fiber</code> 算法，但是在本章当中我们并不会太过深入的去介绍源码相关内容，而是主要来探索一下这个所谓的 <code>Fiber</code> 到底是什么以及它出现的缘由和解决的一些问题</p>
 <h2 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h2><p>之所以会推出新的 <code>Fiber</code>，那就说明在之前的 <code>React</code> 版本当中是存在一定的问题的，那么下面我们就来先看看之前的版本当中到底是存在哪些问题，这个我们可以从官方提供的 <a href="https://claudiopro.github.io/react-fiber-vs-stack-demo/" target="_blank" rel="noopener">示例</a> 开始看起，运行效果如下</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/18-01.gif" alt></p>
 <p>至于根本原因，我们可以通过查看其对应的 <a href="https://github.com/claudiopro/react-fiber-vs-stack-demo" target="_blank" rel="noopener">源码</a> 来分析具体原因，通过观察源码我们可以发现，代码当中使用了 <code>requestAnimationFrame</code> 这个 <code>API</code>，关于 <code>requestAnimationFrame</code> 这个接口的使用我们就不介绍更多内容了，直接来看代码的实现，详细可以参考之前我们整理过的 <a href="https://heptaluan.github.io/2018/06/11/JavaScript/38/#window-requestAnimationFrame" target="_blank" rel="noopener">requestAnimationFrame 的使用</a> 以及 <a href="https://heptaluan.github.io/2018/08/12/JavaScript/30/#%E5%85%B3%E4%BA%8E-requestAnimationFrame" target="_blank" rel="noopener">并发模型中的 requestAnimationFrame</a></p>
@@ -297,10 +297,10 @@ var _hmt = _hmt || [];
 <h4 id="type-和-key"><a href="#type-和-key" class="headerlink" title="type 和 key"></a>type 和 key</h4><p><code>Fiber</code> 的 <code>type</code> 和 <code>key</code> 对 <code>React</code> 元素起着同样的作用（实际上，<code>Fiber</code> 从一个元素创建时，这两个属性直接被复制过来），<code>type</code> 描述了它对应的组件，对于合成组件来说 <code>type</code> 是一个函数或者类组件本身，对于原生元素（<code>div</code>，<code>span</code> 等），它是一个字符串，从概念上来说，<code>type</code> 是在执行时被栈帧追踪的函数（如在 <code>v = f(d)</code> 中）</p>
 <p>而与 <code>type</code> 一起的 <code>key</code>，被用来在协调过程中决定 <code>Fiber</code> 是否可以再利用，也就是在协调阶段用来标识 <code>Fiber</code>，以检测是否可重用该 <code>Fiber</code> 实例</p>
 <h4 id="child-和-sibling"><a href="#child-和-sibling" class="headerlink" title="child 和 sibling"></a>child 和 sibling</h4><p>表示当我们在组件上调用 <code>render()</code> 时返回的元素，例如</p>
-<figure class="highlight jsx hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> Name = <span class="hljs-function">(<span class="hljs-params">props</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> (&lt;div className="name"&gt;</span><br><span class="line">    &#123;props.name&#125;</span><br><span class="line">  &lt;/div&gt;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight jsx hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> Name = <span class="hljs-function">(<span class="hljs-params">props</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> (</span><br><span class="line">    &lt;div className=<span class="hljs-string">"name"</span>&gt;</span><br><span class="line">      &#123;props.name&#125;</span><br><span class="line">    &lt;<span class="hljs-regexp">/div&gt;</span></span><br><span class="line"><span class="hljs-regexp">  )</span></span><br><span class="line"><span class="hljs-regexp">&#125;</span></span><br></pre></td></tr></table></figure>
 
 <p><code>&lt;Name&gt;</code> 的子元素是 <code>&lt;div&gt;</code>，因为它返回一个 <code>&lt;div&gt;</code> 元素，而 <code>sibling</code> 字段则对应 <code>render</code> 返回多个孩子节点的情况，如下</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> Name = <span class="hljs-function">(<span class="hljs-params">props</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> ([&lt;Child1 /&gt;, &lt;Child2 /&gt;])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> Name = <span class="hljs-function">(<span class="hljs-params">props</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> ([<span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">Child1</span> /&gt;</span>, <span class="hljs-tag">&lt;<span class="hljs-name">Child2</span> /&gt;</span>])</span></span><br><span class="line"><span class="hljs-xml">&#125;</span></span><br></pre></td></tr></table></figure>
 
 <p>在上述情况下，<code>&lt;Child1&gt;</code> 和 <code>&lt;Child2&gt;</code> 是父元素 <code>&lt;Name&gt;</code> 的子元素，这两个子元素组成一个单链表，<code>head</code> 指针指向第一个孩子节点，所以在上例中 <code>Parent</code> 的孩子节点是 <code>Child1</code>，<code>Child1</code> 的兄弟节点是 <code>Child2</code>，如果放到函数当中类比的话，可以认为一个子 <code>Fiber</code> 是一个尾调用函数</p>
 <h4 id="return"><a href="#return" class="headerlink" title="return"></a>return</h4><p><code>return</code> 是当前 <code>Fiber</code> 处理完成后需要返回的 <code>Fiber</code>，从概念上来说它对应栈帧返回的地址，从逻辑上讲，它是返回到父 <code>Fiber</code> 节点，因此可以理解为父 <code>Fiber</code>，如果一个 <code>Fiber</code> 有多个子 <code>Fiber</code>，每个子 <code>Fiber</code> 返回的 <code>Fiber</code> 都是它的父 <code>Fiber</code>，在上面示例中的 <code>Child1</code> 和 <code>Child2</code> 的 <code>return</code> 就是 <code>Parent</code></p>
@@ -602,7 +602,7 @@ var _hmt = _hmt || [];
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        171
+                        173
                     </p>
                 </div>
             </div>
@@ -795,7 +795,7 @@ var _hmt = _hmt || [];
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">52</span>
+                <span class="level-item tag">54</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -858,6 +858,44 @@ var _hmt = _hmt || [];
         
         <article class="media">
             
+            <a href="/2021/01/10/JavaScript/59/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/59.webp" alt="在 React 当中使用 TypeScript">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-01-09T16:00:00.000Z">2021-01-10</time></div>
+                    <a href="/2021/01/10/JavaScript/59/" class="has-link-black-ter is-size-6">在 React 当中使用 TypeScript</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/01/09/JavaScript/58/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/58.webp" alt="深入 TypeScript 当中的泛型">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-01-08T16:00:00.000Z">2021-01-09</time></div>
+                    <a href="/2021/01/09/JavaScript/58/" class="has-link-black-ter is-size-6">深入 TypeScript 当中的泛型</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/01/01/JavaScript/57/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/57.webp" alt="深入 TypeScript">
@@ -913,44 +951,6 @@ var _hmt = _hmt || [];
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/12/06/React/18/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/18.webp" alt="深入 React Fiber">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-12-05T16:00:00.000Z">2020-12-06</time></div>
-                    <a href="/2020/12/06/React/18/" class="has-link-black-ter is-size-6">深入 React Fiber</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/React/">React</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/11/28/Essay/31/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.webp" alt="矩形包围盒碰撞检测">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-11-27T16:00:00.000Z">2020-11-28</time></div>
-                    <a href="/2020/11/28/Essay/31/" class="has-link-black-ter is-size-6">矩形包围盒碰撞检测</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -969,7 +969,7 @@ var _hmt = _hmt || [];
                     <span class="level-item">一月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1586,7 +1586,7 @@ var _hmt = _hmt || [];
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">52</span>
+                        <span class="tag is-grey">54</span>
                     </a>
                 </div>
                 
