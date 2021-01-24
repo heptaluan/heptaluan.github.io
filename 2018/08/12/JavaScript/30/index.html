@@ -2,24 +2,24 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-<title>JavaScript 并发模型 - heptaluan&#39;s blog</title>
+<title>JavaScript 中的事件轮询机制 - heptaluan&#39;s blog</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-    <meta name="description" content="最后更新于 2020-02-01  JavaScript 的一大特点就是单线程，这意味着在任何时候只能有一段代码执行，JavaScript 主线程在运行时，会建立一个执行同步代码的栈和执行异步代码的队列，在深入展开之前，我们先来了解一些前置知识，包括单线程执行机制和 JavaScript 中堆和栈的相关概念（堆和栈的相关概念可以参考 体系结构与操作系统 当中的相关章节）">
+    <meta name="description" content="最后更新于 2019-12-28  最近打算重新复习一下 JavaScript 中的事件轮询机制，而且刚好在之前也介绍过 Node.js 中的事件轮询机制，它与 JavaScript 中的事件轮询机制是有所区别的，所以在这里打算重新的梳理一下，也算是将之前博客当中关于事件轮询的相关内容做一个汇总，方便以后更为方便的复习和查看，下面我们就先从一些前置知识点开始看起">
 <meta name="keywords" content="JavaScript">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JavaScript 并发模型">
+<meta property="og:title" content="JavaScript 中的事件轮询机制">
 <meta property="og:url" content="http://yoursite.com/2018/08/12/JavaScript/30/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="最后更新于 2020-02-01  JavaScript 的一大特点就是单线程，这意味着在任何时候只能有一段代码执行，JavaScript 主线程在运行时，会建立一个执行同步代码的栈和执行异步代码的队列，在深入展开之前，我们先来了解一些前置知识，包括单线程执行机制和 JavaScript 中堆和栈的相关概念（堆和栈的相关概念可以参考 体系结构与操作系统 当中的相关章节）">
+<meta property="og:description" content="最后更新于 2019-12-28  最近打算重新复习一下 JavaScript 中的事件轮询机制，而且刚好在之前也介绍过 Node.js 中的事件轮询机制，它与 JavaScript 中的事件轮询机制是有所区别的，所以在这里打算重新的梳理一下，也算是将之前博客当中关于事件轮询的相关内容做一个汇总，方便以后更为方便的复习和查看，下面我们就先从一些前置知识点开始看起">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/30.webp">
-<meta property="og:updated_time" content="2021-01-01T12:30:51.659Z">
+<meta property="og:updated_time" content="2021-01-23T14:55:27.589Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JavaScript 并发模型">
-<meta name="twitter:description" content="最后更新于 2020-02-01  JavaScript 的一大特点就是单线程，这意味着在任何时候只能有一段代码执行，JavaScript 主线程在运行时，会建立一个执行同步代码的栈和执行异步代码的队列，在深入展开之前，我们先来了解一些前置知识，包括单线程执行机制和 JavaScript 中堆和栈的相关概念（堆和栈的相关概念可以参考 体系结构与操作系统 当中的相关章节）">
+<meta name="twitter:title" content="JavaScript 中的事件轮询机制">
+<meta name="twitter:description" content="最后更新于 2019-12-28  最近打算重新复习一下 JavaScript 中的事件轮询机制，而且刚好在之前也介绍过 Node.js 中的事件轮询机制，它与 JavaScript 中的事件轮询机制是有所区别的，所以在这里打算重新的梳理一下，也算是将之前博客当中关于事件轮询的相关内容做一个汇总，方便以后更为方便的复习和查看，下面我们就先从一些前置知识点开始看起">
 <meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/30.webp">
 
 
@@ -34,7 +34,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
 <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.5.0/styles/atom-one-light.css">
 
 
     
@@ -69,16 +69,6 @@
 
     
     
-<script>
-var _hmt = _hmt || [];
-(function() {
-    var hm = document.createElement("script");
-    hm.src = "//hm.baidu.com/hm.js?f0399d35b846ccd84f70acc7b232fb2e";
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(hm, s);
-})();
-</script>
-
     
     
 
@@ -109,7 +99,7 @@ var _hmt = _hmt || [];
         <!-- <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.svg" alt="JavaScript 并发模型" height="28">
+                <img src="/images/logo.svg" alt="JavaScript 中的事件轮询机制" height="28">
             
             </a>
         </div> -->
@@ -154,7 +144,7 @@ var _hmt = _hmt || [];
     
     <div class="card-image">
         <span class="image is-7by1">
-            <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/30.webp" alt="JavaScript 并发模型">
+            <img class="thumbnail" src="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/30.webp" alt="JavaScript 中的事件轮询机制">
         </span>
     </div>
     
@@ -173,7 +163,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    1 小时 读完 (大约 6869 个字)
+                    1 小时 读完 (大约 9485 个字)
                 </span>
                 
                 
@@ -182,39 +172,18 @@ var _hmt = _hmt || [];
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                JavaScript 并发模型
+                JavaScript 中的事件轮询机制
             
         </h1>
         <div class="content">
             <blockquote>
-<p>最后更新于 <code>2020-02-01</code></p>
+<p>最后更新于 <code>2019-12-28</code></p>
 </blockquote>
-<p><code>JavaScript</code> 的一大特点就是单线程，这意味着在任何时候只能有一段代码执行，<code>JavaScript</code> 主线程在运行时，会建立一个执行同步代码的栈和执行异步代码的队列，在深入展开之前，我们先来了解一些前置知识，包括单线程执行机制和 <code>JavaScript</code> 中堆和栈的相关概念（堆和栈的相关概念可以参考 <a href="https://heptaluan.github.io/2020/01/01/Essay/06/" target="_blank" rel="noopener">体系结构与操作系统</a> 当中的相关章节）</p>
+<p>最近打算重新复习一下 <code>JavaScript</code> 中的事件轮询机制，而且刚好在之前也介绍过 <a href="https://heptaluan.github.io/2019/07/05/Node/04/" target="_blank" rel="noopener">Node.js 中的事件轮询机制</a>，它与 <code>JavaScript</code> 中的事件轮询机制是有所区别的，所以在这里打算重新的梳理一下，也算是将之前博客当中关于事件轮询的相关内容做一个汇总，方便以后更为方便的复习和查看，下面我们就先从一些前置知识点开始看起</p>
 <a id="more"></a>
 
 
-<h2 id="单线程执行机制"><a href="#单线程执行机制" class="headerlink" title="单线程执行机制"></a>单线程执行机制</h2><p><code>JavaScript</code> 属于单线程，程序按顺序执行，本质上执行的是基于浏览器的一个事件队列，要执行的函数和触发事件的回调函数都被放在这个队列中，但是浏览器是「事件驱动的、异步的、多线程的」</p>
-<p>浏览器内部有一个事件轮询（<code>Event Loop</code>），是一个大的内部消息循环，会轮询大的消息队列并执行，也就是 <code>JavaScript</code> 要处理的事件队列，是浏览器维护的，浏览器至少有四个线程（不同浏览器会有差异）</p>
-<ul>
-<li><code>JavaScript</code> 引擎线程</li>
-<li>界面渲染线程</li>
-<li>浏览器事件触发线程</li>
-<li><code>HTTP</code> 请求线程</li>
-</ul>
-<p>而在 <code>JavaScript</code> 当中我们一般比较熟悉的的异步操作有 <code>setTimeout</code> 和 <code>Ajax</code>，来看看它们之间的区别</p>
-<ul>
-<li><code>setTimeout</code>，<code>JavaScript</code> 在执行到延时函数时，会触发浏览器的定时器，到设置时间，浏览器再将这个函数放入执行的函数队列，再由 <code>JavaScript</code> 引擎执行，都是在浏览器空闲了才会执行</li>
-<li><code>Ajax</code>，是真正的异步，在调用 <code>Ajax</code> 的时候，浏览器会开辟一个新的线程，去处理这个请求，得到响应后，如果这个请求有回调，会将这个回调再放入事件队列中，再由 <code>JavaScript</code> 引擎执行</li>
-</ul>
-<h2 id="阻塞"><a href="#阻塞" class="headerlink" title="阻塞"></a>阻塞</h2><p>浏览器虽然是多线程，但是由于 <code>JavaScript</code> 具有阻塞特性（比如 <code>alert()</code>），无论外链还是内嵌脚本，在浏览器执行解释 <code>JavaScript</code> 脚本的时候，浏览器是不会去做别的事情的，比如渲染页面，而是直到 <code>JavaScript</code> 下载并执行完毕，这样一来 <code>JavaScript</code> 脚本的下载、解释执行，会反使页面的继续绘制，给用户带来不良的体验，所以避免此类情况的话可以采用下面一些方式</p>
-<ul>
-<li>将 <code>&lt;script&gt;</code> 内嵌和外链，在可以的情况下放在 <code>&lt;body&gt;</code> 底部（对于 <code>CSS</code>，浏览器是并行下载的）</li>
-<li>在页面 <code>onload</code> 后再加载 <code>JavaScript</code></li>
-<li>可以使用 <code>html5</code> 的  <code>&lt;script&gt;</code> 标签的 <code>defer</code> 属性，在页面加载完成后下载</li>
-<li>使用动态创建 <code>&lt;script&gt;</code> 标签的方式，在页面加载完成后添加进去（<code>createElement</code>）</li>
-</ul>
-<p>简单来说就是一句话，先让页面渲染完，再加载 <code>JavaScript</code></p>
-<h2 id="JavaScript-中的栈和堆"><a href="#JavaScript-中的栈和堆" class="headerlink" title="JavaScript 中的栈和堆"></a>JavaScript 中的栈和堆</h2><p>首先要先说一下耳熟能详的「堆栈」，要区分数据结构和内存中各自「堆栈」的含义，数据结构中的堆和栈是两种不同的数据项按序排列的数据结构，但是在这里我们主要介绍的是内存中的堆区与栈区</p>
+<h2 id="JavaScript-中的栈和堆"><a href="#JavaScript-中的栈和堆" class="headerlink" title="JavaScript 中的栈和堆"></a>JavaScript 中的栈和堆</h2><p>我们都知道，<code>JavaScript</code> 的一大特点就是单线程，这意味着在任何时候只能有一段代码执行，<code>JavaScript</code> 主线程在运行时，会建立一个执行同步代码的「栈」和执行异步代码的「队列」，在深入展开之前，我们先来简单的了解一下 <code>JavaScript</code> 中堆和栈的相关概念，关于 <a href="https://heptaluan.github.io/2020/01/01/Essay/06/#%E6%A0%88" target="_blank" rel="noopener">栈</a> 和 <a href="https://heptaluan.github.io/2020/01/01/Essay/06/#%E5%A0%86" target="_blank" rel="noopener">堆</a> 我们需要区分数据结构和内存中各自「堆栈」的含义，数据结构中的堆和栈是两种不同的数据项按序排列的数据结构，但是在这里我们主要介绍的是内存中的堆区与栈区</p>
 <h4 id="内存中的堆区与栈区"><a href="#内存中的堆区与栈区" class="headerlink" title="内存中的堆区与栈区"></a>内存中的堆区与栈区</h4><p>在 <code>C</code> 语言中，各个区别如下</p>
 <ul>
 <li>栈区是分配局部变量的空间</li>
@@ -223,14 +192,15 @@ var _hmt = _hmt || [];
 <li>只读区是分配常量和程序代码空间的</li>
 </ul>
 <p>一个简单的例子</p>
-<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">int</span> a = <span class="hljs-number">0</span>;                  <span class="hljs-comment">// 全局初始化区</span></span><br><span class="line"><span class="hljs-keyword">char</span> *p1;                   <span class="hljs-comment">// 全局未初始化区</span></span><br><span class="line"></span><br><span class="line">main() &#123;</span><br><span class="line">  <span class="hljs-keyword">int</span> b;                    <span class="hljs-comment">// 栈</span></span><br><span class="line">  <span class="hljs-keyword">char</span> s[] = <span class="hljs-string">"abc"</span>;         <span class="hljs-comment">// 栈</span></span><br><span class="line">  <span class="hljs-keyword">char</span> *p2;                 <span class="hljs-comment">// 栈</span></span><br><span class="line">  <span class="hljs-keyword">char</span> *p3 = <span class="hljs-string">"123"</span>;         <span class="hljs-comment">// 在常量区，p3 在栈上</span></span><br><span class="line">  <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> c =<span class="hljs-number">0</span>，         <span class="hljs-comment">// 全局（静态）初始化区</span></span><br><span class="line">  p1 = (<span class="hljs-keyword">char</span> *)<span class="hljs-built_in">malloc</span>(<span class="hljs-number">10</span>);  <span class="hljs-comment">// 堆</span></span><br><span class="line">  p2 = (<span class="hljs-keyword">char</span> *)<span class="hljs-built_in">malloc</span>(<span class="hljs-number">20</span>);  <span class="hljs-comment">// 堆</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight c hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">int</span> a = <span class="hljs-number">0</span>;                  <span class="hljs-comment">// 全局初始化区</span></span><br><span class="line"><span class="hljs-keyword">char</span> *p1;                   <span class="hljs-comment">// 全局未初始化区</span></span><br><span class="line"></span><br><span class="line">main() &#123;</span><br><span class="line">  <span class="hljs-keyword">int</span> b;                    <span class="hljs-comment">// 栈</span></span><br><span class="line">  <span class="hljs-keyword">char</span> s[] = <span class="hljs-string">"abc"</span>;         <span class="hljs-comment">// 栈</span></span><br><span class="line">  <span class="hljs-keyword">char</span> *p2;                 <span class="hljs-comment">// 栈</span></span><br><span class="line">  <span class="hljs-keyword">char</span> *p3 = <span class="hljs-string">"123"</span>;         <span class="hljs-comment">// 在常量区，p3 在栈上</span></span><br><span class="line">  <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> c = <span class="hljs-number">0</span>;         <span class="hljs-comment">// 全局（静态）初始化区</span></span><br><span class="line">  p1 = (<span class="hljs-keyword">char</span> *)<span class="hljs-built_in">malloc</span>(<span class="hljs-number">10</span>);  <span class="hljs-comment">// 堆</span></span><br><span class="line">  p2 = (<span class="hljs-keyword">char</span> *)<span class="hljs-built_in">malloc</span>(<span class="hljs-number">20</span>);  <span class="hljs-comment">// 堆</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>而 <code>JavaScript</code> 是高级语言，底层依靠 <code>C/C++</code> 来编译实现，其变量划分为基本数据类型和引用数据类型</p>
 <ul>
-<li>基本数据类型包括 <code>undefined</code>，<code>null</code>，<code>boolean</code>，<code>number</code>，<code>BigInt</code>，<code>string</code>，<code>Symbol</code>，这些类型在内存中分别占有固定大小的空间，他们的值保存在栈空间，通过按值访问、拷贝和比较</li>
-<li>引用类型包括 <code>Object</code>，<code>Array</code>，<code>Function</code>，<code>Error</code>，<code>Date</code>，这些类型大小不固定，栈内存中存放地址指向堆内存中的对象，是按引用访问的（和 <code>C</code> 语言的指针类似）</li>
+<li>基本数据类型（<code>undefined/null/boolean/string/number/BigInt/Symbol</code>）在内存中分别占有固定大小的空间，他们的值保存在栈空间，通过按值访问、拷贝和比较</li>
+<li>引用数据类型（<code>Object/Array/Function/Error/Date</code>）大小不固定，栈内存中存放地址指向堆内存中的对象，是按引用访问的（和 <code>C</code> 语言的指针类似）</li>
 </ul>
-<p>对于引用类型的变量，栈内存中存放的只是该对象的访问地址，在堆内存中为该值分配空间，由于这种值的大小不固定，因此不能把他们保存在栈内存中，但是内存地址大小是固定的，因此可以将堆内存地址保存到栈内存中，这样一来，当查询引用类型的变量的时候，就会先从栈中读取堆内存地址，然后在根据地址取出对应的值，显而易见的是，<code>JavaScript</code> 中所有引用类型创建实例的时候，都是显式或者隐式的 <code>new</code> 出对应类型的实例，实际上就是对应 <code>C</code> 语言的 <code>malloc()</code> 分配内存函数</p>
+<p>对于引用类型的变量，栈内存中存放的只是该对象的访问地址，在堆内存中为该值分配空间，由于这种值的大小不固定，因此不能把他们保存在栈内存中，但是内存地址大小是固定的，因此可以将堆内存地址保存到栈内存中</p>
+<p>这样一来，当查询引用类型的变量的时候，就会先从栈中读取堆内存地址，然后在根据地址取出对应的值，显而易见的是，<code>JavaScript</code> 中所有引用类型创建实例的时候，都是显式或者隐式的 <code>new</code> 出对应类型的实例，实际上就是对应 <code>C</code> 语言的 <code>malloc()</code> 分配内存函数</p>
 <h4 id="栈和队列的区别"><a href="#栈和队列的区别" class="headerlink" title="栈和队列的区别"></a>栈和队列的区别</h4><ul>
 <li>栈的插入和删除操作都是在一端进行的，而队列的操作却是在两端进行的</li>
 <li>队列先进先出，栈先进后出</li>
@@ -246,10 +216,95 @@ var _hmt = _hmt || [];
 <li>堆（数据结构），堆可以被看成是一棵树，如堆排序</li>
 <li>栈（数据结构），一种先进后出的数据结构</li>
 </ul>
-<p>在了解完相关前置知识之后，下面我们就正式来看看 <code>JavaScript</code> 当中的并发模型</p>
-<h2 id="并发模型"><a href="#并发模型" class="headerlink" title="并发模型"></a>并发模型</h2><p><code>JavaScript</code> 当中的并发模型可以参考下面这个理论模型</p>
-<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/13.png" alt></p>
-<p><code>JavaScript</code> 执行引擎的主线程运行的时候，产生堆（<code>Heap</code>）和栈（<code>Stack</code>），程序中代码依次进入栈中等待执行，若执行时遇到异步方法，该异步方法会被添加到用于回调的队列（<code>Queue</code>）中，即 <code>JavaScript</code> 执行引擎的主线程拥有一个执行栈（或者堆）和一个任务队列</p>
+<h2 id="进程和线程"><a href="#进程和线程" class="headerlink" title="进程和线程"></a>进程和线程</h2><p>我们都知道 <code>JavaScript</code> 属于单线程，程序按顺序执行，本质上执行的是基于浏览器的一个事件队列，要执行的函数和触发事件的回调函数都被放在这个队列中最终交由浏览器来执行，那么浏览器又是如何来执行的呢？在此之前，我们需要先来了解一下什么是进程和线程</p>
+<h4 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h4><p>学术上说，进程是一个具有一定独立功能的程序在一个数据集上的一次动态执行的过程，是操作系统进行资源分配和调度的一个独立单位，是应用程序运行的载体，我们这里将进程比喻为工厂的车间，它代表 <code>CPU</code> 所能处理的单个任务，任一时刻，<code>CPU</code> 总是运行一个进程，其他进程处于非运行状态</p>
+<h4 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h4><p>在早期的操作系统中并没有线程的概念，进程是能拥有资源和独立运行的最小单位，也是程序执行的最小单位，任务调度采用的是时间片轮转的抢占式调度方式，而进程是任务调度的最小单位，每个进程有各自独立的一块内存，使得各个进程之间内存地址相互隔离</p>
+<p>后来随着计算机的发展，对 <code>CPU</code> 的要求越来越高，进程之间的切换开销较大，已经无法满足越来越复杂的程序的要求了，于是就发明了线程，线程是程序执行中一个单一的顺序控制流程，是程序执行流的最小单元，这里把线程比喻一个车间的工人，即一个车间可以允许由多个工人协同完成一个任务</p>
+<h4 id="进程和线程的区别"><a href="#进程和线程的区别" class="headerlink" title="进程和线程的区别"></a>进程和线程的区别</h4><ul>
+<li>进程是操作系统分配资源的最小单位，线程是程序执行的最小单位</li>
+<li>一个进程由一个或多个线程组成，线程是一个进程中代码的不同执行路线</li>
+<li>进程之间相互独立，但同一进程下的各个线程之间共享程序的内存空间（包括代码段、数据集、堆等）及一些进程级的资源（如打开文件和信号）</li>
+<li>调度和切换，线程上下文切换比进程上下文切换要快得多</li>
+</ul>
+<h4 id="多进程与多线程"><a href="#多进程与多线程" class="headerlink" title="多进程与多线程"></a>多进程与多线程</h4><p>多进程指的是在同一个时间里，同一个计算机系统中如果允许两个或两个以上的进程处于运行状态，多进程带来的好处是明显的，比如你可以听歌的同时，打开编辑器敲代码，编辑器和听歌软件的进程之间丝毫不会相互干扰</p>
+<p>而多线程是指程序中包含多个执行流，即在一个程序中可以同时运行多个不同的线程来执行不同的任务，也就是说允许单个程序创建多个并行执行的线程来完成各自的任务</p>
+<h2 id="浏览器是多进程的"><a href="#浏览器是多进程的" class="headerlink" title="浏览器是多进程的"></a>浏览器是多进程的</h2><p>在上面我们已经简单了解了进程和线程的一些相关内容，简单汇总一下就是</p>
+<ul>
+<li>进程是 <code>CPU</code> 资源分配的最小单位（是能拥有资源和独立运行的最小单位）</li>
+<li>线程是 <code>CPU</code> 调度的最小单位（线程是建立在进程的基础上的一次程序运行单位，一个进程中可以有多个线程）</li>
+<li>不同进程之间也可以通信，不过代价较大</li>
+<li>单线程与多线程，都是指在一个进程内的单和多</li>
+</ul>
+<p>对于计算机来说，每一个应用程序都是一个进程，而每一个应用程序都会分别有很多的功能模块，这些功能模块实际上是通过子进程来实现的，对于这种子进程的扩展方式，我们可以称这个应用程序是多进程的</p>
+<p>而对于浏览器来说，浏览器就是多进程的，比如我们在 <code>Chrome</code> 浏览器中打开了多个 <code>TAB</code>，然后打开控制管理器是可以看到一个 <code>Chrome</code> 浏览器启动了好多个进程，那么浏览器又是具体包含了哪些进程呢？主要有下面这些</p>
+<ul>
+<li>主进程<ul>
+<li>协调控制其他子进程（创建、销毁）</li>
+<li>浏览器界面显示，用户交互，前进、后退、收藏</li>
+<li>将渲染进程得到的内存中的 <code>Bitmap</code>，绘制到用户界面上</li>
+<li>处理不可见操作，网络请求，文件访问等</li>
+</ul>
+</li>
+<li>第三方插件进程<ul>
+<li>每种类型的插件对应一个进程，仅当使用该插件时才创建</li>
+</ul>
+</li>
+<li><code>GPU</code> 进程<ul>
+<li>用于 <code>3D</code> 绘制等</li>
+</ul>
+</li>
+<li>渲染进程，就是我们说的浏览器内核<ul>
+<li>负责页面渲染，脚本执行，事件处理等</li>
+<li>每个 <code>TAB</code> 页一个渲染进程</li>
+</ul>
+</li>
+</ul>
+<p>其实上面的有些进程我们不需要太过理解，在这里我们只需要重点关心渲染进程，也就是我们常说的浏览器内核</p>
+<h2 id="浏览器内核（渲染进程）"><a href="#浏览器内核（渲染进程）" class="headerlink" title="浏览器内核（渲染进程）"></a>浏览器内核（渲染进程）</h2><p>进程和线程是一对多的关系，也就是说一个进程包含了多条线程，而对于渲染进程来说，它当然也是多线程的了，接下来我们来看一下渲染进程包含哪些线程，主要有以下这些</p>
+<ul>
+<li><code>GUI</code> 渲染线程<ul>
+<li>负责渲染页面，布局和绘制</li>
+<li>页面需要重绘和回流时，该线程就会执行</li>
+<li>与 <code>JavaScript</code> 引擎线程互斥，防止渲染结果不可预期</li>
+</ul>
+</li>
+<li><code>JavaScript</code> 引擎线程<ul>
+<li>负责处理解析和执行 <code>JavaScript</code> 脚本程序</li>
+<li>只有一个 <code>JavaScript</code> 引擎线程（单线程）</li>
+<li>与 <code>GUI</code> 渲染线程互斥，防止渲染结果不可预期</li>
+</ul>
+</li>
+<li>事件触发线程<ul>
+<li>用来控制事件循环（鼠标点击、<code>setTimeout</code>、<code>Ajax</code> 等）</li>
+<li>当事件满足触发条件时，将事件放入到 <code>JavaScript</code> 引擎所在的执行队列中</li>
+</ul>
+</li>
+<li>定时触发器线程<ul>
+<li><code>setInterval</code> 与 <code>setTimeout</code> 所在的线程</li>
+<li>定时任务并不是由 <code>JavaScript</code> 引擎计时的，是由定时触发线程来计时的</li>
+<li>计时完毕后，通知事件触发线程</li>
+</ul>
+</li>
+<li>异步 <code>HTTP</code> 请求线程<ul>
+<li>浏览器有一个单独的线程用于处理 <code>Ajax</code> 请求</li>
+<li>当请求完成时，若有回调函数，通知事件触发线程</li>
+</ul>
+</li>
+</ul>
+<p>当我们了解了渲染进程包含的这些线程后，这里我们思考两个问题</p>
+<ul>
+<li>为什么 <code>JavaScript</code> 是单线程的</li>
+</ul>
+<p>首先是历史原因，在创建 <code>JavaScript</code> 这门语言时，多进程多线程的架构并不流行，硬件支持并不好，其次是因为多线程的复杂性，多线程操作需要加锁，编码的复杂性会增高</p>
+<p>而且如果同时操作 <code>DOM</code>，假设有两个线程，一个线程在某个 <code>DOM</code> 节点上添加内容，另一个线程删除了这个节点，这时浏览器应该以哪个线程为准，所以说最终可能会导致 <code>DOM</code> 渲染的结果不可预期</p>
+<ul>
+<li>为什么 <code>GUI</code> 渲染线程为什么与 <code>JavaScript</code> 引擎线程互斥</li>
+</ul>
+<p>这是由于 <code>JavaScript</code> 是可以操作 <code>DOM</code> 的，如果同时修改元素属性并同时渲染界面（即 <code>JavaScript</code> 线程和 <code>UI</code> 线程同时运行），那么渲染线程前后获得的元素就可能不一致了</p>
+<p>因此，为了防止渲染出现不可预期的结果，浏览器设定 <code>GUI</code> 渲染线程和 <code>JavaScript</code> 引擎线程为互斥关系，当 <code>JavaScript</code> 引擎线程执行时 <code>GUI</code> 渲染线程会被挂起，<code>GUI</code> 更新则会被保存在一个队列中等待 <code>JavaScript</code> 引擎线程空闲时立即被执行</p>
+<h2 id="Event-Loop"><a href="#Event-Loop" class="headerlink" title="Event Loop"></a>Event Loop</h2><p>我们从一张图开始看起，如下</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/30-01.gif" alt></p>
+<p><code>JavaScript</code> 执行引擎的主线程运行的时候，产生堆（<code>Heap</code>）和栈（<code>Stack</code>），程序中代码依次进入栈中等待执行，若执行时遇到异步方法，该异步方法会被添加到用于回调的队列（<code>Queue</code>）中，即 <code>JavaScript</code> 执行引擎的主线程拥有一个执行栈（或者堆）和一个任务队列，其中</p>
 <ul>
 <li>栈（<code>Stack</code>），函数调用会形成了一个堆栈帧</li>
 <li>堆（<code>Heap</code>），对象被分配在一个堆中，一个用以表示一个内存中大的未被组织的区域</li>
@@ -261,21 +316,14 @@ var _hmt = _hmt || [];
 </ul>
 </li>
 </ul>
-<h2 id="Event-Loop"><a href="#Event-Loop" class="headerlink" title="Event Loop"></a>Event Loop</h2><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/14.gif" alt></p>
-<p>关于上图当中的内容，这里我们主要看两个点，即 <code>Queue</code> 和 <code>Callback</code></p>
-<ul>
-<li>关于 <code>Queue</code> 值得注意的是，除了 <code>IO</code> 设备的事件（比如 <code>load</code>）会被添加到 <code>Queue</code> 中，用户操作产生的事件（比如 <code>click</code>，<code>touchmove</code>）同样也会被添加到 <code>Queue</code> 中，队列中的这些事件会在主线程的执行栈被清空时被依次读取（队列先进先出，即先被压入队列中的事件会被先执行）</li>
-<li>关于 <code>Callback</code> 则是被主线程挂起来的代码，等主线程执行队列中的事件时，事件对应的 <code>Callback</code> 代码就会被执行</li>
-</ul>
-<p>针对上面的并发模型和 <code>JavaScript</code> 的同步异步运行机制，我们可以看到整个流程大致是这样的</p>
+<p>所以我们梳理出整个执行流程大致模样，如下</p>
 <ol>
-<li>所有同步任务都在主线程上执行，形成一个执行栈（并发模型的 <code>Stack</code>）</li>
+<li>所有同步任务都在主线程上执行，形成一个执行栈（并发模型的 <code>Stack</code>），同步的执行流程可以参考我们之前整理过的 <a href="http://localhost:4000/2018/05/20/JavaScript/36/" target="_blank" rel="noopener">JavaScript 的同步执行过程</a></li>
 <li>主线程之外，还存在一个任务队列（并发模型的 <code>Queue</code>），只要异步任务有了运行结果，就在任务队列中放置一个事件</li>
 <li>一旦执行栈中的所有同步任务执行完毕，系统就会读取任务队列，看看里面有哪些事件和那些对应的异步任务，于是等待结束状态，进入执行栈开始执行</li>
-<li>主线程不断重复上面的第三步</li>
+<li>主线程不断重复上面的第三步，也就是只要主线程空了，就会去读取任务队列</li>
 </ol>
 <p>因为主线程从任务队列中读取事件的过程是循环不断的，因此这种运行机制又称为 <code>Event Loop</code>（事件循环），简单总结就是，主线程运行的时候，产生堆（<code>Heap</code>）和栈（<code>Stack</code>），栈中的代码调用各种外部 <code>API</code>，它们在任务队列中加入各种事件（<code>click</code>，<code>load</code>，<code>done</code>），只要栈中的代码执行完毕，主线程就会去读取任务队列，依次执行那些事件所对应的回调函数</p>
-<p>下面我们就简单的结合规范，来看一下官方当中针对 <code>Event Loop</code> 是如何进行介绍的</p>
 <h2 id="任务队列"><a href="#任务队列" class="headerlink" title="任务队列"></a>任务队列</h2><p>我们在之前提到过，事件循环是通过 <a href="https://html.spec.whatwg.org/multipage/webappapis.html#task-queues" target="_blank" rel="noopener">任务队列</a> 的机制来进行协调的，在一个 <code>Event Loop</code> 中可以有一个或者多个任务队列（<code>Task Queue</code>），一个任务队列便是一系列有序任务（<code>Task</code>）的集合，每个任务都有一个任务源（<code>Task Source</code>），源自同一个任务源的 <code>Task</code> 必须放到同一个任务队列，从不同源来的则被添加到不同队列</p>
 <p>在事件循环中，每进行一次循环操作称为 <code>Tick</code>，每一次 <code>Tick</code> 的 <a href="https://html.spec.whatwg.org/multipage/webappapis.html#event-loops-processing-model" target="_blank" rel="noopener">任务处理模型</a> 是比较复杂的，但关键步骤如下</p>
 <ul>
@@ -286,12 +334,12 @@ var _hmt = _hmt || [];
 </ul>
 <p>我们仔细查阅规范可知，异步任务可分为 <code>Task</code> 和 <code>Microtask</code> 两类，不同的 <code>API</code> 注册的异步任务会依次进入自身对应的队列中，然后等待 <code>Event Loop</code> 将它们依次压入执行栈中执行（也就是如上面章节中的图片所示那样）</p>
 <blockquote>
-<p>在网上比较常见的说法是分为是分为 <code>Macrotask</code>（<code>宏任务</code>） 和 <code>Microtask</code>（<code>微任务</code>） 两个概念，但规范中并没有提到 <code>Macrotask</code>，因而一个比较合理的解释是 <code>Task</code> 即为其它文章中的 <code>Macrotask</code>，另外在 <code>ES2015</code> 规范中将 <code>Microtask</code> 又称为 <code>Job</code></p>
+<p>在网上比较常见的说法是分为是分为宏任务（<code>Macrotask</code>）和微任务（<code>Microtask</code>）两个概念，但规范中并没有提到 <code>Macrotask</code>，因而一个比较合理的解释是 <code>Task</code> 即为其它文章中的 <code>Macrotask</code>，另外在 <code>ES2015</code> 规范中将 <code>Microtask</code> 又称为 <code>Job</code></p>
 </blockquote>
-<p>但是在这里我们为了统一，干脆就称为 <code>Macrotask</code>（<code>宏任务</code>） 和 <code>Microtask</code>（<code>微任务</code>），知道它们各自具体代表的是什么即可，下面我们来看看它们两者之间的区别</p>
+<p>但是在这里我们为了统一，干脆就称为宏任务（<code>Macrotask</code>）和微任务（<code>Microtask</code>），知道它们各自具体代表的是什么即可，下面我们来看看它们两者之间的区别</p>
 <ul>
-<li><code>Macrotask</code>（<code>宏任务</code>） 主要包含 <code>setTimeout</code>、<code>setInterval</code>、<code>I/O</code>、<code>UI</code> 交互事件、<code>postMessage</code>、<code>MessageChannel</code>、<code>setImmediate</code>（<code>Node.js</code>）</li>
-<li><code>Microtask</code>（<code>微任务</code>） 主要包含 <code>Promise.then</code>、<code>MutaionObserver</code>、<code>process.nextTick</code>（<code>Node.js</code>）、<code>Object.observe</code>（已废弃）</li>
+<li>宏任务（<code>Macrotask</code>）主要包含 <code>setTimeout</code>、<code>setInterval</code>、<code>I/O</code>、<code>UI</code> 交互事件、<code>postMessage</code>、<code>MessageChannel</code>、<code>setImmediate</code>（<code>Node.js</code>）</li>
+<li>微任务（<code>Microtask</code>）主要包含 <code>Promise.then</code>、<code>MutaionObserver</code>、<code>process.nextTick</code>（<code>Node.js</code>）、<code>Object.observe</code>（已废弃）</li>
 </ul>
 <p>这里有几个需要注意的地方</p>
 <ul>
@@ -299,7 +347,24 @@ var _hmt = _hmt || [];
 <li>在 <code>Node.js</code> 中，会优先清空 <code>next tick queue</code>，即通过 <code>process.nextTick</code> 注册的函数，再清空 <code>other queue</code>，常见的如 <code>Promise</code>，此外，<code>timers</code>（<code>setTimeout/setInterval</code>） 会优先于 <code>setImmediate</code> 执行，因为前者在 <code>timer</code> 阶段执行，后者在 <code>check</code> 阶段执行（下面我们会进行介绍）</li>
 <li>还有一个比较特殊的 <code>requestAnimationFrame</code>，有的将其归纳到宏任务当中，但是这里是存在一定争议的，关于这个我们会在后面来详细进行介绍</li>
 </ul>
-<h2 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a>执行流程</h2><p>在了解了以上内容以后，我们可以来简单的梳理一下 <code>EventLoop</code> 的执行流程，我们都知道，所有 <code>JavaScript</code> 代码一开始都只可能是同步代码，所以肯定是从同步开始进行的</p>
+<p>下面我们就来稍微深入的了解一下宏任务和微任务</p>
+<h4 id="宏任务"><a href="#宏任务" class="headerlink" title="宏任务"></a>宏任务</h4><p>我们可以将每次执行栈执行的代码当做是一个宏任务（包括每次从事件队列中获取一个事件回调并放到执行栈中执行），每一个宏任务会从头到尾执行完毕，不会执行其他</p>
+<p>我们在之前提到过，<code>JavaScript</code> 引擎线程和 <code>GUI</code> 渲染线程是互斥的关系，浏览器为了能够使宏任务和 <code>DOM</code> 任务有序的进行，会在一个宏任务执行结果后，在下一个宏任务执行前，<code>GUI</code> 渲染线程开始工作，对页面进行渲染，有些类似于宏任务与渲染交替执行的一个过程</p>
+<p>我们可以通过一个示例来进行了解，如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">document</span>.body.style = <span class="hljs-string">'background:black'</span></span><br><span class="line"><span class="hljs-built_in">document</span>.body.style = <span class="hljs-string">'background:red'</span></span><br><span class="line"><span class="hljs-built_in">document</span>.body.style = <span class="hljs-string">'background:blue'</span></span><br><span class="line"><span class="hljs-built_in">document</span>.body.style = <span class="hljs-string">'background:grey'</span></span><br></pre></td></tr></table></figure>
+
+<p>我们可以将上面这段代码放到浏览器的控制台下进行执行，运行以后我们会看到的结果是，页面背景会在瞬间变成灰色，因为以上代码属于同一次宏任务，所以全部执行完才触发页面渲染，渲染时 <code>GUI</code> 线程会将所有 <code>UI</code> 改动优化合并，所以视觉效果上，只会看到页面变成灰色，我们将上面的示例稍微调整一下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">document</span>.body.style = <span class="hljs-string">'background:blue'</span></span><br><span class="line"></span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">document</span>.body.style = <span class="hljs-string">'background:black'</span></span><br><span class="line">&#125;, <span class="hljs-number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>再次执行一下，这次可以发现，页面先显示成蓝色背景，然后瞬间变成了黑色背景，这是因为以上代码属于两次宏任务，第一次宏任务执行的代码是将背景变成蓝色，然后触发渲染，将页面变成蓝色，再触发第二次宏任务将背景变成黑色</p>
+<h4 id="微任务"><a href="#微任务" class="headerlink" title="微任务"></a>微任务</h4><p>我们已经知道宏任务结束后，会执行渲染，然后执行下一个宏任务，而微任务可以理解成在当前宏任务执行后立即执行的任务，也就是说，当宏任务执行完，会在渲染前，将执行期间所产生的所有微任务都执行完，老规矩，来看示例</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">document</span>.body.style = <span class="hljs-string">'background:blue'</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Promise</span>.resolve().then(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">2</span>)</span><br><span class="line">  <span class="hljs-built_in">document</span>.body.style = <span class="hljs-string">'background:black'</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-number">3</span>)</span><br></pre></td></tr></table></figure>
+
+<p>控制台会输出 <code>1 3 2</code>，这是因为 <code>Promise</code> 对象的 <code>then</code> 方法的回调函数是异步执行，所以 <code>2</code> 最后输出，而页面的背景色直接变成黑色，没有经过蓝色的阶段，是因为我们在宏任务中将背景设置为蓝色，但在进行渲染前执行了微任务，在微任务中将背景变成了黑色，然后才执行的渲染，我们将上面的示例稍微调整一下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">1</span>)</span><br><span class="line">  <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-number">3</span>).then(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(data))</span><br><span class="line">&#125;, <span class="hljs-number">0</span>)</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">2</span>)</span><br><span class="line">&#125;, <span class="hljs-number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>上面代码共包含两个 <code>setTimeout</code>，也就是说除主代码块外，共有两个宏任务，其中第一个宏任务执行中，输出 <code>1</code>，并且创建了微任务队列，所以在下一个宏任务队列执行前，先执行微任务，在微任务执行中，输出 <code>3</code>，微任务执行后，执行下一次宏任务，执行中输出 <code>2</code></p>
+<h4 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a>执行流程</h4><p>在具体了解了什么是宏任务和微任务以后，我们就可以来使用它们简单的总结一下我们上面介绍到的 <code>EventLoop</code> 的执行流程，我们都知道，所有 <code>JavaScript</code> 代码一开始都只可能是同步代码，所以肯定是从同步开始进行的</p>
 <ul>
 <li>执行「同步」代码<ul>
 <li>如果遇到到「异步任务」，「入队」到相应的队列中，不直接执行</li>
@@ -411,6 +476,15 @@ var _hmt = _hmt || [];
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-number">4</span>))</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">main</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">1</span>)</span><br><span class="line">  <span class="hljs-keyword">await</span> <span class="hljs-built_in">Promise</span>.resolve()</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">3</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">main()</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-number">2</span>)</span><br></pre></td></tr></table></figure>
 
 <p><code>async</code> 函数在 <code>await</code> 之前的代码都是同步执行的，可以理解为 <code>await</code> 之前的代码属于 <code>new Promise</code> 时传入的代码，<code>await</code> 之后的所有代码都是在 <code>Promise.then</code> 中的回调</p>
+<h2 id="Web-Workers"><a href="#Web-Workers" class="headerlink" title="Web Workers"></a>Web Workers</h2><p>最后我们来简单的了解一下 <code>Web Workers</code> 的相关内容，不过需要注意的是，<code>Worker</code> 是浏览器（即宿主环境）的功能，实际上和 <code>JavaScript</code> 语言本身几乎没有什么关系，也就是说 <code>JavaScript</code> 当前并没有任何支持多线程执行的功能</p>
+<p>浏览器可以提供多个 <code>JavaScript</code> 引擎实例，各自运行在自己的线程上，这样你可以在每个线程上运行不同的程序，程序中每一个这样的的独立的多线程部分被称为一个 <code>Worker</code>，这种类型的并行化被称为「任务并行」，因为其重点在于把程序划分为多个块来并发运行，下面是 <code>Worker</code> 的运作流图</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/30-02.png" alt></p>
+<p>下面是一个计算阶乘的示例</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">fieldset</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">legend</span>&gt;</span>计算阶乘<span class="hljs-tag">&lt;/<span class="hljs-name">legend</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"input"</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"number"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"请输入一个正整数"</span> /&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"btn"</span>&gt;</span>计算<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>计算结果：<span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"result"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">fieldset</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">legend</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">legend</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span></span><br><span class="line"><span class="hljs-javascript">    <span class="hljs-keyword">const</span> input = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'input'</span>);</span></span><br><span class="line"><span class="hljs-javascript">    <span class="hljs-keyword">const</span> btn = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'btn'</span>);</span></span><br><span class="line"><span class="hljs-javascript">    <span class="hljs-keyword">const</span> result = <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'result'</span>);</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-javascript">    btn.addEventListener(<span class="hljs-string">'click'</span>, () =&gt; &#123;</span></span><br><span class="line"><span class="hljs-javascript">      <span class="hljs-keyword">const</span> worker = <span class="hljs-keyword">new</span> Worker(<span class="hljs-string">'./worker.js'</span>);</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-javascript">      <span class="hljs-comment">// 向 Worker 发送消息</span></span></span><br><span class="line">      worker.postMessage(input.value);</span><br><span class="line"></span><br><span class="line"><span class="hljs-javascript">      <span class="hljs-comment">// 接收来自 Worker 的消息</span></span></span><br><span class="line"><span class="hljs-javascript">      worker.addEventListener(<span class="hljs-string">'message'</span>, e =&gt; &#123;</span></span><br><span class="line">        result.innerHTML = e.data;</span><br><span class="line"></span><br><span class="line"><span class="hljs-javascript">        <span class="hljs-comment">// 使用完 Worker 后记得关闭</span></span></span><br><span class="line">        worker.terminate();</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后我们在同目录下新建一个 <code>worker.js</code>，内容如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">memorize</span>(<span class="hljs-params">f</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> cache = &#123;&#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> key = <span class="hljs-built_in">Array</span>.prototype.join.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-string">','</span>)</span><br><span class="line">    <span class="hljs-keyword">if</span> (key <span class="hljs-keyword">in</span> cache) &#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> cache[key]</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> (cache[key] = f.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>))</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> factorial = memorize(<span class="hljs-function"><span class="hljs-params">n</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> n &lt;= <span class="hljs-number">1</span> ? <span class="hljs-number">1</span> : n * factorial(n - <span class="hljs-number">1</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 监听主线程发过来的消息</span></span><br><span class="line">self.addEventListener(</span><br><span class="line">  <span class="hljs-string">'message'</span>,</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// 响应主线程</span></span><br><span class="line">    self.postMessage(factorial(e.data))</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-literal">false</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/EventLoop" target="_blank" rel="noopener">并发模型与事件循环</a></li>
 <li><a href="https://www.jianshu.com/p/c38bd2b1bb43" target="_blank" rel="noopener">JavaScript 的并发模型</a></li>
@@ -419,7 +493,7 @@ var _hmt = _hmt || [];
 <li><a href="https://jakearchibald.com/2015/tasks-microtasks-queues-and-schedules/" target="_blank" rel="noopener">Tasks, microtasks, queues and schedules</a></li>
 <li><a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestAnimationFrame" target="_blank" rel="noopener">window.requestAnimationFrame</a></li>
 <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver" target="_blank" rel="noopener">MutationObserver</a></li>
-<li><a href="https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/" target="_blank" rel="noopener">What is the Event Loop?</a></li>
+<li><a href="https://nodejs.org/en/docs/guides/event-loop-timers-and-nexttick/" target="_blank" rel="noopener">What is the Event Loop</a></li>
 </ul>
 
         </div>
@@ -573,33 +647,49 @@ var _hmt = _hmt || [];
                 目录
             </h3>
             <ul class="menu-list"><li>
-        <a class="is-flex" href="#单线程执行机制">
-        <span class="has-mr-6">1</span>
-        <span>单线程执行机制</span>
-        </a></li><li>
-        <a class="is-flex" href="#阻塞">
-        <span class="has-mr-6">2</span>
-        <span>阻塞</span>
-        </a></li><li>
         <a class="is-flex" href="#JavaScript-中的栈和堆">
-        <span class="has-mr-6">3</span>
+        <span class="has-mr-6">1</span>
         <span>JavaScript 中的栈和堆</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#内存中的堆区与栈区">
-        <span class="has-mr-6">3.1</span>
+        <span class="has-mr-6">1.1</span>
         <span>内存中的堆区与栈区</span>
         </a></li><li>
         <a class="is-flex" href="#栈和队列的区别">
-        <span class="has-mr-6">3.2</span>
+        <span class="has-mr-6">1.2</span>
         <span>栈和队列的区别</span>
         </a></li><li>
         <a class="is-flex" href="#栈和堆的区别">
-        <span class="has-mr-6">3.3</span>
+        <span class="has-mr-6">1.3</span>
         <span>栈和堆的区别</span>
         </a></li></ul></li><li>
-        <a class="is-flex" href="#并发模型">
+        <a class="is-flex" href="#进程和线程">
+        <span class="has-mr-6">2</span>
+        <span>进程和线程</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#进程">
+        <span class="has-mr-6">2.1</span>
+        <span>进程</span>
+        </a></li><li>
+        <a class="is-flex" href="#线程">
+        <span class="has-mr-6">2.2</span>
+        <span>线程</span>
+        </a></li><li>
+        <a class="is-flex" href="#进程和线程的区别">
+        <span class="has-mr-6">2.3</span>
+        <span>进程和线程的区别</span>
+        </a></li><li>
+        <a class="is-flex" href="#多进程与多线程">
+        <span class="has-mr-6">2.4</span>
+        <span>多进程与多线程</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#浏览器是多进程的">
+        <span class="has-mr-6">3</span>
+        <span>浏览器是多进程的</span>
+        </a></li><li>
+        <a class="is-flex" href="#浏览器内核（渲染进程）">
         <span class="has-mr-6">4</span>
-        <span>并发模型</span>
+        <span>浏览器内核（渲染进程）</span>
         </a></li><li>
         <a class="is-flex" href="#Event-Loop">
         <span class="has-mr-6">5</span>
@@ -608,34 +698,46 @@ var _hmt = _hmt || [];
         <a class="is-flex" href="#任务队列">
         <span class="has-mr-6">6</span>
         <span>任务队列</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#宏任务">
+        <span class="has-mr-6">6.1</span>
+        <span>宏任务</span>
+        </a></li><li>
+        <a class="is-flex" href="#微任务">
+        <span class="has-mr-6">6.2</span>
+        <span>微任务</span>
         </a></li><li>
         <a class="is-flex" href="#执行流程">
-        <span class="has-mr-6">7</span>
+        <span class="has-mr-6">6.3</span>
         <span>执行流程</span>
-        </a></li><li>
+        </a></li></ul></li><li>
         <a class="is-flex" href="#实例">
-        <span class="has-mr-6">8</span>
+        <span class="has-mr-6">7</span>
         <span>实例</span>
         </a></li><li>
         <a class="is-flex" href="#关于-requestAnimationFrame">
-        <span class="has-mr-6">9</span>
+        <span class="has-mr-6">8</span>
         <span>关于 requestAnimationFrame</span>
         </a></li><li>
         <a class="is-flex" href="#Node-js-中的表现">
-        <span class="has-mr-6">10</span>
+        <span class="has-mr-6">9</span>
         <span>Node.js 中的表现</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#setImmediate-与-setTimeout-的区别">
-        <span class="has-mr-6">10.1</span>
+        <span class="has-mr-6">9.1</span>
         <span>setImmediate 与 setTimeout 的区别</span>
         </a></li><li>
         <a class="is-flex" href="#process-nextTick">
-        <span class="has-mr-6">10.2</span>
+        <span class="has-mr-6">9.2</span>
         <span>process.nextTick</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#Async-Await">
-        <span class="has-mr-6">11</span>
+        <span class="has-mr-6">10</span>
         <span>Async/Await</span>
+        </a></li><li>
+        <a class="is-flex" href="#Web-Workers">
+        <span class="has-mr-6">11</span>
+        <span>Web Workers</span>
         </a></li><li>
         <a class="is-flex" href="#参考">
         <span class="has-mr-6">12</span>
@@ -1546,7 +1648,7 @@ var _hmt = _hmt || [];
             <div class="level-start has-text-centered-mobile">
                 <!-- <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.svg" alt="JavaScript 并发模型" height="28">
+                    <img src="/images/logo.svg" alt="JavaScript 中的事件轮询机制" height="28">
                 
                 </a> -->
                 <p class="is-size-7">

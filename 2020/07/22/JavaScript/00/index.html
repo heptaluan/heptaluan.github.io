@@ -16,7 +16,7 @@
 <meta property="og:description" content="之前我们整理了 HTML 知识梳理 和 CSS 知识梳理，本章我们就开始梳理最为重要的 JavaScript 部分，内容可能比较多，但是不要着急，我们会分章节来慢慢进行介绍，更多详细内容可见 前端知识体系整理">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/53.webp">
-<meta property="og:updated_time" content="2021-01-16T14:34:39.297Z">
+<meta property="og:updated_time" content="2021-01-23T14:55:27.588Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 知识梳理">
 <meta name="twitter:description" content="之前我们整理了 HTML 知识梳理 和 CSS 知识梳理，本章我们就开始梳理最为重要的 JavaScript 部分，内容可能比较多，但是不要着急，我们会分章节来慢慢进行介绍，更多详细内容可见 前端知识体系整理">
@@ -34,7 +34,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
 <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.5.0/styles/atom-one-light.css">
 
 
     
@@ -69,16 +69,6 @@
 
     
     
-<script>
-var _hmt = _hmt || [];
-(function() {
-    var hm = document.createElement("script");
-    hm.src = "//hm.baidu.com/hm.js?f0399d35b846ccd84f70acc7b232fb2e";
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(hm, s);
-})();
-</script>
-
     
     
 
@@ -173,7 +163,7 @@ var _hmt = _hmt || [];
                 <span class="level-item has-text-grey">
                     
                     
-                    32 分钟 读完 (大约 4746 个字)
+                    31 分钟 读完 (大约 4665 个字)
                 </span>
                 
                 
@@ -220,7 +210,7 @@ var _hmt = _hmt || [];
 </ul>
 </li>
 <li>异步（<code>Callback/Promise/Generator/Async/Await</code>）</li>
-<li>并发模型（单线程执行机制/<code>Event Loop</code>/任务队列/执行顺序/<code>requestAnimationFrame</code>）</li>
+<li>并发模型（渲染进程/<code>Event Loop</code>/任务队列）</li>
 <li><code>V8</code> 引擎<ul>
 <li>解析器与 <code>AST</code>（基线编译器/优化编译器）</li>
 <li>垃圾回收机制（标记清除/引用计数）<ul>
@@ -481,31 +471,17 @@ var _hmt = _hmt || [];
 <p>最后我们再来看看异步的终极解决方案，那就是 <code>Async/await</code>，它的优点是代码清晰，不用像 <code>Promise</code> 写一大堆 <code>then</code> 链，而且也可以处理回调地狱的问题，但是同样的也存在着一定的缺点，那就是 <code>await</code> 会将异步代码改造成同步代码，如果多个异步操作没有依赖性而使用 <code>await</code> 会导致性能上的降低</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">setTime</span>(<span class="hljs-params">time</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">await</span> setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123; <span class="hljs-built_in">console</span>.log(<span class="hljs-number">1</span>) &#125;, time)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">log</span>(<span class="hljs-params">val, time</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">await</span> setTime(time)</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(val)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">log(<span class="hljs-number">2</span>, <span class="hljs-number">3000</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 2 ==&gt; 立即输出</span></span><br><span class="line"><span class="hljs-comment">// 1 ==&gt; 三秒后输出</span></span><br></pre></td></tr></table></figure>
 
-<p>更多关于 <code>Async</code> 和 <code>Await</code> 的用法可以参考 <a href="https://heptaluan.github.io/2020/01/16/JavaScript/50/" target="_blank" rel="noopener">Async 和 Await</a>，在看完了异步的演化流程，我们最后再来看看 <code>JavaScript</code> 当中的并发模型，详细内容可以参考 <a href="https://heptaluan.github.io/2018/08/12/JavaScript/30/" target="_blank" rel="noopener">JavaScript 并发模型</a>，主要包括</p>
+<p>更多关于 <code>Async</code> 和 <code>Await</code> 的用法可以参考 <a href="https://heptaluan.github.io/2020/01/16/JavaScript/50/" target="_blank" rel="noopener">Async 和 Await</a></p>
+<h2 id="并发模型"><a href="#并发模型" class="headerlink" title="并发模型"></a>并发模型</h2><p><code>JavaScript</code> 的一大特点就是单线程，这意味着在任何时候只能有一段代码执行，<code>JavaScript</code> 主线程在运行时，会建立一个执行同步代码的栈和执行异步代码的队列，这部分内容之前已经整理过，详细可见 <a href="https://heptaluan.github.io/2018/08/12/JavaScript/30/" target="_blank" rel="noopener">JavaScript 中的事件轮询机制</a>，内容包括</p>
 <ul>
-<li>单线程执行机制</li>
-<li>阻塞</li>
-<li>堆区与栈区</li>
-<li>并发模型</li>
-<li><code>Event Loop</code></li>
-<li>定时器</li>
-<li><code>Macrotask</code> 和 <code>Microtask</code></li>
-<li>执行顺序</li>
-</ul>
-<h2 id="并发模型"><a href="#并发模型" class="headerlink" title="并发模型"></a>并发模型</h2><p><code>JavaScript</code> 的一大特点就是单线程，这意味着在任何时候只能有一段代码执行，<code>JavaScript</code> 主线程在运行时，会建立一个执行同步代码的栈和执行异步代码的队列，这部分内容之前已经整理过，详细可见 <a href="https://heptaluan.github.io/2018/08/12/JavaScript/30/" target="_blank" rel="noopener">JavaScript 并发模型</a>，内容包括</p>
-<ul>
-<li>单线程执行机制</li>
-<li>阻塞</li>
 <li><code>JavaScript</code> 中的栈和堆</li>
-<li>内存中的堆区与栈区</li>
-<li>并发模型</li>
+<li>进程和线程</li>
+<li>浏览器是多进程的</li>
+<li>浏览器内核（渲染进程）</li>
 <li><code>Event Loop</code></li>
-<li>任务队列</li>
-<li>执行顺序</li>
-<li><code>requestAnimationFrame</code></li>
-<li><code>setImmediate/setTimeout</code></li>
-<li><code>process.nextTick</code></li>
-<li><code>Async/Await</code></li>
+<li>任务队列（宏任务/微任务）</li>
+<li>执行流程</li>
+<li>关于 <code>requestAnimationFrame</code></li>
 </ul>
 <h2 id="V8-引擎机制"><a href="#V8-引擎机制" class="headerlink" title="V8 引擎机制"></a>V8 引擎机制</h2><p>大致过了一遍，发现涉及到的东西还是比较多的，所以另开篇章进行介绍，详细可见 <a href="https://heptaluan.github.io/2020/08/02/JavaScript/54/" target="_blank" rel="noopener">V8 引擎机制</a>，主要内容包括</p>
 <ul>
