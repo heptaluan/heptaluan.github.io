@@ -16,7 +16,7 @@
 <meta property="og:description" content="在平常开发过程当中，虽然 Object 上的一些原生方法经常会看到，比如在一些扩展的第三方插件中可能会遇到，但是遇到了类似于 Object.fromEntries() 和 Object.entries() 这种长的比较像的但是使用频率较低的 API，往往又是傻傻分不清楚，更别说它们具体是做什么用的，所以今天就打算将其汇总一下，将 Object 上涉及到的平常可能会遇到的 API 整体的学习记录一下">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/51.webp">
-<meta property="og:updated_time" content="2021-01-16T14:34:39.304Z">
+<meta property="og:updated_time" content="2021-01-30T14:34:51.729Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Object 上的原生 API">
 <meta name="twitter:description" content="在平常开发过程当中，虽然 Object 上的一些原生方法经常会看到，比如在一些扩展的第三方插件中可能会遇到，但是遇到了类似于 Object.fromEntries() 和 Object.entries() 这种长的比较像的但是使用频率较低的 API，往往又是傻傻分不清楚，更别说它们具体是做什么用的，所以今天就打算将其汇总一下，将 Object 上涉及到的平常可能会遇到的 API 整体的学习记录一下">
@@ -296,7 +296,7 @@
 <td>返回指定对象的原型（内部 <code>[[Prototype]]</code> 属性的值）</td>
 </tr>
 </tbody></table>
-<p>这两个方法的作用也是一样的，都是返回指定对象「自有属性」对应的属性描述符，不过一个是返回指定的，一个是返回全部的</p>
+<p>这两个方法的作用也是一样的，都是返回指定对象『自有属性』对应的属性描述符，不过一个是返回指定的，一个是返回全部的</p>
 <blockquote>
 <p>需要注意，这里指的是自有属性，意思是直接赋予该对象的属性，而不需要从原型链上进行查找的属性</p>
 </blockquote>
@@ -311,7 +311,7 @@
 <li>在 <code>ES5</code> 中，如果该方法的第一个参数不是对象（而是原始类型），那么就会产生出现 <code>TypeError</code></li>
 <li>而在 <code>ES6</code> 中，第一个的参数不是对象的话就会被强制转换为对象</li>
 </ul>
-<p>但是 <code>Object.getOwnPropertyDescriptors(obj)</code> 这个方法的作用不仅仅只是用于查看对象的属性描述符，比如还可以用来「浅拷贝」对象</p>
+<p>但是 <code>Object.getOwnPropertyDescriptors(obj)</code> 这个方法的作用不仅仅只是用于查看对象的属性描述符，比如还可以用来『浅拷贝』对象</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> obj = &#123;</span><br><span class="line">  a: <span class="hljs-number">1</span>,</span><br><span class="line">  b: &#123;</span><br><span class="line">    name: <span class="hljs-string">'zhangsan'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> newObj = <span class="hljs-built_in">Object</span>.create(</span><br><span class="line">  <span class="hljs-built_in">Object</span>.getPrototypeOf(obj), </span><br><span class="line">  <span class="hljs-built_in">Object</span>.getOwnPropertyDescriptors(obj) </span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(newObj)  <span class="hljs-comment">// &#123; a: 1, b: &#123; name: 'zhangsan' &#125; &#125;</span></span><br><span class="line"></span><br><span class="line">newObj.a = <span class="hljs-number">2</span></span><br><span class="line">newObj.b.name = <span class="hljs-string">'lisi'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(obj)     <span class="hljs-comment">// &#123; a: 1, b: &#123; name: 'lisi' &#125; &#125;</span></span><br></pre></td></tr></table></figure>
 
 <p>另外还可以用来创建子类，创建子类的典型方法是定义子类，将其原型设置为超类的实例，然后在该实例上定义属性，其实就是我们常说的继承，也就是原来经常使用的</p>

@@ -16,7 +16,7 @@
 <meta property="og:description" content="按照惯例，我们先来看看 IntersectionObserver 到底是个什么东西，MDN 上的介绍的是，IntersectionObserver 接口（从属于 Intersection Observer API），提供了一种异步观察目标元素与其祖先元素或顶级文档视窗（viewport）交叉状态的方法，祖先元素与视窗（viewport）被称为根（root） 当一个 IntersectionObse">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/46.webp">
-<meta property="og:updated_time" content="2020-12-08T14:41:08.891Z">
+<meta property="og:updated_time" content="2021-01-30T14:34:51.726Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="IntersectionObserver">
 <meta name="twitter:description" content="按照惯例，我们先来看看 IntersectionObserver 到底是个什么东西，MDN 上的介绍的是，IntersectionObserver 接口（从属于 Intersection Observer API），提供了一种异步观察目标元素与其祖先元素或顶级文档视窗（viewport）交叉状态的方法，祖先元素与视窗（viewport）被称为根（root） 当一个 IntersectionObse">
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    16 分钟 读完 (大约 2411 个字)
+                    16 分钟 读完 (大约 2413 个字)
                 </span>
                 
                 
@@ -184,7 +184,7 @@
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/41.png" alt></p>
 <p>如上图，交叉了就是说明当前元素在视窗里，当前就是可见的了，但是有一点特别需要注意的就是，必须是子元素跟父（祖先）元素发生交叉，如果你想检查两个非父子关系的交叉，是不可以的</p>
 <blockquote>
-<p>本文所有示例可见 <a href="https://heptaluan.github.io/demos/blog/IntersectionObserver.html" target="_blank" rel="noopener">IntersectionObserver</a></p>
+<p>本文所有示例可见 <a href="https://heptaluan.github.io/demos/example/blog/IntersectionObserver.html" target="_blank" rel="noopener">IntersectionObserver</a></p>
 </blockquote>
 <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p>先来看看如何使用，使用方式很简单</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> io = <span class="hljs-keyword">new</span> IntersectionObserver(callback, options)</span><br><span class="line">io.observe(element)    <span class="hljs-comment">// 观察元素</span></span><br><span class="line">io.unobserve(element)  <span class="hljs-comment">// 停止观察</span></span><br><span class="line">io.disconnect()        <span class="hljs-comment">// 关闭观察器</span></span><br></pre></td></tr></table></figure>
@@ -262,7 +262,7 @@
 <p>为了方便理解，可以参考下图</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/42.png" alt></p>
 <p>首先我们先来看看上图当中的蓝线部分，它就是我们定义的 <code>root</code> 元素，我们添加了 <code>rootMargin</code> 属性，将视窗的增大了，虚线就是现在的视窗，所以元素现在也就在视窗里面了，简单来说就是自定义元素进入视窗的距离，由此可见，<code>root</code> 元素只有在 <code>rootMargin</code> 为空的时候才是绝对的视窗</p>
-<h2 id="实际应用"><a href="#实际应用" class="headerlink" title="实际应用"></a>实际应用</h2><p>在了解完 <code>IntersectionObserver</code> 的相关概念之后，我们来看几个具体的实例，本文所有示例可见 <a href="https://heptaluan.github.io/demos/blog/IntersectionObserver.html" target="_blank" rel="noopener">IntersectionObserver</a></p>
+<h2 id="实际应用"><a href="#实际应用" class="headerlink" title="实际应用"></a>实际应用</h2><p>在了解完 <code>IntersectionObserver</code> 的相关概念之后，我们来看几个具体的实例，本文所有示例可见 <a href="https://heptaluan.github.io/demos/example/blog/IntersectionObserver.html" target="_blank" rel="noopener">IntersectionObserver</a></p>
 <h4 id="监听元素"><a href="#监听元素" class="headerlink" title="监听元素"></a>监听元素</h4><p>先来看一个最简单的示例，主要代码如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> box = <span class="hljs-built_in">document</span>.querySelector(<span class="hljs-string">'.box'</span>)</span><br><span class="line"><span class="hljs-keyword">let</span> observe = <span class="hljs-keyword">new</span> IntersectionObserver(<span class="hljs-function"><span class="hljs-params">entries</span> =&gt;</span> &#123;</span><br><span class="line">  entries.forEach(<span class="hljs-function"><span class="hljs-params">item</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> tips = item.isIntersecting ? <span class="hljs-string">`进入`</span> : <span class="hljs-string">`离开`</span></span><br><span class="line">    <span class="hljs-built_in">console</span>.log(tips)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">observe.observe(box)</span><br></pre></td></tr></table></figure>
 

@@ -16,7 +16,7 @@
 <meta property="og:description" content="既然有 HTTP/3 的诞生，那么就说明在 HTTP/1.1 和 HTTP/2 当中是存在一些问题的，下面我们就先从这个根本上的问题开始看起  本文主要参考的是 HTTP/3 原理与实践，内容有所调整，主要是方便自己理解，更为详细的内容可以参考原文">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/12.webp">
-<meta property="og:updated_time" content="2020-12-08T14:41:08.890Z">
+<meta property="og:updated_time" content="2021-01-30T14:34:51.691Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HTTP&#x2F;3">
 <meta name="twitter:description" content="既然有 HTTP/3 的诞生，那么就说明在 HTTP/1.1 和 HTTP/2 当中是存在一些问题的，下面我们就先从这个根本上的问题开始看起  本文主要参考的是 HTTP/3 原理与实践，内容有所调整，主要是方便自己理解，更为详细的内容可以参考原文">
@@ -268,10 +268,10 @@
 </ul>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/12-11.png" alt></p>
 <h2 id="拥塞控制"><a href="#拥塞控制" class="headerlink" title="拥塞控制"></a>拥塞控制</h2><p>拥塞控制的目的是避免过多的数据一下子涌入网络，导致网络超出最大负荷，<code>QUIC</code> 的拥塞控制与 <code>TCP</code> 类似，并在此基础上做了改进，所以我们先简单介绍下 <code>TCP</code> 的拥塞控制，关于 <code>TCP</code> 当中的拥塞控制更为详细的内容可以参考 <a href="https://www.cnblogs.com/anzhengyu/p/11232804.html" target="_blank" rel="noopener">TCP 的流量控制和拥塞控制</a> 这篇博文，这里我们只简单介绍一二</p>
-<p><code>TCP</code> 拥塞控制由 <code>4</code> 个核心算法组成，即 「慢启动」、「拥塞避免」、「快速重传」和「快速恢复」，理解了这 <code>4</code> 个算法，对 <code>TCP</code> 的拥塞控制也就有了大概了解</p>
+<p><code>TCP</code> 拥塞控制由 <code>4</code> 个核心算法组成，即 『慢启动』、『拥塞避免』、『快速重传』和『快速恢复』，理解了这 <code>4</code> 个算法，对 <code>TCP</code> 的拥塞控制也就有了大概了解</p>
 <ul>
 <li>慢启动，发送方向接收方发送 <code>1</code> 个单位的数据，收到对方确认后会发送 <code>2</code> 个单位的数据，然后依次是 <code>4</code> 个、<code>8</code> 个呈指数级增长，这个过程就是在不断试探网络的拥塞程度，超出阈值则会导致网络拥塞</li>
-<li>拥塞避免，指数增」长变为线性增长</li>
+<li>拥塞避免，指数增』长变为线性增长</li>
 <li>快速重传，发送方每一次发送时都会设置一个超时计时器，超时后即认为丢失，需要重发</li>
 <li>快速恢复，在上面快速重传的基础上，发送方重新发送数据时，也会启动一个超时定时器，如果收到确认消息则进入拥塞避免阶段，如果仍然超时，则回到慢启动阶段</li>
 </ul>

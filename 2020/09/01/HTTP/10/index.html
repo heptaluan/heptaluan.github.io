@@ -16,7 +16,7 @@
 <meta property="og:description" content="最近在复习计算机网络相关知识，因为在复习过程中发现博客当中很多关于 HTTP 的内容都是东一块西一块的混杂在一起，没有形成体系，所以干脆就将之前的全部内容提取出来，然后重新的整理一遍，在借助一些书籍从 HTTP 诞生之时开始重新的梳理一遍其相关内容，也算是从零开始从新学习 HTTP 其实主要目的还是了解一下 HTTP、TCP/IP、HTTPS 等相关概念到底是什么，又是用来做什么的，更多相关内容可">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/10.webp">
-<meta property="og:updated_time" content="2021-01-16T14:34:39.291Z">
+<meta property="og:updated_time" content="2021-01-30T14:34:51.689Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HTTP 协议">
 <meta name="twitter:description" content="最近在复习计算机网络相关知识，因为在复习过程中发现博客当中很多关于 HTTP 的内容都是东一块西一块的混杂在一起，没有形成体系，所以干脆就将之前的全部内容提取出来，然后重新的整理一遍，在借助一些书籍从 HTTP 诞生之时开始重新的梳理一遍其相关内容，也算是从零开始从新学习 HTTP 其实主要目的还是了解一下 HTTP、TCP/IP、HTTPS 等相关概念到底是什么，又是用来做什么的，更多相关内容可">
@@ -292,8 +292,8 @@
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/10-16.png" alt></p>
 <p>这里我们假设 <code>m.xyz.com</code> 需要查找 <code>y.abc.com</code> 的 <code>IP</code> 地址，具体流程是下面这样的</p>
 <ul>
-<li>主机 <code>m.xyz.com</code> 向本地域名服务器进行「递归查询」</li>
-<li>本地域名服务器「迭代查询」，先向一个根域名服务器查询</li>
+<li>主机 <code>m.xyz.com</code> 向本地域名服务器进行『递归查询』</li>
+<li>本地域名服务器『迭代查询』，先向一个根域名服务器查询</li>
 <li>根域名服务器告诉本地域名服务器，下一步应该向顶级域名服务器 <code>dns.com</code> 查询</li>
 <li>顶级域名服务器 <code>dns.com</code> 告诉本地域名服务器，下一步查找权限域名服务器 <code>dns.adc.com</code></li>
 <li>本地域名服务器向权限域名服务器发起查询，权限域名服务器告诉本地域名服务器所需的 <code>IP</code> 地址，本地域名服务器在告诉给本地主机</li>
@@ -305,7 +305,7 @@
 <li>递归查询指的是查询请求发出后，域名服务器代为向下一级域名服务器发出请求，最后向用户返回查询的最终结果，使用递归查询，用户只需要发出一次查询请求</li>
 <li>迭代查询指的是查询请求后，域名服务器返回单次查询的结果，下一级的查询由用户自己请求，使用迭代查询，用户需要发出多次的查询请求</li>
 </ul>
-<p>所以一般而言，主机向本地域名服务器查询时一般使用「递归查询」，而本地 <code>DNS</code> 服务器向其他域名服务器请求的过程是「迭代查询」的过程</p>
+<p>所以一般而言，主机向本地域名服务器查询时一般使用『递归查询』，而本地 <code>DNS</code> 服务器向其他域名服务器请求的过程是『迭代查询』的过程</p>
 <p>这里我们在简单的补充一些关于域名服务器的分类（也就是上图当中右侧部分），如下</p>
 <ul>
 <li>根域名服务器，最高层也是最重要的域名服务器，所有的根域名服务器都知道所有的顶级域名服务器的域名地址和 <code>IP</code> 地址，例如 <code>a.rootserver.net</code></li>
@@ -428,7 +428,7 @@
 <blockquote>
 <p>注意，尽管 <code>HTTP</code> 规范中说明应该用 <code>CRLF</code> 来表示行终止，但稳健的做法也应该接受单个换行符作为行的终止</p>
 </blockquote>
-<h4 id="请求报文"><a href="#请求报文" class="headerlink" title="请求报文"></a>请求报文</h4><p><code>HTTP</code> 请求报文由「请求行」、「请求头」、「空行」（有时会忽略掉这一部分）和「请求体」（请求数据）四个部分组成，如下图所示</p>
+<h4 id="请求报文"><a href="#请求报文" class="headerlink" title="请求报文"></a>请求报文</h4><p><code>HTTP</code> 请求报文由『请求行』、『请求头』、『空行』（有时会忽略掉这一部分）和『请求体』（请求数据）四个部分组成，如下图所示</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/07-02.png" alt></p>
 <p>我们可以针对上图当中的内容简化一下，就变成了下面这样</p>
 <figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">method</span>&gt;</span> <span class="hljs-tag">&lt;<span class="hljs-name">request-URL</span>&gt;</span> <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">header</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">entity-body</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -477,7 +477,7 @@
 </blockquote>
 <h6 id="空行（请求）"><a href="#空行（请求）" class="headerlink" title="空行（请求）"></a>空行（请求）</h6><p>最后一个请求头之后是一个空行，发送回车符和换行符，通知服务器以下不再有请求头</p>
 <h6 id="请求体"><a href="#请求体" class="headerlink" title="请求体"></a>请求体</h6><p>它将一个页面表单中的组件值通过键值对形式编码成一个格式化串，它承载多个请求参数的数据，报文体可以传递请求参数，请求 <code>URL</code> 也可以通过类似于 <code>/index.html?param1=value1&amp;param2=value2</code> 的方式传递请求参数，请求数据不在 <code>GET</code> 方法中使用，而是在 <code>POST</code> 方法中使用，与请求数据相关的最常使用的请求头是 <code>Content-Type</code> 和 <code>Content-Length</code></p>
-<h4 id="响应报文"><a href="#响应报文" class="headerlink" title="响应报文"></a>响应报文</h4><p><code>HTTP</code> 的响应报文由「状态行」、「响应头」、「空行」（有时会忽略掉这一部分）和「响应体」四部分组成，如下图所示</p>
+<h4 id="响应报文"><a href="#响应报文" class="headerlink" title="响应报文"></a>响应报文</h4><p><code>HTTP</code> 的响应报文由『状态行』、『响应头』、『空行』（有时会忽略掉这一部分）和『响应体』四部分组成，如下图所示</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/07-03.png" alt></p>
 <p>响应报文也可以进行简化，如下</p>
 <figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">status</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">reason-phrase</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">headers</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">entity-body</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -491,8 +491,8 @@
 <li><code>1xx</code>，处理中，一般是告诉客户端，请求已经收到了，正在处理</li>
 <li><code>2xx</code>，处理成功，一般表示请求已受理、已经处理完成等信息</li>
 <li><code>3xx</code>，重定向到其它地方，它让客户端再发起一个请求以完成整个处理</li>
-<li><code>4xx</code>，处理发生错误，错误发生在「客户端」，如客户端的请求一个不存在的资源，客户端未被授权，禁止访问等</li>
-<li><code>5xx</code>，处理发生错误，错误发生在「服务端」，如服务端抛出异常，路由出错，<code>HTTP</code> 版本不支持等</li>
+<li><code>4xx</code>，处理发生错误，错误发生在『客户端』，如客户端的请求一个不存在的资源，客户端未被授权，禁止访问等</li>
+<li><code>5xx</code>，处理发生错误，错误发生在『服务端』，如服务端抛出异常，路由出错，<code>HTTP</code> 版本不支持等</li>
 </ul>
 <blockquote>
 <p>关于状态码的相关内容，会在后面的 <code>HTTP</code> 状态码章节当中来详细进行介绍</p>

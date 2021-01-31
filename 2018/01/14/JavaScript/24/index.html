@@ -16,7 +16,7 @@
 <meta property="og:description" content="在深入深浅拷贝之前，我们先来了解一些关于 JavaScript 当中变量的一些知识点">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/24.webp">
-<meta property="og:updated_time" content="2021-01-01T12:30:51.655Z">
+<meta property="og:updated_time" content="2021-01-30T14:34:51.714Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的深浅拷贝">
 <meta name="twitter:description" content="在深入深浅拷贝之前，我们先来了解一些关于 JavaScript 当中变量的一些知识点">
@@ -179,7 +179,7 @@
             <p>在深入深浅拷贝之前，我们先来了解一些关于 <code>JavaScript</code> 当中变量的一些知识点</p>
 <a id="more"></a>
 
-<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>我们都知道，在 <code>JavaScript</code> 中，变量包含两种不同数据类型的值「基本类型」和「引用类型」，在将一个值赋给变量时，解析器必须确定这个值是基本类型值还是引用类型值</p>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>我们都知道，在 <code>JavaScript</code> 中，变量包含两种不同数据类型的值『基本类型』和『引用类型』，在将一个值赋给变量时，解析器必须确定这个值是基本类型值还是引用类型值</p>
 <ul>
 <li>基本数据类型是按值访问的，因为可以操作保存在变量中的实际的值</li>
 <li>引用类型的值是保存在内存中的对象</li>
@@ -190,13 +190,13 @@
 <li>栈，自动分配内存空间，系统自动释放，里面存放的是基本类型的值和引用类型的地址</li>
 <li>堆，动态分配的内存，大小不定，也不会自动释放，里面存放引用类型的值</li>
 </ul>
-<h2 id="变量的赋值"><a href="#变量的赋值" class="headerlink" title="变量的赋值"></a>变量的赋值</h2><p>通过上面的介绍我们可以知道，变量的赋值行为可以分为「传值」与「传址」两种，给变量赋予基本数据类型的值，也就是「传值」，而给变量赋予引用数据类型的值，实际上是「传址」，基本数据类型变量的赋值、比较，只是值的赋值与比较，即栈内存中的数据的拷贝和比较</p>
+<h2 id="变量的赋值"><a href="#变量的赋值" class="headerlink" title="变量的赋值"></a>变量的赋值</h2><p>通过上面的介绍我们可以知道，变量的赋值行为可以分为『传值』与『传址』两种，给变量赋予基本数据类型的值，也就是『传值』，而给变量赋予引用数据类型的值，实际上是『传址』，基本数据类型变量的赋值、比较，只是值的赋值与比较，即栈内存中的数据的拷贝和比较</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-number">123</span></span><br><span class="line"><span class="hljs-keyword">var</span> b = <span class="hljs-number">123</span></span><br><span class="line"><span class="hljs-keyword">var</span> c = a</span><br><span class="line"></span><br><span class="line">a === b  <span class="hljs-comment">// true</span></span><br><span class="line">a === c  <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line">a = <span class="hljs-number">456</span></span><br><span class="line">a === b  <span class="hljs-comment">// false</span></span><br><span class="line">a === c  <span class="hljs-comment">// false</span></span><br></pre></td></tr></table></figure>
 
 <p>引用数据类型变量的赋值、比较，只是存于栈内存中的堆内存地址的拷贝、比较</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> a = [<span class="hljs-string">'a'</span>, <span class="hljs-string">'b'</span>, <span class="hljs-string">'c'</span>]</span><br><span class="line"><span class="hljs-keyword">let</span> b = a</span><br><span class="line">b.push(<span class="hljs-string">'d'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(a)  <span class="hljs-comment">// ['a', 'b', 'c', 'd']</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(b)  <span class="hljs-comment">// ['a', 'b', 'c', 'd']</span></span><br></pre></td></tr></table></figure>
 
-<p>由于 <code>a</code> 和 <code>b</code> 都是引用类型，采用的是「址」传递，即 <code>a</code> 将地址传递给 <code>b</code>，那么 <code>a</code> 和 <code>b</code> 必然指向同一个地址（引用类型的地址存放在栈内存中），而这个地址都指向了堆内存中引用类型的值，当 <code>b</code> 改变了这个值的同时，因为 <code>a</code> 的地址也指向了这个值，故 <code>a</code> 的值也跟着变化，那么如何解决这样的问题呢，这就可以引出我们今天的主题，浅拷贝或者深拷贝了</p>
+<p>由于 <code>a</code> 和 <code>b</code> 都是引用类型，采用的是『址』传递，即 <code>a</code> 将地址传递给 <code>b</code>，那么 <code>a</code> 和 <code>b</code> 必然指向同一个地址（引用类型的地址存放在栈内存中），而这个地址都指向了堆内存中引用类型的值，当 <code>b</code> 改变了这个值的同时，因为 <code>a</code> 的地址也指向了这个值，故 <code>a</code> 的值也跟着变化，那么如何解决这样的问题呢，这就可以引出我们今天的主题，浅拷贝或者深拷贝了</p>
 <blockquote>
 <p>但是这里有个需要注意的地方，即 <code>JavaScript</code> 中的深浅拷贝主要是针对于引用类型而言</p>
 </blockquote>

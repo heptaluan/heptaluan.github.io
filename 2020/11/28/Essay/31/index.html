@@ -16,7 +16,7 @@
 <meta property="og:description" content="最近在项目当中遇到一个需求，也是一个我们平常十分常见的操作，那就是框选操作，但是对于正常元素来说，我们只需要计算框选框是否包裹了当前的目标元素就可以知道当前元素是否选中，但是项目中的元素会存在旋转的情况，所以计算起来就会有些复杂了，所以就抽了些时间深入的了解了一下，也在这里记录记录  最终代码可见 转向包围盒（OBB） 这个在线示例">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/31.webp">
-<meta property="og:updated_time" content="2020-12-08T14:41:08.891Z">
+<meta property="og:updated_time" content="2021-01-30T14:34:51.681Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="矩形包围盒碰撞检测">
 <meta name="twitter:description" content="最近在项目当中遇到一个需求，也是一个我们平常十分常见的操作，那就是框选操作，但是对于正常元素来说，我们只需要计算框选框是否包裹了当前的目标元素就可以知道当前元素是否选中，但是项目中的元素会存在旋转的情况，所以计算起来就会有些复杂了，所以就抽了些时间深入的了解了一下，也在这里记录记录  最终代码可见 转向包围盒（OBB） 这个在线示例">
@@ -191,7 +191,7 @@
 <li>轴对齐包围盒（<code>AABB</code>，<code>Axis Aligned Bounding Box</code>）</li>
 <li>转向包围盒（<code>OBB</code>，<code>Oriented Bounding Box</code>）</li>
 </ul>
-<p><code>AABB</code> 与 <code>OBB</code> 的区别在于，<code>AABB</code> 中的矩形的其中一条边和坐标轴平行，<code>OBB</code> 的计算复杂度要高于 <code>AABB</code>，根据不同的使用场景，可以用不同的方案，但是本章当中我们不会太过深入，仅仅来看矩形包围盒，也就是「轴对齐包围盒」与「转向包围盒」这两种情况，但是在具体展开之前，我们先来看看向量的相关内容</p>
+<p><code>AABB</code> 与 <code>OBB</code> 的区别在于，<code>AABB</code> 中的矩形的其中一条边和坐标轴平行，<code>OBB</code> 的计算复杂度要高于 <code>AABB</code>，根据不同的使用场景，可以用不同的方案，但是本章当中我们不会太过深入，仅仅来看矩形包围盒，也就是『轴对齐包围盒』与『转向包围盒』这两种情况，但是在具体展开之前，我们先来看看向量的相关内容</p>
 <h2 id="向量"><a href="#向量" class="headerlink" title="向量"></a>向量</h2><p>向量作为一种数学工具，在碰撞检测中发挥很大作用，我们的计算都是通过向量来完成，所以先来了解一些向量的相关知识</p>
 <h4 id="向量的代数表示"><a href="#向量的代数表示" class="headerlink" title="向量的代数表示"></a>向量的代数表示</h4><p>向量的代数表示指在指定了一个坐标系之后，用一个向量在该坐标系下的坐标来表示该向量，兼具了符号的抽象性和几何形象性，因而具有最高的实用性，被广泛采用于需要定量分析的情形，对于自由向量，将向量的起点平移到坐标原点后，向量就可以用一个坐标系下的一个点来表示，该点的坐标值即向量的终点坐标</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/31-02.png" alt></p>
@@ -222,16 +222,16 @@
 <p>在了解完上面的内容以后，下面我们就来具体看看两矩形相交的情况</p>
 <h2 id="轴对齐包围盒（AABB）"><a href="#轴对齐包围盒（AABB）" class="headerlink" title="轴对齐包围盒（AABB）"></a>轴对齐包围盒（AABB）</h2><p>也就是如下图所示的情况</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/31-06.png" alt></p>
-<p>针对于两个「无旋转」的矩形相交，我们应该如何来进行判断碰撞呢？比如我们定义了两个矩形，并且第一个物体的碰撞外形以某种形式进入了第二个物体的碰撞外形，在这种情况之下，我们就可以认为两者碰撞，也就是当两个矩形进入对方的区域时就会发生碰撞，针对于这种情况，也就是上面我们提到的 <code>AABB</code> 类型来说很容易判断，因为它们是与坐标轴对齐的</p>
-<p>对于每个轴我们要检测两个物体的边界在此轴向是否有重叠，因此我们只需要简单地检查两个物体的「水平边界」以及「垂直边界」是否重合，如果「水平边界和垂直边界都有重叠」那么我们就认为两者是碰撞的</p>
+<p>针对于两个『无旋转』的矩形相交，我们应该如何来进行判断碰撞呢？比如我们定义了两个矩形，并且第一个物体的碰撞外形以某种形式进入了第二个物体的碰撞外形，在这种情况之下，我们就可以认为两者碰撞，也就是当两个矩形进入对方的区域时就会发生碰撞，针对于这种情况，也就是上面我们提到的 <code>AABB</code> 类型来说很容易判断，因为它们是与坐标轴对齐的</p>
+<p>对于每个轴我们要检测两个物体的边界在此轴向是否有重叠，因此我们只需要简单地检查两个物体的『水平边界』以及『垂直边界』是否重合，如果『水平边界和垂直边界都有重叠』那么我们就认为两者是碰撞的</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/31-07.png" alt></p>
 <p>将这一概念转化为代码也是很直白的，我们对两个轴都检测是否重叠，如果都重叠就返回碰撞，因为都是不旋转的元素，所以这里我们不用考虑 <code>rotation</code> 这个参数</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// selectionRect  拖拽框</span></span><br><span class="line"><span class="hljs-comment">// element        元素节点</span></span><br><span class="line"><span class="hljs-comment">// scroll         是否需要计算滚动条距离</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">AABB</span>(<span class="hljs-params">selectionRect, element, scroll</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> rect = element.getBoundingClientRect()</span><br><span class="line">  <span class="hljs-keyword">var</span> elementRect = &#123;</span><br><span class="line">    y: rect.top + scroll.y,</span><br><span class="line">    x: rect.left + scroll.x,</span><br><span class="line">    h: rect.height,</span><br><span class="line">    w: rect.width</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">if</span> (</span><br><span class="line">    selectionRect.x &lt; elementRect.x + elementRect.w &amp;&amp;</span><br><span class="line">    selectionRect.x + selectionRect.w &gt; elementRect.x &amp;&amp;</span><br><span class="line">    selectionRect.y &lt; elementRect.y + elementRect.h &amp;&amp;</span><br><span class="line">    selectionRect.h + selectionRect.y &gt; elementRect.y</span><br><span class="line">  ) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span></span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>我们检查「第一个物体的最右侧是否大于第二个物体的最左侧」并且「第二个物体的最右侧是否大于第一个物体的最左侧」，垂直的轴向与此相似，所以我们就可以根据此方法来判断两个矩形是否相交，这种方式的碰撞检测相对是比较简单的，下面我们再来看看比较复杂的情况，也就是转向包围盒（<code>OBB</code>）</p>
+<p>我们检查『第一个物体的最右侧是否大于第二个物体的最左侧』并且『第二个物体的最右侧是否大于第一个物体的最左侧』，垂直的轴向与此相似，所以我们就可以根据此方法来判断两个矩形是否相交，这种方式的碰撞检测相对是比较简单的，下面我们再来看看比较复杂的情况，也就是转向包围盒（<code>OBB</code>）</p>
 <h2 id="转向包围盒（OBB）"><a href="#转向包围盒（OBB）" class="headerlink" title="转向包围盒（OBB）"></a>转向包围盒（OBB）</h2><p>这种情况也就是我们开头部分所看到的情形</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/31-01.png" alt></p>
-<p>针对于这种情况，两个矩形的 <code>OBB</code> 检测我们可以使用分离轴定理（<code>Separating Axis Theorem</code>）来进行解决，所谓分离轴定理，即通过判断任意两个矩形在「任意角度下的投影是否均存在重叠」来判断是否发生碰撞，若在某一角度光源下，两物体的投影存在间隙，则为不碰撞，否则为发生碰撞，因为矩形的对边平行，所以只要判断四条对称轴上的投影即可（这也可以扩展到任意多边形）</p>
+<p>针对于这种情况，两个矩形的 <code>OBB</code> 检测我们可以使用分离轴定理（<code>Separating Axis Theorem</code>）来进行解决，所谓分离轴定理，即通过判断任意两个矩形在『任意角度下的投影是否均存在重叠』来判断是否发生碰撞，若在某一角度光源下，两物体的投影存在间隙，则为不碰撞，否则为发生碰撞，因为矩形的对边平行，所以只要判断四条对称轴上的投影即可（这也可以扩展到任意多边形）</p>
 <p>比如下图当中的四周轴线之上对应的红蓝线条</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/31-08.png" alt></p>
 <p>至于如何投影？我们在这里来补充一些向量点积的几何意义</p>

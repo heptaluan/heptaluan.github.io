@@ -16,7 +16,7 @@
 <meta property="og:description" content="本章我们来看 Node.js 当中一个比较重要的概念，那就是 Stream，也就是所谓的流，那么什么是 Stream 呢？">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/01.webp">
-<meta property="og:updated_time" content="2021-01-16T14:34:39.312Z">
+<meta property="og:updated_time" content="2021-01-30T14:34:51.738Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Node.js 中的 Stream（流）">
 <meta name="twitter:description" content="本章我们来看 Node.js 当中一个比较重要的概念，那就是 Stream，也就是所谓的流，那么什么是 Stream 呢？">
@@ -250,7 +250,7 @@
 
 <p>若 <code>readable._readableState.flowing</code> 为 <code>null</code>，由于不存在数据消费者，可读流将不会产生数据，如果监听 <code>data</code> 事件，调用 <code>readable.pipe()</code> 方法，或者调用 <code>readable.resume()</code> 方法，<code>readable._readableState.flowing</code> 的值将会变为 <code>true</code>，这时，随着数据生成，可读流开始频繁触发事件</p>
 <p>调用 <code>readable.pause()</code> 方法，<code>readable.unpipe()</code> 方法，或者接收背压（关于背压的概念我们将会在下一章当中详细介绍），将导致 <code>readable._readableState.flowing</code> 值变为 <code>false</code>，这将暂停事件流，但不会暂停数据生成，当 <code>readable._readableState.flowing</code> 值为 <code>false</code> 时， 数据可能堆积到流的内部缓存中</p>
-<p>需要注意的是，应该选择其中「一种」来消费数据，而「不应该」在单个流使用多种方法来消费数据，对于大多数用户，建议使用 <code>readable.pipe()</code> 方法来消费流数据，因为它是最简单的一种实现，如果要精细地控制数据传递和产生的过程，可以使用 <code>EventEmitter</code> 和 <code>readable.pause()/readable.resume()</code> 提供的 <code>API</code></p>
+<p>需要注意的是，应该选择其中『一种』来消费数据，而『不应该』在单个流使用多种方法来消费数据，对于大多数用户，建议使用 <code>readable.pipe()</code> 方法来消费流数据，因为它是最简单的一种实现，如果要精细地控制数据传递和产生的过程，可以使用 <code>EventEmitter</code> 和 <code>readable.pause()/readable.resume()</code> 提供的 <code>API</code></p>
 <h4 id="paused-mode"><a href="#paused-mode" class="headerlink" title="paused mode"></a>paused mode</h4><p>在 <code>paused mode</code> 下，需要手动地读取数据，并且可以直接指定读取数据的长度</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> Read = <span class="hljs-built_in">require</span>(<span class="hljs-string">'stream'</span>).Readable</span><br><span class="line"><span class="hljs-keyword">var</span> r = <span class="hljs-keyword">new</span> Read()</span><br><span class="line"></span><br><span class="line">r.push(<span class="hljs-string">'hello'</span>)</span><br><span class="line">r.push(<span class="hljs-string">'world'</span>)</span><br><span class="line">r.push(<span class="hljs-literal">null</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(r.read(<span class="hljs-number">1</span>).toString())  <span class="hljs-comment">// h</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(r.read(<span class="hljs-number">3</span>).toString())  <span class="hljs-comment">// ell</span></span><br></pre></td></tr></table></figure>
 
@@ -276,7 +276,7 @@
 </ul>
 <p>它的流程大致如下</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/node/25.png" alt></p>
-<p>务必记住 <code>read()</code> 是「同步」的，因此它并不是直接从底层数据那里读取数据，而是从缓冲区读取数据，而缓冲区的数据则是由 <code>_read()</code> 负责补充</p>
+<p>务必记住 <code>read()</code> 是『同步』的，因此它并不是直接从底层数据那里读取数据，而是从缓冲区读取数据，而缓冲区的数据则是由 <code>_read()</code> 负责补充</p>
 <p><code>_read()</code> 可以是同步或者异步，<code>Node.js</code> 内部的实现经常会调用 <code>read(0)</code>，因为参数是 <code>0</code> 所以不会破坏缓冲区中的数据和状态，但可以触发 <code>_read()</code> 来从底层汲取数据并填充缓冲区，<code>_read()</code> 是流实现者需要重写的函数，它从底层汲取数据并填充缓冲区（<code>flowing</code> 模式不会填充而是直接发送给消费者），它的大致流程如下</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/node/26.png" alt></p>
 <p>注意在 <code>addChunk()</code> 后会根据情况发射 <code>readable</code> 或者 <code>data</code> 事件，然后依次调用</p>

@@ -16,7 +16,7 @@
 <meta property="og:description" content="在深入了解作用域之前，我们先来看看什么是变量提升">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/03.webp">
-<meta property="og:updated_time" content="2020-12-11T14:45:54.564Z">
+<meta property="og:updated_time" content="2021-01-30T14:34:51.699Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的作用域">
 <meta name="twitter:description" content="在深入了解作用域之前，我们先来看看什么是变量提升">
@@ -223,7 +223,7 @@
 <blockquote>
 <p><code>Hosting</code> 只提升了命名，没有提升定义</p>
 </blockquote>
-<p>这里顺便简单的提及一下什么是 <code>IIFE</code>，也就是所谓的「立即执行函数」，那么为什么需要 <code>IIFE</code></p>
+<p>这里顺便简单的提及一下什么是 <code>IIFE</code>，也就是所谓的『立即执行函数』，那么为什么需要 <code>IIFE</code></p>
 <ul>
 <li>传统的方法啰嗦，定义和执行分开写</li>
 <li>传统的方法直接污染全局命名空间（浏览器里的 <code>global</code> 对象，如 <code>window</code>）</li>
@@ -243,8 +243,8 @@
 <p>所谓不去污染全局命名空间，是因为 <code>IIFE</code> 创建了一个新的函数作用域，你真正的业务代码被封装在其中，自然就不会触碰到全局对象了，如果你需要全局对象，可以传递给 <code>IIFE</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">void</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">global</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 在这里，global 就是全局对象了</span></span><br><span class="line">&#125;(<span class="hljs-keyword">this</span>)  <span class="hljs-comment">// 在浏览器里，this 就是 window 对象</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="执行上下文环境"><a href="#执行上下文环境" class="headerlink" title="执行上下文环境"></a>执行上下文环境</h2><p>简单来说，函数「每被」调用一次，都会产生一个新的执行上下文环境，因为不同的调用可能就会有不同的参数，需要注意一点，函数体内部自由变量在函数在定义的时候（不是调用的时候）就已经确定了</p>
-<p><code>JavaScript</code> 在执行一个代码段之前，都会进行这些「准备工作」来生成执行上下文，其中又分三种情况，分别是全局代码，函数体 和 <code>Eval</code>（不推荐使用这个，所以我们主要介绍前两种）</p>
+<h2 id="执行上下文环境"><a href="#执行上下文环境" class="headerlink" title="执行上下文环境"></a>执行上下文环境</h2><p>简单来说，函数『每被』调用一次，都会产生一个新的执行上下文环境，因为不同的调用可能就会有不同的参数，需要注意一点，函数体内部自由变量在函数在定义的时候（不是调用的时候）就已经确定了</p>
+<p><code>JavaScript</code> 在执行一个代码段之前，都会进行这些『准备工作』来生成执行上下文，其中又分三种情况，分别是全局代码，函数体 和 <code>Eval</code>（不推荐使用这个，所以我们主要介绍前两种）</p>
 <h4 id="全局执行上下文环境"><a href="#全局执行上下文环境" class="headerlink" title="全局执行上下文环境"></a>全局执行上下文环境</h4><p>在产生执行全局上下文时，浏览器通常会做以下三个准备工作</p>
 <ul>
 <li>提取 <code>var</code> 声明的变量，并赋值（默认）为 <code>undefined</code>（变量提升）</li>
@@ -261,7 +261,7 @@
 <blockquote>
 <p>在执行代码之前，把将要用到的所有的变量都事先拿出来，有的直接赋值了，有的先用 <code>undefined</code> 占个空</p>
 </blockquote>
-<p>而在执行 <code>JavaScript</code> 代码时，会有数不清的函数调用次数，自然就会产生许多个上下文环境，那么这么多的上下文环境该如何管理，以及如何销毁而释放内存呢？其实这个就主要依靠我们下面将会介绍到的「执行上下文栈」，不过在此之前，我们先来针对上面提到过的上下文环境在深入的了解一下</p>
+<p>而在执行 <code>JavaScript</code> 代码时，会有数不清的函数调用次数，自然就会产生许多个上下文环境，那么这么多的上下文环境该如何管理，以及如何销毁而释放内存呢？其实这个就主要依靠我们下面将会介绍到的『执行上下文栈』，不过在此之前，我们先来针对上面提到过的上下文环境在深入的了解一下</p>
 <h4 id="变量对象"><a href="#变量对象" class="headerlink" title="变量对象"></a>变量对象</h4><p>变量对象是与执行上下文相关的数据作用域，存储了在上下文中定义的变量和函数声明，<code>JavaScript</code> 解释器之所以可以找到我们定义的函数和变量，全部依靠的变量对象（<code>VO</code>），变量对象（<code>Variable Object</code>，缩写为 <code>VO</code>）是一个抽象概念中的对象，它用于存储执行上下文中的</p>
 <ol>
 <li>变量</li>
@@ -315,7 +315,7 @@
 
 <p>没有 <code>a</code> 的值，然后就会到全局去找，全局也没有，所以会报错，当第二段执行 <code>console</code> 的时候，全局对象已经被赋予了 <code>a</code> 属性，这时候就可以从全局找到 <code>a</code> 的值，所以会打印 <code>1</code></p>
 <h2 id="执行上下文栈"><a href="#执行上下文栈" class="headerlink" title="执行上下文栈"></a>执行上下文栈</h2><p>我们都知道在代码执行的时候，<code>JavaScript</code> 引擎并非一行一行地分析和执行程序，而是一段一段地分析执行，当执行一段代码的时候，会进行一个准备工作，就比如之前我们提到过的的变量提升和函数提升，这其实就是所谓的执行上下文</p>
-<p>执行全局代码时，会产生一个执行上下文环境，每次调用函数都又会产生执行上下文环境，当函数调用完成时，这个上下文环境以及其中的数据都会被消除，再重新回到全局上下文环境，处于活动状态的执行上下文环境只有「一个」，其实简单来说，就是一个「压栈」==&gt;「出栈」的过程，如下图所示</p>
+<p>执行全局代码时，会产生一个执行上下文环境，每次调用函数都又会产生执行上下文环境，当函数调用完成时，这个上下文环境以及其中的数据都会被消除，再重新回到全局上下文环境，处于活动状态的执行上下文环境只有『一个』，其实简单来说，就是一个『压栈』==&gt;『出栈』的过程，如下图所示</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/07.png" alt></p>
 <ul>
 <li>压栈，函数未调用时只有全局上下文在执行，每次调用函数时会产生局部上下文，这就是压栈，也就是进栈</li>
@@ -331,10 +331,10 @@
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fun3</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'fun3'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fun2</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  fun3()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">fun1</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  fun2()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fun1()</span><br></pre></td></tr></table></figure>
 
 <p>当执行一个函数的时候，就会创建一个执行上下文，并且压入执行上下文栈，当函数执行完毕的时候，就会将函数的执行上下文从栈中弹出，所以我们可以尝试使用伪代码来描述上述过程</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">ECStack.push(&lt;fun1&gt; functionContext)</span><br><span class="line"></span><br><span class="line">// fun1 中调用了 fun2，创建 fun2 的执行上下文</span><br><span class="line">ECStack.push(&lt;fun2&gt; functionContext)</span><br><span class="line"></span><br><span class="line">// fun2 还调用了 fun3</span><br><span class="line">ECStack.push(&lt;fun3&gt; functionContext)</span><br><span class="line"></span><br><span class="line">// fun3 执行完毕</span><br><span class="line">ECStack.pop()</span><br><span class="line"></span><br><span class="line">// fun2 执行完毕</span><br><span class="line">ECStack.pop()</span><br><span class="line"></span><br><span class="line">// fun1 执行完毕</span><br><span class="line">ECStack.pop()</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">ECStack.push(<span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">fun1</span>&gt;</span> functionContext)</span></span><br><span class="line"><span class="hljs-xml"></span></span><br><span class="line"><span class="hljs-xml">// fun1 中调用了 fun2，创建 fun2 的执行上下文</span></span><br><span class="line">ECStack.push(&lt;fun2&gt; functionContext)</span><br><span class="line"></span><br><span class="line">// fun2 还调用了 fun3</span><br><span class="line">ECStack.push(&lt;fun3&gt; functionContext)</span><br><span class="line"></span><br><span class="line">// fun3 执行完毕</span><br><span class="line">ECStack.pop()</span><br><span class="line"></span><br><span class="line">// fun2 执行完毕</span><br><span class="line">ECStack.pop()</span><br><span class="line"></span><br><span class="line">// fun1 执行完毕</span><br><span class="line">ECStack.pop()</span><br></pre></td></tr></table></figure>
 
 <p>但是需要注意的是，<code>JavaScript</code> 虽然执行完毕了，但是 <code>ECStack</code> 底层永远有个 <code>globalContext</code></p>
-<h2 id="作用域链"><a href="#作用域链" class="headerlink" title="作用域链"></a>作用域链</h2><p>在上面我们介绍 <code>AO</code> 部分概念的时候，我们曾经提到过，在查找变量的时候，会先从当前上下文的变量对象中查找，如果没有找到，就会从父级（词法层面上的父级）执行上下文的变量对象中查找，一直找到全局上下文的变量对象，也就是全局对象，这样由多个执行上下文的变量对象构成的链表就叫做「作用域链」</p>
+<h2 id="作用域链"><a href="#作用域链" class="headerlink" title="作用域链"></a>作用域链</h2><p>在上面我们介绍 <code>AO</code> 部分概念的时候，我们曾经提到过，在查找变量的时候，会先从当前上下文的变量对象中查找，如果没有找到，就会从父级（词法层面上的父级）执行上下文的变量对象中查找，一直找到全局上下文的变量对象，也就是全局对象，这样由多个执行上下文的变量对象构成的链表就叫做『作用域链』</p>
 <p>又因为函数有一个内部属性 <code>[[scope]]</code>，当函数创建的时候，就会保存所有父变量对象到其中，你可以理解 <code>[[scope]]</code> 就是所有父变量对象的层级链，比如下面这个例子，函数创建时，各自的 <code>[[scope]]</code> 为</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bar</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ==&gt;</span></span><br><span class="line"></span><br><span class="line">foo.[[scope]] = [</span><br><span class="line">  globalContext.VO</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">bar.[[scope]] = [</span><br><span class="line">  fooContext.AO,</span><br><span class="line">  globalContext.VO</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
 

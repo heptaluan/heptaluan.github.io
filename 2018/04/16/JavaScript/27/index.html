@@ -16,7 +16,7 @@
 <meta property="og:description" content="JavaScript 中的 call() 和 apply() 方法主要是用来扩充函数的作用域和改变 this 的指向（改变被调用函数的上下文），它们都接收两个参数">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/27.webp">
-<meta property="og:updated_time" content="2021-01-01T12:30:51.657Z">
+<meta property="og:updated_time" content="2021-01-30T14:34:51.717Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的 call 和 apply">
 <meta name="twitter:description" content="JavaScript 中的 call() 和 apply() 方法主要是用来扩充函数的作用域和改变 this 的指向（改变被调用函数的上下文），它们都接收两个参数">
@@ -301,10 +301,10 @@
 <p>第四种，使用排序，因为我们进行过排序，那么最大值就是最后一个值，但是这个方法是存在缺陷的，因为 <code>sort()</code> 返回的结果不一定准确</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>, <span class="hljs-number">7</span>, <span class="hljs-number">9</span>, <span class="hljs-number">11</span>, <span class="hljs-number">2</span>, <span class="hljs-number">4</span>, <span class="hljs-number">6</span>, <span class="hljs-number">8</span>, <span class="hljs-number">10</span>]</span><br><span class="line"></span><br><span class="line">arr.sort(<span class="hljs-function">(<span class="hljs-params">a, b</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> a - b</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(arr[arr.length - <span class="hljs-number">1</span>])</span><br></pre></td></tr></table></figure>
 
-<h2 id="Array-prototype-slice-call-arguments-0"><a href="#Array-prototype-slice-call-arguments-0" class="headerlink" title="Array.prototype.slice.call(arguments, 0)"></a>Array.prototype.slice.call(arguments, 0)</h2><p>在平常开发过程当中，我们经常会在一些第三方库等地方会看到类似 <code>Array.prototype.slice.call(arguments, 0)</code> 这样的写法，其实这个方法的本质作用就是「把类数组对象转换成一个真正的数组」，这里主要涉及到 <code>slice()</code> 方法和 <code>call()</code> 方法，我们先来简单的了解一下 <code>slice()</code> 方法，在数组和字符串当中都有这个 <code>slice</code> 方法，这个方法的作用是截取一段数据</p>
+<h2 id="Array-prototype-slice-call-arguments-0"><a href="#Array-prototype-slice-call-arguments-0" class="headerlink" title="Array.prototype.slice.call(arguments, 0)"></a>Array.prototype.slice.call(arguments, 0)</h2><p>在平常开发过程当中，我们经常会在一些第三方库等地方会看到类似 <code>Array.prototype.slice.call(arguments, 0)</code> 这样的写法，其实这个方法的本质作用就是『把类数组对象转换成一个真正的数组』，这里主要涉及到 <code>slice()</code> 方法和 <code>call()</code> 方法，我们先来简单的了解一下 <code>slice()</code> 方法，在数组和字符串当中都有这个 <code>slice</code> 方法，这个方法的作用是截取一段数据</p>
 <ul>
-<li>在数组中，该方法的返回值是「包含」截取元素的组成的数组</li>
-<li>在字符串中，该方法的返回值是「包含」截取字符串组成的字符串</li>
+<li>在数组中，该方法的返回值是『包含』截取元素的组成的数组</li>
+<li>在字符串中，该方法的返回值是『包含』截取字符串组成的字符串</li>
 </ul>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 参数 start 表示数组片段开始处的下标，如果是负数，它声明从数组末尾开始算起的位置</span></span><br><span class="line"><span class="hljs-comment">// 参数 end 表示数组片段结束处的后一个元素的下标，如果没有指定这个参数，切分的数组包含从 start 开始到数组结束的所有元素</span></span><br><span class="line"><span class="hljs-comment">// 如果这个参数是负数，它声明的是从数组尾部开始算起的元素（不包括结束位置）</span></span><br><span class="line">array.slice(start, end)</span><br></pre></td></tr></table></figure>
 
@@ -322,7 +322,7 @@
 <li>如果之传入一个参数的话，那就是输出从开始位置到结束位置的所有元素</li>
 <li>而如果不传递参数，则是从 <code>0</code> 开始计算（可以认为返回一个原对象的副本，因为 <code>slice</code> 方法返回的是一个新的数组）</li>
 </ul>
-<p>在字符串中，和 <code>slice()</code> 方法类型的还有两个方法 <code>substring()</code> 和 <code>substr()</code> 方法，其中，<code>substring()</code> 方法表示「返回从开始位置到结束位置的字符串」，<code>substr()</code> 接收两个参数，「第一个参数表示开始位置，第二个参数表示要截取的字符个数」，和前两个方法略有不同，当传入方法的参数为负数时，这三种方法又略有不同</p>
+<p>在字符串中，和 <code>slice()</code> 方法类型的还有两个方法 <code>substring()</code> 和 <code>substr()</code> 方法，其中，<code>substring()</code> 方法表示『返回从开始位置到结束位置的字符串』，<code>substr()</code> 接收两个参数，『第一个参数表示开始位置，第二个参数表示要截取的字符个数』，和前两个方法略有不同，当传入方法的参数为负数时，这三种方法又略有不同</p>
 <ul>
 <li><code>slice()</code>，像上面说的，是负数加上字符串的长度得出相应的正值</li>
 <li><code>substring()</code>，方法的参数均置为零</li>
@@ -330,7 +330,7 @@
 </ul>
 <hr>
 <p>在了解了 <code>slice()</code> 方法的基本用法以后，我们就正式的来看看 <code>Array.prototype.slice.call(arguments, 0)</code> 具体含义，在 <code>Array.prototype.slice.call(arguments, 0)</code> 中，<code>Array.prototype.slice</code> 调用的是 <code>Array</code> 的原型方法</p>
-<p>对于正真的数组是有 <code>slice()</code> 方法，但是对于像 <code>arguments</code> 或者自己定义的一些「类数组对象」，虽然存在 <code>length</code> 等若干属性，但是并没有 <code>slice()</code> 方法，所以对于这种类数组对象就得使用原型方法来使用 <code>slice()</code> 方法，即 <code>Array.prototype.slice</code>（如果在自定义中的类数组对象中自定义了 <code>slice()</code> 方法，那么自然可以直接调用）</p>
+<p>对于正真的数组是有 <code>slice()</code> 方法，但是对于像 <code>arguments</code> 或者自己定义的一些『类数组对象』，虽然存在 <code>length</code> 等若干属性，但是并没有 <code>slice()</code> 方法，所以对于这种类数组对象就得使用原型方法来使用 <code>slice()</code> 方法，即 <code>Array.prototype.slice</code>（如果在自定义中的类数组对象中自定义了 <code>slice()</code> 方法，那么自然可以直接调用）</p>
 <p>简单点说就是对于 <code>arguments</code> 类数组，我们调用 <code>Array.prototype.slice</code> 原型方法，并用 <code>call()</code> 方法，将作用域限定在 <code>arguments</code> 中，这里 <code>Array.prototype</code> 就可以理解为 <code>arguments</code>，同参数 <code>0</code> 为 <code>slice()</code> 方法的第一个参数，即开始位置索引，通过这种方法就将 <code>arguments</code> 类数组转换成了真数组</p>
 <blockquote>
 <p><code>Array.prototype.slice.call(arguments)</code> 能将具有 <code>length</code> 属性的对象转成数组，除了 <code>IE</code> 下的节点集合</p>

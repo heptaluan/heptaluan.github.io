@@ -16,7 +16,7 @@
 <meta property="og:description" content="本章记录的是一些 HTTP 相关内容的补充，偏向于查漏补缺，主要是一些平常遇到或是看到过的知识点，面试题之类的，在这里简单的整理汇总一下，一方面补充些专业知识，另一方面也是方便以后查询或是复习，更多相关内容可以参考 计算机网络知识梳理 和 前端知识体系整理">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/13.webp">
-<meta property="og:updated_time" content="2021-01-16T14:34:39.294Z">
+<meta property="og:updated_time" content="2021-01-30T14:34:51.692Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="HTTP 查漏补缺">
 <meta name="twitter:description" content="本章记录的是一些 HTTP 相关内容的补充，偏向于查漏补缺，主要是一些平常遇到或是看到过的知识点，面试题之类的，在这里简单的整理汇总一下，一方面补充些专业知识，另一方面也是方便以后查询或是复习，更多相关内容可以参考 计算机网络知识梳理 和 前端知识体系整理">
@@ -669,7 +669,7 @@
 <td><code>TCP</code></td>
 </tr>
 </tbody></table>
-<h2 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h2><p><code>TCP</code> 建立连接的过程叫做握手，握手需要在客户和服务器之间交换三个 <code>TCP</code> 报文段，也叫三报文握手，之所以会有三次握手的过程，是因为需要确认双方的两样能力，即「发送的能力」和「接收的能力」</p>
+<h2 id="三次握手"><a href="#三次握手" class="headerlink" title="三次握手"></a>三次握手</h2><p><code>TCP</code> 建立连接的过程叫做握手，握手需要在客户和服务器之间交换三个 <code>TCP</code> 报文段，也叫三报文握手，之所以会有三次握手的过程，是因为需要确认双方的两样能力，即『发送的能力』和『接收的能力』</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/13-01.png" alt></p>
 <ul>
 <li><code>A</code> 主动打开连接，<code>B</code> 被动打开连接，<code>B</code> 先进入收听状态（<code>LISTEN</code>），<code>A</code> 打算建立 <code>TCP</code> 连接时，先向 <code>B</code> 发送连接请求报文段，其中同步位 <code>SYN = 1</code>，初始序号 <code>seq = x</code>，这个报文段不能携带数据，但是要消耗一个序号，接着 <code>A</code> 进入同步已发送状态</li>
@@ -686,7 +686,7 @@
 <blockquote>
 <p>所谓的失效的连接请求就是 <code>A</code> 第一次先发送了一个请求，但是丢失了，于是 <code>A</code> 再发送一个连接请求，重新建立连接，发送数据并释放连接</p>
 </blockquote>
-<h4 id="为什么不是四次握手"><a href="#为什么不是四次握手" class="headerlink" title="为什么不是四次握手"></a>为什么不是四次握手</h4><p>三次握手的目的是确认双方「发送」和「接收」的能力，当然四次握手也是可以的，甚至 <code>100</code> 次都可以，但为了解决问题，三次就已经足够了，再多用处就不大了</p>
+<h4 id="为什么不是四次握手"><a href="#为什么不是四次握手" class="headerlink" title="为什么不是四次握手"></a>为什么不是四次握手</h4><p>三次握手的目的是确认双方『发送』和『接收』的能力，当然四次握手也是可以的，甚至 <code>100</code> 次都可以，但为了解决问题，三次就已经足够了，再多用处就不大了</p>
 <h4 id="三次握手过程中可以携带数据么"><a href="#三次握手过程中可以携带数据么" class="headerlink" title="三次握手过程中可以携带数据么"></a>三次握手过程中可以携带数据么</h4><p>第三次握手的时候，可以携带，前两次握手不能携带数据</p>
 <ul>
 <li>如果前两次握手能够携带数据，那么一旦有人想攻击服务器，那么他只需要在第一次握手中的 <code>SYN</code> 报文中放大量数据，那么服务器势必会消耗更多的时间和内存空间去处理这些数据，增大了服务器被攻击的风险</li>
@@ -723,7 +723,7 @@
 <p>如果是三次挥手，这就等于说服务端将 <code>ACK</code> 和 <code>FIN</code> 的发送合并为一次挥手，这个时候长时间的延迟可能会导致客户端误以为 <code>FIN</code> 没有到达客户端，从而让客户端不断的重发 <code>FIN</code></p>
 <h4 id="同时关闭会怎样"><a href="#同时关闭会怎样" class="headerlink" title="同时关闭会怎样"></a>同时关闭会怎样</h4><p>如果客户端和服务端同时发送 <code>FIN</code>，状态如下图所示</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/13-04.png" alt></p>
-<h2 id="半连接队列与-SYN-Flood-攻击"><a href="#半连接队列与-SYN-Flood-攻击" class="headerlink" title="半连接队列与 SYN Flood 攻击"></a>半连接队列与 SYN Flood 攻击</h2><p>三次握手前，服务端的状态从 <code>CLOSED</code> 变为 <code>LISTEN</code>，同时在内部创建了两个队列「半连接队列」和「全连接队列」，即 <code>SYN</code> 队列和 <code>ACCEPT</code>（<code>Accept Queue</code>） 队列</p>
+<h2 id="半连接队列与-SYN-Flood-攻击"><a href="#半连接队列与-SYN-Flood-攻击" class="headerlink" title="半连接队列与 SYN Flood 攻击"></a>半连接队列与 SYN Flood 攻击</h2><p>三次握手前，服务端的状态从 <code>CLOSED</code> 变为 <code>LISTEN</code>，同时在内部创建了两个队列『半连接队列』和『全连接队列』，即 <code>SYN</code> 队列和 <code>ACCEPT</code>（<code>Accept Queue</code>） 队列</p>
 <ul>
 <li>半连接队列，当客户端发送 <code>SYN</code> 到服务端，服务端收到以后回复 <code>ACK</code> 和 <code>SYN</code>，状态由 <code>LISTEN</code> 变为 <code>SYN_RCVD</code>，此时这个连接就被推入了 <code>SYN</code> 队列，也就是半连接队列</li>
 <li>全连接队列，当客户端返回 <code>ACK</code>，服务端接收后，三次握手完成，这个时候连接等待被具体的应用取走，在被取走之前，它会被推入另外一个 <code>TCP</code> 维护的队列，也就是全连接队列</li>
@@ -943,7 +943,7 @@
 <li><code>cwnd</code> 的大小变为拥塞阈值</li>
 <li><code>cwnd</code> 线性增加</li>
 </ul>
-<h4 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h4><p><code>TCP</code> 拥塞控制由 <code>4</code> 个核心算法组成，即「慢启动」、「拥塞避免」、「快速重传」和「快速恢复」</p>
+<h4 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h4><p><code>TCP</code> 拥塞控制由 <code>4</code> 个核心算法组成，即『慢启动』、『拥塞避免』、『快速重传』和『快速恢复』</p>
 <ul>
 <li>慢启动，发送方向接收方发送 <code>1</code> 个单位的数据，收到对方确认后会发送 <code>2</code> 个单位的数据，然后依次是 <code>4</code> 个、<code>8</code> 个呈指数级增长，这个过程就是在不断试探网络的拥塞程度，超出阈值则会导致网络拥塞</li>
 <li>拥塞避免，指数增长不可能是无限的，到达某个限制（慢启动阈值）之后，指数增长变为线性增长</li>

@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="在上一章当中我们研究了 最短路径 的相关算法，它们是迪杰斯特拉算法（Dijkstra）和弗洛伊德算法（Floyd），本章我们就来了解一下关键路径的一些相关算法，这也是图结构相关内容的最后一部分，但是在展开之前，我们需要先来了解一些前置知识，它们就是「拓扑序列」和「拓扑排序」">
+    <meta name="description" content="在上一章当中我们研究了 最短路径 的相关算法，它们是迪杰斯特拉算法（Dijkstra）和弗洛伊德算法（Floyd），本章我们就来了解一下关键路径的一些相关算法，这也是图结构相关内容的最后一部分，但是在展开之前，我们需要先来了解一些前置知识，它们就是『拓扑序列』和『拓扑排序』">
 <meta name="keywords" content="Essay">
 <meta property="og:type" content="article">
 <meta property="og:title" content="关键路径">
 <meta property="og:url" content="http://yoursite.com/2020/05/08/Essay/25/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="在上一章当中我们研究了 最短路径 的相关算法，它们是迪杰斯特拉算法（Dijkstra）和弗洛伊德算法（Floyd），本章我们就来了解一下关键路径的一些相关算法，这也是图结构相关内容的最后一部分，但是在展开之前，我们需要先来了解一些前置知识，它们就是「拓扑序列」和「拓扑排序」">
+<meta property="og:description" content="在上一章当中我们研究了 最短路径 的相关算法，它们是迪杰斯特拉算法（Dijkstra）和弗洛伊德算法（Floyd），本章我们就来了解一下关键路径的一些相关算法，这也是图结构相关内容的最后一部分，但是在展开之前，我们需要先来了解一些前置知识，它们就是『拓扑序列』和『拓扑排序』">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/25.webp">
-<meta property="og:updated_time" content="2020-12-08T14:41:08.891Z">
+<meta property="og:updated_time" content="2021-01-30T14:34:51.675Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关键路径">
-<meta name="twitter:description" content="在上一章当中我们研究了 最短路径 的相关算法，它们是迪杰斯特拉算法（Dijkstra）和弗洛伊德算法（Floyd），本章我们就来了解一下关键路径的一些相关算法，这也是图结构相关内容的最后一部分，但是在展开之前，我们需要先来了解一些前置知识，它们就是「拓扑序列」和「拓扑排序」">
+<meta name="twitter:description" content="在上一章当中我们研究了 最短路径 的相关算法，它们是迪杰斯特拉算法（Dijkstra）和弗洛伊德算法（Floyd），本章我们就来了解一下关键路径的一些相关算法，这也是图结构相关内容的最后一部分，但是在展开之前，我们需要先来了解一些前置知识，它们就是『拓扑序列』和『拓扑排序』">
 <meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/25.webp">
 
 
@@ -176,7 +176,7 @@
             
         </h1>
         <div class="content">
-            <p>在上一章当中我们研究了 <a href="https://heptaluan.github.io/2020/05/06/Essay/24/" target="_blank" rel="noopener">最短路径</a> 的相关算法，它们是迪杰斯特拉算法（<code>Dijkstra</code>）和弗洛伊德算法（<code>Floyd</code>），本章我们就来了解一下关键路径的一些相关算法，这也是图结构相关内容的最后一部分，但是在展开之前，我们需要先来了解一些前置知识，它们就是「拓扑序列」和「拓扑排序」</p>
+            <p>在上一章当中我们研究了 <a href="https://heptaluan.github.io/2020/05/06/Essay/24/" target="_blank" rel="noopener">最短路径</a> 的相关算法，它们是迪杰斯特拉算法（<code>Dijkstra</code>）和弗洛伊德算法（<code>Floyd</code>），本章我们就来了解一下关键路径的一些相关算法，这也是图结构相关内容的最后一部分，但是在展开之前，我们需要先来了解一些前置知识，它们就是『拓扑序列』和『拓扑排序』</p>
 <a id="more"></a>
 
 
@@ -187,7 +187,7 @@
 <blockquote>
 <p>设 <code>G = (V, E)</code> 是一个具有 <code>n</code> 个顶点的有向图，<code>V</code> 中的顶点序列 <code>V1, V2, ... Vn</code> 满足若从顶点 <code>Vi</code> 到 <code>Vj</code> 有一条路径，则在顶点序列中顶点 <code>Vi</code> 必在顶点 <code>Vj</code> 之前，则我们称这样的顶点序列为一个拓扑序列</p>
 </blockquote>
-<p>而所谓的拓扑排序，其实就是对一个「有向图构造拓扑序列」的过程，我们可以以一个具体的例子来进行理解，如下图</p>
+<p>而所谓的拓扑排序，其实就是对一个『有向图构造拓扑序列』的过程，我们可以以一个具体的例子来进行理解，如下图</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/25-01.png" alt></p>
 <p>上图是某校计算机专业所修课程，比如代号 <code>C1</code> 的课程，它就不需要前置课程，而比如对于课程 <code>C3</code> 它就需要 <code>C1</code> 和 <code>C14</code> 这两门前置课程，我们将上图转换为 <code>AOV</code> 网是下面这样的</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/25-02.png" alt></p>
@@ -197,7 +197,7 @@
 <li>从网中删去该顶点，并且删去从该顶点发出的全部有向边</li>
 <li>重复上述两步，直到剩余网中不再存在没有前趋的顶点为止</li>
 </ul>
-<p>有了实现步骤，下面我们就来看看如何使用代码来进行实现，由于需要删除顶点，所以在这里我们选择「邻接表」的数据结构来表示会更加方便（相较于邻边矩阵），形式如下</p>
+<p>有了实现步骤，下面我们就来看看如何使用代码来进行实现，由于需要删除顶点，所以在这里我们选择『邻接表』的数据结构来表示会更加方便（相较于邻边矩阵），形式如下</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/25-03.png" alt></p>
 <p>针对于该算法时间复杂度而言</p>
 <ul>
@@ -217,7 +217,7 @@
 <blockquote>
 <p>在一个表示工程的带权有向图（注意这里是带权的）中，用顶点表示事件，用有向边表示活动，用边上的权值表示活动的持续时间，这种有向图的边表示活动的网，我们称之为 <code>AOE</code> 网（<code>Activity On Edge Network</code>）</p>
 </blockquote>
-<p>我们把 <code>AOE</code> 网中没有「入边」的顶点称为始点或源点，没有「出边」的顶点称为终点或汇点，如下图所示</p>
+<p>我们把 <code>AOE</code> 网中没有『入边』的顶点称为始点或源点，没有『出边』的顶点称为终点或汇点，如下图所示</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/25-04.png" alt></p>
 <h2 id="AOV-网与-AOE-网的比较"><a href="#AOV-网与-AOE-网的比较" class="headerlink" title="AOV 网与 AOE 网的比较"></a>AOV 网与 AOE 网的比较</h2><p>下面我们来看看两者之间的区别，有一个比较好的记忆方式就是，注意它们是否带权，不带权的就是 <code>AOV</code>，而带权的就是 <code>AOE</code>，如下</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/25-05.png" alt></p>
@@ -248,7 +248,7 @@
 <td>活动的最晚开工时间，不推迟工期的最晚开工时间</td>
 </tr>
 </tbody></table>
-<p>其实简单来说，关键路径就是「源点到汇点之间权值最大的一条路径」，这条路径决定了整个工期，关键路径上的关键活动的最早开始的时间和最晚开始的时间应该是相同的（也就是 <code>etv == ltv</code>），否则说明还有其他工程会影响工期，这条路径就不是关键路径了，而引入 <code>ete</code> 和 <code>lte</code> 是为了通过循环边来找出关键活动，同时可以得到边上的权，还是以下图为例</p>
+<p>其实简单来说，关键路径就是『源点到汇点之间权值最大的一条路径』，这条路径决定了整个工期，关键路径上的关键活动的最早开始的时间和最晚开始的时间应该是相同的（也就是 <code>etv == ltv</code>），否则说明还有其他工程会影响工期，这条路径就不是关键路径了，而引入 <code>ete</code> 和 <code>lte</code> 是为了通过循环边来找出关键活动，同时可以得到边上的权，还是以下图为例</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/25-04.png" alt></p>
 <p>根据图中的信息，我们可以得到如下信息</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/essay/25-07.png" alt></p>

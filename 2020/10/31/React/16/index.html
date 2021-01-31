@@ -16,7 +16,7 @@
 <meta property="og:description" content="我们在之前 React 中的 Mixin 和 React 中的 HOC 的章节当中介绍了 Mixin 和 HOC 的相关内容，了解了它们大致的实现原理和使用方式，也知道了 HOC 的出现就是为了替代 Mixin，但是 HOC 也并非完美无缺，它其实也是存在着一些缺陷的，比如  HOC 需要在原组件上进行包裹或者嵌套，如果大量使用 HOC，将会产生非常多的嵌套，这让调试变得非常困难 HOC 可以劫持">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/16.webp">
-<meta property="og:updated_time" content="2021-01-23T14:55:27.596Z">
+<meta property="og:updated_time" content="2021-01-30T14:34:51.756Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="React 中的 Hook">
 <meta name="twitter:description" content="我们在之前 React 中的 Mixin 和 React 中的 HOC 的章节当中介绍了 Mixin 和 HOC 的相关内容，了解了它们大致的实现原理和使用方式，也知道了 HOC 的出现就是为了替代 Mixin，但是 HOC 也并非完美无缺，它其实也是存在着一些缺陷的，比如  HOC 需要在原组件上进行包裹或者嵌套，如果大量使用 HOC，将会产生非常多的嵌套，这让调试变得非常困难 HOC 可以劫持">
@@ -256,7 +256,7 @@
 <figure class="highlight jsx hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Button</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> [text, setText] = useState(<span class="hljs-string">'click me'</span>)</span><br><span class="line"></span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">handleClick</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    setText(<span class="hljs-string">'clicked'</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">&#123;handleClick&#125;</span>&gt;</span>&#123;text&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>在上面示例当中，<code>useState</code> 就是一个 <code>Hook</code>，通过在函数组件里调用它来给组件添加一些内部 <code>state</code>，<code>React</code> 会在重复渲染时保留这个 <code>state</code></p>
-<p><code>useState</code> 会返回一对值，包括「当前状态」和「一个让你更新它的函数」，你可以在事件处理函数中或其他一些地方调用这个函数，它类似 <code>Class</code> 组件的 <code>this.setState</code>，但是它不会把新的 <code>state</code> 和旧的 <code>state</code> 进行合并，<code>useState</code> 唯一的参数就是初始 <code>state</code>，值得注意的是，不同于 <code>this.state</code>，这里的 <code>state</code> 不一定要是一个对象，并且这个初始 <code>state</code> 参数只有在第一次渲染时会被用到</p>
+<p><code>useState</code> 会返回一对值，包括『当前状态』和『一个让你更新它的函数』，你可以在事件处理函数中或其他一些地方调用这个函数，它类似 <code>Class</code> 组件的 <code>this.setState</code>，但是它不会把新的 <code>state</code> 和旧的 <code>state</code> 进行合并，<code>useState</code> 唯一的参数就是初始 <code>state</code>，值得注意的是，不同于 <code>this.state</code>，这里的 <code>state</code> 不一定要是一个对象，并且这个初始 <code>state</code> 参数只有在第一次渲染时会被用到</p>
 <h4 id="更新方式"><a href="#更新方式" class="headerlink" title="更新方式"></a>更新方式</h4><p>另外 <code>useState</code> 的更新方式也有两种，即直接更新和函数式更新，其应用场景的区分点在于</p>
 <ul>
 <li>直接更新不依赖于旧 <code>state</code> 的值</li>
@@ -607,8 +607,8 @@
 <p><code>Effect Hook</code> 将会被保存在组件一个称为 <code>updateQueue</code> 的属性上，每个 <code>effect</code> 节点都有如下的结构（<a href="https://github.com/facebook/react/tree/5f06576f51ece88d846d01abd2ddd575827c6127/packages/react-reconciler/src/ReactFiberHooks.js#L477" target="_blank" rel="noopener">源码</a>）</p>
 <ul>
 <li><code>tag</code>，一个二进制数字，它控制了 <code>effect</code> 节点的行为（下面会进行介绍）</li>
-<li><code>create</code>，「绘制之后」运行的回调函数</li>
-<li><code>destroy</code>，它是 <code>create()</code> 返回的回调函数，将会在「初始渲染前」运行</li>
+<li><code>create</code>，『绘制之后』运行的回调函数</li>
+<li><code>destroy</code>，它是 <code>create()</code> 返回的回调函数，将会在『初始渲染前』运行</li>
 <li><code>inputs</code>，一个集合，该集合中的值将会决定一个 <code>effect</code> 节点是否应该被销毁或者重新创建</li>
 <li><code>next</code>，它指向下一个定义在函数组件中的 <code>effect</code> 节点</li>
 </ul>

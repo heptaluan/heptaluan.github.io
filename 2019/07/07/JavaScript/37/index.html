@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="在展开渲染机制相关内容之前，我们先来简单的了解一下浏览器的内核的分类，浏览器的内核是指支持浏览器运行的最核心的程序，分为两个部分的，一是渲染引擎，另一个是 JavaScript 引擎（比如我们经常可以听到的 V8 引擎），渲染引擎在不同的浏览器中也不是都相同的，目前市面上常见的浏览器内核有  Trident（IE） Gecko（Firefox） Blink（Chrome、Opera） Webkit">
+    <meta name="description" content="在展开渲染机制相关内容之前，我们先来简单的了解一下常见的浏览器内核有哪些，浏览器的内核是指支持浏览器运行的最核心的程序，分为两个部分的，一是渲染引擎，另一个是 JavaScript 引擎（比如我们经常可以听到的 V8 引擎），渲染引擎在不同的浏览器中也不是都相同的，目前市面上常见的浏览器内核主要有以下这些    浏览器/RunTime 内核（渲染引擎） JavaScript 引擎    Chrom">
 <meta name="keywords" content="JavaScript">
 <meta property="og:type" content="article">
 <meta property="og:title" content="浏览器的渲染机制">
 <meta property="og:url" content="http://yoursite.com/2019/07/07/JavaScript/37/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="在展开渲染机制相关内容之前，我们先来简单的了解一下浏览器的内核的分类，浏览器的内核是指支持浏览器运行的最核心的程序，分为两个部分的，一是渲染引擎，另一个是 JavaScript 引擎（比如我们经常可以听到的 V8 引擎），渲染引擎在不同的浏览器中也不是都相同的，目前市面上常见的浏览器内核有  Trident（IE） Gecko（Firefox） Blink（Chrome、Opera） Webkit">
+<meta property="og:description" content="在展开渲染机制相关内容之前，我们先来简单的了解一下常见的浏览器内核有哪些，浏览器的内核是指支持浏览器运行的最核心的程序，分为两个部分的，一是渲染引擎，另一个是 JavaScript 引擎（比如我们经常可以听到的 V8 引擎），渲染引擎在不同的浏览器中也不是都相同的，目前市面上常见的浏览器内核主要有以下这些    浏览器/RunTime 内核（渲染引擎） JavaScript 引擎    Chrom">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/37.webp">
-<meta property="og:updated_time" content="2021-01-23T14:55:27.591Z">
+<meta property="og:updated_time" content="2021-01-30T14:34:51.724Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浏览器的渲染机制">
-<meta name="twitter:description" content="在展开渲染机制相关内容之前，我们先来简单的了解一下浏览器的内核的分类，浏览器的内核是指支持浏览器运行的最核心的程序，分为两个部分的，一是渲染引擎，另一个是 JavaScript 引擎（比如我们经常可以听到的 V8 引擎），渲染引擎在不同的浏览器中也不是都相同的，目前市面上常见的浏览器内核有  Trident（IE） Gecko（Firefox） Blink（Chrome、Opera） Webkit">
+<meta name="twitter:description" content="在展开渲染机制相关内容之前，我们先来简单的了解一下常见的浏览器内核有哪些，浏览器的内核是指支持浏览器运行的最核心的程序，分为两个部分的，一是渲染引擎，另一个是 JavaScript 引擎（比如我们经常可以听到的 V8 引擎），渲染引擎在不同的浏览器中也不是都相同的，目前市面上常见的浏览器内核主要有以下这些    浏览器/RunTime 内核（渲染引擎） JavaScript 引擎    Chrom">
 <meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/37.webp">
 
 
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    37 分钟 读完 (大约 5568 个字)
+                    1 小时 读完 (大约 7175 个字)
                 </span>
                 
                 
@@ -176,18 +176,67 @@
             
         </h1>
         <div class="content">
-            <p>在展开渲染机制相关内容之前，我们先来简单的了解一下浏览器的内核的分类，浏览器的内核是指支持浏览器运行的最核心的程序，分为两个部分的，一是渲染引擎，另一个是 <code>JavaScript</code> 引擎（比如我们经常可以听到的 <code>V8</code> 引擎），渲染引擎在不同的浏览器中也不是都相同的，目前市面上常见的浏览器内核有</p>
-<ul>
-<li><code>Trident</code>（<code>IE</code>）</li>
-<li><code>Gecko</code>（<code>Firefox</code>）</li>
-<li><code>Blink</code>（<code>Chrome</code>、<code>Opera</code>）</li>
-<li><code>Webkit</code>（<code>Safari</code>）</li>
-</ul>
-<p>这里面大家最耳熟能详的可能就是 <code>Webkit</code> 内核了，其中的 <code>Blink</code> 其实就是 <code>Webkit</code> 的一个分支，也就是说它也是基于 <code>Webkit</code> 的，所以本章也就以 <code>Webkit</code> 为例，来看看浏览器的渲染机制到底是一个什么样的过程，这里我们先从页面的加载过程开始看起</p>
+            <p>在展开渲染机制相关内容之前，我们先来简单的了解一下常见的浏览器内核有哪些，浏览器的内核是指支持浏览器运行的最核心的程序，分为两个部分的，一是渲染引擎，另一个是 <code>JavaScript</code> 引擎（比如我们经常可以听到的 <code>V8</code> 引擎），渲染引擎在不同的浏览器中也不是都相同的，目前市面上常见的浏览器内核主要有以下这些</p>
+<table>
+<thead>
+<tr>
+<th>浏览器/RunTime</th>
+<th>内核（渲染引擎）</th>
+<th>JavaScript 引擎</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Chrome</code></td>
+<td><code>Blink（28~）Webkit（Chrome 27）</code></td>
+<td><code>V8</code></td>
+</tr>
+<tr>
+<td><code>FireFox</code></td>
+<td><code>Gecko</code></td>
+<td><code>SpiderMonkey</code></td>
+</tr>
+<tr>
+<td><code>Safari</code></td>
+<td><code>Webkit</code></td>
+<td><code>JavaScriptCore</code></td>
+</tr>
+<tr>
+<td><code>Edge</code></td>
+<td><code>EdgeHTML</code></td>
+<td><code>Chakra(for JavaScript)</code></td>
+</tr>
+<tr>
+<td><code>IE</code></td>
+<td><code>Trident</code></td>
+<td><code>Chakra(for JScript)</code></td>
+</tr>
+<tr>
+<td><code>PhantomJS</code></td>
+<td><code>Webkit</code></td>
+<td><code>JavaScriptCore</code></td>
+</tr>
+<tr>
+<td><code>Node.js</code></td>
+<td>-</td>
+<td><code>V8</code></td>
+</tr>
+</tbody></table>
+<p>这里面大家最耳熟能详的可能就是 <code>Webkit</code> 内核了，其中的 <code>Blink</code> 其实就是 <code>Webkit</code> 的一个分支，也就是说它也是基于 <code>Webkit</code> 的，所以本章也就以 <code>Webkit</code> 为例，来看看浏览器的渲染机制到底是一个什么样的过程，不过在此之前，我们先来简单的了解一下浏览器的主要组成部分</p>
 <a id="more"></a>
 
 
-
+<h2 id="浏览器的主要组成部分"><a href="#浏览器的主要组成部分" class="headerlink" title="浏览器的主要组成部分"></a>浏览器的主要组成部分</h2><p>主要分为以下几部分</p>
+<ul>
+<li>用户界面，包括地址栏、前进/后退 按钮、书签菜单等，除了浏览器主窗口显示的您请求的页面外，其他显示的各个部分都属于用户界面</li>
+<li>浏览器引擎，在用户界面和呈现引擎之间传送指令</li>
+<li>呈现引擎，负责显示请求的内容，如果请求的内容是 <code>HTML</code>，它就负责解析 <code>HTML</code> 和 <code>CSS</code> 内容，并将解析后的内容显示在屏幕上</li>
+<li>网络，用于网络调用，比如 <code>HTTP</code> 请求，其接口与平台无关，并为所有平台提供底层实现</li>
+<li>用户界面后端，用于绘制基本的窗口小部件，比如组合框和窗口，其公开了与平台无关的通用接口，而在底层使用操作系统的用户界面方法</li>
+<li><code>JavaScript</code> 解释器，用于解析和执行 <code>JavaScript</code> 代码</li>
+<li>数据存储，这是持久层，浏览器需要在硬盘上保存各种数据，例如 <code>Cookie</code>，新的 <code>HTML</code> 规范（<code>HTML5</code>）定义了『网络数据库』，这是一个完整（但是轻便）的浏览器内数据库</li>
+</ul>
+<p>如下图所示</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-01.png" alt></p>
 <h2 id="页面加载过程"><a href="#页面加载过程" class="headerlink" title="页面加载过程"></a>页面加载过程</h2><p>这里我们就简单的梳理一下，至于更为详细的过程可以参考之前整理过的 <a href="https://heptaluan.github.io/2017/11/07/HTTP/01/" target="_blank" rel="noopener">浏览器输入网址到页面展示所经历的过程</a> 和 <a href="https://heptaluan.github.io/2017/12/01/HTTP/03/" target="_blank" rel="noopener">域名发散与收敛</a> 当中的相关内容，流程如下</p>
 <ul>
 <li>浏览器根据 <code>DNS</code> 服务器得到域名的 <code>IP</code> 地址</li>
@@ -206,10 +255,16 @@
 <h4 id="1、解析-HTML-标签，构建-DOM-树"><a href="#1、解析-HTML-标签，构建-DOM-树" class="headerlink" title="1、解析 HTML 标签，构建 DOM 树"></a>1、解析 HTML 标签，构建 DOM 树</h4><p>这个阶段对应着 <code>Create/Update DOM And request CSS/Images/JavaScript</code> 的过程，也就是说浏览器请求到 <code>HTML</code> 代码后，在生成 <code>DOM</code> 的最开始阶段（应该是 <code>Bytes → characters</code> 后），并行发起 <code>CSS</code>、<code>Images</code>、<code>JavaScript</code> 的请求，无论他们是否在 <code>HEAD</code> 里</p>
 <p>不过需要注意的是，发起 <code>JavaScript</code> 文件的下载 <code>request</code>，并不需要 <code>DOM</code> 处理到那个 <code>script</code> 节点</p>
 <h4 id="2-解析-CSS-标签，构建-CSSOM-树"><a href="#2-解析-CSS-标签，构建-CSSOM-树" class="headerlink" title="2. 解析 CSS 标签，构建 CSSOM 树"></a>2. 解析 CSS 标签，构建 CSSOM 树</h4><p>这个阶段对应着 <code>Create/Update Render CSSOM</code> 的过程，即 <code>CSS</code> 文件下载完成，开始构建 <code>CSSOM</code>，其中的 <code>CSSOM</code> 即 <code>CSS Object Model</code>，是浏览器将 <code>CSS</code> 代码解析成树形的数据结构，这个我们会在下方来进行介绍</p>
-<p>其中 <code>DOM</code> 和 <code>CSSOM</code> 都是以下图当中所示的流程，也就是依次经过 <code>Bytes</code>（字节数据），<code>Characters</code>（字符串），<code>Tokens</code>，<code>Nodes</code> 最后到 <code>Object Model</code> 这样的方式生成最终的数据</p>
+<p>其中 <code>DOM</code> 和 <code>CSSOM</code> 都是以下图当中所示的流程，也就是依次经过 <code>Bytes</code>（字节数据），<code>Characters</code>（字符串），<code>Tokens</code>，<code>Nodes</code> 最后到 <code>Object Model</code> 这样的方式生成最终的数据，也就是如下几个步骤</p>
+<ul>
+<li>转码，浏览器将接收到的二进制数据按照指定编码格式转化为 <code>HTML</code> 字符串</li>
+<li>生成 <code>Tokens</code>，之后开始 <code>parser</code>，浏览器会将 <code>HTML</code> 字符串解析成 <code>Tokens</code></li>
+<li>构建 <code>Nodes</code>，对 <code>Node</code> 添加特定的属性，通过指针确定 <code>Node</code> 的父、子、兄弟关系和所属 <code>treeScope</code></li>
+<li>生成 <code>DOM Tree</code>，通过 <code>Node</code> 包含的指针确定的关系构建出 <code>DOM Tree</code></li>
+</ul>
 <p>在这里我们需要注意的是，<code>DOM</code> 树的构建过程是一个深度遍历过程，当前节点的所有子节点都构建好后才会去构建当前节点的下一个兄弟节点</p>
-<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-03.png" alt></p>
-<h4 id="3-把-DOM-和-CSSOM-组合成渲染树"><a href="#3-把-DOM-和-CSSOM-组合成渲染树" class="headerlink" title="3. 把 DOM 和 CSSOM 组合成渲染树"></a>3. 把 DOM 和 CSSOM 组合成渲染树</h4><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-04.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-02.png" alt></p>
+<h4 id="3-把-DOM-和-CSSOM-组合成渲染树"><a href="#3-把-DOM-和-CSSOM-组合成渲染树" class="headerlink" title="3. 把 DOM 和 CSSOM 组合成渲染树"></a>3. 把 DOM 和 CSSOM 组合成渲染树</h4><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-03.png" alt></p>
 <p>这个阶段对应着 <code>Create/Update Render Tree</code> 的过程，所有 <code>CSS</code> 文件下载完成，<code>CSSOM</code> 构建结束后，和 <code>DOM</code> 一起生成 <code>Render Tree</code></p>
 <h4 id="4-在渲染树的基础上进行布局，计算每个节点的几何结构"><a href="#4-在渲染树的基础上进行布局，计算每个节点的几何结构" class="headerlink" title="4. 在渲染树的基础上进行布局，计算每个节点的几何结构"></a>4. 在渲染树的基础上进行布局，计算每个节点的几何结构</h4><p>这个阶段对应着 <code>Layout</code> 的过程，有了 <code>Render Tree</code>，浏览器已经能知道网页中有哪些节点、各个节点的 <code>CSS</code> 定义以及他们的从属关系，这一步操作之所以称为 <code>Layout</code>，顾名思义就是计算出每个节点在屏幕中的位置</p>
 <h4 id="5-把每个节点绘制到屏幕上"><a href="#5-把每个节点绘制到屏幕上" class="headerlink" title="5. 把每个节点绘制到屏幕上"></a>5. 把每个节点绘制到屏幕上</h4><p>这个阶段对应着 <code>Painting</code> 的过程，<code>Layout</code> 后，浏览器已经知道了哪些节点要显示（<code>which nodes are visible</code>）、每个节点的 <code>CSS</code> 属性是什么（<code>their computed styles</code>）、每个节点在屏幕中的位置是哪里（<code>geometry</code>），就进入了最后一步 <code>Painting</code>，按照算出来的规则，通过显卡，把内容画到屏幕上</p>
@@ -220,7 +275,7 @@
 <p>以上五个步骤前三个步骤之所有使用 <code>Create/Update</code> 是因为 <code>DOM</code>、<code>CSSOM</code>、<code>Render Tree</code> 都可能在第一次 <code>Painting</code> 后又被更新多次，比如 <code>JavaScript</code> 修改了 <code>DOM</code> 或者 <code>CSS</code> 属性，<code>Layout</code> 和 <code>Painting</code> 也会被重复执行，除了 <code>DOM</code>、<code>CSSOM</code> 更新的原因外，图片下载完成后也需要调用 <code>Layout</code> 和 <code>Painting</code> 来更新网页</p>
 <h2 id="渲染过程拆解"><a href="#渲染过程拆解" class="headerlink" title="渲染过程拆解"></a>渲染过程拆解</h2><p>我们在上面小节当中提到的渲染过程的五个步骤看起来可能比较抽象，下面我们就来将它们拆解成我们经常遇到的一些操作，然后简单的归纳一下各个步骤</p>
 <p>通常来说我们在编写 <code>Web</code> 页面时，我们需要理解我们所写的页面代码是如何被转换成屏幕上显示的像素的，这个转换过程我们可以归纳为这样的一个流水线，包含五个关键步骤</p>
-<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-09.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-04.png" alt></p>
 <ul>
 <li><code>JavaScript</code><ul>
 <li>一般来说，我们会使用 <code>JavaScript</code> 来实现一些视觉变化的效果，比如用 <code>jQuery</code> 的 <code>animate</code> 函数做一个动画、对一个数据集进行排序、或者往页面里添加一些 <code>DOM</code> 元素等，当然除了<code>JavaScript</code> 还有其他一些常用方法也可以实现视觉变化效果，比如 <code>CSS Animations</code>，<code>Transitions</code> 和 <code>Web Animation API</code></li>
@@ -249,19 +304,20 @@
 <li>往格子中填充像素</li>
 </ol>
 <p>这个过程后来被称之为栅格化（<code>rasterization</code>），所以我们在 <code>DevTools</code> 中看到的绘制记录，应该要知道其中已经包含了栅格化这一过程，但是我们不需要了解所有帧画面渲染流程上的所有流程，实际上，当我们修改视图的时候，有三种方式会重新生成一个帧画面，无论是修改 <code>JavaScript</code>，<code>CSS</code> 还是 <code>Web Animations</code>，这里我们重点关注这三种方式</p>
-<h4 id="JavaScript-CSS-gt-Style-gt-layout-gt-Paint-gt-Composite"><a href="#JavaScript-CSS-gt-Style-gt-layout-gt-Paint-gt-Composite" class="headerlink" title="JavaScript/CSS &gt; Style &gt; layout &gt; Paint &gt; Composite"></a>JavaScript/CSS &gt; Style &gt; layout &gt; Paint &gt; Composite</h4><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-10.png" alt></p>
+<h4 id="JavaScript-CSS-gt-Style-gt-layout-gt-Paint-gt-Composite"><a href="#JavaScript-CSS-gt-Style-gt-layout-gt-Paint-gt-Composite" class="headerlink" title="JavaScript/CSS &gt; Style &gt; layout &gt; Paint &gt; Composite"></a>JavaScript/CSS &gt; Style &gt; layout &gt; Paint &gt; Composite</h4><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-05.png" alt></p>
 <p>如果我们修改布局属性（元素的几何形状），比如宽度，高度以及位置，那么浏览器会检查哪些元素需要重新布局，然后对页面激发一个 <a href="https://stackoverflow.com/questions/27637184/what-is-dom-reflow/27637245#27637245" target="_blank" rel="noopener">reflow</a> 过程完成重新布局，被 <code>reflow</code> 的元素，接下来也会激发绘制过程，最后激发渲染层合并过程，生成最后的画面</p>
-<h4 id="JavaScript-CSS-gt-Style-gt-Paint-gt-Composite"><a href="#JavaScript-CSS-gt-Style-gt-Paint-gt-Composite" class="headerlink" title="JavaScript/CSS &gt; Style &gt; Paint &gt; Composite"></a>JavaScript/CSS &gt; Style &gt; Paint &gt; Composite</h4><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-11.png" alt></p>
+<h4 id="JavaScript-CSS-gt-Style-gt-Paint-gt-Composite"><a href="#JavaScript-CSS-gt-Style-gt-Paint-gt-Composite" class="headerlink" title="JavaScript/CSS &gt; Style &gt; Paint &gt; Composite"></a>JavaScript/CSS &gt; Style &gt; Paint &gt; Composite</h4><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-06.png" alt></p>
 <p>如果我们只是修改了绘制属性，比如说背景图片，字体颜色，阴影等，这些属性不属于页面布局，因此浏览器会在完成样式计算之后，跳过布局过程，只做绘制和渲染层合并过程</p>
-<h4 id="JavaScript-CSS-gt-Style-gt-Composite"><a href="#JavaScript-CSS-gt-Style-gt-Composite" class="headerlink" title="JavaScript/CSS &gt; Style &gt; Composite"></a>JavaScript/CSS &gt; Style &gt; Composite</h4><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-12.png" alt></p>
+<h4 id="JavaScript-CSS-gt-Style-gt-Composite"><a href="#JavaScript-CSS-gt-Style-gt-Composite" class="headerlink" title="JavaScript/CSS &gt; Style &gt; Composite"></a>JavaScript/CSS &gt; Style &gt; Composite</h4><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-07.png" alt></p>
 <p>如果我们修改的属性既不属于布局，也不属于绘制，那么浏览器会在完成样式计算之后，跳过布局和绘制的过程，直接做渲染层合并，第三种方式在性能上是最理想的，对于动画和滚动这种负荷很重的渲染，我们要争取使用第三种渲染流程</p>
 <blockquote>
 <p>如果想知道哪些 <code>CSS</code> 属性会触发这三种方式，可以参考 <a href="https://csstriggers.com/" target="_blank" rel="noopener">CSS Triggers</a>，而对于高性能动画方面则可以参考 <a href="https://developers.google.com/web/fundamentals/performance/rendering/stick-to-compositor-only-properties-and-manage-layer-count" target="_blank" rel="noopener">使用渲染层合并属性</a></p>
 </blockquote>
-<h2 id="关于-CSSOM"><a href="#关于-CSSOM" class="headerlink" title="关于 CSSOM"></a>关于 CSSOM</h2><p><code>CSSOM</code> 是 <code>CSS Object Model</code> 的缩写，大体上来说，<code>CSSOM</code> 是一个建立在 <code>Web</code> 页面上的 <code>CSS</code> 样式的映射，它和 <code>DOM</code> 类似，但是只针对 <code>CSS</code> 而不是 <code>HTML</code>，浏览器将 <code>DOM</code> 和 <code>CSSOM</code> 结合来渲染 <code>Web</code> 页面</p>
-<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-01.png" alt></p>
-<h4 id="CSSOM-是做什么的"><a href="#CSSOM-是做什么的" class="headerlink" title="CSSOM 是做什么的"></a>CSSOM 是做什么的</h4><p><code>CSSOM</code> 将样式表中的规则映射到页面对应的元素上，虽然 <code>CSSOM</code> 采取了复杂的措施来做这件事，但是 <code>CSSOM</code> 最终的功能还是将样式映射到它们应该对应的元素上去，更确切地说，<code>CSSOM</code> 识别 <code>tokens</code> 并把这些 <code>Tokens</code> 转换成一个树结构上的对应的结点，所有结点以及它们所关联的页面中的样式就是所谓的 <code>CSS Object Model</code>，从上面的渲染机制可以看出，<code>CSSOM</code> 对于 <code>Web</code> 页面的展示起着重要作用</p>
-<h4 id="使用-CSSOM"><a href="#使用-CSSOM" class="headerlink" title="使用 CSSOM"></a>使用 CSSOM</h4><p>其实我们不必为了优化 <code>Web</code> 页面而去了解 <code>CSSOM</code> 是怎样工作的，这里有几个关于 <code>CSSOM</code> 的关键点是我们需要知道的，利用这些关键点可以优化页面的加载速度</p>
+<h2 id="补充说明"><a href="#补充说明" class="headerlink" title="补充说明"></a>补充说明</h2><p>我们下面来看几个在上面过程当中延伸出来的问题</p>
+<h4 id="CSSOM"><a href="#CSSOM" class="headerlink" title="CSSOM"></a>CSSOM</h4><p><code>CSSOM</code> 是 <code>CSS Object Model</code> 的缩写，大体上来说，<code>CSSOM</code> 是一个建立在 <code>Web</code> 页面上的 <code>CSS</code> 样式的映射，它和 <code>DOM</code> 类似，但是只针对 <code>CSS</code> 而不是 <code>HTML</code>，浏览器将 <code>DOM</code> 和 <code>CSSOM</code> 结合来渲染 <code>Web</code> 页面</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-08.png" alt></p>
+<h6 id="CSSOM-是做什么的"><a href="#CSSOM-是做什么的" class="headerlink" title="CSSOM 是做什么的"></a>CSSOM 是做什么的</h6><p><code>CSSOM</code> 将样式表中的规则映射到页面对应的元素上，虽然 <code>CSSOM</code> 采取了复杂的措施来做这件事，但是 <code>CSSOM</code> 最终的功能还是将样式映射到它们应该对应的元素上去，更确切地说，<code>CSSOM</code> 识别 <code>tokens</code> 并把这些 <code>Tokens</code> 转换成一个树结构上的对应的结点，所有结点以及它们所关联的页面中的样式就是所谓的 <code>CSS Object Model</code>，从上面的渲染机制可以看出，<code>CSSOM</code> 对于 <code>Web</code> 页面的展示起着重要作用</p>
+<h6 id="使用-CSSOM"><a href="#使用-CSSOM" class="headerlink" title="使用 CSSOM"></a>使用 CSSOM</h6><p>其实我们不必为了优化 <code>Web</code> 页面而去了解 <code>CSSOM</code> 是怎样工作的，这里有几个关于 <code>CSSOM</code> 的关键点是我们需要知道的，利用这些关键点可以优化页面的加载速度</p>
 <ul>
 <li><code>CSSOM</code> 阻止任何东西渲染</li>
 <li><code>CSSOM</code> 在加载一个新页面时必须重新构建</li>
@@ -272,7 +328,7 @@
 <li><code>CSSOM</code> 阻止任何东西渲染</li>
 </ol>
 <p>所有的 <code>CSS</code> 都是阻塞渲染的（意味着在 <code>CSS</code> 没处理好之前所有东西都不会展示），具体的原因是如果浏览器在 <code>CSS</code> 检查之前展示了页面，那么每个页面都是没有样式的，等一会之后又突然有了样式，整个页面的体验就会很糟糕</p>
-<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-02.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-09.png" alt></p>
 <p>由于 <code>CSSOM</code> 被用作创建 <code>Render Tree</code>，那么如果不能高效的利用 <code>CSS</code> 会有一些严重的后果，而主要的后果就是我们的页面在加载时白屏</p>
 <ol start="2">
 <li><code>CSSOM</code> 在加载一个新页面时必须重新构建</li>
@@ -286,9 +342,8 @@
 <li>如果我们阻塞了 <code>CSSOM</code> 的构建，<code>CSSOM</code> 的构建就会消耗更长的时间，这就意味着页面的渲染也需要更长的时间</li>
 <li>如果我们的 <code>JavaScript</code> 阻塞了 <code>CSSOM</code> 的构建，我们的用户就会面对更长时间的白屏</li>
 </ul>
-<h2 id="补充说明"><a href="#补充说明" class="headerlink" title="补充说明"></a>补充说明</h2><p>我们下面来看几个在上面过程当中延伸出来的问题</p>
 <h4 id="Async-和-Defer-有什么区别？"><a href="#Async-和-Defer-有什么区别？" class="headerlink" title="Async 和 Defer 有什么区别？"></a>Async 和 Defer 有什么区别？</h4><p>我们先来对比下 <code>Async</code> 和 <code>Defer</code> 属性的区别，如下图所示</p>
-<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-05.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-10.png" alt></p>
 <p>其中蓝色线代表 <code>JavaScript</code> 加载，红色线代表 <code>JavaScript</code> 执行，绿色线代表 <code>HTML</code> 解析，所以我们也对应的分别来看看三种情况</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="hljs-string">"example.js"</span>&gt;<span class="hljs-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
 
@@ -310,6 +365,24 @@
 <li>载入 <code>JavaScript</code> 文件时不阻塞 <code>HTML</code> 的解析，执行阶段被放到 <code>HTML</code> 标签解析完成之后</li>
 <li>在加载多个 <code>JavaScript</code> 脚本的时候，<code>Async</code> 是无顺序的加载，而 <code>Defer</code> 是有顺序的加载</li>
 </ul>
+<h4 id="如何解析-CSS-选择器"><a href="#如何解析-CSS-选择器" class="headerlink" title="如何解析 CSS 选择器"></a>如何解析 CSS 选择器</h4><p>浏览器会『从右往左』解析 <code>CSS</code> 选择器，我们知道 <code>DOM Tree</code> 与 <code>Style Rules</code> 合成为 <code>Render Tree</code>，实际上是需要将 <code>Style Rules</code> 附着到 <code>DOM Tree</code> 上，因此需要根据选择器提供的信息对 <code>DOM Tree</code> 进行遍历，才能将样式附着到对应的 <code>DOM</code> 元素上，我们以下面这段 <code>CSS</code> 为例</p>
+<figure class="highlight css hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-selector-class">.mod-nav</span> <span class="hljs-selector-tag">h3</span> <span class="hljs-selector-tag">span</span> &#123;<span class="hljs-attribute">font-size</span>: <span class="hljs-number">16px</span>;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对应的 <code>DOM Tree</code> 如下</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-14.png" alt></p>
+<p>若从左向右的匹配，过程是</p>
+<ul>
+<li>从 <code>.mod-nav</code> 开始，遍历子节点 <code>header</code> 和子节点 <code>div</code></li>
+<li>然后各自向子节点遍历，在右侧 <code>div</code> 的分支中，最后遍历到叶子节点 <code>a</code>，发现不符合规则</li>
+<li>所以需要回溯到 <code>ul</code> 节点，再遍历下一个 <code>li-a</code>，一颗 <code>DOM</code> 树的节点动不动上千，所以可以发现这种效率很低</li>
+</ul>
+<p>如果从右至左的匹配</p>
+<ul>
+<li>先找到所有的最右节点 <code>span</code>，对于每一个 <code>span</code>，向上寻找节点 <code>h3</code></li>
+<li>由 <code>h3</code> 再向上寻找 <code>.mod-nav</code> 的节点</li>
+<li>最后找到根元素 <code>html</code> 则结束这个分支的遍历</li>
+</ul>
+<p>两者对比下来，可以明显的发现后者匹配性能更好，是因为从右向左的匹配在第一步就筛选掉了大量的不符合条件的最右节点（叶子节点），而从左向右的匹配规则的性能都浪费在了失败的查找上面</p>
 <h4 id="回流与重绘"><a href="#回流与重绘" class="headerlink" title="回流与重绘"></a>回流与重绘</h4><p>渲染的流程基本上是这样（如下图黄色的四个步骤）</p>
 <ol>
 <li>计算 <code>CSS</code> 样式</li>
@@ -317,7 +390,7 @@
 <li><code>Layout</code> 定位坐标和大小</li>
 <li>正式开画</li>
 </ol>
-<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-07.png" alt></p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-11.png" alt></p>
 <p>这里需要注意上图流程中有很多连接线，这表示了 <code>JavaScript</code> 动态修改了 <code>DOM</code> 属性或是 <code>CSS</code> 属性会导致重新 <code>Layout</code>，但有些改变不会重新 <code>Layout</code>，就是上图中那些指到天上的箭头，比如修改后的 <code>CSS rule</code> 没有被匹配到元素，这里重要要说两个概念，一个是 <code>Reflow</code>，另一个是 <code>Repaint</code></p>
 <ul>
 <li>重绘，当我们对 <code>DOM</code> 的修改导致了样式的变化、却并未影响其几何属性（比如修改了颜色或背景色）时，浏览器不需重新计算元素的几何属性、直接为该元素绘制新的样式（跳过了上图所示的回流环节）</li>
@@ -333,7 +406,7 @@
 <li>计算 <code>offsetWidth</code> 和 <code>offsetHeight</code> 属性</li>
 <li>设置 <code>style</code> 属性的值</li>
 </ul>
-<h6 id="常见引起重绘属性和方法"><a href="#常见引起重绘属性和方法" class="headerlink" title="常见引起重绘属性和方法"></a>常见引起重绘属性和方法</h6><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-08.png" alt></p>
+<h6 id="常见引起重绘属性和方法"><a href="#常见引起重绘属性和方法" class="headerlink" title="常见引起重绘属性和方法"></a>常见引起重绘属性和方法</h6><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-12.png" alt></p>
 <h6 id="如何减少回流、重绘"><a href="#如何减少回流、重绘" class="headerlink" title="如何减少回流、重绘"></a>如何减少回流、重绘</h6><ul>
 <li>使用 <code>transform</code> 替代 <code>top</code></li>
 <li>使用 <code>visibility</code> 替换 <code>display: none</code>，因为前者只会引起重绘，后者会引发回流（改变了布局）</li>
@@ -346,7 +419,27 @@
 <li>动画实现的速度的选择，动画速度越快，回流次数越多，也可以选择使用 <code>requestAnimationFrame</code></li>
 <li><code>CSS</code> 选择符从右往左匹配查找，避免节点层级过多</li>
 <li>将频繁重绘或者回流的节点设置为图层，图层能够阻止该节点的渲染行为影响别的节点，比如对于 <code>video</code> 标签来说，浏览器会自动将该节点变为图层</li>
+<li>集中改变样式，即通过改变 <code>class</code> 的方式来集中改变样式</li>
 </ul>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 判断是否是黑色系样式</span></span><br><span class="line"><span class="hljs-keyword">const</span> theme = isDark ? <span class="hljs-string">'dark'</span> : <span class="hljs-string">'light'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 根据判断来设置不同的class</span></span><br><span class="line">ele.setAttribute(<span class="hljs-string">'className'</span>, theme)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用 <code>DocumentFragment</code>，我们可以通过 <code>createDocumentFragment</code> 创建一个游离于 <code>DOM</code> 树之外的节点，然后在此节点上批量操作，最后插入 <code>DOM</code> 树中，因此只触发一次重排</li>
+</ul>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> fragment = <span class="hljs-built_in">document</span>.createDocumentFragment()</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) &#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> node = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'p'</span>)</span><br><span class="line">  node.innerHTML = i</span><br><span class="line">  fragment.appendChild(node)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">document</span>.body.appendChild(fragment)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>提升为合成层，将元素提升为合成层有以下优点<ul>
+<li>合成层的位图，会交由 <code>GPU</code> 合成，比 <code>CPU</code> 处理要快</li>
+<li>当需要 <code>repaint</code> 时，只需要 <code>repaint</code> 本身，不会影响到其他的层</li>
+<li>对于 <code>transform</code> 和 <code>opacity</code> 效果，不会触发 <code>layout</code> 和 <code>paint</code></li>
+<li>通常来说，提升合成层的最好方式是使用 <code>CSS</code> 的 <code>will-change</code> 属性</li>
+<li>更多关于合成层的相关内容可以参考 <a href="https://fed.taobao.org/blog/taofed/do71ct/performance-composite/" target="_blank" rel="noopener">无线性能优化：Composite</a></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight css hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-selector-id">#target</span> &#123;</span><br><span class="line">  <span class="hljs-attribute">will-change</span>: transform;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h4 id="性能优化策略"><a href="#性能优化策略" class="headerlink" title="性能优化策略"></a>性能优化策略</h4><p>基于上面介绍的浏览器渲染原理，<code>DOM</code> 和 <code>CSSOM</code> 结构构建顺序，初始化可以对页面渲染做些优化，提升页面性能</p>
 <ul>
 <li><code>JavaScript</code> 优化，<code>&lt;script&gt;</code> 标签加上 <code>defer</code> 属性和 <code>async</code> 属性用于在不阻塞页面文档解析的前提下，控制脚本的下载和执行<ul>
@@ -356,8 +449,27 @@
 </li>
 <li><code>CSS</code> 优化，<code>&lt;link&gt;</code> 标签的 <code>rel</code> 属性中的属性值设置为 <code>preload</code> 能够让我们在 <code>HTML</code> 页面中可以指明哪些资源是在页面加载完成后即刻需要的，最优的配置加载顺序，提高渲染性能</li>
 </ul>
+<h4 id="浏览器解析-JavaScript-的过程"><a href="#浏览器解析-JavaScript-的过程" class="headerlink" title="浏览器解析 JavaScript 的过程"></a>浏览器解析 JavaScript 的过程</h4><p>早期，浏览器内部对 <code>JavaScript</code> 的处理过程大致如下</p>
+<ul>
+<li>读取代码，进行词法分析（<code>Lexical Analysis</code>），将代码分解成词元（<code>token</code>）</li>
+<li>对词元进行语法分析（<code>Parsing</code>），将代码整理成语法树（<code>Syntax Tree</code>）</li>
+<li>使用翻译器（<code>Translator</code>），将代码转为字节码（<code>Bytecode</code>）</li>
+<li>使用字节码解释器（<code>Bytecode Interpreter</code>），将字节码转为机器码</li>
+</ul>
+<p>逐行解释将字节码转为机器码，是很低效的，为了提高运行速度，现代浏览器改为采用即时编译（<code>Just In Time compiler</code>，<code>JIT</code>），即字节码只在运行时编译，用到哪一行就编译哪一行，并且把编译结果缓存（<code>Inline Cache</code>），通常来说，一个程序被经常用到的，只是其中一小部分代码，有了缓存的编译结果，整个程序的运行速度就会显著提升</p>
+<p>关于这部分更为详细的内容可以参考我们之前整理过的 <a href="http://localhost:4000/2020/08/02/JavaScript/54/" target="_blank" rel="noopener">V8 引擎机制</a> 这篇文章了解更多</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
-<li>浏览器工作流程是，构建 <code>DOM</code> 和 <code>CSSOM</code>，然后构建渲染树，最后进行布局和绘制</li>
+<li>浏览器渲染工作的主流程分为下面五个步骤（如下图所示）<ul>
+<li>浏览器获取 <code>HTML</code> 文件，然后对文件进行解析，形成 <code>DOM Tree</code></li>
+<li>与此同时，进行 <code>CSS</code> 解析，生成 <code>Style Rules</code></li>
+<li>接着将 <code>DOM Tree</code> 与 <code>Style Rules</code> 合成为 <code>Render Tree</code></li>
+<li>接着进入布局（<code>Layout</code>）阶段，也就是为每个节点分配一个应出现在屏幕上的确切坐标</li>
+<li>随后调用 <code>GPU</code> 进行绘制（<code>Paint</code>），遍历 <code>Render Tree</code> 的节点，并将元素呈现出来</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-13.png" alt></p>
+<ul>
 <li><code>CSSOM</code> 会阻塞渲染，只有当 <code>CSSOM</code> 构建完毕后才会进入下一个阶段构建渲染树</li>
 <li>通常情况下 <code>DOM</code> 和 <code>CSSOM</code> 是并行构建的，但是当浏览器遇到一个不带 <code>defer</code> 或 <code>async</code> 属性的 <code>&lt;script&gt;</code> 标签时，<code>DOM</code> 构建将暂停，如果此时又恰巧浏览器尚未完成 <code>CSSOM</code> 的下载和构建，由于 <code>JavaScript</code> 可以修改 <code>CSSOM</code>，所以需要等 <code>CSSOM</code> 构建完毕后再执行 <code>JavaScript</code>，最后才重新 <code>DOM</code> 构建</li>
 </ul>
@@ -518,93 +630,105 @@
                 目录
             </h3>
             <ul class="menu-list"><li>
-        <a class="is-flex" href="#页面加载过程">
+        <a class="is-flex" href="#浏览器的主要组成部分">
         <span class="has-mr-6">1</span>
+        <span>浏览器的主要组成部分</span>
+        </a></li><li>
+        <a class="is-flex" href="#页面加载过程">
+        <span class="has-mr-6">2</span>
         <span>页面加载过程</span>
         </a></li><li>
         <a class="is-flex" href="#页面解析和页面渲染">
-        <span class="has-mr-6">2</span>
+        <span class="has-mr-6">3</span>
         <span>页面解析和页面渲染</span>
         </a></li><li>
         <a class="is-flex" href="#渲染过程">
-        <span class="has-mr-6">3</span>
+        <span class="has-mr-6">4</span>
         <span>渲染过程</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#1、解析-HTML-标签，构建-DOM-树">
-        <span class="has-mr-6">3.1</span>
+        <span class="has-mr-6">4.1</span>
         <span>1、解析 HTML 标签，构建 DOM 树</span>
         </a></li><li>
         <a class="is-flex" href="#2-解析-CSS-标签，构建-CSSOM-树">
-        <span class="has-mr-6">3.2</span>
+        <span class="has-mr-6">4.2</span>
         <span>2. 解析 CSS 标签，构建 CSSOM 树</span>
         </a></li><li>
         <a class="is-flex" href="#3-把-DOM-和-CSSOM-组合成渲染树">
-        <span class="has-mr-6">3.3</span>
+        <span class="has-mr-6">4.3</span>
         <span>3. 把 DOM 和 CSSOM 组合成渲染树</span>
         </a></li><li>
         <a class="is-flex" href="#4-在渲染树的基础上进行布局，计算每个节点的几何结构">
-        <span class="has-mr-6">3.4</span>
+        <span class="has-mr-6">4.4</span>
         <span>4. 在渲染树的基础上进行布局，计算每个节点的几何结构</span>
         </a></li><li>
         <a class="is-flex" href="#5-把每个节点绘制到屏幕上">
-        <span class="has-mr-6">3.5</span>
+        <span class="has-mr-6">4.5</span>
         <span>5. 把每个节点绘制到屏幕上</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#渲染过程拆解">
-        <span class="has-mr-6">4</span>
+        <span class="has-mr-6">5</span>
         <span>渲染过程拆解</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#JavaScript-CSS-gt-Style-gt-layout-gt-Paint-gt-Composite">
-        <span class="has-mr-6">4.1</span>
+        <span class="has-mr-6">5.1</span>
         <span>JavaScript/CSS &gt; Style &gt; layout &gt; Paint &gt; Composite</span>
         </a></li><li>
         <a class="is-flex" href="#JavaScript-CSS-gt-Style-gt-Paint-gt-Composite">
-        <span class="has-mr-6">4.2</span>
+        <span class="has-mr-6">5.2</span>
         <span>JavaScript/CSS &gt; Style &gt; Paint &gt; Composite</span>
         </a></li><li>
         <a class="is-flex" href="#JavaScript-CSS-gt-Style-gt-Composite">
-        <span class="has-mr-6">4.3</span>
+        <span class="has-mr-6">5.3</span>
         <span>JavaScript/CSS &gt; Style &gt; Composite</span>
-        </a></li></ul></li><li>
-        <a class="is-flex" href="#关于-CSSOM">
-        <span class="has-mr-6">5</span>
-        <span>关于 CSSOM</span>
-        </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#CSSOM-是做什么的">
-        <span class="has-mr-6">5.1</span>
-        <span>CSSOM 是做什么的</span>
-        </a></li><li>
-        <a class="is-flex" href="#使用-CSSOM">
-        <span class="has-mr-6">5.2</span>
-        <span>使用 CSSOM</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#补充说明">
         <span class="has-mr-6">6</span>
         <span>补充说明</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#Async-和-Defer-有什么区别？">
+        <a class="is-flex" href="#CSSOM">
         <span class="has-mr-6">6.1</span>
+        <span>CSSOM</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#CSSOM-是做什么的">
+        <span class="has-mr-6">6.1.1</span>
+        <span>CSSOM 是做什么的</span>
+        </a></li><li>
+        <a class="is-flex" href="#使用-CSSOM">
+        <span class="has-mr-6">6.1.2</span>
+        <span>使用 CSSOM</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#Async-和-Defer-有什么区别？">
+        <span class="has-mr-6">6.2</span>
         <span>Async 和 Defer 有什么区别？</span>
         </a></li><li>
+        <a class="is-flex" href="#如何解析-CSS-选择器">
+        <span class="has-mr-6">6.3</span>
+        <span>如何解析 CSS 选择器</span>
+        </a></li><li>
         <a class="is-flex" href="#回流与重绘">
-        <span class="has-mr-6">6.2</span>
+        <span class="has-mr-6">6.4</span>
         <span>回流与重绘</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#常见引起回流属性和方法">
-        <span class="has-mr-6">6.2.1</span>
+        <span class="has-mr-6">6.4.1</span>
         <span>常见引起回流属性和方法</span>
         </a></li><li>
         <a class="is-flex" href="#常见引起重绘属性和方法">
-        <span class="has-mr-6">6.2.2</span>
+        <span class="has-mr-6">6.4.2</span>
         <span>常见引起重绘属性和方法</span>
         </a></li><li>
         <a class="is-flex" href="#如何减少回流、重绘">
-        <span class="has-mr-6">6.2.3</span>
+        <span class="has-mr-6">6.4.3</span>
         <span>如何减少回流、重绘</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#性能优化策略">
-        <span class="has-mr-6">6.3</span>
+        <span class="has-mr-6">6.5</span>
         <span>性能优化策略</span>
+        </a></li><li>
+        <a class="is-flex" href="#浏览器解析-JavaScript-的过程">
+        <span class="has-mr-6">6.6</span>
+        <span>浏览器解析 JavaScript 的过程</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#总结">
         <span class="has-mr-6">7</span>

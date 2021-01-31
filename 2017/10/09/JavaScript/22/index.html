@@ -16,7 +16,7 @@
 <meta property="og:description" content="this 是 JavaScript 语言的一个关键字它代表函数运行时，自动生成的一个内部对象，只能在函数内部使用，随着函数使用场合的不同，this 的值会发生变化，但是有一个总的原则，那就是 this 指向的是，调用函数的那个对象">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/22.webp">
-<meta property="og:updated_time" content="2021-01-16T14:34:39.301Z">
+<meta property="og:updated_time" content="2021-01-30T14:34:51.713Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的 this">
 <meta name="twitter:description" content="this 是 JavaScript 语言的一个关键字它代表函数运行时，自动生成的一个内部对象，只能在函数内部使用，随着函数使用场合的不同，this 的值会发生变化，但是有一个总的原则，那就是 this 指向的是，调用函数的那个对象">
@@ -282,7 +282,7 @@
 <li>函数代码（<code>Function code</code>）</li>
 </ul>
 <p>其中，对于全局代码直接指向 <code>window</code>，<code>eval</code> 代码由于已经不推荐使用暂不做讨论，所以我们主要关注点就是函数代码中的 <code>this</code> 如何指定</p>
-<h4 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用</h4><p>规范指出，当执行流进入函数代码时，由函数调用者提供 <code>thisArg</code> 和 <code>argumentsList</code>，在 <a href="http://yanhaijing.com/es5/#164" target="_blank" rel="noopener">11.2.3 函数调用</a> 当中我们可以发现，在函数调用发生时，首先会对「函数名部分进行计算」并赋值给 <code>ref</code>，并且通过一系列的判断就可以来决定 <code>this</code> 会指向何方，如下图所示</p>
+<h4 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用</h4><p>规范指出，当执行流进入函数代码时，由函数调用者提供 <code>thisArg</code> 和 <code>argumentsList</code>，在 <a href="http://yanhaijing.com/es5/#164" target="_blank" rel="noopener">11.2.3 函数调用</a> 当中我们可以发现，在函数调用发生时，首先会对『函数名部分进行计算』并赋值给 <code>ref</code>，并且通过一系列的判断就可以来决定 <code>this</code> 会指向何方，如下图所示</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/52.png" alt></p>
 <p>但是在展开之前，我们需要先来了解一下什么是 <code>Reference</code></p>
 <h4 id="Type-ref-is-Reference"><a href="#Type-ref-is-Reference" class="headerlink" title="Type(ref) is Reference"></a>Type(ref) is Reference</h4><p>在 <a href="http://yanhaijing.com/es5/#80" target="_blank" rel="noopener">8.7 引用规范类型</a> 当中可知，<code>Reference</code> 的构成，由三个组成部分</p>
@@ -314,7 +314,7 @@
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> foo = <span class="hljs-number">1</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> fooReference = &#123;</span><br><span class="line">  base: EnvironmentRecord,</span><br><span class="line">  name: <span class="hljs-string">'foo'</span>,</span><br><span class="line">  strict: <span class="hljs-literal">false</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">GetValue(fooReference) <span class="hljs-comment">// 1</span></span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>但是要注意：调用 <code>GetValue</code>，返回的将是具体的值，而「不再是」一个 <code>Reference</code>（这个很重要，下面示例当中会多次用到）</p>
+<p>但是要注意：调用 <code>GetValue</code>，返回的将是具体的值，而『不再是』一个 <code>Reference</code>（这个很重要，下面示例当中会多次用到）</p>
 </blockquote>
 <p>下面我们就来正式的了解一下，如何确定 <code>this</code> 的值</p>
 <h2 id="确定-this-的值"><a href="#确定-this-的值" class="headerlink" title="确定 this 的值"></a>确定 this 的值</h2><p>在 <a href="http://yanhaijing.com/es5/#164" target="_blank" rel="noopener">11.2.3 函数调用</a> 当中，我们可以了解到可以如何来确定 <code>this</code> 的值，其实也就是上面图中所表达的意思，我们简单的总结一下就是</p>
@@ -355,7 +355,7 @@
 <blockquote>
 <p>令 <code>rval</code> 为 <code>GetValue(rref)</code></p>
 </blockquote>
-<p>简单赋值语句返回的是针对 <code>=</code> 号右边进行 <code>GetValue</code> 之后的结果，又因为调用 <code>GetValue</code> 后，返回的值「不再是」一个 <code>Reference</code>，所以根据 <code>MemberExpression</code> 我们可以得出，如果 <code>ref</code> 不是 <code>Reference</code>，那么 <code>this</code> 的值为 <code>undefined</code>，这里需要注意，如果在非严格模式下，<code>this</code> 的值为 <code>undefined</code> 的时候，其值会被隐式转换为全局对象</p>
+<p>简单赋值语句返回的是针对 <code>=</code> 号右边进行 <code>GetValue</code> 之后的结果，又因为调用 <code>GetValue</code> 后，返回的值『不再是』一个 <code>Reference</code>，所以根据 <code>MemberExpression</code> 我们可以得出，如果 <code>ref</code> 不是 <code>Reference</code>，那么 <code>this</code> 的值为 <code>undefined</code>，这里需要注意，如果在非严格模式下，<code>this</code> 的值为 <code>undefined</code> 的时候，其值会被隐式转换为全局对象</p>
 <h4 id="false-foo-bar"><a href="#false-foo-bar" class="headerlink" title="(false || foo.bar)()"></a>(false || foo.bar)()</h4><p>同示例 <code>3</code> 类似，不过这里调用的不再是赋值操作，而是逻辑与算法，同样的，我们查看 <a href="http://yanhaijing.com/es5/#208" target="_blank" rel="noopener">11.11 二元逻辑运算符</a> 可知</p>
 <blockquote>
 <p>令 <code>lval</code> 为 <code>GetValue(lref)</code></p>

@@ -16,7 +16,7 @@
 <meta property="og:description" content="我们在之前的文章当中梳理了 React Fiber 相关内容，了解了 Fiber 的基本作用以及它内部一些简单的运行原理，所以在本章当中我们来继续深入理解其原理，尝试尝试手动的模拟实现一个简易版本的 Fiber 架构，本文主要参考的是 Build your own React，内容有所调整，主要是为了方便自己理解，更多详细内容可以查看原文，下面我们就先从 JSX 开始看起  完整代码地址可见 Fi">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/19.webp">
-<meta property="og:updated_time" content="2021-01-16T14:34:39.336Z">
+<meta property="og:updated_time" content="2021-01-30T14:34:51.759Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Fiber 架构的简单实现">
 <meta name="twitter:description" content="我们在之前的文章当中梳理了 React Fiber 相关内容，了解了 Fiber 的基本作用以及它内部一些简单的运行原理，所以在本章当中我们来继续深入理解其原理，尝试尝试手动的模拟实现一个简易版本的 Fiber 架构，本文主要参考的是 Build your own React，内容有所调整，主要是为了方便自己理解，更多详细内容可以查看原文，下面我们就先从 JSX 开始看起  完整代码地址可见 Fi">
@@ -202,7 +202,7 @@
 <h2 id="createElement"><a href="#createElement" class="headerlink" title="createElement"></a>createElement</h2><p>对于 <code>&lt;h1 id=&quot;title&quot;&gt;Title&lt;/h1&gt;</code> 这样一个简单的节点，我们都知道原生 <code>DOM</code> 会附加一大堆属性和方法在上面，所以我们在 <code>createElement</code> 的时候最好能将它转换为一种比较简单的数据结构，只包含我们需要的元素，比如下面这样</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  type: <span class="hljs-string">'h1'</span>,</span><br><span class="line">  props: &#123;</span><br><span class="line">    id: <span class="hljs-string">'title'</span>,</span><br><span class="line">    children: <span class="hljs-string">'Title'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>有了这个数据结构后，我们对于 <code>DOM</code> 的操作其实可以转化为对这个数据结构的操作，新老 <code>DOM</code> 的对比其实也可以转化为这个数据结构的对比，这样我们就不需要每次操作都去渲染页面，而是等到需要渲染的时候才将这个数据结构渲染到页面上，这其实就是所谓的「虚拟 <code>DOM</code>」（以下我们简称为 <code>vDom</code>），而我们 <code>createElement</code> 就是负责来构建这个 <code>vDom</code> 的方法</p>
+<p>有了这个数据结构后，我们对于 <code>DOM</code> 的操作其实可以转化为对这个数据结构的操作，新老 <code>DOM</code> 的对比其实也可以转化为这个数据结构的对比，这样我们就不需要每次操作都去渲染页面，而是等到需要渲染的时候才将这个数据结构渲染到页面上，这其实就是所谓的『虚拟 <code>DOM</code>』（以下我们简称为 <code>vDom</code>），而我们 <code>createElement</code> 就是负责来构建这个 <code>vDom</code> 的方法</p>
 <p>这里关于 <code>createElement</code> 的实现就不具体展开了，详细可以参考我们之前已经整理过的 <a href="https://heptaluan.github.io/2019/12/15/React/06/" target="_blank" rel="noopener">什么是 Virtual DOM</a> 系列文章或是 <a href="https://github.com/facebook/react/blob/60016c448bb7d19fc989acd05dda5aca2e124381/packages/react/src/ReactElement.js#L348" target="_blank" rel="noopener">官方源码</a> ，核心逻辑并不复杂，这里我们只需要知道它是用来帮助我们构建 <code>vDom</code> 的方法即可</p>
 <h2 id="render"><a href="#render" class="headerlink" title="render"></a>render</h2><p>在上面的代码中我们使用 <code>createElement</code> 将 <code>JSX</code> 代码转换成了 <code>vDom</code>，但是我们又该如何将 <code>vDom</code> 渲染为真实的 <code>DOM</code> 节点呢？所以我们还需要一个 <code>render</code> 方法来帮助我们实现这个功能，我们通过上面的使用可以发现，<code>render</code> 方法接收两个参数</p>
 <ul>
@@ -237,12 +237,12 @@
 <li><code>sibling</code>，从第一个子元素往后，指向下一个兄弟元素</li>
 <li><code>return</code>，所有子元素都有的指向父元素的指针</li>
 </ul>
-<p>有了这几个指针后，我们可以在任意一个元素中断遍历并恢复，比如在上图 <code>List</code> 处中断了，恢复的时候可以通过 <code>child</code> 找到他的子元素，也可以通过 <code>return</code> 找到他的父元素，如果他还有兄弟节点也可以用 <code>sibling</code> 找到，<code>Fiber</code> 这个结构外形看着还是棵树，但是没有了指向所有子元素的指针，父节点只指向第一个子节点，然后子节点有指向其他子节点的指针，所以可以发现这其实是个「链表结构」</p>
+<p>有了这几个指针后，我们可以在任意一个元素中断遍历并恢复，比如在上图 <code>List</code> 处中断了，恢复的时候可以通过 <code>child</code> 找到他的子元素，也可以通过 <code>return</code> 找到他的父元素，如果他还有兄弟节点也可以用 <code>sibling</code> 找到，<code>Fiber</code> 这个结构外形看着还是棵树，但是没有了指向所有子元素的指针，父节点只指向第一个子节点，然后子节点有指向其他子节点的指针，所以可以发现这其实是个『链表结构』</p>
 <blockquote>
 <p>这里需要注意的是，真正的 <code>Fiber</code> 结构并不仅仅只多了这三个节点，但是这里我们只使用这三个节点来理解其原理就足够了，更多 <code>Fiber</code> 节点相关内容可见 <a href="https://heptaluan.github.io/2020/12/06/React/18/#Fiber-节点" target="_blank" rel="noopener">Fiber 节点</a></p>
 </blockquote>
 <h2 id="Fiber-的实现"><a href="#Fiber-的实现" class="headerlink" title="Fiber 的实现"></a>Fiber 的实现</h2><p>有了以上内容的铺垫以后，下面我们就可以来实现一下我们自己的 <code>Fiber</code> 了，我们需要将我们之前的 <code>vDom</code> 结构转换为 <code>Fiber</code> 的数据结构，同时需要能够通过其中任意一个节点返回下一个节点，其实就是遍历这个链表</p>
-<p>遍历的时候从根节点出发，先找子元素，如果子元素存在，直接返回，如果没有子元素了就找兄弟元素，找完所有的兄弟元素后再返回父元素，然后再找这个父元素的兄弟元素，整个遍历过程其实是个「深度优先遍历」，从上到下，然后最后一行开始从左到右遍历</p>
+<p>遍历的时候从根节点出发，先找子元素，如果子元素存在，直接返回，如果没有子元素了就找兄弟元素，找完所有的兄弟元素后再返回父元素，然后再找这个父元素的兄弟元素，整个遍历过程其实是个『深度优先遍历』，从上到下，然后最后一行开始从左到右遍历</p>
 <p>比如下图从 <code>div1</code> 开始遍历的话，遍历的顺序就应该是 <code>div1 ==&gt; div2 ==&gt; h1 ==&gt; a ==&gt; div2 ==&gt; p ==&gt; div1</code>，可以看到这个序列中，当我们 <code>return</code> 父节点时，这些父节点会被第二次遍历，所以我们在设计的时候，<code>return</code> 的父节点不会作为下一个任务返回，只有 <code>sibling</code> 和 <code>child</code> 才会作为下一个任务返回</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/19-02.png" alt></p>
 <p>同样我们可以参考官方当中的 <a href="https://github.com/facebook/react/blob/4c7036e807fa18a3e21a5182983c7c0f05c5936e/packages/react-reconciler/src/ReactFiberWorkLoop.new.js#L1541" target="_blank" rel="noopener">performUnitOfWork</a> 来进行实现，它的作用是用来执行任务，参数是我们当前的 <code>Fiber</code> 任务，返回值是下一个任务，我们这里只是简单的模拟实现，官方版本当中的实现方式远比我们要复杂很多</p>
@@ -332,9 +332,9 @@
 <li><code>ReactDOM.render</code> 方法是将 <code>vDom</code> 渲染到页面上</li>
 <li><code>vDom</code> 的协调和渲染可以简单粗暴的递归，但是这个过程是同步的，如果需要处理的节点过多，可能会阻塞用户输入和动画播放，造成卡顿</li>
 <li>为了解决这个问题，<code>React</code> 引入了 <code>Fiber</code> 结构，目的是将同步的协调变成异步的</li>
-<li><code>Fiber</code> 改造了 <code>vDom</code> 的结构，形成具有「父元素 ==&gt; 第一个子元素」，「子元素 ==&gt; 兄弟元素」，「子元素 ==&gt; 父元素」这样的链表结构，有了这几个指针，可以从任意一个 <code>Fiber</code> 节点找到其他节点</li>
+<li><code>Fiber</code> 改造了 <code>vDom</code> 的结构，形成具有『父元素 ==&gt; 第一个子元素』，『子元素 ==&gt; 兄弟元素』，『子元素 ==&gt; 父元素』这样的链表结构，有了这几个指针，可以从任意一个 <code>Fiber</code> 节点找到其他节点</li>
 <li><code>Fiber</code> 将整棵树的同步任务拆分成了每个节点可以单独执行的异步执行结构</li>
-<li><code>Fiber</code> 可以从任意一个节点开始遍历，遍历是深度优先遍历，顺序是「父元素 ==&gt; 子元素 ==&gt; 兄弟元素 ==&gt; 父元素」，也就是从上往下，从左往右</li>
+<li><code>Fiber</code> 可以从任意一个节点开始遍历，遍历是深度优先遍历，顺序是『父元素 ==&gt; 子元素 ==&gt; 兄弟元素 ==&gt; 父元素』，也就是从上往下，从左往右</li>
 <li><code>Fiber</code> 的协调阶段可以是异步的小任务，但是提交阶段（<code>commit</code>）必须是同步的，因为异步的 <code>commit</code> 可能让用户看到节点一个一个接连出现，体验不好</li>
 <li>函数组件其实就是这个节点的 <code>type</code> 是个函数，直接将 <code>type</code> 拿来运行就可以得到 <code>vDom</code></li>
 <li><code>useState</code> 是在 <code>Fiber</code> 节点上添加了一个数组，数组里面的每个值对应了一个 <code>useState</code>，<code>useState</code> 调用顺序必须和这个数组下标匹配，不然会报错（所以不能在判断当中使用 <code>useState</code>）</li>

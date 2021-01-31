@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="我们都知道，React 是一个用于构建用户交互界面的 JavaScript 库，其核心机制就是跟踪组件的状态变化，并将更新的状态映射到到新的界面，在 React 中，我们将此过程称之为「协调」（Reconcilation），我们调用 setState 方法来改变状态，而框架本身会去检查 state 或 props 是否已经更改来决定是否重新渲染组件，React 的官方文档对 协调机制 进行了良好的">
+    <meta name="description" content="我们都知道，React 是一个用于构建用户交互界面的 JavaScript 库，其核心机制就是跟踪组件的状态变化，并将更新的状态映射到到新的界面，在 React 中，我们将此过程称之为『协调』（Reconcilation），我们调用 setState 方法来改变状态，而框架本身会去检查 state 或 props 是否已经更改来决定是否重新渲染组件，React 的官方文档对 协调机制 进行了良好的">
 <meta name="keywords" content="React">
 <meta property="og:type" content="article">
 <meta property="og:title" content="深入 React Fiber">
 <meta property="og:url" content="http://yoursite.com/2020/12/06/React/18/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="我们都知道，React 是一个用于构建用户交互界面的 JavaScript 库，其核心机制就是跟踪组件的状态变化，并将更新的状态映射到到新的界面，在 React 中，我们将此过程称之为「协调」（Reconcilation），我们调用 setState 方法来改变状态，而框架本身会去检查 state 或 props 是否已经更改来决定是否重新渲染组件，React 的官方文档对 协调机制 进行了良好的">
+<meta property="og:description" content="我们都知道，React 是一个用于构建用户交互界面的 JavaScript 库，其核心机制就是跟踪组件的状态变化，并将更新的状态映射到到新的界面，在 React 中，我们将此过程称之为『协调』（Reconcilation），我们调用 setState 方法来改变状态，而框架本身会去检查 state 或 props 是否已经更改来决定是否重新渲染组件，React 的官方文档对 协调机制 进行了良好的">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/18.webp">
-<meta property="og:updated_time" content="2021-01-16T14:34:39.335Z">
+<meta property="og:updated_time" content="2021-01-30T14:34:51.758Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入 React Fiber">
-<meta name="twitter:description" content="我们都知道，React 是一个用于构建用户交互界面的 JavaScript 库，其核心机制就是跟踪组件的状态变化，并将更新的状态映射到到新的界面，在 React 中，我们将此过程称之为「协调」（Reconcilation），我们调用 setState 方法来改变状态，而框架本身会去检查 state 或 props 是否已经更改来决定是否重新渲染组件，React 的官方文档对 协调机制 进行了良好的">
+<meta name="twitter:description" content="我们都知道，React 是一个用于构建用户交互界面的 JavaScript 库，其核心机制就是跟踪组件的状态变化，并将更新的状态映射到到新的界面，在 React 中，我们将此过程称之为『协调』（Reconcilation），我们调用 setState 方法来改变状态，而框架本身会去检查 state 或 props 是否已经更改来决定是否重新渲染组件，React 的官方文档对 协调机制 进行了良好的">
 <meta name="twitter:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/18.webp">
 
 
@@ -176,13 +176,13 @@
             
         </h1>
         <div class="content">
-            <p>我们都知道，<code>React</code> 是一个用于构建用户交互界面的 <code>JavaScript</code> 库，其核心机制就是跟踪组件的状态变化，并将更新的状态映射到到新的界面，在 <code>React</code> 中，我们将此过程称之为「协调」（<code>Reconcilation</code>），我们调用 <code>setState</code> 方法来改变状态，而框架本身会去检查 <code>state</code> 或 <code>props</code> 是否已经更改来决定是否重新渲染组件，<code>React</code> 的官方文档对 <a href="https://reactjs.org/docs/reconciliation.html" target="_blank" rel="noopener">协调机制</a> 进行了良好的抽象描述，即</p>
+            <p>我们都知道，<code>React</code> 是一个用于构建用户交互界面的 <code>JavaScript</code> 库，其核心机制就是跟踪组件的状态变化，并将更新的状态映射到到新的界面，在 <code>React</code> 中，我们将此过程称之为『协调』（<code>Reconcilation</code>），我们调用 <code>setState</code> 方法来改变状态，而框架本身会去检查 <code>state</code> 或 <code>props</code> 是否已经更改来决定是否重新渲染组件，<code>React</code> 的官方文档对 <a href="https://reactjs.org/docs/reconciliation.html" target="_blank" rel="noopener">协调机制</a> 进行了良好的抽象描述，即</p>
 <blockquote>
-<p><code>React</code> 的元素、生命周期、<code>render</code> 方法，以及应用于组件子元素的 <code>Diffing</code> 算法综合起到的作用，就是「协调」</p>
+<p><code>React</code> 的元素、生命周期、<code>render</code> 方法，以及应用于组件子元素的 <code>Diffing</code> 算法综合起到的作用，就是『协调』</p>
 </blockquote>
 <a id="more"></a>
 
-<p>我们将从 <code>render</code> 方法返回的不可变的 <code>React</code> 元素通常称为「虚拟 <code>DOM</code>」，但是除了「虚拟 <code>DOM</code>」之外，<code>React</code> 框架总是在内部维护一个实例来持有状态（如组件、<code>DOM</code> 节点等），从版本 <code>16</code> 开始，<code>React</code> 推出了新的内部实例树的实现方法，也就是我们经常听闻的 <code>Fiber</code> 算法，但是在本章当中我们并不会太过深入的去介绍源码相关内容，而是主要来探索一下这个所谓的 <code>Fiber</code> 到底是什么以及它出现的缘由和解决的一些问题</p>
+<p>我们将从 <code>render</code> 方法返回的不可变的 <code>React</code> 元素通常称为『虚拟 <code>DOM</code>』，但是除了『虚拟 <code>DOM</code>』之外，<code>React</code> 框架总是在内部维护一个实例来持有状态（如组件、<code>DOM</code> 节点等），从版本 <code>16</code> 开始，<code>React</code> 推出了新的内部实例树的实现方法，也就是我们经常听闻的 <code>Fiber</code> 算法，但是在本章当中我们并不会太过深入的去介绍源码相关内容，而是主要来探索一下这个所谓的 <code>Fiber</code> 到底是什么以及它出现的缘由和解决的一些问题</p>
 <h2 id="存在的问题"><a href="#存在的问题" class="headerlink" title="存在的问题"></a>存在的问题</h2><p>之所以会推出新的 <code>Fiber</code>，那就说明在之前的 <code>React</code> 版本当中是存在一定的问题的，那么下面我们就来先看看之前的版本当中到底是存在哪些问题，这个我们可以从官方提供的 <a href="https://claudiopro.github.io/react-fiber-vs-stack-demo/" target="_blank" rel="noopener">示例</a> 开始看起，运行效果如下</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/18-01.gif" alt></p>
 <p>至于根本原因，我们可以通过查看其对应的 <a href="https://github.com/claudiopro/react-fiber-vs-stack-demo" target="_blank" rel="noopener">源码</a> 来分析具体原因，通过观察源码我们可以发现，代码当中使用了 <code>requestAnimationFrame</code> 这个 <code>API</code>，关于 <code>requestAnimationFrame</code> 这个接口的使用我们就不介绍更多内容了，直接来看代码的实现，详细可以参考之前我们整理过的 <a href="https://heptaluan.github.io/2018/06/11/JavaScript/38/#window-requestAnimationFrame" target="_blank" rel="noopener">requestAnimationFrame 的使用</a> 以及 <a href="https://heptaluan.github.io/2018/08/12/JavaScript/30/#%E5%85%B3%E4%BA%8E-requestAnimationFrame" target="_blank" rel="noopener">并发模型中的 requestAnimationFrame</a></p>
@@ -193,15 +193,15 @@
 
 <p>以上效果之所以会卡顿，究其原因，对绝大多的浏览器来说，它的页面刷新频率取决于显示器的刷新频率，比如一台刷新频率是 <code>60FPS</code> 的显示器，<code>requestAnimationFrame</code> 会每 <code>16.66ms</code>（<code>1000ms / 60</code>）执行一次回调函数，但为了给主线程时间处理其他事务，一般要求产出一帧画面的时间不要超过 <code>10ms</code>，所以 <code>requestAnimationFrame</code> 的执行频率不会比显示器更高，但有可能更低</p>
 <p>默认情况下，<code>JavaSceipr</code> 运算、页面布局和页面绘制都是运行在浏览器的主线程当中，他们之间是互斥的关系，如果 <code>JavaSceipr</code> 运算持续占用主线程，页面就没法得到及时的更新，当我们调用 <code>setState</code> 更新页面的时候，<code>React</code> 会遍历应用的所有节点，计算出差异，然后再更新 <code>UI</code>，整个过程是一气呵成，不能被打断的，如果页面元素很多，整个过程占用的时机就可能超过 <code>16</code> 毫秒，这是就容易出现掉帧的现象，也就是说，其根本原因是因为大量的同步计算任务阻塞了浏览器的 <code>UI</code> 渲染</p>
-<p>而 <code>React</code> 的 <code>Reconcilation</code> 是 <code>CPU</code> 密集型的操作，旧版 <code>React</code> 通过「递归」的方式进行渲染，使用的是 <code>JavaSceipr</code> 引擎自身的函数调用栈，它会一直执行到栈空为止，也就是比对 <code>Virtual DOM</code> 树，找出需要变动的节点，然后同步更新它们，这个过程 <code>React</code> 称为 <code>Reconcilation</code>（协调）</p>
-<p>而 <code>React</code> 团队使用 <code>Fiber</code> 实现了自己的组件调用栈以后，它以链表的形式遍历组件树，可以灵活的暂停、继续和丢弃执行的任务，基本思路是将运算切割为多个步骤，分批完成，也就是说在完成一部分任务之后，将控制权交回给浏览器，让浏览器有时间进行页面的渲染，等浏览器忙完之后，再继续之前未完成的任务，所以使用 <code>Fiber</code> 架构的目的是让 <code>Reconcilation</code> 过程变成「可被中断」，适时地让出 <code>CPU</code> 执行权，让浏览器及时地响应用户的交互</p>
+<p>而 <code>React</code> 的 <code>Reconcilation</code> 是 <code>CPU</code> 密集型的操作，旧版 <code>React</code> 通过『递归』的方式进行渲染，使用的是 <code>JavaSceipr</code> 引擎自身的函数调用栈，它会一直执行到栈空为止，也就是比对 <code>Virtual DOM</code> 树，找出需要变动的节点，然后同步更新它们，这个过程 <code>React</code> 称为 <code>Reconcilation</code>（协调）</p>
+<p>而 <code>React</code> 团队使用 <code>Fiber</code> 实现了自己的组件调用栈以后，它以链表的形式遍历组件树，可以灵活的暂停、继续和丢弃执行的任务，基本思路是将运算切割为多个步骤，分批完成，也就是说在完成一部分任务之后，将控制权交回给浏览器，让浏览器有时间进行页面的渲染，等浏览器忙完之后，再继续之前未完成的任务，所以使用 <code>Fiber</code> 架构的目的是让 <code>Reconcilation</code> 过程变成『可被中断』，适时地让出 <code>CPU</code> 执行权，让浏览器及时地响应用户的交互</p>
 <p>如下就是优化后的效果，我们可以明显感觉到，示例运行起来会比之前看上去流畅许多</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/18-02.gif" alt></p>
 <h2 id="协调（Reconciliation）"><a href="#协调（Reconciliation）" class="headerlink" title="协调（Reconciliation）"></a>协调（Reconciliation）</h2><p>我们都知道，<code>React</code> 的核心是定义组件，渲染组件的方式则是由环境所决定（比如 <code>React Native</code>），定义组件，组件状态管理，生命周期方法管理，组件更新等应该跨平台一致处理，不受渲染环境影响，而这部分内容统一由 <a href="https://github.com/facebook/react/tree/master/packages/react-reconciler" target="_blank" rel="noopener">协调器（Reconciler）</a> 处理，不同渲染器都会使用该模块，协调器主要作用就是在组件状态变更时，调用组件树各组件的 <code>render</code> 方法，渲染，卸载组件</p>
-<h4 id="Stack-Reconciler"><a href="#Stack-Reconciler" class="headerlink" title="Stack Reconciler"></a>Stack Reconciler</h4><p>我们知道浏览器渲染引擎是单线程的，在上面章节当中我们也提到过，在 <code>React</code> 之前的版本当中，计算组件树变更时将会阻塞整个线程，整个渲染过程是连续不中断完成的，而这时的其他任务都会被阻塞，如动画等，这可能会使用户感觉到明显卡顿，这个版本的协调器可以称为「栈协调器」（<code>Stack Reconciler</code>），其协调算法的大致实现过程可以参考官方文档中的 <a href="https://reactjs.org/docs/implementation-notes.html" target="_blank" rel="noopener">React Stack Reconciler</a></p>
+<h4 id="Stack-Reconciler"><a href="#Stack-Reconciler" class="headerlink" title="Stack Reconciler"></a>Stack Reconciler</h4><p>我们知道浏览器渲染引擎是单线程的，在上面章节当中我们也提到过，在 <code>React</code> 之前的版本当中，计算组件树变更时将会阻塞整个线程，整个渲染过程是连续不中断完成的，而这时的其他任务都会被阻塞，如动画等，这可能会使用户感觉到明显卡顿，这个版本的协调器可以称为『栈协调器』（<code>Stack Reconciler</code>），其协调算法的大致实现过程可以参考官方文档中的 <a href="https://reactjs.org/docs/implementation-notes.html" target="_blank" rel="noopener">React Stack Reconciler</a></p>
 <p><code>Stack Reconcilier</code> 的主要缺陷就是不能暂停渲染任务，也不能切分任务，无法有效平衡组件更新渲染与动画相关任务间的执行顺序，即不能划分任务优先级，有可能导致重要任务卡顿，动画掉帧等问题</p>
 <h4 id="Fiber-Reconciler"><a href="#Fiber-Reconciler" class="headerlink" title="Fiber Reconciler"></a>Fiber Reconciler</h4><p>而 <code>React 16</code> 版本提出了一个更为先进的协调器，它允许渲染进程分段完成，而不必须一次性完成，中间可以返回至主进程控制执行其他任务，而这是通过计算部分组件树的变更，并暂停渲染更新，询问主进程是否有更高需求的绘制或者更新任务需要执行，这些高需求的任务完成后才开始渲染</p>
-<p>这一切的实现是在代码层引入了一个新的数据结构，也就是我们的 <code>Fiber</code> 对象，每一个组件实例对应有一个 <code>Fiber</code> 实例，此 <code>Fiber</code> 实例负责管理组件实例的更新，渲染任务及与其他 <code>Fiber</code> 实例的联系，这个新推出的协调器就叫做「纤维协调器」（<code>Fiber Reconciler</code>），它提供的新功能主要有下面这些</p>
+<p>这一切的实现是在代码层引入了一个新的数据结构，也就是我们的 <code>Fiber</code> 对象，每一个组件实例对应有一个 <code>Fiber</code> 实例，此 <code>Fiber</code> 实例负责管理组件实例的更新，渲染任务及与其他 <code>Fiber</code> 实例的联系，这个新推出的协调器就叫做『纤维协调器』（<code>Fiber Reconciler</code>），它提供的新功能主要有下面这些</p>
 <ul>
 <li>可切分，可中断任务</li>
 <li>可重用各分阶段任务，且可以设置优先级</li>
@@ -210,7 +210,7 @@
 <li>支持异常边界处理异常</li>
 </ul>
 <p>下面就让我们来深入的了解一下，到底什么是 <code>Fiber</code></p>
-<h2 id="什么是-Fiber"><a href="#什么是-Fiber" class="headerlink" title="什么是 Fiber"></a>什么是 Fiber</h2><p>那么什么是 <code>Fiber</code> 呢？其实 <code>Fiber</code> 是一种流程控制原语，它是一个非常底层的抽象描述，我们可以称其 <a href="https://zh.wikipedia.org/wiki/协程" target="_blank" rel="noopener">协程</a> 或者「纤程」，但是需要注意的是，协程和「线程」并不一样，协程本身是没有并发或者并行能力的（需要配合线程），它只是一种控制流程的让出机制，这里我们可以对比普通函数和 <code>Generator</code> 的运行方式，普通函数执行的过程中无法被中断和恢复，如下</p>
+<h2 id="什么是-Fiber"><a href="#什么是-Fiber" class="headerlink" title="什么是 Fiber"></a>什么是 Fiber</h2><p>那么什么是 <code>Fiber</code> 呢？其实 <code>Fiber</code> 是一种流程控制原语，它是一个非常底层的抽象描述，我们可以称其 <a href="https://zh.wikipedia.org/wiki/协程" target="_blank" rel="noopener">协程</a> 或者『纤程』，但是需要注意的是，协程和『线程』并不一样，协程本身是没有并发或者并行能力的（需要配合线程），它只是一种控制流程的让出机制，这里我们可以对比普通函数和 <code>Generator</code> 的运行方式，普通函数执行的过程中无法被中断和恢复，如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> tasks = []</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">run</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> task</span><br><span class="line">  <span class="hljs-keyword">while</span> (task = tasks.shift()) &#123;</span><br><span class="line">    execute(task)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>而 <code>Generator</code> 却是可以的</p>
@@ -221,7 +221,7 @@
 <li>一来浏览器中没有类似进程的概念，任务之间的界限很模糊，没有上下文，所以不具备中断或是恢复的条件</li>
 <li>二则是没有抢占的机制，我们无法中断一个正在执行的程序，所以我们只能采用类似协程这样控制权让出机制</li>
 </ul>
-<p>观察我们上面的代码，其实上面代码示例中的 <code>hasHighPriorityEvent()</code> 在目前浏览器中是无法实现的，因为我们没办法判断当前是否有更高优先级的任务等待被执行，从而让其让出机制，所以我们只能换一种思路，也就是通过「超时检查的机制」来让出控制权，即确定一个合理的运行时长，然后在合适的检查点检测是否超时（比如每执行一个小任务），如果超时就停止执行，将控制权交换给浏览器，而这个方式的实现主要依赖的是浏览器提供的 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestIdleCallback" target="_blank" rel="noopener">requestIdleCallback</a> 这个 <code>API</code></p>
+<p>观察我们上面的代码，其实上面代码示例中的 <code>hasHighPriorityEvent()</code> 在目前浏览器中是无法实现的，因为我们没办法判断当前是否有更高优先级的任务等待被执行，从而让其让出机制，所以我们只能换一种思路，也就是通过『超时检查的机制』来让出控制权，即确定一个合理的运行时长，然后在合适的检查点检测是否超时（比如每执行一个小任务），如果超时就停止执行，将控制权交换给浏览器，而这个方式的实现主要依赖的是浏览器提供的 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestIdleCallback" target="_blank" rel="noopener">requestIdleCallback</a> 这个 <code>API</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">window</span>.requestIdleCallback(</span><br><span class="line">  callback: <span class="hljs-function">(<span class="hljs-params">dealine: IdleDeadline</span>) =&gt;</span> <span class="hljs-keyword">void</span>,</span><br><span class="line">  option?: &#123;<span class="hljs-attr">timeout</span>: number&#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 
 <p><code>IdleDeadline</code> 的接口如下</p>
@@ -236,7 +236,7 @@
 <li>绘制 <code>Paint</code></li>
 </ul>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/18-03.png" alt></p>
-<p>通常，客户端线程执行任务时会以帧的形式划分，大部分设备控制在 <code>30-60</code> 帧是不会影响用户体验，在两个执行帧之间，主线程通常会有一小段空闲时间，<code>requestIdleCallback</code> 可以在这个「空闲期」（<code>Idle Period</code>）调用「空闲期回调」（<code>Idle Callback</code>）执行一些任务</p>
+<p>通常，客户端线程执行任务时会以帧的形式划分，大部分设备控制在 <code>30-60</code> 帧是不会影响用户体验，在两个执行帧之间，主线程通常会有一小段空闲时间，<code>requestIdleCallback</code> 可以在这个『空闲期』（<code>Idle Period</code>）调用『空闲期回调』（<code>Idle Callback</code>）执行一些任务</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/18-04.png" alt></p>
 <p>但是在浏览器繁忙的时候，可能不会有盈余时间，这时候 <code>requestIdleCallback</code> 回调可能就不会被执行，所以在这种情况下可以通过 <code>requestIdleCallback</code> 的第二个参数指定一个超时时间</p>
 <blockquote>
@@ -265,7 +265,7 @@
 <h2 id="Fiber-节点"><a href="#Fiber-节点" class="headerlink" title="Fiber 节点"></a>Fiber 节点</h2><p>我们都知道，<code>React</code> 元素并非真实的 <code>DOM</code> 节点或组件实例，而是一种描述方式，用于描述 <code>DOM</code> 元素的类型、拥有的属性以及包含的子元素，这也正是 <code>React</code> 的核心所在，<code>React</code> 将构建、渲染以及管理真实 <code>DOM</code> 树生命周期这些复杂的逻辑进行了抽象，从而避免了我们直接操作真实 <code>DOM</code> 而引起的巨大性能消耗</p>
 <p>在协调期间，从 <code>render</code> 方法返回的每个 <code>React</code> 元素的数据都会被合并到 <code>Fiber</code> 节点树中，每个 <code>React</code> 元素都有一个相应的 <code>Fiber</code> 节点，与 <code>React</code> 元素不同，不会在每次渲染时重新创建这些 <code>Fiber</code> ，这些是持有组件状态和 <code>DOM</code> 的可变数据结构</p>
 <p>因此，这意味着当我们调用 <code>ReactDOM.render()</code> 或 <code>setState()</code> 时，<code>React</code> 将执行协调，在 <code>setState</code> 的情况下，它执行遍历并通过将新树与已渲染的树进行区分来找出树中发生了什么变化，然后将这些更改应用于当前树，从而更新与 <code>setState()</code> 调用相关的 <code>state</code></p>
-<p>我们在之前提到过，旧版 <code>React</code> 是通过「递归」的方式进行渲染的，也就是说这是基于函数调用栈的协调算法，只不过这种依赖于调用栈的方式不能随意中断、也很难被恢复，不利于异步处理，这种调用栈，不是程序所能控制的，如果你要恢复递归现场，可能需要从头开始，恢复到之前的调用栈，所以针对于这种情况就需要对 <code>React</code> 现有的数据结构进行调整，模拟函数调用栈，将之前需要递归进行处理的事情分解成增量的执行单元，将递归转换成迭代</p>
+<p>我们在之前提到过，旧版 <code>React</code> 是通过『递归』的方式进行渲染的，也就是说这是基于函数调用栈的协调算法，只不过这种依赖于调用栈的方式不能随意中断、也很难被恢复，不利于异步处理，这种调用栈，不是程序所能控制的，如果你要恢复递归现场，可能需要从头开始，恢复到之前的调用栈，所以针对于这种情况就需要对 <code>React</code> 现有的数据结构进行调整，模拟函数调用栈，将之前需要递归进行处理的事情分解成增量的执行单元，将递归转换成迭代</p>
 <p><code>React</code> 目前的做法是使用链表，每个 <code>VirtualDOM</code> 节点内部现在使用 <code>Fiber</code> 表示，它的结构大概如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> type Fiber = &#123;     </span><br><span class="line">  type: any,              <span class="hljs-comment">// Fiber 类型信息</span></span><br><span class="line">  <span class="hljs-keyword">return</span>: Fiber | <span class="hljs-literal">null</span>,   <span class="hljs-comment">// 链表结构，指向父节点，或者 render 该节点的组件</span></span><br><span class="line">  child: Fiber | <span class="hljs-literal">null</span>,    <span class="hljs-comment">// 指向第一个子节点</span></span><br><span class="line">  sibling: Fiber | <span class="hljs-literal">null</span>,  <span class="hljs-comment">// 指向下一个兄弟节点</span></span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -394,7 +394,7 @@
 </ul>
 <h2 id="渲染阶段与提交阶段"><a href="#渲染阶段与提交阶段" class="headerlink" title="渲染阶段与提交阶段"></a>渲染阶段与提交阶段</h2><p><code>React</code> 在两个主要阶段执行工作，它们是 <code>render</code> 和 <code>commit</code></p>
 <p>在第一个 <code>render</code> 阶段，<code>React</code> 通过 <code>setUpdate</code> 或 <code>React.render</code> 计划性的更新组件，并确定需要在 <code>UI</code> 中更新的内容，如果是初始渲染，<code>React</code> 会为 <code>render</code> 方法返回的每个元素创建一个新的 <code>Fiber</code> 节点，在后续更新中，现有 <code>React</code> 元素的 <code>Fiber</code> 节点将被重复使用和更新，这一阶段是为了得到标记了副作用的 <code>Fiber</code> 节点树，副作用描述了在下一个 <code>commit</code> 阶段需要完成的工作，在当前阶段，<code>React</code> 持有标记了副作用的 <code>Fiber</code> 树并将其应用于实例，它遍历副作用列表、执行 <code>DOM</code> 更新和用户可见的其他更改</p>
-<p>这里需要我们注意的是，「第一个 <code>render</code> 阶段的工作是可以异步执行的」，即</p>
+<p>这里需要我们注意的是，『第一个 <code>render</code> 阶段的工作是可以异步执行的』，即</p>
 <blockquote>
 <p><code>React</code> 可以根据可用时间片来处理一个或多个 <code>Fiber</code> 节点，然后停下来暂存已完成的工作，并转而去处理某些事件，接着它再从它停止的地方继续执行，但有时候，它可能需要丢弃完成的工作并再次从顶部开始，由于在此阶段执行的工作不会导致任何用户可见的更改（如 <code>DOM</code> 更新），因此暂停行为才有了意义，与之相反的是，后续 <code>commit</code> 阶段始终是同步的，这是因为在此阶段执行的工作会导致用户可见的变化，例如 <code>DOM</code> 更新，这就是为什么 <code>React</code> 需要在一次单一过程中完成这些更新</p>
 </blockquote>
@@ -443,7 +443,7 @@
 <p>我们首先来看看 <code>performUnitOfWork</code> 这个函数</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">performUnitOfWork</span>(<span class="hljs-params">unitOfWork: Fiber</span>): <span class="hljs-title">void</span> </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">  <span class="hljs-keyword">const</span> current = unitOfWork.alternate;</span><br><span class="line">  <span class="hljs-keyword">let</span> next = beginWork(current, unitOfWork, subtreeRenderLanes)</span><br><span class="line">  <span class="hljs-keyword">if</span> (next === <span class="hljs-literal">null</span>) &#123;</span><br><span class="line">    completeUnitOfWork(unitOfWork);</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    workInProgress = next;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>函数 <code>performUnitOfWork</code> 接收一个 <code>Fiber</code> 节点，并通过调用 <code>beginWork</code> 函数启动工作，这个函数将启动所有 <code>Fiber</code> 执行工作所需要的活动，函数 <code>beginWork</code> 的作用主要是从来节点比对，它始终返回指向要在循环中处理的下一个子节点的指针或 <code>null</code>，如果没有子节点，<code>React</code> 知道它到达了分支的末尾，因此它可以完成当前节点，「一旦节点完成，它将需要为同层的其他节点执行工作，并在完成后回溯到父节点」</p>
+<p>函数 <code>performUnitOfWork</code> 接收一个 <code>Fiber</code> 节点，并通过调用 <code>beginWork</code> 函数启动工作，这个函数将启动所有 <code>Fiber</code> 执行工作所需要的活动，函数 <code>beginWork</code> 的作用主要是从来节点比对，它始终返回指向要在循环中处理的下一个子节点的指针或 <code>null</code>，如果没有子节点，<code>React</code> 知道它到达了分支的末尾，因此它可以完成当前节点，『一旦节点完成，它将需要为同层的其他节点执行工作，并在完成后回溯到父节点』</p>
 <p>下面来看看 <code>completeUnitOfWork</code> 函数执行的代码</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">completeUnitOfWork</span>(<span class="hljs-params">unitOfWork: Fiber</span>): <span class="hljs-title">void</span> </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">  <span class="hljs-keyword">let</span> completedWork = unitOfWork</span><br><span class="line">  <span class="hljs-keyword">do</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> current = completedWork.alternate</span><br><span class="line">    <span class="hljs-keyword">if</span> ((completedWork.effectTag &amp; Incomplete) === NoEffect) &#123;</span><br><span class="line">      <span class="hljs-keyword">let</span> next = next = completeWork(current, completedWork, subtreeRenderLanes)</span><br><span class="line">      <span class="hljs-keyword">if</span> (next !== <span class="hljs-literal">null</span>) &#123;</span><br><span class="line">        workInProgress = next</span><br><span class="line">        <span class="hljs-keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="hljs-keyword">while</span> (completedWork !== <span class="hljs-literal">null</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -452,7 +452,7 @@
 <p>从实现中也可以看出 <code>performUnitOfWork</code> 和 <code>completeUnitOfWork</code> 主要用于迭代目的，而主要活动则在 <a href="https://github.com/facebook/react/blob/4c7036e807fa18a3e21a5182983c7c0f05c5936e/packages/react-reconciler/src/ReactFiberWorkLoop.new.js#L2905" target="_blank" rel="noopener">beginWork</a> 和 <a href="https://github.com/facebook/react/blob/4c7036e807fa18a3e21a5182983c7c0f05c5936e/packages/react-reconciler/src/ReactFiberCompleteWork.new.js#L652" target="_blank" rel="noopener">completeWork</a> 函数中进行，也如我们所见，这四个函数一起执行工作单元的工作，并且还控制当前正在完成的工作，也就是下图当中所示这般</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/react/18-09.png" alt></p>
 <h2 id="提交阶段"><a href="#提交阶段" class="headerlink" title="提交阶段"></a>提交阶段</h2><p>渲染阶段完成后，<code>React</code> 进入提交阶段，这一阶段从函数 <code>completeRoot</code> 开始，在这个阶段 <code>React</code> 更新 <code>DOM</code> 并调用变更生命周期之前及之后方法的地方，当 <code>React</code> 进入这个阶段时，它有两棵树和副作用列表，第一个树表示当前在屏幕上渲染的状态，然后在 <code>render</code> 阶段会构建一个备用树，它在源代码中称为 <code>finishedWork</code> 或 <code>workInProgress</code>，表示需要映射到屏幕上的状态，此备用树会用类似的方法通过 <code>child</code> 和 <code>sibling</code> 指针链接到 <code>current</code> 树</p>
-<p>然后在构造 <code>Fiber</code> 树的过程中，<code>Fiber Reconciler</code> 会将需要更新的节点信息都保存在 <code>Effect List</code> 当中，也就是所谓的副作用列表，它是 <code>finishedWork</code> 树的节点子集，通过 <code>nextEffect</code> 指针进行链接，需要注意的是，副作用列表是运行 <code>render</code> 阶段的「结果」，渲染的重点就是确定需要插入、更新或删除的节点，以及哪些组件需要调用其生命周期方法，这就是副作用列表告诉我们的内容，它页正是在 <code>commit</code> 阶段迭代的节点集合</p>
+<p>然后在构造 <code>Fiber</code> 树的过程中，<code>Fiber Reconciler</code> 会将需要更新的节点信息都保存在 <code>Effect List</code> 当中，也就是所谓的副作用列表，它是 <code>finishedWork</code> 树的节点子集，通过 <code>nextEffect</code> 指针进行链接，需要注意的是，副作用列表是运行 <code>render</code> 阶段的『结果』，渲染的重点就是确定需要插入、更新或删除的节点，以及哪些组件需要调用其生命周期方法，这就是副作用列表告诉我们的内容，它页正是在 <code>commit</code> 阶段迭代的节点集合</p>
 <p>在 <code>commit</code> 阶段运行的主要函数是 <code>commitRoot</code>，它执行如下下操作</p>
 <ul>
 <li>在标记为 <code>Snapshot</code> 副作用的节点上调用 <code>getSnapshotBeforeUpdate</code> 生命周期</li>
