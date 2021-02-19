@@ -16,7 +16,7 @@
 <meta property="og:description" content="Object.defineProperty() 方法会直接在一个对象上定义一个新属性，或者修改一个已经存在的属性，并返回这个对象">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/12.webp">
-<meta property="og:updated_time" content="2021-01-30T14:34:51.707Z">
+<meta property="og:updated_time" content="2021-02-19T11:48:20.835Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Object.defineProperty()">
 <meta name="twitter:description" content="Object.defineProperty() 方法会直接在一个对象上定义一个新属性，或者修改一个已经存在的属性，并返回这个对象">
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    20 分钟 读完 (大约 2948 个字)
+                    25 分钟 读完 (大约 3804 个字)
                 </span>
                 
                 
@@ -273,6 +273,20 @@
 <p>为了让属性更合理，还应当定义 <code>setter</code>，和你期望的一样，<code>setter</code> 会覆盖单个属性默认的 <code>[[Put]]</code>（也被称为赋值）操作，通常来说 <code>getter</code> 和 <code>setter</code> 是成对出现的（只定义一个的话通常会产生意料之外的行为）</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> myObject = &#123;</span><br><span class="line">  <span class="hljs-comment">// 给 a 定义一个 getter</span></span><br><span class="line">  <span class="hljs-keyword">get</span> a() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>._a_</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-comment">// 给 a 定义一个 setter</span></span><br><span class="line">  <span class="hljs-keyword">set</span> a(val) &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>._a_ = val * <span class="hljs-number">2</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">myObject.a = <span class="hljs-number">2</span></span><br><span class="line">myObject.a <span class="hljs-comment">// 4</span></span><br></pre></td></tr></table></figure>
 
+<h2 id="如何监听对象和数组的属性改变"><a href="#如何监听对象和数组的属性改变" class="headerlink" title="如何监听对象和数组的属性改变"></a>如何监听对象和数组的属性改变</h2><p>最后我们再来看一个稍微有些扩展的内容，那就是如何监听对象和数组的属性改变，也算是一个老生常谈的问题，下面我们就来看看如何实现</p>
+<h4 id="监听对象属性改变"><a href="#监听对象属性改变" class="headerlink" title="监听对象属性改变"></a>监听对象属性改变</h4><p>其实我们实现的方式主要依赖的还是上面介绍到的 <code>Object.defineProperty</code>，它可以接受的第三个参数可以取 <code>get/set</code> 并各自对应一个 <code>getter/setter</code> 的方法，这样一来在对象属性改变的时候我们就可以知道属性的值变化了</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = &#123; <span class="hljs-attr">obj</span>: <span class="hljs-number">0</span> &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">Object</span>.defineProperty(a, <span class="hljs-string">'obj'</span>, &#123;</span><br><span class="line">  <span class="hljs-keyword">get</span>: function () &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'get：'</span> + obj)</span><br><span class="line">    <span class="hljs-keyword">return</span> obj</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-keyword">set</span>: function (value) &#123;</span><br><span class="line">    obj = value</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'set:'</span> + obj)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">a.obj = <span class="hljs-number">2</span>          <span class="hljs-comment">// set: 2</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(a.obj) <span class="hljs-comment">// get：2</span></span><br></pre></td></tr></table></figure>
+
+<p>但是这种方式有个缺点就是在 <code>IE8</code> 及更低版本 <code>IE</code> 是无法使用的，因为这个特性是没有 <code>polyfill</code> 的，所以无法在不支持的平台实现，但是随着版本的更新，现在我们可以使用 <code>ES6</code> 提供的 <code>Proxy</code> 代理来处理，本质原理都是一样的，都是利用 <code>get/set</code> 来监听对象属性的变化</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> user = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> proxy = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Proxy</span>(user, &#123;</span><br><span class="line">  <span class="hljs-keyword">get</span>(target, property) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> target[property]</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-keyword">set</span>(target, property, value) &#123;</span><br><span class="line">    target[property] = value</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">proxy.name = <span class="hljs-string">'zhangsan'</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(user)</span><br><span class="line"><span class="hljs-comment">// &#123;name: 'zhangsan'&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="监听数组的变化"><a href="#监听数组的变化" class="headerlink" title="监听数组的变化"></a>监听数组的变化</h4><p>监听数组的变化相对来说就没有监听对象那么轻松了，因为没有对应的 <code>get/set</code> 方法来供我们使用，但是我们可以定义一个新的数组，然后让其继承原生的 <code>Array</code>，然后重写其中我们需要监听的方法即可（<code>pop</code>，<code>push</code> 等），如下是 <code>ES6</code> 当中的实现方式</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">NewArray</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Array</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(...args) &#123;</span><br><span class="line">    <span class="hljs-comment">// 调用父类 Array 的 constructor</span></span><br><span class="line">    <span class="hljs-keyword">super</span>(...args)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  push(...args) &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`监听到数组变化`</span>)</span><br><span class="line">    <span class="hljs-comment">// 调用父类方法</span></span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">super</span>.push(...args)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> arr = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]</span><br><span class="line"><span class="hljs-keyword">let</span> newArr = <span class="hljs-keyword">new</span> NewArray(...arr)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(newArr)  <span class="hljs-comment">// [1, 2]</span></span><br><span class="line"></span><br><span class="line">newArr.push(<span class="hljs-number">3</span>)       <span class="hljs-comment">// 监听到数组变化</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(newArr)  <span class="hljs-comment">// [1, 2, 3]</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="关于-ES5-以下实现"><a href="#关于-ES5-以下实现" class="headerlink" title="关于 ES5 以下实现"></a>关于 ES5 以下实现</h4><p>上面我们介绍了 <code>ES6</code> 当中的数组监听方法的实现，那么 <code>ES6</code> 以下还能实现吗？这里就需要注意了，在 <code>ES5</code> 及以下的 <code>JavaScript</code> 因为无法完美的继承数组，所以虽然可以实现，但是是存在一定缺陷的，因为 <code>Array</code> 构造函数执行时不会对传进去的 <code>this</code> 做任何处理，不止 <code>Array</code>，<code>String</code>，<code>Number</code>，<code>Regexp</code>，<code>Object</code> 等等 <code>JavaScript</code> 的内置类都不行</p>
+<p>数组其响应式的 <code>length</code> 属性以及内部的 <code>[[class]]</code> 属性我们无法在 <code>JavaScript</code> 层面实现，这就导致我们无法去用任何一个对象来模仿一个数组，但是可以使用非标准属性 <code>__proto__</code> 来实现，如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 首先获取 Array 原型</span></span><br><span class="line"><span class="hljs-keyword">const</span> oldMethod = <span class="hljs-built_in">Object</span>.create(<span class="hljs-built_in">Array</span>.prototype)</span><br><span class="line"><span class="hljs-keyword">const</span> newMethod = []</span><br><span class="line"></span><br><span class="line">[<span class="hljs-string">'push'</span>, <span class="hljs-string">'pop'</span>, <span class="hljs-string">'shift'</span>, <span class="hljs-string">'unshift'</span>, <span class="hljs-string">'splice'</span>, <span class="hljs-string">'sort'</span>, <span class="hljs-string">'reverse'</span>].forEach(<span class="hljs-function"><span class="hljs-params">method</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// 在 newMethod 上进行方法的重写</span></span><br><span class="line">  <span class="hljs-comment">// 这里需要注意的是重写的方法是定义在 newMethod 的属性上而不是其原型属性（newMethod.__proto__ 没有改变）</span></span><br><span class="line">  newMethod[method] = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`监听到数组的变化`</span>)</span><br><span class="line">    <span class="hljs-keyword">return</span> oldMethod[method].apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> list = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]</span><br><span class="line"><span class="hljs-comment">// 将需要监听的数组的原型指针指向我们重新定义的新对象</span></span><br><span class="line">list.__proto__ = newMethod</span><br><span class="line">list.push(<span class="hljs-number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 如果不设定指向，则默认使用原生的方法</span></span><br><span class="line"><span class="hljs-keyword">let</span> list2 = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>]</span><br><span class="line">list2.push(<span class="hljs-number">3</span>)</span><br></pre></td></tr></table></figure>
+
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="https://book.douban.com/subject/25883834/" target="_blank" rel="noopener">《You Don’t Know JavaScript》</a></li>
 <li><a href="https://book.douban.com/subject/10546125/" target="_blank" rel="noopener">《JavaScript 高级程序设计》</a></li>
@@ -311,8 +325,8 @@
         
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2017/04/22/JavaScript/11/">
-                <span class="level-item">JavaScript 中的遍历和枚举</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2017/04/15/JavaScript/10/">
+                <span class="level-item">parseInt() 与 parseFloat()</span>
                 <i class="level-item fa fa-chevron-right"></i>
             </a>
         </div>
@@ -388,7 +402,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        173
+                        149
                     </p>
                 </div>
             </div>
@@ -398,7 +412,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        8
                     </p>
                 </div>
             </div>
@@ -408,7 +422,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        8
                     </p>
                 </div>
             </div>
@@ -474,8 +488,24 @@
         <span class="has-mr-6">7</span>
         <span>Getter 和 Setter</span>
         </a></li><li>
-        <a class="is-flex" href="#参考">
+        <a class="is-flex" href="#如何监听对象和数组的属性改变">
         <span class="has-mr-6">8</span>
+        <span>如何监听对象和数组的属性改变</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#监听对象属性改变">
+        <span class="has-mr-6">8.1</span>
+        <span>监听对象属性改变</span>
+        </a></li><li>
+        <a class="is-flex" href="#监听数组的变化">
+        <span class="has-mr-6">8.2</span>
+        <span>监听数组的变化</span>
+        </a></li><li>
+        <a class="is-flex" href="#关于-ES5-以下实现">
+        <span class="has-mr-6">8.3</span>
+        <span>关于 ES5 以下实现</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#参考">
+        <span class="has-mr-6">9</span>
         <span>参考</span>
         </a></li></ul>
         </div>
@@ -501,7 +531,7 @@
                 <span class="level-item">Angular</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">15</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/CSS/">
@@ -509,7 +539,7 @@
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">14</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -517,15 +547,7 @@
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">32</span>
-            </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/HTML/">
-            <span class="level-start">
-                <span class="level-item">HTML</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">29</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTTP/">
@@ -533,7 +555,7 @@
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">12</span>
+                <span class="level-item tag">11</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -541,7 +563,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">54</span>
+                <span class="level-item tag">44</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -549,7 +571,7 @@
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">14</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -567,14 +589,6 @@
             <span class="level-end">
                 <span class="level-item tag">4</span>
             </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/jQuery/">
-            <span class="level-start">
-                <span class="level-item">jQuery</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">4</span>
-            </span>
         </a></li>
             </ul>
         </div>
@@ -587,7 +601,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 15px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/HTTP/" style="font-size: 13.33px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 15px;">Node.js</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Vue/" style="font-size: 11.67px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.67px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 15px;">Angular</a> <a href="/tags/CSS/" style="font-size: 13.33px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 11.67px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 13.33px;">Node.js</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a>
     </div>
 </div>
 
@@ -770,7 +784,7 @@
                     <span class="level-item">八月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -781,7 +795,7 @@
                     <span class="level-item">七月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -792,7 +806,7 @@
                     <span class="level-item">六月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -880,7 +894,7 @@
                     <span class="level-item">十月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -913,7 +927,7 @@
                     <span class="level-item">七月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1023,7 +1037,7 @@
                     <span class="level-item">九月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1056,7 +1070,7 @@
                     <span class="level-item">六月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1161,23 +1175,12 @@
         </li>
         
         <li>
-            <a class="level is-marginless" href="/archives/2017/08/">
-                <span class="level-start">
-                    <span class="level-item">八月 2017</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
             <a class="level is-marginless" href="/archives/2017/07/">
                 <span class="level-start">
                     <span class="level-item">七月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1199,7 +1202,7 @@
                     <span class="level-item">五月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1210,7 +1213,7 @@
                     <span class="level-item">四月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1221,18 +1224,7 @@
                     <span class="level-item">三月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2017/02/">
-                <span class="level-start">
-                    <span class="level-item">二月 2017</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1259,28 +1251,6 @@
             </a>
         </li>
         
-        <li>
-            <a class="level is-marginless" href="/archives/2016/11/">
-                <span class="level-start">
-                    <span class="level-item">十一月 2016</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2016/10/">
-                <span class="level-start">
-                    <span class="level-item">十月 2016</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
         </ul>
         </div>
     </div>
@@ -1297,49 +1267,42 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Angular/">
                         <span class="tag">Angular</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">32</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/HTML/">
-                        <span class="tag">HTML</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">29</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">12</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">54</span>
+                        <span class="tag is-grey">44</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 
@@ -1353,13 +1316,6 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
-                        <span class="tag is-grey">4</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/jQuery/">
-                        <span class="tag">jQuery</span>
                         <span class="tag is-grey">4</span>
                     </a>
                 </div>

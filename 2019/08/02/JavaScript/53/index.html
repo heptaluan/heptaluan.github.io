@@ -16,7 +16,7 @@
 <meta property="og:description" content="算是一些手写 API，常用方法的一些汇总，反正就是面试可能涉及到的一些手写功能可能都会有所涉及，不仅仅只是为了面试所用，也算是在这里做下汇总记录，方便以后可以快速查询（可以直接参考左边目录）">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/45.webp">
-<meta property="og:updated_time" content="2021-01-30T15:06:59.044Z">
+<meta property="og:updated_time" content="2021-02-19T11:48:20.850Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中一些常用方法的实现">
 <meta name="twitter:description" content="算是一些手写 API，常用方法的一些汇总，反正就是面试可能涉及到的一些手写功能可能都会有所涉及，不仅仅只是为了面试所用，也算是在这里做下汇总记录，方便以后可以快速查询（可以直接参考左边目录）">
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    2 小时 读完 (大约 15388 个字)
+                    2 小时 读完 (大约 16045 个字)
                 </span>
                 
                 
@@ -191,8 +191,11 @@
 <li><code>throttle</code> 策略的电梯，保证如果电梯第一个人进来后，<code>15</code> 秒后准时运送一次，不等待，如果没有人，则待机</li>
 <li><code>debounce</code> 策略的电梯，如果电梯里有人进来，等待 <code>15</code> 秒，如果有人进来，<code>15</code> 秒等待重新计时，直到 <code>15</code> 秒超时，开始运送</li>
 </ul>
-<p>关于两者更为具体的应用和内部的一些原理可以参考 <a href="https://heptaluan.github.io/2020/01/05/JavaScript/49/" target="_blank" rel="noopener">函数防抖和节流</a>，下面是代码实现</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">debounce</span>(<span class="hljs-params">fn, wait</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> timer</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>, args = <span class="hljs-built_in">arguments</span></span><br><span class="line">    clearTimeout(timer)</span><br><span class="line">    timer = setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">      fn.apply(that, args)</span><br><span class="line">    &#125;, wait)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">throttle</span>(<span class="hljs-params">fn, wait</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> timer</span><br><span class="line">  <span class="hljs-keyword">var</span> prev = <span class="hljs-number">0</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>, now = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(), args = <span class="hljs-built_in">arguments</span></span><br><span class="line">    clearTimeout(timer)</span><br><span class="line">    <span class="hljs-keyword">if</span> (now - prev &gt;= wait) &#123;</span><br><span class="line">      fn.apply(that, args)</span><br><span class="line">      prev = now</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      timer = setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">        fn.apply(that, args)</span><br><span class="line">      &#125;, wait)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面的实现方式只是两者最为基本的实现方式，这里我们只为展示其原理，关于它们两者更为完善的实现以及一些内部的原理可以参考我们之前整理过的 <a href="https://heptaluan.github.io/2020/01/05/JavaScript/49/" target="_blank" rel="noopener">函数防抖和节流</a></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">debounce</span>(<span class="hljs-params">fn, wait</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> timer</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span>, args = <span class="hljs-built_in">arguments</span></span><br><span class="line">    clearTimeout(timer)</span><br><span class="line">    timer = setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">      fn.apply(that, args)</span><br><span class="line">    &#125;, wait)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 使用</span></span><br><span class="line"><span class="hljs-built_in">window</span>.onscroll = debounce(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'debounce'</span>)</span><br><span class="line">&#125;, <span class="hljs-number">1000</span>)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">throttle</span>(<span class="hljs-params">fn, wait</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> prev = <span class="hljs-number">0</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> now = +<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>()</span><br><span class="line">    <span class="hljs-keyword">if</span> (now - prev &gt;= wait) &#123;</span><br><span class="line">      fn.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>)</span><br><span class="line">      prev = now</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 使用</span></span><br><span class="line"><span class="hljs-keyword">var</span> throtteScroll = throttle(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'throtte'</span>)</span><br><span class="line">&#125;, <span class="hljs-number">1000</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">window</span>.onscroll = throtteScroll</span><br></pre></td></tr></table></figure>
+
 
 <h2 id="call-apply-bind"><a href="#call-apply-bind" class="headerlink" title="call/apply/bind"></a>call/apply/bind</h2><p><code>call</code> 和 <code>apply</code> 更为具体的应用可以参考 <a href="https://heptaluan.github.io/2018/04/16/JavaScript/27/" target="_blank" rel="noopener">JavaScript 中的 call 和 apply</a>，主要包括</p>
 <ul>
@@ -215,7 +218,7 @@
 <li><code>bind</code> 实现</li>
 </ul>
 <p><code>ES5</code> 当中实现</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Function</span>.prototype.bind) &#123;</span><br><span class="line">  <span class="hljs-built_in">Function</span>.prototype.bind = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">oThis</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span> !== <span class="hljs-string">'function'</span>) &#123;</span><br><span class="line">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">'Function.prototype.bind - what is trying to be bound is not callable'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">var</span> aArgs = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">1</span>), fToBind = <span class="hljs-keyword">this</span>, fNOP = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;,</span><br><span class="line">      fBound = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> fToBind.apply(<span class="hljs-keyword">this</span> <span class="hljs-keyword">instanceof</span> fNOP ? <span class="hljs-keyword">this</span> : oThis, aArgs.concat(<span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>)))</span><br><span class="line">      &#125;</span><br><span class="line">    fNOP.prototype = <span class="hljs-keyword">this</span>.prototype</span><br><span class="line">    fBound.prototype = <span class="hljs-keyword">new</span> fNOP()</span><br><span class="line">    <span class="hljs-keyword">return</span> fBound</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Function</span>.prototype.bind) &#123;</span><br><span class="line">  <span class="hljs-built_in">Function</span>.prototype.bind = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">oThis</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-keyword">this</span> !== <span class="hljs-string">'function'</span>) &#123;</span><br><span class="line">      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">'Function.prototype.bind - what is trying to be bound is not callable'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">var</span> aArgs = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>, <span class="hljs-number">1</span>), fToBind = <span class="hljs-keyword">this</span>, fNOP = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;,</span><br><span class="line">      fBound = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> fToBind.apply(<span class="hljs-keyword">this</span> <span class="hljs-keyword">instanceof</span> fNOP</span><br><span class="line">          ? <span class="hljs-keyword">this</span></span><br><span class="line">          : oThis, aArgs.concat(<span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>)))</span><br><span class="line">      &#125;</span><br><span class="line">    fNOP.prototype = <span class="hljs-keyword">this</span>.prototype</span><br><span class="line">    fBound.prototype = <span class="hljs-keyword">new</span> fNOP()</span><br><span class="line">    <span class="hljs-keyword">return</span> fBound</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><code>ES6</code> 当中实现</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Function</span>.prototype.myBind = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">oThis, ...args</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> thisFn = <span class="hljs-keyword">this</span></span><br><span class="line">  <span class="hljs-keyword">let</span> fToBind = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">...params</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> context = <span class="hljs-keyword">this</span> <span class="hljs-keyword">instanceof</span> fToBind ? <span class="hljs-keyword">this</span> : <span class="hljs-built_in">Object</span>(oThis)</span><br><span class="line">    <span class="hljs-keyword">return</span> thisFn.apply(context, ...args, ...params)</span><br><span class="line">  &#125;</span><br><span class="line">  fToBind.prototype = <span class="hljs-built_in">Object</span>.create(thisFn.prototype)</span><br><span class="line">  <span class="hljs-keyword">return</span> fToBind</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -240,8 +243,11 @@
 <h4 id="Object-create"><a href="#Object-create" class="headerlink" title="Object.create()"></a>Object.create()</h4><p>关于 <code>Object.create()</code> 的详细用法可以参考 <a href="https://heptaluan.github.io/2017/03/03/JavaScript/07/" target="_blank" rel="noopener">Object.create()</a>，在了解过它的具体原理后，我们不难可以手动的来进行实现</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Object</span>.create) &#123;</span><br><span class="line">  <span class="hljs-built_in">Object</span>.create = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">o</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">F</span>(<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">    F.prototype = o</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> F()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="instanceof"><a href="#instanceof" class="headerlink" title="instanceof"></a>instanceof</h4><p>核心原理就是原型链的向上查找</p>
+<h4 id="instanceof"><a href="#instanceof" class="headerlink" title="instanceof"></a>instanceof</h4><p>核心原理就是原型链的向上查找，比如我们有 <code>left</code> 和 <code>right</code> 两个变量，首先判断 <code>left</code> 的 <code>__proto__</code> 是不是等于 <code>right.prototype</code>，如果不等于再往上寻找 <code>left.__proto__.__proto__</code> 直到 <code>__proto__</code> 为 <code>null</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">myInstanceof</span>(<span class="hljs-params">left, right</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> left !== <span class="hljs-string">'object'</span> || left === <span class="hljs-literal">null</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>   <span class="hljs-comment">// 基本数据类型直接返回 false</span></span><br><span class="line">  <span class="hljs-keyword">let</span> proto = <span class="hljs-built_in">Object</span>.getPrototypeOf(left)                       <span class="hljs-comment">// 获取参数的原型对象</span></span><br><span class="line">  <span class="hljs-keyword">while</span> (<span class="hljs-literal">true</span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (proto == <span class="hljs-literal">null</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>                             <span class="hljs-comment">// 查找到尽头，还没找到，返回 false</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (proto == right.prototype) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>                   <span class="hljs-comment">// 找到相同的原型对象，返回 true</span></span><br><span class="line">    proto = <span class="hljs-built_in">Object</span>.getPrototypeOf(proto)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">myInstanceof(<span class="hljs-string">'111'</span>, <span class="hljs-built_in">String</span>)              <span class="hljs-comment">// false</span></span><br><span class="line">myInstanceof(<span class="hljs-keyword">new</span> <span class="hljs-built_in">String</span>(<span class="hljs-string">'111'</span>), <span class="hljs-built_in">String</span>)  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="getOwnPropertyNames"><a href="#getOwnPropertyNames" class="headerlink" title="getOwnPropertyNames"></a>getOwnPropertyNames</h4><p>需要注意的是，获取不到不可枚举的属性</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> <span class="hljs-built_in">Object</span>.getOwnPropertyNames !== <span class="hljs-string">'function'</span>) &#123;</span><br><span class="line">  <span class="hljs-built_in">Object</span>.getOwnPropertyNames = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">o</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (o !== <span class="hljs-built_in">Object</span>(o)) <span class="hljs-keyword">throw</span> <span class="hljs-built_in">TypeError</span>(<span class="hljs-string">'Object.getOwnPropertyNames called on non-object'</span>)</span><br><span class="line">    <span class="hljs-keyword">var</span> props = [], p</span><br><span class="line">    <span class="hljs-keyword">for</span> (p <span class="hljs-keyword">in</span> o) &#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Object</span>.prototype.hasOwnProperty.call(o, p)) &#123;</span><br><span class="line">        props.push(p)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> props</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="数组原生-API"><a href="#数组原生-API" class="headerlink" title="数组原生 API"></a>数组原生 API</h2><p>这部分内容主要是源自于平时收集整理以及参考了一些 <a href="https://dev.to/bnevilleoneill/understand-array-methods-by-implementing-them-all-of-them-iha" target="_blank" rel="noopener">这篇文章</a> 当中的内容整合而成，而且在实现方式上我们也不再去扩展 <code>Array</code> 构造函数上的方法了，直接使用函数的形式来进行实现，主要目的也是为了了解其内部的实现原理</p>
 <h4 id="forEach"><a href="#forEach" class="headerlink" title="forEach"></a>forEach</h4><p>这里需要注意的一点是，<code>forEach</code> 方法默认返回 <code>undefined</code></p>
@@ -322,29 +328,53 @@
 
 <h4 id="nextAll"><a href="#nextAll" class="headerlink" title="nextAll"></a>nextAll</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 原理就是遍历 elem 节点的后面，直到返回第一个 nodeType 为 1 的节点</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getRealnextAll</span>(<span class="hljs-params">elem</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> o = elem</span><br><span class="line">  <span class="hljs-keyword">var</span> result = []</span><br><span class="line">  <span class="hljs-comment">// 循环遍历，将循环的结果再次赋予 o，依次向下查询，如果不存在下一个节点，则会返回 null，便自动停止循环</span></span><br><span class="line">  <span class="hljs-keyword">while</span> (o = o.nextSibling) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (o.nodeType == <span class="hljs-number">1</span>) &#123;</span><br><span class="line">      result.push(o)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> result</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="常见工具函数"><a href="#常见工具函数" class="headerlink" title="常见工具函数"></a>常见工具函数</h2><h4 id="数组去重"><a href="#数组去重" class="headerlink" title="数组去重"></a>数组去重</h4><blockquote>
-<p>默认传递的都是数组对象，所以在这里就省掉了针对入参的判断，我们只关心核心实现部分</p>
+<h2 id="常见工具函数"><a href="#常见工具函数" class="headerlink" title="常见工具函数"></a>常见工具函数</h2><h4 id="短横变驼峰"><a href="#短横变驼峰" class="headerlink" title="短横变驼峰"></a>短横变驼峰</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> f = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">s</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> s.replace(<span class="hljs-regexp">/-\w/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">x</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(x)</span><br><span class="line">    <span class="hljs-keyword">return</span> x.slice(<span class="hljs-number">1</span>).toUpperCase()</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">f(<span class="hljs-string">'border-right-color'</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="千位分隔符"><a href="#千位分隔符" class="headerlink" title="千位分隔符"></a>千位分隔符</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">commafy</span>(<span class="hljs-params">num</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> num &amp;&amp; num</span><br><span class="line">    .toString()</span><br><span class="line">    <span class="hljs-comment">// 也可以使用 /\B(?=(\d&#123;3&#125;)+$)/g</span></span><br><span class="line">    .replace(<span class="hljs-regexp">/(\d)(?=(\d&#123;3&#125;)+\.)/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">$<span class="hljs-number">0</span>, $<span class="hljs-number">1</span></span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> $<span class="hljs-number">1</span> + <span class="hljs-string">','</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">commafy(<span class="hljs-number">1234567.90</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="解析-URL"><a href="#解析-URL" class="headerlink" title="解析 URL"></a>解析 URL</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">parseParam</span>(<span class="hljs-params">url</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> param = &#123;&#125;</span><br><span class="line">  url.replace(<span class="hljs-regexp">/[?&amp;](.*?)=([^&amp;]*)/g</span>, (m, $<span class="hljs-number">1</span>, $<span class="hljs-number">2</span>) =&gt; param[$<span class="hljs-number">1</span>] = $<span class="hljs-number">2</span>)</span><br><span class="line">  <span class="hljs-keyword">return</span> param</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">parseParam(<span class="hljs-string">'https://www.baidu.com?id=123&amp;name=zhangsan'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>上面这个示例可以应对大多正常使用的情况，但是当然也会存在一些比较特殊的情况，比如下面这个 <code>url</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> url = <span class="hljs-string">'http://www.example.com/?user=anonymous&amp;id=123&amp;id=456&amp;city=%E5%8C%97%E4%BA%AC&amp;enabled'</span></span><br></pre></td></tr></table></figure>
+
+<p>要求输出的结果是下面这样的</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123; </span><br><span class="line">  user: <span class="hljs-string">'anonymous'</span>,</span><br><span class="line">  id: [ <span class="hljs-number">123</span>, <span class="hljs-number">456</span> ],</span><br><span class="line">  city: <span class="hljs-string">'北京'</span>,</span><br><span class="line">  enabled: <span class="hljs-literal">true</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具体规则为</p>
+<ul>
+<li>重复出现的 <code>key</code> 要组装成数组，能被转成数字的就转成数字类型</li>
+<li>中文需解码</li>
+<li>未指定值得 key 约定为 true</li>
+</ul>
+<p>下面我们来看如何实现</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">parseParam</span>(<span class="hljs-params">url</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> paramsStr = <span class="hljs-regexp">/.+\?(.+)$/</span>.exec(url)[<span class="hljs-number">1</span>]              <span class="hljs-comment">// 将 ? 后面的字符串取出来</span></span><br><span class="line">  <span class="hljs-keyword">const</span> paramsArr = paramsStr.split(<span class="hljs-string">'&amp;'</span>)                  <span class="hljs-comment">// 将字符串以 &amp; 分割后存到数组中</span></span><br><span class="line">  <span class="hljs-keyword">let</span> paramsObj = &#123;&#125;</span><br><span class="line">  paramsArr.forEach(<span class="hljs-function"><span class="hljs-params">param</span> =&gt;</span> &#123;                            <span class="hljs-comment">// 将 params 存到对象中</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-regexp">/=/</span>.test(param)) &#123;                                <span class="hljs-comment">// 处理有 value 的参数</span></span><br><span class="line">      <span class="hljs-keyword">let</span> [key, val] = param.split(<span class="hljs-string">'='</span>)                   <span class="hljs-comment">// 分割 key 和 value</span></span><br><span class="line">      val = <span class="hljs-built_in">decodeURIComponent</span>(val)                       <span class="hljs-comment">// 解码</span></span><br><span class="line">      val = <span class="hljs-regexp">/^\d+$/</span>.test(val) ? <span class="hljs-built_in">parseFloat</span>(val) : val     <span class="hljs-comment">// 判断是否转为数字</span></span><br><span class="line">      <span class="hljs-keyword">if</span> (paramsObj.hasOwnProperty(key)) &#123;                <span class="hljs-comment">// 如果对象有 key，则添加一个值</span></span><br><span class="line">        paramsObj[key] = [].concat(paramsObj[key], val)</span><br><span class="line">      &#125; <span class="hljs-keyword">else</span> &#123;                                            <span class="hljs-comment">// 如果对象没有这个 key，创建 key 并设置值</span></span><br><span class="line">        paramsObj[key] = val</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;                                              <span class="hljs-comment">// 处理没有 value 的参数</span></span><br><span class="line">      paramsObj[param] = <span class="hljs-literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="hljs-keyword">return</span> paramsObj                                        <span class="hljs-comment">// 返回最终结果</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="数组去重"><a href="#数组去重" class="headerlink" title="数组去重"></a>数组去重</h4><blockquote>
+<p>这里需要注意的是，我们默认传递的参数都是数组对象，所以也就省掉了针对入参的判断，在这里我们只关心核心实现部分</p>
 </blockquote>
-<p>第一种，也是最原始的方法，即双层循环（<code>while</code> 也可），其缺点是其复杂度为 <code>O(n^2)</code>，如果数组过大，将会影响性能，但是它也有好处，就是兼容性好，原理是先定义一个包含原始数组第一个元素的数组，然后遍历原始数组，将原始数组中的每个元素与新数组中的每个元素进行比对，如果不重复则添加到新数组中，最后返回新数组</p>
+<p>第一种，也是我们可能想到的最为直白的方式，那就是使用双层循环（<code>while</code> 也可），其缺点是其复杂度为 <code>O(n^2)</code>，如果数组过大，将会影响性能，但是它也有好处，就是兼容性好，原理是先定义一个包含原始数组第一个元素的数组，然后遍历原始数组，将原始数组中的每个元素与新数组中的每个元素进行比对，如果不重复则添加到新数组中，最后返回新数组</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">unique</span>(<span class="hljs-params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> res = [arr[<span class="hljs-number">0</span>]]</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">1</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> flag = <span class="hljs-literal">true</span></span><br><span class="line">    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j = <span class="hljs-number">0</span>; j &lt; res.length; j++) &#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (arr[i] === res[j]) &#123;</span><br><span class="line">        flag = <span class="hljs-literal">false</span></span><br><span class="line">        <span class="hljs-keyword">break</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">if</span> (flag) &#123;</span><br><span class="line">      res.push(arr[i])</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> res</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>第二种方法 <code>indexOf</code>，<code>indexOf</code> 用法也有两种使用方式</p>
+<p>第二种方法，使用 <code>indexOf</code> 或者 <code>includes</code>，因为原理是一样的，这里我们就以 <code>indexOf</code> 为例来进行介绍了，<code>indexOf</code> 的用法有两种</p>
 <ul>
 <li>一种是首先定义一个空数组，然后调用 <code>indexOf</code> 方法对原来的数组进行遍历判断，如果元素不在新定义的数组中，则将其添加进去，最后将数组返回</li>
 <li>第二种就是检测元素在数组中第一次出现的位置是否和元素现在的位置相等，如果不等则说明该元素是重复元素</li>
 </ul>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 第一种方式</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">unique</span>(<span class="hljs-params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> res = []</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (res.indexOf(arr[i]) === <span class="hljs-number">-1</span>) &#123;</span><br><span class="line">      res.push(arr[i])</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> res</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 第二种方式</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">unique</span>(<span class="hljs-params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-built_in">Array</span>.prototype.filter.call(arr, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, index</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> arr.indexOf(item) === index</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 第一种方式</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">unique</span>(<span class="hljs-params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> res = []</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">    <span class="hljs-comment">// 或者使用 if (!res.includes(arr[i])) &#123; &#125;</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (res.indexOf(arr[i]) === <span class="hljs-number">-1</span>) &#123;</span><br><span class="line">      res.push(arr[i])</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> res</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 第二种方式</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">unique</span>(<span class="hljs-params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-built_in">Array</span>.prototype.filter.call(arr, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, index</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> arr.indexOf(item) === index</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>第三种方法，相邻元素去重，这种方法首先调用了数组的排序方法 <code>sort()</code>，相同的值就会被排在一起，然后我们就可以只判断当前元素与上一个元素是否相同，但是这个方法存在缺陷，即 <code>sort()</code> 排序的结果并非十分准确</p>
+<p>第三种方法，使用 <code>reduce</code>，原理是利用 <code>reduce</code> 的累加原理，因为初始值为 <code>[]</code>，所以在添加前先行判断，如果当前数组中没有该元素，再将其放入其中</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">unique</span>(<span class="hljs-params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> arr.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">pre, cur</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> pre.includes(cur) ? pre : [...pre, cur]</span><br><span class="line">  &#125;, [])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>第四种方法，相邻元素去重，这种方法首先调用了数组的排序方法 <code>sort()</code>，相同的值就会被排在一起，然后我们就可以只判断当前元素与上一个元素是否相同，但是这个方法存在缺陷，即 <code>sort()</code> 排序的结果并非十分准确</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">unique</span>(<span class="hljs-params">arr</span>) </span>&#123;</span><br><span class="line">  arr = arr.sort()</span><br><span class="line">  <span class="hljs-keyword">let</span> res = []</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (arr[i] !== arr[i - <span class="hljs-number">1</span>]) &#123;</span><br><span class="line">      res.push(arr[i])</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> res</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>第四种方法，利用对象属性去重，也就是所谓的对象键值对法，原理是遍历数组，将数组中的值设为对象的属性，并给该属性赋初始值 <code>1</code>，每出现一次，对应的属性值增加 <code>1</code>，这样属性值对应的就是该元素出现的次数了（这个方法也可以用来统计字符串出现的次数）</p>
+<p>第五种方法，利用对象属性去重，也就是所谓的对象键值对法，原理是遍历数组，将数组中的值设为对象的属性，并给该属性赋初始值 <code>1</code>，每出现一次，对应的属性值增加 <code>1</code>，这样属性值对应的就是该元素出现的次数了（这个方法也可以用来统计字符串出现的次数）</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 方式一</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">unique</span>(<span class="hljs-params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> res = [], obj = &#123;&#125;</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (!obj[arr[i]]) &#123;</span><br><span class="line">      res.push(arr[i])</span><br><span class="line">      obj[arr[i]] = <span class="hljs-number">1</span></span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      obj[arr[i]]++</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> res</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 方式二，针对处理 [1, 2, 1, 1, '1'] 这样的数组，可以使用 typeof item + item 拼成字符串作为 key 值来避免这个问题</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">unique</span>(<span class="hljs-params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> obj = &#123;&#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> arr.filter(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">item, index, array</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> obj.hasOwnProperty(<span class="hljs-keyword">typeof</span> item + item) ? <span class="hljs-literal">false</span> : (obj[<span class="hljs-keyword">typeof</span> item + item] = <span class="hljs-literal">true</span>)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>第五种方法，解构赋值去重，<code>ES6</code> 提供了新的数据结构 <code>Set</code>，它类似于数组，但是成员的值都是唯一的</p>
+<p>第六种方法，解构赋值去重，<code>ES6</code> 提供了新的数据结构 <code>Set</code>，它类似于数组，但是成员的值都是唯一的</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 利用 Set</span></span><br><span class="line"><span class="hljs-keyword">var</span> unique = <span class="hljs-function"><span class="hljs-params">arr</span> =&gt;</span> [...new <span class="hljs-built_in">Set</span>(arr)]</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 也可以使用 Map，原理也是利用对象属性</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">unique</span>(<span class="hljs-params">arr</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> map = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Map</span>()</span><br><span class="line">  <span class="hljs-keyword">return</span> arr.filter(<span class="hljs-function">(<span class="hljs-params">a</span>) =&gt;</span> !map.has(a) &amp;&amp; map.set(a, <span class="hljs-number">1</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>最后来看一个特殊的数组处理</p>
+<p>最后我们再来通过一个特殊的数组依次来看看上面各种方法处理后的结果，做一个简单的对比</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> array = [<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-string">'1'</span>, <span class="hljs-string">'1'</span>, <span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-literal">undefined</span>, <span class="hljs-keyword">new</span> <span class="hljs-built_in">String</span>(<span class="hljs-string">'1'</span>), <span class="hljs-keyword">new</span> <span class="hljs-built_in">String</span>(<span class="hljs-string">'1'</span>), /a/, /a/, <span class="hljs-literal">NaN</span>, <span class="hljs-literal">NaN</span>]</span><br></pre></td></tr></table></figure>
 
 <p>针对上面的数组，上述去重方法结果如下，可以根据实际场景选择使用</p>
@@ -365,6 +395,11 @@
 <td>单纯的 <code>indexOf</code></td>
 <td><code>[1, &#39;1&#39;, null, undefined, String, String, /a/, /a/, NaN, NaN]</code></td>
 <td>对象和 <code>NaN</code> 不去重</td>
+</tr>
+<tr>
+<td><code>reduce</code></td>
+<td><code>[1, &#39;1&#39;, null, undefined, String, String, /a/, /a/, NaN]</code></td>
+<td>对象不去重 <code>NaN</code> 去重</td>
 </tr>
 <tr>
 <td><code>filter</code> + <code>indexOf</code></td>
@@ -469,9 +504,16 @@
 
 <h4 id="取数组的并集，交集和差集"><a href="#取数组的并集，交集和差集" class="headerlink" title="取数组的并集，交集和差集"></a>取数组的并集，交集和差集</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 这里有一些需要注意的地方</span></span><br><span class="line"><span class="hljs-comment">// 如果两个数组 A 和 B 当中没有重复的元素，以下三种都是可以正常实现的</span></span><br><span class="line"><span class="hljs-comment">// 如果数组当中有重复的元素，需要使用 ES6 当中的 Set 数据结构</span></span><br><span class="line"><span class="hljs-comment">// 如果数组当中包含 NaN，可以考虑在结尾处添加 .filter(v =&gt; !isNaN(v)) 过滤掉即可</span></span><br><span class="line"><span class="hljs-keyword">let</span> a = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]</span><br><span class="line"><span class="hljs-keyword">let</span> b = [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES7 并集</span></span><br><span class="line">a.concat(b.filter(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> !a.includes(v)))                                       <span class="hljs-comment">// [1, 2, 3, 4]</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES7 交集</span></span><br><span class="line">a.filter(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> b.includes(v))                                                  <span class="hljs-comment">// [2, 3]</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES7 差集</span></span><br><span class="line">a.concat(b).filter(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> !a.includes(v) || !b.includes(v))                     <span class="hljs-comment">// [1, 4]</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ------------</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> aSet = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>(a)</span><br><span class="line"><span class="hljs-keyword">let</span> bSet = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>(b)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES6 并集</span></span><br><span class="line"><span class="hljs-built_in">Array</span>.from(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>(a.concat(b)))                                              <span class="hljs-comment">// [1, 2, 3, 4]</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES6 交集</span></span><br><span class="line"><span class="hljs-built_in">Array</span>.from(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>(a.filter(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> bSet.has(v))))                               <span class="hljs-comment">// [2, 3]</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES6 差集</span></span><br><span class="line"><span class="hljs-built_in">Array</span>.from(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Set</span>(a.concat(b).filter(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> !aSet.has(v) || !bSet.has(v))))    <span class="hljs-comment">// [1, 4]</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ------------</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES5 并集</span></span><br><span class="line">a.concat(b.filter(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> a.indexOf(v) === <span class="hljs-number">-1</span>))                                  <span class="hljs-comment">// [1, 2, 3, 4]</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES5 交集</span></span><br><span class="line">a.filter(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> b.indexOf(v) !== <span class="hljs-number">-1</span>)                                            <span class="hljs-comment">// [2, 3]</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ES5 差集</span></span><br><span class="line">a.filter(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> b.indexOf(v) === <span class="hljs-number">-1</span>).concat(b.filter(<span class="hljs-function"><span class="hljs-params">v</span> =&gt;</span> a.indexOf(v) === <span class="hljs-number">-1</span>))  <span class="hljs-comment">// [1, 4]</span></span><br></pre></td></tr></table></figure>
 
+<h4 id="字符串包含查找"><a href="#字符串包含查找" class="headerlink" title="字符串包含查找"></a>字符串包含查找</h4><p>虽然有 <code>API</code> 可以实现，但是我们这里使用最基本的遍历来实现，要求是判断字符串 <code>a</code> 是否被包含在字符串 <code>b</code> 中，并返回第一次出现的位置，如果找不到则返回 <code>-1</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">isContain</span>(<span class="hljs-params">a, b</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i <span class="hljs-keyword">in</span> b) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (a[<span class="hljs-number">0</span>] === b[i]) &#123;</span><br><span class="line">      <span class="hljs-keyword">let</span> tmp = <span class="hljs-literal">true</span></span><br><span class="line">      <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> j <span class="hljs-keyword">in</span> a) &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (a[j] !== b[~~i + ~~j]) &#123;</span><br><span class="line">          tmp = <span class="hljs-literal">false</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="hljs-keyword">if</span> (tmp) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> i</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> - <span class="hljs-number">1</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-string">'355'</span>, b = <span class="hljs-string">'12354355'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 5</span></span><br><span class="line">isContain(a, b)</span><br></pre></td></tr></table></figure>
+
+<p>这里有一个需要注意的地方就是其中的 <code>i</code> 和 <code>j</code> 是字符串，所以需要我们将其转换为数字</p>
 <h4 id="统计数组中每一项出现的次数"><a href="#统计数组中每一项出现的次数" class="headerlink" title="统计数组中每一项出现的次数"></a>统计数组中每一项出现的次数</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="hljs-number">5</span>, <span class="hljs-number">5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>].reduce(<span class="hljs-function">(<span class="hljs-params">ad, ap</span>) =&gt;</span> (ad[ap] = ++ad[ap] || <span class="hljs-number">1</span>, ad), &#123;&#125;)</span><br></pre></td></tr></table></figure>
 
-<h4 id="寻找字符串中出现次数最少的、并且首次出现位置最前的字符"><a href="#寻找字符串中出现次数最少的、并且首次出现位置最前的字符" class="headerlink" title="寻找字符串中出现次数最少的、并且首次出现位置最前的字符"></a>寻找字符串中出现次数最少的、并且首次出现位置最前的字符</h4><p>要求实现一个算法，寻找字符串中出现次数最少的、并且首次出现位置最前的字符，如 <code>cbaacfdeaebb</code>，方法一，利用 <code>hash table</code>，缺点是 <code>Object.keys()</code> 不能保证顺序，所以存在风险</p>
+<h4 id="寻找字符串中出现最多的字符和个数"><a href="#寻找字符串中出现最多的字符和个数" class="headerlink" title="寻找字符串中出现最多的字符和个数"></a>寻找字符串中出现最多的字符和个数</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">findLength</span>(<span class="hljs-params">str, num = <span class="hljs-number">0</span>, char = <span class="hljs-string">''</span></span>) </span>&#123;</span><br><span class="line">  str.split(<span class="hljs-string">''</span>).sort().join(<span class="hljs-string">''</span>).replace(<span class="hljs-regexp">/(\w)\1+/g</span>, ($<span class="hljs-number">0</span>, $<span class="hljs-number">1</span>) =&gt; &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (num &lt; $<span class="hljs-number">0.</span>length) &#123;</span><br><span class="line">      num = $<span class="hljs-number">0.</span>length</span><br><span class="line">      char = $<span class="hljs-number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`字符最多的是<span class="hljs-subst">$&#123;char&#125;</span>，出现了<span class="hljs-subst">$&#123;num&#125;</span>次`</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">findLength(<span class="hljs-string">'abcabcabcbbccccc'</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="寻找字符串中出现次数最少的、并且首次出现位置最前的字符"><a href="#寻找字符串中出现次数最少的、并且首次出现位置最前的字符" class="headerlink" title="寻找字符串中出现次数最少的、并且首次出现位置最前的字符"></a>寻找字符串中出现次数最少的、并且首次出现位置最前的字符</h4><p>要求实现一个算法，寻找字符串中出现次数最少的、并且首次出现位置最前的字符，如 <code>cbaacfdeaebb</code>，方法有很多种，我们一个一个来看</p>
+<p>方法一，利用 <code>hash table</code>，缺点是 <code>Object.keys()</code> 不能保证顺序，所以存在风险</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> o = [].reduce.call(<span class="hljs-string">'cbaacfdeaebb'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">p, n</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> p[n] = (p[n] || <span class="hljs-number">0</span>) + <span class="hljs-number">1</span>, p</span><br><span class="line">&#125;, &#123;&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> s = <span class="hljs-built_in">Object</span>.keys(o).reduce(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">p, n</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> o[p] &lt;= o[n] ? p : n</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(s, o[s])</span><br></pre></td></tr></table></figure>
 
 <p>方法二，引入了 <code>index</code> 来解决顺序问题</p>
@@ -640,27 +682,7 @@
 <hr>
 <hr>
 <hr>
-<h2 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h2><h4 id="短横变驼峰"><a href="#短横变驼峰" class="headerlink" title="短横变驼峰"></a>短横变驼峰</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">strToCamel</span>(<span class="hljs-params">str</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> str.replace(<span class="hljs-regexp">/(^\w)|-(\w)/g</span>, (m, $<span class="hljs-number">1</span>, $<span class="hljs-number">2</span>) =&gt; $<span class="hljs-number">1</span> ? $<span class="hljs-number">1.</span>toUpperCase() : $<span class="hljs-number">2.</span>toUpperCase())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">strToCamel(<span class="hljs-string">'border-right-color'</span>)</span><br></pre></td></tr></table></figure>
-
-<h4 id="千位分隔符"><a href="#千位分隔符" class="headerlink" title="千位分隔符"></a>千位分隔符</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">commafy</span>(<span class="hljs-params">num</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> num &amp;&amp; num</span><br><span class="line">    .toString()</span><br><span class="line">    <span class="hljs-comment">// 也可以使用 /\B(?=(\d&#123;3&#125;)+$)/g</span></span><br><span class="line">    .replace(<span class="hljs-regexp">/(\d)(?=(\d&#123;3&#125;)+\.)/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">$<span class="hljs-number">0</span>, $<span class="hljs-number">1</span></span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> $<span class="hljs-number">1</span> + <span class="hljs-string">','</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">commafy(<span class="hljs-number">1234567.90</span>)</span><br></pre></td></tr></table></figure>
-
-<h4 id="解析-url"><a href="#解析-url" class="headerlink" title="解析 url"></a>解析 url</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">urlParam</span>(<span class="hljs-params">url</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> param = &#123;&#125;</span><br><span class="line">  url.replace(<span class="hljs-regexp">/[?&amp;](.*?)=([^&amp;]*)/g</span>, (m, $<span class="hljs-number">1</span>, $<span class="hljs-number">2</span>) =&gt; param[$<span class="hljs-number">1</span>] = $<span class="hljs-number">2</span>)</span><br><span class="line">  <span class="hljs-keyword">return</span> param</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">urlParam(<span class="hljs-string">'https://www.baidu.com?id=123&amp;name=zhangsan'</span>)</span><br></pre></td></tr></table></figure>
-
-<h4 id="字符串大小写切换"><a href="#字符串大小写切换" class="headerlink" title="字符串大小写切换"></a>字符串大小写切换</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">caseConvert</span>(<span class="hljs-params">str</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> str.replace(<span class="hljs-regexp">/([a-z]*)([A-Z]*)/g</span>, (m, s1, s2) =&gt; &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">$&#123;s1.toUpperCase()&#125;</span><span class="hljs-subst">$&#123;s2.toLowerCase()&#125;</span>`</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">caseConvert(<span class="hljs-string">'abcdefg'</span>)</span><br><span class="line">caseConvert(<span class="hljs-string">'ABCDEFG'</span>)</span><br></pre></td></tr></table></figure>
-
-<h4 id="去空格"><a href="#去空格" class="headerlink" title="去空格"></a>去空格</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">str.replace(<span class="hljs-regexp">/\s*/g</span>, <span class="hljs-string">''</span>)        <span class="hljs-comment">//去除字符串内所有的空格</span></span><br><span class="line">str.replace(<span class="hljs-regexp">/^\s*|\s*$/g</span>, <span class="hljs-string">''</span>)  <span class="hljs-comment">//去除字符串内两头的空格</span></span><br><span class="line">str.replace(<span class="hljs-regexp">/^\s*/</span>, <span class="hljs-string">''</span>)        <span class="hljs-comment">//去除字符串内左侧的空格</span></span><br><span class="line">str.replace(<span class="hljs-regexp">/(\s*$)/g</span>, <span class="hljs-string">''</span>)     <span class="hljs-comment">//去除字符串内右侧的空格</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="去除所有的-html"><a href="#去除所有的-html" class="headerlink" title="去除所有的 html"></a>去除所有的 html</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> con = content.replace(<span class="hljs-regexp">/&lt;[^&gt;]+&gt;/g</span>,<span class="hljs-string">''</span>)</span><br></pre></td></tr></table></figure>
-
-<h4 id="提取括号中的数值"><a href="#提取括号中的数值" class="headerlink" title="提取括号中的数值"></a>提取括号中的数值</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/\(([^()]+)\)/g.exec(<span class="hljs-string">'add(18)'</span>)</span><br></pre></td></tr></table></figure>
-
-<h4 id="匹配空行"><a href="#匹配空行" class="headerlink" title="匹配空行"></a>匹配空行</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">^[\s]*\n</span><br></pre></td></tr></table></figure>
-
-<h4 id="验证邮政编码"><a href="#验证邮政编码" class="headerlink" title="验证邮政编码"></a>验证邮政编码</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 共六位数，第一位不能为 0</span></span><br><span class="line"><span class="hljs-keyword">const</span> pattern = <span class="hljs-regexp">/^[1-9]&#123;1&#125;[0-9]&#123;5&#125;$/</span></span><br><span class="line"><span class="hljs-keyword">const</span> str = <span class="hljs-string">'430000'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(pattern.test(str))  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="验证压缩包后缀名"><a href="#验证压缩包后缀名" class="headerlink" title="验证压缩包后缀名"></a>验证压缩包后缀名</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 文件名（字母_数字）.zip|gz|rar</span></span><br><span class="line"><span class="hljs-keyword">const</span> pattern = <span class="hljs-regexp">/^[\w]+\.(zip|gz|rar)$/</span></span><br><span class="line"><span class="hljs-keyword">const</span> str = <span class="hljs-string">'a12_.zip'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(pattern.test(str))  <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
-
-<h2 id="常用方法-amp-amp-函数"><a href="#常用方法-amp-amp-函数" class="headerlink" title="常用方法 &amp;&amp; 函数"></a>常用方法 &amp;&amp; 函数</h2><h4 id="事件模型"><a href="#事件模型" class="headerlink" title="事件模型"></a>事件模型</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> Emitter = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>._listeners = &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 注册事件</span></span><br><span class="line">Emitter.prototype.on = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">eventName, callback</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> listeners = <span class="hljs-keyword">this</span>._listeners[eventName] || []</span><br><span class="line">  listeners.push(callback)</span><br><span class="line">  <span class="hljs-keyword">this</span>._listeners[eventName] = listeners</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 触发事件</span></span><br><span class="line">Emitter.prototype.emit = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">eventName</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> args = <span class="hljs-built_in">Array</span>.prototype.slice.apply(<span class="hljs-built_in">arguments</span>).slice(<span class="hljs-number">1</span>),</span><br><span class="line">    listeners = <span class="hljs-keyword">this</span>._listeners[eventName]</span><br><span class="line">  <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(listeners)) <span class="hljs-keyword">return</span></span><br><span class="line">  listeners.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">callback</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">try</span> &#123;</span><br><span class="line">      callback.apply(<span class="hljs-keyword">this</span>, args)</span><br><span class="line">    &#125; <span class="hljs-keyword">catch</span> (e) &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.error(e)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 实例对象</span></span><br><span class="line"><span class="hljs-keyword">var</span> emitter = <span class="hljs-keyword">new</span> Emitter()</span><br><span class="line"></span><br><span class="line">emitter.on(<span class="hljs-string">'event2'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">arg1, arg2</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'get event2'</span>, arg1, arg2)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">emitter.on(<span class="hljs-string">'event1'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">arg1, arg2</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'get event1'</span>, arg1, arg2)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'emit event'</span>)</span><br><span class="line"></span><br><span class="line">emitter.emit(<span class="hljs-string">'event2'</span>, <span class="hljs-string">'arg1'</span>, <span class="hljs-string">'arg2'</span>)</span><br><span class="line">emitter.emit(<span class="hljs-string">'event1'</span>, <span class="hljs-string">'arg1'</span>, <span class="hljs-string">'arg2'</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="常用方法-amp-amp-函数"><a href="#常用方法-amp-amp-函数" class="headerlink" title="常用方法 &amp;&amp; 函数"></a>常用方法 &amp;&amp; 函数</h2><h4 id="事件模型（EventBus）"><a href="#事件模型（EventBus）" class="headerlink" title="事件模型（EventBus）"></a>事件模型（EventBus）</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> Emitter = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>._listeners = &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 注册事件</span></span><br><span class="line">Emitter.prototype.on = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">eventName, callback</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> listeners = <span class="hljs-keyword">this</span>._listeners[eventName] || []</span><br><span class="line">  listeners.push(callback)</span><br><span class="line">  <span class="hljs-keyword">this</span>._listeners[eventName] = listeners</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 触发事件</span></span><br><span class="line">Emitter.prototype.emit = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">eventName</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> args = <span class="hljs-built_in">Array</span>.prototype.slice.apply(<span class="hljs-built_in">arguments</span>).slice(<span class="hljs-number">1</span>),</span><br><span class="line">    listeners = <span class="hljs-keyword">this</span>._listeners[eventName]</span><br><span class="line">  <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(listeners)) <span class="hljs-keyword">return</span></span><br><span class="line">  listeners.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">callback</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">try</span> &#123;</span><br><span class="line">      callback.apply(<span class="hljs-keyword">this</span>, args)</span><br><span class="line">    &#125; <span class="hljs-keyword">catch</span> (e) &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.error(e)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 实例对象</span></span><br><span class="line"><span class="hljs-keyword">var</span> emitter = <span class="hljs-keyword">new</span> Emitter()</span><br><span class="line"></span><br><span class="line">emitter.on(<span class="hljs-string">'event2'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">arg1, arg2</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'get event2'</span>, arg1, arg2)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">emitter.on(<span class="hljs-string">'event1'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">arg1, arg2</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'get event1'</span>, arg1, arg2)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'emit event'</span>)</span><br><span class="line"></span><br><span class="line">emitter.emit(<span class="hljs-string">'event2'</span>, <span class="hljs-string">'arg1'</span>, <span class="hljs-string">'arg2'</span>)</span><br><span class="line">emitter.emit(<span class="hljs-string">'event1'</span>, <span class="hljs-string">'arg1'</span>, <span class="hljs-string">'arg2'</span>)</span><br></pre></td></tr></table></figure>
 
 <h4 id="Ajax"><a href="#Ajax" class="headerlink" title="Ajax"></a>Ajax</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> xhr = <span class="hljs-keyword">new</span> XMLHttpRequest()</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">if</span> (xhr) &#123;</span><br><span class="line">  xhr.open(<span class="hljs-string">'GET'</span>, url)</span><br><span class="line">  xhr.onreadystatechange = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (xhr.readyState == <span class="hljs-number">4</span> &amp;&amp; xhr.status == <span class="hljs-number">200</span>) &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(xhr.responseText)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  xhr.send()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// ---------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 如果需要使用 POST 请求发送表单数据，使用 setRequestHeader() 来添加 http 头</span></span><br><span class="line"><span class="hljs-comment">// 然后在 send() 方法中添加需要发送的数据</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 在 Form 元素的语法中，EncType 表明提交数据的格式，用 Enctype 属性指定将数据回发到服务器时浏览器使用的编码类型</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 下面是三种常用的设置方式</span></span><br><span class="line"><span class="hljs-comment">// application/x-www-form-urlencoded   窗体数据被编码为 名称/值 对，这是标准的编码格式</span></span><br><span class="line"><span class="hljs-comment">// multipart/form-data                 窗体数据被编码为一条消息，页上的每个控件对应消息中的一个部分</span></span><br><span class="line"><span class="hljs-comment">// text/plain                          窗体数据以纯文本形式进行编码，其中不含任何控件或格式字符 </span></span><br><span class="line"></span><br><span class="line">xhr.open(<span class="hljs-string">'POST'</span>, url, <span class="hljs-literal">true</span>)</span><br><span class="line">xhr.setRequestHeader(<span class="hljs-string">'Content-type'</span>, <span class="hljs-string">'application/x-www-form-urlencoded'</span>)</span><br><span class="line">xhr.send(data)</span><br></pre></td></tr></table></figure>
 
@@ -795,7 +817,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        173
+                        149
                     </p>
                 </div>
             </div>
@@ -805,7 +827,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        8
                     </p>
                 </div>
             </div>
@@ -815,7 +837,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        8
                     </p>
                 </div>
             </div>
@@ -864,6 +886,10 @@
         <a class="is-flex" href="#instanceof">
         <span class="has-mr-6">3.4</span>
         <span>instanceof</span>
+        </a></li><li>
+        <a class="is-flex" href="#getOwnPropertyNames">
+        <span class="has-mr-6">3.5</span>
+        <span>getOwnPropertyNames</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#数组原生-API">
         <span class="has-mr-6">4</span>
@@ -969,64 +995,84 @@
         <span class="has-mr-6">6</span>
         <span>常见工具函数</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#数组去重">
+        <a class="is-flex" href="#短横变驼峰">
         <span class="has-mr-6">6.1</span>
+        <span>短横变驼峰</span>
+        </a></li><li>
+        <a class="is-flex" href="#千位分隔符">
+        <span class="has-mr-6">6.2</span>
+        <span>千位分隔符</span>
+        </a></li><li>
+        <a class="is-flex" href="#解析-URL">
+        <span class="has-mr-6">6.3</span>
+        <span>解析 URL</span>
+        </a></li><li>
+        <a class="is-flex" href="#数组去重">
+        <span class="has-mr-6">6.4</span>
         <span>数组去重</span>
         </a></li><li>
         <a class="is-flex" href="#数组扁平化">
-        <span class="has-mr-6">6.2</span>
+        <span class="has-mr-6">6.5</span>
         <span>数组扁平化</span>
         </a></li><li>
         <a class="is-flex" href="#对象扁平化">
-        <span class="has-mr-6">6.3</span>
+        <span class="has-mr-6">6.6</span>
         <span>对象扁平化</span>
         </a></li><li>
         <a class="is-flex" href="#字符串去重">
-        <span class="has-mr-6">6.4</span>
+        <span class="has-mr-6">6.7</span>
         <span>字符串去重</span>
         </a></li><li>
         <a class="is-flex" href="#生成区间随机数，并排序">
-        <span class="has-mr-6">6.5</span>
+        <span class="has-mr-6">6.8</span>
         <span>生成区间随机数，并排序</span>
         </a></li><li>
         <a class="is-flex" href="#取数组的并集，交集和差集">
-        <span class="has-mr-6">6.6</span>
+        <span class="has-mr-6">6.9</span>
         <span>取数组的并集，交集和差集</span>
         </a></li><li>
+        <a class="is-flex" href="#字符串包含查找">
+        <span class="has-mr-6">6.10</span>
+        <span>字符串包含查找</span>
+        </a></li><li>
         <a class="is-flex" href="#统计数组中每一项出现的次数">
-        <span class="has-mr-6">6.7</span>
+        <span class="has-mr-6">6.11</span>
         <span>统计数组中每一项出现的次数</span>
         </a></li><li>
+        <a class="is-flex" href="#寻找字符串中出现最多的字符和个数">
+        <span class="has-mr-6">6.12</span>
+        <span>寻找字符串中出现最多的字符和个数</span>
+        </a></li><li>
         <a class="is-flex" href="#寻找字符串中出现次数最少的、并且首次出现位置最前的字符">
-        <span class="has-mr-6">6.8</span>
+        <span class="has-mr-6">6.13</span>
         <span>寻找字符串中出现次数最少的、并且首次出现位置最前的字符</span>
         </a></li><li>
         <a class="is-flex" href="#生成指定长度数组">
-        <span class="has-mr-6">6.9</span>
+        <span class="has-mr-6">6.14</span>
         <span>生成指定长度数组</span>
         </a></li><li>
         <a class="is-flex" href="#动态规划">
-        <span class="has-mr-6">6.10</span>
+        <span class="has-mr-6">6.15</span>
         <span>动态规划</span>
         </a></li><li>
         <a class="is-flex" href="#贪心算法">
-        <span class="has-mr-6">6.11</span>
+        <span class="has-mr-6">6.16</span>
         <span>贪心算法</span>
         </a></li><li>
         <a class="is-flex" href="#计算最长递增子序列">
-        <span class="has-mr-6">6.12</span>
+        <span class="has-mr-6">6.17</span>
         <span>计算最长递增子序列</span>
         </a></li><li>
         <a class="is-flex" href="#BF-和-KMP-算法">
-        <span class="has-mr-6">6.13</span>
+        <span class="has-mr-6">6.18</span>
         <span>BF 和 KMP 算法</span>
         </a></li><li>
         <a class="is-flex" href="#随机十六进制颜色">
-        <span class="has-mr-6">6.14</span>
+        <span class="has-mr-6">6.19</span>
         <span>随机十六进制颜色</span>
         </a></li><li>
         <a class="is-flex" href="#平滑滚动至顶部（回到顶部）">
-        <span class="has-mr-6">6.15</span>
+        <span class="has-mr-6">6.20</span>
         <span>平滑滚动至顶部（回到顶部）</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#深浅拷贝-amp-amp-Mixin">
@@ -1117,76 +1163,32 @@
         <span class="has-mr-6">8.16</span>
         <span>发布订阅模式</span>
         </a></li></ul></li><li>
-        <a class="is-flex" href="#正则表达式">
-        <span class="has-mr-6">9</span>
-        <span>正则表达式</span>
-        </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#短横变驼峰">
-        <span class="has-mr-6">9.1</span>
-        <span>短横变驼峰</span>
-        </a></li><li>
-        <a class="is-flex" href="#千位分隔符">
-        <span class="has-mr-6">9.2</span>
-        <span>千位分隔符</span>
-        </a></li><li>
-        <a class="is-flex" href="#解析-url">
-        <span class="has-mr-6">9.3</span>
-        <span>解析 url</span>
-        </a></li><li>
-        <a class="is-flex" href="#字符串大小写切换">
-        <span class="has-mr-6">9.4</span>
-        <span>字符串大小写切换</span>
-        </a></li><li>
-        <a class="is-flex" href="#去空格">
-        <span class="has-mr-6">9.5</span>
-        <span>去空格</span>
-        </a></li><li>
-        <a class="is-flex" href="#去除所有的-html">
-        <span class="has-mr-6">9.6</span>
-        <span>去除所有的 html</span>
-        </a></li><li>
-        <a class="is-flex" href="#提取括号中的数值">
-        <span class="has-mr-6">9.7</span>
-        <span>提取括号中的数值</span>
-        </a></li><li>
-        <a class="is-flex" href="#匹配空行">
-        <span class="has-mr-6">9.8</span>
-        <span>匹配空行</span>
-        </a></li><li>
-        <a class="is-flex" href="#验证邮政编码">
-        <span class="has-mr-6">9.9</span>
-        <span>验证邮政编码</span>
-        </a></li><li>
-        <a class="is-flex" href="#验证压缩包后缀名">
-        <span class="has-mr-6">9.10</span>
-        <span>验证压缩包后缀名</span>
-        </a></li></ul></li><li>
         <a class="is-flex" href="#常用方法-amp-amp-函数">
-        <span class="has-mr-6">10</span>
+        <span class="has-mr-6">9</span>
         <span>常用方法 &amp;&amp; 函数</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#事件模型">
-        <span class="has-mr-6">10.1</span>
-        <span>事件模型</span>
+        <a class="is-flex" href="#事件模型（EventBus）">
+        <span class="has-mr-6">9.1</span>
+        <span>事件模型（EventBus）</span>
         </a></li><li>
         <a class="is-flex" href="#Ajax">
-        <span class="has-mr-6">10.2</span>
+        <span class="has-mr-6">9.2</span>
         <span>Ajax</span>
         </a></li><li>
         <a class="is-flex" href="#Promise-版本-Ajax">
-        <span class="has-mr-6">10.3</span>
+        <span class="has-mr-6">9.3</span>
         <span>Promise 版本 Ajax</span>
         </a></li><li>
         <a class="is-flex" href="#终止请求">
-        <span class="has-mr-6">10.4</span>
+        <span class="has-mr-6">9.4</span>
         <span>终止请求</span>
         </a></li><li>
         <a class="is-flex" href="#批量请求">
-        <span class="has-mr-6">10.5</span>
+        <span class="has-mr-6">9.5</span>
         <span>批量请求</span>
         </a></li><li>
         <a class="is-flex" href="#getElementsByClassName">
-        <span class="has-mr-6">10.6</span>
+        <span class="has-mr-6">9.6</span>
         <span>getElementsByClassName()</span>
         </a></li></ul></li></ul>
         </div>
@@ -1212,7 +1214,7 @@
                 <span class="level-item">Angular</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">15</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/CSS/">
@@ -1220,7 +1222,7 @@
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">14</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -1228,15 +1230,7 @@
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">32</span>
-            </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/HTML/">
-            <span class="level-start">
-                <span class="level-item">HTML</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">29</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTTP/">
@@ -1244,7 +1238,7 @@
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">12</span>
+                <span class="level-item tag">11</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -1252,7 +1246,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">54</span>
+                <span class="level-item tag">44</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -1260,7 +1254,7 @@
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">14</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -1278,14 +1272,6 @@
             <span class="level-end">
                 <span class="level-item tag">4</span>
             </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/jQuery/">
-            <span class="level-start">
-                <span class="level-item">jQuery</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">4</span>
-            </span>
         </a></li>
             </ul>
         </div>
@@ -1298,7 +1284,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 15px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/HTTP/" style="font-size: 13.33px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 15px;">Node.js</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Vue/" style="font-size: 11.67px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.67px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 15px;">Angular</a> <a href="/tags/CSS/" style="font-size: 13.33px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 11.67px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 13.33px;">Node.js</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a>
     </div>
 </div>
 
@@ -1481,7 +1467,7 @@
                     <span class="level-item">八月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1492,7 +1478,7 @@
                     <span class="level-item">七月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1503,7 +1489,7 @@
                     <span class="level-item">六月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1591,7 +1577,7 @@
                     <span class="level-item">十月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -1624,7 +1610,7 @@
                     <span class="level-item">七月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1734,7 +1720,7 @@
                     <span class="level-item">九月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1767,7 +1753,7 @@
                     <span class="level-item">六月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1872,23 +1858,12 @@
         </li>
         
         <li>
-            <a class="level is-marginless" href="/archives/2017/08/">
-                <span class="level-start">
-                    <span class="level-item">八月 2017</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
             <a class="level is-marginless" href="/archives/2017/07/">
                 <span class="level-start">
                     <span class="level-item">七月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1910,7 +1885,7 @@
                     <span class="level-item">五月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1921,7 +1896,7 @@
                     <span class="level-item">四月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1932,18 +1907,7 @@
                     <span class="level-item">三月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2017/02/">
-                <span class="level-start">
-                    <span class="level-item">二月 2017</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1970,28 +1934,6 @@
             </a>
         </li>
         
-        <li>
-            <a class="level is-marginless" href="/archives/2016/11/">
-                <span class="level-start">
-                    <span class="level-item">十一月 2016</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2016/10/">
-                <span class="level-start">
-                    <span class="level-item">十月 2016</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
         </ul>
         </div>
     </div>
@@ -2008,49 +1950,42 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Angular/">
                         <span class="tag">Angular</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">32</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/HTML/">
-                        <span class="tag">HTML</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">29</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">12</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">54</span>
+                        <span class="tag is-grey">44</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 
@@ -2064,13 +1999,6 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
-                        <span class="tag is-grey">4</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/jQuery/">
-                        <span class="tag">jQuery</span>
                         <span class="tag is-grey">4</span>
                     </a>
                 </div>

@@ -16,7 +16,7 @@
 <meta property="og:description" content="最后更新于 2019-12-14  因为最近在复习相关内容，所以打算从头开始重新的梳理一下 async 和 await 的相关内容，主要包括它们是什么，有什么作用以及最后我们会来手动的实现一个简易版本的 async，那么我们就先从什么是 async 开始看起吧">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/50.webp">
-<meta property="og:updated_time" content="2021-01-08T14:12:53.362Z">
+<meta property="og:updated_time" content="2021-02-19T11:48:20.849Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Async 和 Await">
 <meta name="twitter:description" content="最后更新于 2019-12-14  因为最近在复习相关内容，所以打算从头开始重新的梳理一下 async 和 await 的相关内容，主要包括它们是什么，有什么作用以及最后我们会来手动的实现一个简易版本的 async，那么我们就先从什么是 async 开始看起吧">
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    30 分钟 读完 (大约 4427 个字)
+                    30 分钟 读完 (大约 4432 个字)
                 </span>
                 
                 
@@ -271,7 +271,7 @@
 <p>是不是有点思路了，<code>spawn</code> 方法接受一个 <code>generator</code> 函数，返回一个 <code>Promise</code>，下面我们就来看看 <code>spawn</code> 函数的具体实现</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">spawn</span>(<span class="hljs-params">genF</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Promise</span>(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">resolve, reject</span>) </span>&#123;      <span class="hljs-comment">// 返回的是一个 promise</span></span><br><span class="line">    <span class="hljs-keyword">const</span> gen = genF()                                 <span class="hljs-comment">// 直接调用来生成迭代器</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">step</span>(<span class="hljs-params">nextF</span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">let</span> next</span><br><span class="line">      <span class="hljs-keyword">try</span> &#123;                                            <span class="hljs-comment">// 包裹在 try-catch 中，如果报错了就把 promise 给 reject 掉，外部就可以通过 .catch 获取到错误</span></span><br><span class="line">        next = nextF()                                 <span class="hljs-comment">// next 的结果是一个 &#123; value, done &#125; 的结构</span></span><br><span class="line">      &#125; <span class="hljs-keyword">catch</span> (e) &#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> reject(e)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="hljs-keyword">if</span> (next.done) &#123;                                 <span class="hljs-comment">// 如果已经完成，就直接 resolve 这个 promise</span></span><br><span class="line">        <span class="hljs-keyword">return</span> resolve(next.value)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="hljs-built_in">Promise</span>.resolve(next.value).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">v</span>) </span>&#123;  <span class="hljs-comment">// 除了最后结束的时候外，每次调用 .next()，其实是返回的都是 &#123; value: Promise, done: false &#125; 的结构</span></span><br><span class="line">        step(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; <span class="hljs-keyword">return</span> gen.next(v) &#125;)       <span class="hljs-comment">// 只要 done 不是 true 的时候，就会递归的往下解开 promise</span></span><br><span class="line">      &#125;, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">e</span>) </span>&#123;</span><br><span class="line">        step(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; <span class="hljs-keyword">return</span> gen.throw(e) &#125;)</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">    step(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; <span class="hljs-keyword">return</span> gen.next(<span class="hljs-literal">undefined</span>) &#125;)   <span class="hljs-comment">// 开启</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>其实也就是我们经常听闻的 <code>Node.js</code> 中的 <a href="https://heptaluan.github.io/2019/01/02/Node/02/" target="_blank" rel="noopener">co 模块</a>，它的目的也是为了 <code>generator</code> 函数的自动执行</p>
+<p>其实也就是我们经常听闻的 <code>Node.js</code> 中的 <a href="https://heptaluan.github.io/2019/01/02/Node/02/" target="_blank" rel="noopener">co 模块</a> 的实现方式，它的目的也是为了 <code>generator</code> 函数的自动执行</p>
 <h2 id="顶层-Await"><a href="#顶层-Await" class="headerlink" title="顶层 Await"></a>顶层 Await</h2><p>我们在上面曾介绍到说 <code>await</code> 关键词只能在 <code>async</code> 函数中使用，否则都会报错，但是现在有一个 <a href="https://github.com/tc39/proposal-top-level-await" target="_blank" rel="noopener">语法提案</a>（目前提案处于 <code>Status: Stage 3</code>），允许在模块的顶层独立使用 <code>await</code> 命令，这个提案的目的，是借用 <code>await</code> 解决模块异步加载的问题，比如下面这种情况</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// awaiting.js，模块的输出值 output 取决于异步操作</span></span><br><span class="line"><span class="hljs-keyword">let</span> output</span><br><span class="line">(<span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">main</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> dynamic = <span class="hljs-keyword">await</span> <span class="hljs-keyword">import</span>(someMission)</span><br><span class="line">  <span class="hljs-keyword">const</span> data = <span class="hljs-keyword">await</span> fetch(url)</span><br><span class="line">  output = someProcess(dynamic.default, data)</span><br><span class="line">&#125;)()</span><br><span class="line"><span class="hljs-keyword">export</span> &#123; output &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// usage.js，加载 awaiting.js 的模块</span></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; output &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./awaiting.js'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">outputPlusValue</span>(<span class="hljs-params">value</span>) </span>&#123; <span class="hljs-keyword">return</span> output + value &#125;</span><br><span class="line"><span class="hljs-built_in">console</span>.log(outputPlusValue(<span class="hljs-number">100</span>))</span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(outputPlusValue(<span class="hljs-number">100</span>), <span class="hljs-number">1000</span>)</span><br></pre></td></tr></table></figure>
 
@@ -405,7 +405,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        173
+                        149
                     </p>
                 </div>
             </div>
@@ -415,7 +415,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        8
                     </p>
                 </div>
             </div>
@@ -425,7 +425,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        8
                     </p>
                 </div>
             </div>
@@ -502,7 +502,7 @@
                 <span class="level-item">Angular</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">15</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/CSS/">
@@ -510,7 +510,7 @@
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">14</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -518,15 +518,7 @@
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">32</span>
-            </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/HTML/">
-            <span class="level-start">
-                <span class="level-item">HTML</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">29</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTTP/">
@@ -534,7 +526,7 @@
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">12</span>
+                <span class="level-item tag">11</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -542,7 +534,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">54</span>
+                <span class="level-item tag">44</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -550,7 +542,7 @@
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">14</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -568,14 +560,6 @@
             <span class="level-end">
                 <span class="level-item tag">4</span>
             </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/jQuery/">
-            <span class="level-start">
-                <span class="level-item">jQuery</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">4</span>
-            </span>
         </a></li>
             </ul>
         </div>
@@ -588,7 +572,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 15px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/HTTP/" style="font-size: 13.33px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 15px;">Node.js</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Vue/" style="font-size: 11.67px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.67px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 15px;">Angular</a> <a href="/tags/CSS/" style="font-size: 13.33px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 11.67px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 13.33px;">Node.js</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a>
     </div>
 </div>
 
@@ -771,7 +755,7 @@
                     <span class="level-item">八月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -782,7 +766,7 @@
                     <span class="level-item">七月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -793,7 +777,7 @@
                     <span class="level-item">六月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -881,7 +865,7 @@
                     <span class="level-item">十月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -914,7 +898,7 @@
                     <span class="level-item">七月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1024,7 +1008,7 @@
                     <span class="level-item">九月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1057,7 +1041,7 @@
                     <span class="level-item">六月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1162,23 +1146,12 @@
         </li>
         
         <li>
-            <a class="level is-marginless" href="/archives/2017/08/">
-                <span class="level-start">
-                    <span class="level-item">八月 2017</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
             <a class="level is-marginless" href="/archives/2017/07/">
                 <span class="level-start">
                     <span class="level-item">七月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1200,7 +1173,7 @@
                     <span class="level-item">五月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1211,7 +1184,7 @@
                     <span class="level-item">四月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1222,18 +1195,7 @@
                     <span class="level-item">三月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2017/02/">
-                <span class="level-start">
-                    <span class="level-item">二月 2017</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1260,28 +1222,6 @@
             </a>
         </li>
         
-        <li>
-            <a class="level is-marginless" href="/archives/2016/11/">
-                <span class="level-start">
-                    <span class="level-item">十一月 2016</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2016/10/">
-                <span class="level-start">
-                    <span class="level-item">十月 2016</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
         </ul>
         </div>
     </div>
@@ -1298,49 +1238,42 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Angular/">
                         <span class="tag">Angular</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">32</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/HTML/">
-                        <span class="tag">HTML</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">29</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">12</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">54</span>
+                        <span class="tag is-grey">44</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 
@@ -1354,13 +1287,6 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
-                        <span class="tag is-grey">4</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/jQuery/">
-                        <span class="tag">jQuery</span>
                         <span class="tag is-grey">4</span>
                     </a>
                 </div>

@@ -16,7 +16,7 @@
 <meta property="og:description" content="最后更新于 2019-12-28  最近打算重新复习一下 JavaScript 中的事件轮询机制，而且刚好在之前也介绍过 Node.js 中的事件轮询机制，它与 JavaScript 中的事件轮询机制是有所区别的，所以在这里打算重新的梳理一下，也算是将之前博客当中关于事件轮询的相关内容做一个汇总，方便以后更为方便的复习和查看，下面我们就先从一些前置知识点开始看起">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/30.webp">
-<meta property="og:updated_time" content="2021-01-30T14:34:51.719Z">
+<meta property="og:updated_time" content="2021-02-19T11:48:20.844Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的事件轮询机制">
 <meta name="twitter:description" content="最后更新于 2019-12-28  最近打算重新复习一下 JavaScript 中的事件轮询机制，而且刚好在之前也介绍过 Node.js 中的事件轮询机制，它与 JavaScript 中的事件轮询机制是有所区别的，所以在这里打算重新的梳理一下，也算是将之前博客当中关于事件轮询的相关内容做一个汇总，方便以后更为方便的复习和查看，下面我们就先从一些前置知识点开始看起">
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    1 小时 读完 (大约 9485 个字)
+                    1 小时 读完 (大约 10689 个字)
                 </span>
                 
                 
@@ -431,7 +431,37 @@
 <p>这个时候宏任务队列与微任务队列中都没有任务了，所以代码就不会再输出其他东西了，那么例子的输出结果就显而易见</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">script start</span><br><span class="line">promise1</span><br><span class="line">script end</span><br><span class="line">then1</span><br><span class="line">timeout1</span><br><span class="line">timeout2</span><br></pre></td></tr></table></figure>
 
-<h2 id="关于-requestAnimationFrame"><a href="#关于-requestAnimationFrame" class="headerlink" title="关于 requestAnimationFrame"></a>关于 requestAnimationFrame</h2><p>先说结论，<code>requestAnimationFrame</code> 其实不属于 <code>Task</code>，它只是浏览器渲染过程的一步，和 <code>Task/Microtask</code> 的执行是分离的，至于为什么会这样，我们则需要深入的去了解一下 <code>requestAnimationFrame</code> 这个接口，详细可以参考 <a href="https://www.cnblogs.com/onepixel/p/7078617.html" target="_blank" rel="noopener">requestAnimationFrame 知多少</a> 和 <a href="https://stackoverflow.com/questions/43050448/when-will-requestanimationframe-be-executed" target="_blank" rel="noopener">When will requestAnimationFrame be executed</a>，我们在这里只简单的总结一下</p>
+<h2 id="关于-requestAnimationFrame"><a href="#关于-requestAnimationFrame" class="headerlink" title="关于 requestAnimationFrame"></a>关于 requestAnimationFrame</h2><p>我们先来看看 <code>requestAnimationFrame</code> 的基本用法，然后再来看看它与事件轮询的关系</p>
+<h4 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h4><p><code>requestAnimationFrame</code> 是浏览器用于定时循环操作的一个接口，类似于 <code>setTimeout</code>，主要用途是按帧对网页进行重绘，设置这个 <code>API</code> 的目的是为了让各种网页动画效果（<code>DOM</code> 动画、<code>Canvas</code> 动画、<code>SVG</code> 动画、<code>WebGL</code> 动画）能够有一个统一的刷新机制，从而节省系统资源，提高系统性能，改善视觉效果，代码中使用这个 <code>API</code>，就是告诉浏览器希望执行一个动画，让浏览器在下一个动画帧安排一次网页重绘，它主要有两个特点</p>
+<ol>
+<li>按帧对网页进行重绘，该方法告诉浏览器希望执行动画并请求浏览器在下一次重绘之前调用回调函数来更新动画</li>
+<li>由系统来决定回调函数的执行时机，在运行时浏览器会自动优化方法的调用</li>
+</ol>
+<p>关于第二点，显示器有固定的刷新频率（<code>60Hz</code> 或 <code>75Hz</code>），也就是说每秒最多只能重绘 <code>60</code> 次或 <code>75</code> 次，<code>requestAnimationFrame</code> 的基本思想让页面重绘的频率与这个刷新频率保持同步，比如显示器屏幕刷新率为 <code>60Hz</code>，使用 <code>requestAnimationFrame API</code>，那么回调函数就每 <code>1000ms / 60 ≈ 16.7ms</code> 执行一次，如果显示器屏幕的刷新率为 <code>75Hz</code>，那么回调函数就每 <code>1000ms / 75 ≈ 13.3ms</code> 执行一次</p>
+<p>另外，一旦页面不处于浏览器的当前标签，就会自动停止刷新</p>
+<ul>
+<li>当页面被最小化或者被切换成后台标签页时，页面为不可见，浏览器会触发一个 <code>visibilitychange</code> 事件，并设置 <code>document.hidden</code> 属性为 <code>true</code></li>
+<li>当页面切换到显示状态，页面变为可见，同时触发一个 <code>visibilitychange</code> 事件，设置 <code>document.hidden</code> 属性为 <code>false</code></li>
+</ul>
+<p>不过有一点需要注意是 <code>requestAnimationFrame</code> 是在主线程上完成，这意味着如果主线程非常繁忙，<code>requestAnimationFrame</code> 的动画效果会大打折扣，<code>requestAnimationFrame</code> 使用一个回调函数作为参数，这个回调函数会在浏览器重绘之前调用</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id = <span class="hljs-built_in">window</span>.requestAnimationFrame(callback)</span><br></pre></td></tr></table></figure>
+
+<p>它会返回一个 <code>id</code> 结果，主要是用于传递给 <code>window.cancelAnimationFrame(id)</code> 来取消重绘，在浏览器当中的执行过程大致如下</p>
+<ul>
+<li>首先判断 <code>document.hidden</code> 属性是否为 <code>true</code>（页面是否可见），页面处于可见状态才会执行后面步骤</li>
+<li>浏览器清空上一轮的动画函数</li>
+<li><code>requestAnimationFrame</code> 将回调函数追加到动画帧请求回调函数列表的末尾，当执行 <code>requestAnimationFrame(callback)</code> 的时候，不会立即调用 <code>callback</code> 函数，只是将其放入队列，每个回调函数都有一个布尔标识 <code>cancelled</code>，该标识初始值为 <code>false</code>，并且对外不可见</li>
+<li>当浏览器再执行列表中的回调函数的时候，判断每个元组的 <code>callback</code> 的 <code>cancelled</code>，如果为 <code>false</code> 则执行 <code>callback</code>，当页面可见并且动画帧请求回调函数列表不为空，浏览器会定期将这些回调函数加入到浏览器 <code>UI</code> 线程的队列中</li>
+<li>当调用 <code>cancelAnimationFrame(handle)</code> 时，浏览器会设置该 <code>handle</code> 指向的回调函数的 <code>cancelled</code> 为 <code>true</code>（无论该回调函数是否在动画帧请求回调函数列表中），如果该 <code>handle</code> 没有指向任何回调函数，则什么也不会发生</li>
+</ul>
+<p>更为底层的原理可以参考 <a href="https://www.cnblogs.com/chaogex/p/3960175.html" target="_blank" rel="noopener">深入理解 requestAnimationFrame</a>，这里就不详细展开了，但是在这里我们多提及两点，第一个就是递归调用，要想实现一个完整的动画，应该在回调函数中递归调用回调函数</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> count = <span class="hljs-number">0</span></span><br><span class="line"><span class="hljs-keyword">let</span> rafId = <span class="hljs-literal">null</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">requestAnimation</span>(<span class="hljs-params">time</span>) </span>&#123;                     <span class="hljs-comment">// requestAnimationFrame 调用该函数时，自动传入的一个时间</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(time)</span><br><span class="line">  <span class="hljs-keyword">if</span> (count &lt; <span class="hljs-number">50</span>) &#123;                                   <span class="hljs-comment">// 动画没有执行完，则递归渲染</span></span><br><span class="line">    count++</span><br><span class="line">    rafId = requestAnimationFrame(requestAnimation)   <span class="hljs-comment">// 渲染下一帧</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">requestAnimationFrame(requestAnimation)               <span class="hljs-comment">// 渲染第一帧</span></span><br></pre></td></tr></table></figure>
+
+<p>另外如果如果在执行回调函数或者 <code>Document</code> 的动画帧请求回调函数列表被清空之前多次调用 <code>requestAnimationFrame</code> 调用同一个回调函数，那么列表中会有多个元组指向该回调函数（它们的 <code>handle</code> 不同，但 <code>callback</code> 都为该回调函数），采集所有动画任务操作会执行多次该回调函数（类比定时器 <code>setTimeout</code>）</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">counter</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> count = <span class="hljs-number">0</span></span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">animate</span>(<span class="hljs-params">time</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (count &lt; <span class="hljs-number">50</span>) &#123;</span><br><span class="line">      count++</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(count)</span><br><span class="line">      requestAnimationFrame(animate)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  requestAnimationFrame(animate)</span><br><span class="line">&#125;</span><br><span class="line">btn.addEventListener(<span class="hljs-string">'click'</span>, counter, <span class="hljs-literal">false</span>)</span><br></pre></td></tr></table></figure>
+
+<p>例如上面这个示例，多次点击按钮，会发现打印出来多个序列数值</p>
+<h4 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h4><p>在了解完它的基本用法以后，我们不难发现，<code>requestAnimationFrame</code> 其实不属于 <code>Task</code>，它只是浏览器渲染过程的一步，和 <code>Task/Microtask</code> 的执行是分离的，我们在这里简单的总结一下就是</p>
 <ul>
 <li><code>setTimeout</code> 的执行时间并不是确定的，在 <code>JavaScript</code> 中，<code>setTimeout</code> 任务被放进了异步队列中，只有当主线程上的任务执行完以后，才会去检查该队列里的任务是否需要开始执行，所以 <code>setTimeout</code> 的实际执行时机一般要比其设定的时间晚一些</li>
 <li>与 <code>setTimeout</code> 相比，<code>requestAnimationFrame</code> 最大的优势是『由系统来决定回调函数的执行时机』，系统每次绘制之前会主动调用 <code>requestAnimationFrame</code> 中的回调函数，如果系统绘制率是 <code>60Hz</code>，那么回调函数就每 <code>16.7ms</code> 被执行一次，如果绘制频率是 <code>75Hz</code>，那么这个间隔时间就变成了 <code>1000 / 75 = 13.3ms</code>，换句话说就是 <code>requestAnimationFrame</code> 的执行步伐跟着系统的绘制频率走，它能保证回调函数在屏幕每一次的绘制间隔中只被执行一次，这样就不会引起丢帧现象，也不会导致动画出现卡顿的问题</li>
@@ -605,7 +635,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        173
+                        149
                     </p>
                 </div>
             </div>
@@ -615,7 +645,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        8
                     </p>
                 </div>
             </div>
@@ -625,7 +655,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        8
                     </p>
                 </div>
             </div>
@@ -718,7 +748,15 @@
         <a class="is-flex" href="#关于-requestAnimationFrame">
         <span class="has-mr-6">8</span>
         <span>关于 requestAnimationFrame</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#基本用法">
+        <span class="has-mr-6">8.1</span>
+        <span>基本用法</span>
         </a></li><li>
+        <a class="is-flex" href="#结论">
+        <span class="has-mr-6">8.2</span>
+        <span>结论</span>
+        </a></li></ul></li><li>
         <a class="is-flex" href="#Node-js-中的表现">
         <span class="has-mr-6">9</span>
         <span>Node.js 中的表现</span>
@@ -766,7 +804,7 @@
                 <span class="level-item">Angular</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">15</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/CSS/">
@@ -774,7 +812,7 @@
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">14</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -782,15 +820,7 @@
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">32</span>
-            </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/HTML/">
-            <span class="level-start">
-                <span class="level-item">HTML</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">29</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTTP/">
@@ -798,7 +828,7 @@
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">12</span>
+                <span class="level-item tag">11</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -806,7 +836,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">54</span>
+                <span class="level-item tag">44</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -814,7 +844,7 @@
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">14</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -832,14 +862,6 @@
             <span class="level-end">
                 <span class="level-item tag">4</span>
             </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/jQuery/">
-            <span class="level-start">
-                <span class="level-item">jQuery</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">4</span>
-            </span>
         </a></li>
             </ul>
         </div>
@@ -852,7 +874,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 15px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/HTTP/" style="font-size: 13.33px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 15px;">Node.js</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Vue/" style="font-size: 11.67px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.67px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 15px;">Angular</a> <a href="/tags/CSS/" style="font-size: 13.33px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 11.67px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 13.33px;">Node.js</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a>
     </div>
 </div>
 
@@ -1035,7 +1057,7 @@
                     <span class="level-item">八月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1046,7 +1068,7 @@
                     <span class="level-item">七月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1057,7 +1079,7 @@
                     <span class="level-item">六月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1145,7 +1167,7 @@
                     <span class="level-item">十月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -1178,7 +1200,7 @@
                     <span class="level-item">七月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1288,7 +1310,7 @@
                     <span class="level-item">九月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1321,7 +1343,7 @@
                     <span class="level-item">六月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1426,23 +1448,12 @@
         </li>
         
         <li>
-            <a class="level is-marginless" href="/archives/2017/08/">
-                <span class="level-start">
-                    <span class="level-item">八月 2017</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
             <a class="level is-marginless" href="/archives/2017/07/">
                 <span class="level-start">
                     <span class="level-item">七月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1464,7 +1475,7 @@
                     <span class="level-item">五月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1475,7 +1486,7 @@
                     <span class="level-item">四月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1486,18 +1497,7 @@
                     <span class="level-item">三月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2017/02/">
-                <span class="level-start">
-                    <span class="level-item">二月 2017</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1524,28 +1524,6 @@
             </a>
         </li>
         
-        <li>
-            <a class="level is-marginless" href="/archives/2016/11/">
-                <span class="level-start">
-                    <span class="level-item">十一月 2016</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2016/10/">
-                <span class="level-start">
-                    <span class="level-item">十月 2016</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
         </ul>
         </div>
     </div>
@@ -1562,49 +1540,42 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Angular/">
                         <span class="tag">Angular</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">32</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/HTML/">
-                        <span class="tag">HTML</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">29</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">12</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">54</span>
+                        <span class="tag is-grey">44</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 
@@ -1618,13 +1589,6 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
-                        <span class="tag is-grey">4</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/jQuery/">
-                        <span class="tag">jQuery</span>
                         <span class="tag is-grey">4</span>
                     </a>
                 </div>

@@ -16,7 +16,7 @@
 <meta property="og:description" content="本章我们来看 Node.js 当中一个比较重要的概念，那就是 Stream，也就是所谓的流，那么什么是 Stream 呢？">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/01.webp">
-<meta property="og:updated_time" content="2021-01-30T14:34:51.738Z">
+<meta property="og:updated_time" content="2021-02-19T11:48:20.854Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Node.js 中的 Stream（流）">
 <meta name="twitter:description" content="本章我们来看 Node.js 当中一个比较重要的概念，那就是 Stream，也就是所谓的流，那么什么是 Stream 呢？">
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    40 分钟 读完 (大约 5992 个字)
+                    1 小时 读完 (大约 7478 个字)
                 </span>
                 
                 
@@ -249,7 +249,7 @@
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">readable._readableState.flowing = <span class="hljs-literal">null</span></span><br><span class="line"></span><br><span class="line">readable._readableState.flowing = <span class="hljs-literal">false</span></span><br><span class="line"></span><br><span class="line">readable._readableState.flowing = <span class="hljs-literal">true</span></span><br></pre></td></tr></table></figure>
 
 <p>若 <code>readable._readableState.flowing</code> 为 <code>null</code>，由于不存在数据消费者，可读流将不会产生数据，如果监听 <code>data</code> 事件，调用 <code>readable.pipe()</code> 方法，或者调用 <code>readable.resume()</code> 方法，<code>readable._readableState.flowing</code> 的值将会变为 <code>true</code>，这时，随着数据生成，可读流开始频繁触发事件</p>
-<p>调用 <code>readable.pause()</code> 方法，<code>readable.unpipe()</code> 方法，或者接收背压（关于背压的概念我们将会在下一章当中详细介绍），将导致 <code>readable._readableState.flowing</code> 值变为 <code>false</code>，这将暂停事件流，但不会暂停数据生成，当 <code>readable._readableState.flowing</code> 值为 <code>false</code> 时， 数据可能堆积到流的内部缓存中</p>
+<p>调用 <code>readable.pause()</code> 方法，<code>readable.unpipe()</code> 方法，或者接收背压（关于背压的概念我们会在下面进行介绍），将导致 <code>readable._readableState.flowing</code> 值变为 <code>false</code>，这将暂停事件流，但不会暂停数据生成，当 <code>readable._readableState.flowing</code> 值为 <code>false</code> 时， 数据可能堆积到流的内部缓存中</p>
 <p>需要注意的是，应该选择其中『一种』来消费数据，而『不应该』在单个流使用多种方法来消费数据，对于大多数用户，建议使用 <code>readable.pipe()</code> 方法来消费流数据，因为它是最简单的一种实现，如果要精细地控制数据传递和产生的过程，可以使用 <code>EventEmitter</code> 和 <code>readable.pause()/readable.resume()</code> 提供的 <code>API</code></p>
 <h4 id="paused-mode"><a href="#paused-mode" class="headerlink" title="paused mode"></a>paused mode</h4><p>在 <code>paused mode</code> 下，需要手动地读取数据，并且可以直接指定读取数据的长度</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> Read = <span class="hljs-built_in">require</span>(<span class="hljs-string">'stream'</span>).Readable</span><br><span class="line"><span class="hljs-keyword">var</span> r = <span class="hljs-keyword">new</span> Read()</span><br><span class="line"></span><br><span class="line">r.push(<span class="hljs-string">'hello'</span>)</span><br><span class="line">r.push(<span class="hljs-string">'world'</span>)</span><br><span class="line">r.push(<span class="hljs-literal">null</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(r.read(<span class="hljs-number">1</span>).toString())  <span class="hljs-comment">// h</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(r.read(<span class="hljs-number">3</span>).toString())  <span class="hljs-comment">// ell</span></span><br></pre></td></tr></table></figure>
@@ -269,7 +269,7 @@
 
 <p>以上两种 <code>mode</code> 总体如下</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/node/07.png" alt></p>
-<h2 id="readable-与-data-事件"><a href="#readable-与-data-事件" class="headerlink" title="readable 与 data 事件"></a>readable 与 data 事件</h2><p><code>read()</code> 是 <code>Readable</code> 流的基石，无论流处于什么模式，只要是涉及读取数据最终都会转到 <code>read()</code> 上面来，它的主要功能是</p>
+<h4 id="readable-与-data-事件"><a href="#readable-与-data-事件" class="headerlink" title="readable 与 data 事件"></a>readable 与 data 事件</h4><p><code>read()</code> 是 <code>Readable</code> 流的基石，无论流处于什么模式，只要是涉及读取数据最终都会转到 <code>read()</code> 上面来，它的主要功能是</p>
 <ul>
 <li>读取缓冲区数据并返回给消费者，并按需发射各种事件</li>
 <li>按需调用 <code>_read()</code>，<code>_read()</code> 会从底层汲取数据，并填充缓冲区</li>
@@ -283,7 +283,7 @@
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">read() ==&gt; _read(<span class="hljs-number">0</span>) ==&gt; ... ==&gt; addChunk()</span><br></pre></td></tr></table></figure>
 
 <p>从而形成一个循环，因为一旦调用了 <code>_read()</code> 之后，流就会默默在底层读取数据，直到数据都消耗完为止</p>
-<h2 id="readable-事件"><a href="#readable-事件" class="headerlink" title="readable 事件"></a>readable 事件</h2><p>文档上关于 <code>readable</code> 事件的描述如下</p>
+<h4 id="readable-事件"><a href="#readable-事件" class="headerlink" title="readable 事件"></a>readable 事件</h4><p>文档上关于 <code>readable</code> 事件的描述如下</p>
 <blockquote>
 <p>事实上，<code>readable</code> 事件表明流有了新的动态，要么是有了新的数据，要么是到了流的尾部，对于前者 <code>stream.read()</code> 将返回可用的数据，而对于后者 <code>stream.read()</code> 将返回 <code>null</code></p>
 </blockquote>
@@ -303,7 +303,7 @@
 <li>在 <code>read(n)</code> 中，且 <code>n</code> 为 <code>0</code> 是的某些情况下</li>
 <li>通过 <code>on()</code> 为 <code>readable</code> 添加监听器，如果此时缓冲区有数据则会触发，这个场景意味着流中已经有数据可供 <code>read()</code> 直接调用</li>
 </ul>
-<h2 id="data-事件"><a href="#data-事件" class="headerlink" title="data 事件"></a>data 事件</h2><p><code>data</code> 事件的意义则明确很多，文档上关于 <code>data</code> 事件的描述如下</p>
+<h4 id="data-事件"><a href="#data-事件" class="headerlink" title="data 事件"></a>data 事件</h4><p><code>data</code> 事件的意义则明确很多，文档上关于 <code>data</code> 事件的描述如下</p>
 <blockquote>
 <p>The ‘data’ event is emitted whenever the stream is relinquishing ownership of a chunk of data to a consumer.</p>
 </blockquote>
@@ -344,22 +344,22 @@
 
 <p>上游通过调用 <code>writable.write(data)</code> 将数据写入可写流中，<code>write()</code> 方法会调用 <code>_write()</code> 将 <code>data</code> 写入底层，在 <code>_write</code> 方法中，当数据成功写入底层后，必须调用 <code>next([err])</code> 告诉流开始处理下一个数据</p>
 <p><code>next</code> 的调用既可以是同步的，也可以是异步的，上游必须调用 <code>writable.end(data)</code> 来结束可写流，<code>data</code> 是可选的，此后，不能再调用 <code>write</code> 新增数据，在 <code>end</code> 方法调用后，当所有底层的写操作均完成时，会触发 <code>finish</code> 事件</p>
-<h2 id="Readable-Stream-与-Writeable-Stream"><a href="#Readable-Stream-与-Writeable-Stream" class="headerlink" title="Readable Stream 与 Writeable Stream"></a>Readable Stream 与 Writeable Stream</h2><p>二者的关系</p>
+<h4 id="Readable-Stream-与-Writeable-Stream"><a href="#Readable-Stream-与-Writeable-Stream" class="headerlink" title="Readable Stream 与 Writeable Stream"></a>Readable Stream 与 Writeable Stream</h4><p>二者的关系</p>
 <ul>
 <li><code>Readable Stream</code> 是提供数据的 <code>Stream</code>，外部来源的数据均会存储到内部的 <code>Buffer</code> 数组内缓存起来</li>
 <li><code>writeable Stream</code> 是消费数据的 <code>Stream</code>，从 <code>readable stream</code> 中获取数据，然后对得到的 <code>chunk</code> 块数据进行处理，至于如何处理，就依赖于具体实现（也就是 <code>_write</code> 的实现）</li>
 </ul>
 <p>首先看看 <code>Readdable Stream</code> 与 <code>writeable stream</code> 二者之间的流动关系</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/node/08.png" alt></p>
-<h2 id="pipe-的流程"><a href="#pipe-的流程" class="headerlink" title="pipe 的流程"></a>pipe 的流程</h2><p><code>stream</code> 内部是从 <code>readable stream</code> 流到 <code>writeable stream</code>，有两种处理方法</p>
-<h4 id="pipe-连接两个-stream"><a href="#pipe-连接两个-stream" class="headerlink" title="pipe 连接两个 stream"></a>pipe 连接两个 stream</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> Read = <span class="hljs-built_in">require</span>(<span class="hljs-string">'stream'</span>).Readable</span><br><span class="line"><span class="hljs-keyword">var</span> Write = <span class="hljs-built_in">require</span>(<span class="hljs-string">'stream'</span>).Writable</span><br><span class="line"><span class="hljs-keyword">var</span> r = <span class="hljs-keyword">new</span> Read()</span><br><span class="line"><span class="hljs-keyword">var</span> w = <span class="hljs-keyword">new</span> Write()</span><br><span class="line"></span><br><span class="line">r.push(<span class="hljs-string">'hello'</span>)</span><br><span class="line">r.push(<span class="hljs-string">'world'</span>)</span><br><span class="line">r.push(<span class="hljs-literal">null</span>)</span><br><span class="line"></span><br><span class="line">w._write = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">chunk, ev, cb</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(chunk.toString())</span><br><span class="line">  cb()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">r.pipe(w)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// hello</span></span><br><span class="line"><span class="hljs-comment">// world</span></span><br></pre></td></tr></table></figure>
+<h4 id="pipe-的流程"><a href="#pipe-的流程" class="headerlink" title="pipe 的流程"></a>pipe 的流程</h4><p><code>stream</code> 内部是从 <code>readable stream</code> 流到 <code>writeable stream</code>，有两种处理方法</p>
+<h6 id="pipe-连接两个-stream"><a href="#pipe-连接两个-stream" class="headerlink" title="pipe 连接两个 stream"></a>pipe 连接两个 stream</h6><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> Read = <span class="hljs-built_in">require</span>(<span class="hljs-string">'stream'</span>).Readable</span><br><span class="line"><span class="hljs-keyword">var</span> Write = <span class="hljs-built_in">require</span>(<span class="hljs-string">'stream'</span>).Writable</span><br><span class="line"><span class="hljs-keyword">var</span> r = <span class="hljs-keyword">new</span> Read()</span><br><span class="line"><span class="hljs-keyword">var</span> w = <span class="hljs-keyword">new</span> Write()</span><br><span class="line"></span><br><span class="line">r.push(<span class="hljs-string">'hello'</span>)</span><br><span class="line">r.push(<span class="hljs-string">'world'</span>)</span><br><span class="line">r.push(<span class="hljs-literal">null</span>)</span><br><span class="line"></span><br><span class="line">w._write = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">chunk, ev, cb</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(chunk.toString())</span><br><span class="line">  cb()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">r.pipe(w)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// hello</span></span><br><span class="line"><span class="hljs-comment">// world</span></span><br></pre></td></tr></table></figure>
 
 <p><code>pipe</code> 是一种最简单直接的方法连接两个 <code>stream</code>，内部实现了数据传递的整个过程，在开发的时候不需要关注内部数据的流动</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Readable.prototype.pipe = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">dest, pipeOpts</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> src = <span class="hljs-keyword">this</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  src.on(<span class="hljs-string">'data'</span>, ondata)</span><br><span class="line"></span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ondata</span>(<span class="hljs-params">chunk</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> ret = dest.write(chunk)</span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-literal">false</span> === ret) &#123;</span><br><span class="line">      debug(<span class="hljs-string">'false write response, pause'</span>,</span><br><span class="line">        src._readableState.awaitDrain)</span><br><span class="line">      src._readableState.awaitDrain++</span><br><span class="line">      src.pause()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>附一张 <code>pipe()</code> 的流程图</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/node/27.png" alt></p>
-<h4 id="事件-data-事件-drain-联合实现"><a href="#事件-data-事件-drain-联合实现" class="headerlink" title="事件 data + 事件 drain 联合实现"></a>事件 data + 事件 drain 联合实现</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> Read = <span class="hljs-built_in">require</span>(<span class="hljs-string">'stream'</span>).Readable</span><br><span class="line"><span class="hljs-keyword">var</span> Write = <span class="hljs-built_in">require</span>(<span class="hljs-string">'stream'</span>).Writable</span><br><span class="line"><span class="hljs-keyword">var</span> r = <span class="hljs-keyword">new</span> Read()</span><br><span class="line"><span class="hljs-keyword">var</span> w = <span class="hljs-keyword">new</span> Write()</span><br><span class="line"></span><br><span class="line">r.push(<span class="hljs-string">'hello'</span>)</span><br><span class="line">r.push(<span class="hljs-string">'world'</span>)</span><br><span class="line">r.push(<span class="hljs-literal">null</span>)</span><br><span class="line"></span><br><span class="line">w._write = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">chunk, ev, cb</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(chunk.toString())</span><br><span class="line">  cb()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">r.on(<span class="hljs-string">'data'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">chunk</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (!w.write(chunk)) &#123;</span><br><span class="line">    r.pause()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">w.on(<span class="hljs-string">'drain'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  r.resume()</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// hello</span></span><br><span class="line"><span class="hljs-comment">// world</span></span><br></pre></td></tr></table></figure>
+<h6 id="事件-data-事件-drain-联合实现"><a href="#事件-data-事件-drain-联合实现" class="headerlink" title="事件 data + 事件 drain 联合实现"></a>事件 data + 事件 drain 联合实现</h6><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> Read = <span class="hljs-built_in">require</span>(<span class="hljs-string">'stream'</span>).Readable</span><br><span class="line"><span class="hljs-keyword">var</span> Write = <span class="hljs-built_in">require</span>(<span class="hljs-string">'stream'</span>).Writable</span><br><span class="line"><span class="hljs-keyword">var</span> r = <span class="hljs-keyword">new</span> Read()</span><br><span class="line"><span class="hljs-keyword">var</span> w = <span class="hljs-keyword">new</span> Write()</span><br><span class="line"></span><br><span class="line">r.push(<span class="hljs-string">'hello'</span>)</span><br><span class="line">r.push(<span class="hljs-string">'world'</span>)</span><br><span class="line">r.push(<span class="hljs-literal">null</span>)</span><br><span class="line"></span><br><span class="line">w._write = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">chunk, ev, cb</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(chunk.toString())</span><br><span class="line">  cb()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">r.on(<span class="hljs-string">'data'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">chunk</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (!w.write(chunk)) &#123;</span><br><span class="line">    r.pause()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">w.on(<span class="hljs-string">'drain'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  r.resume()</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// hello</span></span><br><span class="line"><span class="hljs-comment">// world</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="Duplex"><a href="#Duplex" class="headerlink" title="Duplex"></a>Duplex</h2><p><code>Duplex</code> 实际上就是继承了 <code>Readable</code> 和 <code>Writable</code> 的一类流，所以，一个 <code>Duplex</code> 对象既可当成可读流来使用（需要实现 <code>_read</code> 方法），也可当成可写流来使用（需要实现 <code>_write</code> 方法）</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> Duplex = <span class="hljs-built_in">require</span>(<span class="hljs-string">'stream'</span>).Duplex</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> duplex = Duplex()</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 可读端底层读取逻辑</span></span><br><span class="line">duplex._read = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>._readNum = <span class="hljs-keyword">this</span>._readNum || <span class="hljs-number">0</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._readNum &gt; <span class="hljs-number">1</span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.push(<span class="hljs-literal">null</span>)</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.push(<span class="hljs-string">' '</span> + (<span class="hljs-keyword">this</span>._readNum++))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 可写端底层写逻辑</span></span><br><span class="line">duplex._write = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">buf, enc, next</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// a, b</span></span><br><span class="line">  process.stdout.write(<span class="hljs-string">'_write '</span> + buf.toString() + <span class="hljs-string">'\n'</span>)</span><br><span class="line">  next()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 0, 1</span></span><br><span class="line">duplex.on(<span class="hljs-string">'data'</span>, data =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'ondata'</span>, data.toString()))</span><br><span class="line"></span><br><span class="line">duplex.write(<span class="hljs-string">'a'</span>)</span><br><span class="line">duplex.write(<span class="hljs-string">'b'</span>)</span><br><span class="line"></span><br><span class="line">duplex.end()</span><br></pre></td></tr></table></figure>
@@ -373,7 +373,7 @@
 <p>下面是一个简单的 <code>transform stream</code> 示例，它会将你的输入结果转换为大写</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> &#123; Transform &#125; = <span class="hljs-built_in">require</span>(<span class="hljs-string">'stream'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> upperCaseTr = <span class="hljs-keyword">new</span> Transform(&#123;</span><br><span class="line">  transform(chunk, encoding, callback) &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.push(chunk.toString().toUpperCase())</span><br><span class="line">    callback()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">process.stdin.pipe(upperCaseTr).pipe(process.stdout)</span><br></pre></td></tr></table></figure>
 
-<h2 id="内置的-transform-stream"><a href="#内置的-transform-stream" class="headerlink" title="内置的 transform stream"></a>内置的 transform stream</h2><p><code>Node.js</code> 有一些内置的 <code>transform stream</code>，比如 <code>zlib</code> 和 <code>crypto</code>，下面是一个使用 <code>zlib.createGzip()</code> 方法结合 <code>fs</code> 的 <code>readable/writable</code> 流实现的一个文件压缩示例</p>
+<h4 id="内置的-transform-stream"><a href="#内置的-transform-stream" class="headerlink" title="内置的 transform stream"></a>内置的 transform stream</h4><p><code>Node.js</code> 有一些内置的 <code>transform stream</code>，比如 <code>zlib</code> 和 <code>crypto</code>，下面是一个使用 <code>zlib.createGzip()</code> 方法结合 <code>fs</code> 的 <code>readable/writable</code> 流实现的一个文件压缩示例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>)</span><br><span class="line"><span class="hljs-keyword">const</span> zlib = <span class="hljs-built_in">require</span>(<span class="hljs-string">'zlib'</span>)</span><br><span class="line"><span class="hljs-keyword">const</span> file = process.argv[<span class="hljs-number">2</span>]</span><br><span class="line"></span><br><span class="line">fs.createReadStream(file)</span><br><span class="line">  .pipe(zlib.createGzip())</span><br><span class="line">  .pipe(fs.createWriteStream(file + <span class="hljs-string">'.gz'</span>))</span><br></pre></td></tr></table></figure>
 
 <p>上述示例可以将传递进来的文件进行 <code>gzip</code> 压缩，下面我们来稍微扩展一下，比如我们希望用户在运行时可以看到进度结果，并且在完成的时侯看到已经完成的提示</p>
@@ -388,7 +388,7 @@
 <p>当然，为了解压上面我们压缩过的内容，我们只需要以相反的顺序执行 <code>crypto</code> 和 <code>zlib</code> 即可</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">fs.createReadStream(file)</span><br><span class="line">  .pipe(crypto.createDecipher(<span class="hljs-string">'aes192'</span>, <span class="hljs-string">'a_secret'</span>))</span><br><span class="line">  .pipe(zlib.createGunzip())</span><br><span class="line">  .pipe(reportProgress)</span><br><span class="line">  .pipe(fs.createWriteStream(file.slice(<span class="hljs-number">0</span>, <span class="hljs-number">-3</span>)))</span><br><span class="line">  .on(<span class="hljs-string">'finish'</span>, () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Done'</span>))</span><br></pre></td></tr></table></figure>
 
-<h2 id="自定义-stream"><a href="#自定义-stream" class="headerlink" title="自定义 stream"></a>自定义 stream</h2><p>自定义 <code>stream</code> 很简单，只要实现相应的内部待实现方法就可以了，具体来说</p>
+<h2 id="自定义流"><a href="#自定义流" class="headerlink" title="自定义流"></a>自定义流</h2><p>自定义流的实现很简单，只要实现相应的内部待实现方法就可以了，具体来说</p>
 <ul>
 <li><code>readable stream</code>，实现 <code>_read</code> 方法来解决数据的获取问题</li>
 <li><code>writeable stream</code>，实现 <code>_write</code> 方法来解决数据的去向问题</li>
@@ -397,6 +397,43 @@
 <p>代码如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 自定义 readable stream 的实现</span></span><br><span class="line"><span class="hljs-keyword">var</span> Stream = <span class="hljs-built_in">require</span>(<span class="hljs-string">'stream'</span>)</span><br><span class="line"><span class="hljs-keyword">var</span> Read = Stream.Readable</span><br><span class="line"><span class="hljs-keyword">var</span> util = <span class="hljs-built_in">require</span>(<span class="hljs-string">'util'</span>)</span><br><span class="line"></span><br><span class="line">util.inherits(MyReadStream, Read)</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">MyReadStream</span>(<span class="hljs-params">data, opt</span>) </span>&#123;</span><br><span class="line">  Read.call(<span class="hljs-keyword">this</span>, opt)</span><br><span class="line">  <span class="hljs-keyword">this</span>.data = data || []</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">MyReadStream.prototype._read = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> _this = <span class="hljs-keyword">this</span></span><br><span class="line">  <span class="hljs-keyword">this</span>.data.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">d</span>) </span>&#123;</span><br><span class="line">    _this.push(d)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="hljs-keyword">this</span>.push(<span class="hljs-literal">null</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> data = [<span class="hljs-string">'aa'</span>, <span class="hljs-string">'bb'</span>, <span class="hljs-string">'cc'</span>]</span><br><span class="line"><span class="hljs-keyword">var</span> r = <span class="hljs-keyword">new</span> MyReadStream(data)</span><br><span class="line"></span><br><span class="line">r.on(<span class="hljs-string">'data'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">chunk</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(chunk.toString())</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
+<h2 id="背压"><a href="#背压" class="headerlink" title="背压"></a>背压</h2><p>我们在上面介绍可读流（<code>Readable Streams</code>）的时候，提及了一个背压的概念，下面我们就来看看到底什么是背压，本小结内容主要是参考 <a href="https://nodejs.org/en/docs/guides/backpressuring-in-streams/" target="_blank" rel="noopener">Backpressuring in Streams</a> 这个文章整合而成</p>
+<h4 id="数据流中的积压问题"><a href="#数据流中的积压问题" class="headerlink" title="数据流中的积压问题"></a>数据流中的积压问题</h4><p>通常在数据处理的时候我们会遇到一个普遍的问题，那就是背压，意思是在数据传输过程中有一大堆数据在缓存之后积压着，每次当数据到达结尾又遇到复杂的运算，又或者无论什么原因它比预期的慢，这样累积下来，从源头来的数据就会变得很庞大，像一个塞子一样堵塞住</p>
+<p>为解决这个问题，必须存在一种适当的代理机制，确保流从一个源流入另外一个的时候是平滑顺畅的，不同的社区组织针对他们各自的问题单独做了解决，好例子比如 <code>Unix</code> 的管道和 <code>TCP</code> 的 <code>Socket</code>，在 <code>Node.js</code> 中，流（<code>stream</code>）已经是被采纳的解决方案</p>
+<h4 id="数据太多，速度太快"><a href="#数据太多，速度太快" class="headerlink" title="数据太多，速度太快"></a>数据太多，速度太快</h4><p>有太多的例子证明有时 <code>Readable</code> 传输给 <code>Writable</code> 的速度远大于它接受和处理的速度，如果发生了这种情况，消费者开始为后面的消费而将数据列队形式积压起来，写入队列的时间越来越长，也正因为如此，更多的数据不得不保存在内存中知道整个流程全部处理完毕，写入磁盘的速度远比从磁盘读取数据慢得多，因此当我们试图压缩一个文件并写入磁盘时，积压的问题也就出现了，因为写磁盘的速度不能跟上读磁盘的速度</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 数据将会在读入侧堆积，这样写入侧才能和数据流的读入速度保持同步</span></span><br><span class="line">inp.pipe(gzip).pipe(outputFile)</span><br></pre></td></tr></table></figure>
+
+<p>这就是为什么说积压机制很重要，如果积压机制不存在，进程将用完你全部的系统内存，从而对其它进程产生显著影响，它独占系统大量资源直到任务完成为止，这最终将会导致一些问题</p>
+<ul>
+<li>明显使得其它进程处理变慢</li>
+<li>太多繁重的垃圾回收  </li>
+<li>内存耗尽</li>
+</ul>
+<h4 id="pipe-的背压平衡机制"><a href="#pipe-的背压平衡机制" class="headerlink" title="pipe 的背压平衡机制"></a>pipe 的背压平衡机制</h4><p>假设现在有一对 <code>Readable</code> 和 <code>Writable</code>，要求编程实现从 <code>Readable</code> 里面读取数据然后写到 <code>Writable</code> 中，那么面临的问题很有可能就是如果两者对数据的产生/消费速度不一致，那么需要手动协调两者速度使得任务可以完成，思路可能这样</p>
+<ol start="0">
+<li><code>Readable</code> 进入 <code>flowing</code> 模式，然后进入步骤 <code>2</code></li>
+<li>听 <code>data</code> 事件，一旦有数据到达则进入步骤 <code>2</code>，如果捕捉到 <code>end</code> 事件就结束任务</li>
+<li>数据写入到 <code>Writable</code>，如果返回 <code>true</code> 进入步骤 <code>1</code>，否则进入步骤 <code>3</code></li>
+<li><code>Readable</code> 进入 <code>pause</code> 模式，并等待 <code>Writable</code> 发射 <code>drain</code> 事件</li>
+<li>果 <code>Writable</code> 发射了 <code>drain</code> 事件，则返回步骤 <code>1</code></li>
+</ol>
+<p>而事实上 <code>pipe()</code> 的过程和上述很相似，它的源码如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">Readable.prototype.pipe = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">dest, pipeOpts</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">var</span> ondrain = pipeOnDrain(src)</span><br><span class="line">  <span class="hljs-comment">// 当写操作返回 false 的时候，正常情况下必然会在稍后触发一个 drain 事件</span></span><br><span class="line">  dest.on(<span class="hljs-string">'drain'</span>, ondrain)</span><br><span class="line">  src.on(<span class="hljs-string">'data'</span>, ondata)</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">ondata</span>(<span class="hljs-params">chunk</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> ret = dest.write(chunk)</span><br><span class="line">    <span class="hljs-comment">// 如果写操作的返回值为 false，则暂停 readable 流</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (ret === <span class="hljs-literal">false</span>) &#123;</span><br><span class="line">      <span class="hljs-keyword">if</span> (((state.pipesCount === <span class="hljs-number">1</span> &amp;&amp; state.pipes === dest) ||</span><br><span class="line">        (state.pipesCount &gt; <span class="hljs-number">1</span> &amp;&amp; state.pipes.indexOf(dest) !== <span class="hljs-number">-1</span>)) &amp;&amp;</span><br><span class="line">        !cleanedUp) &#123;</span><br><span class="line">        state.awaitDrain++</span><br><span class="line">      &#125;</span><br><span class="line">      src.pause()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> dest</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">pipeOnDrain</span>(<span class="hljs-params">src</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> state = src._readableState</span><br><span class="line">    <span class="hljs-keyword">if</span> (state.awaitDrain)</span><br><span class="line">      state.awaitDrain--</span><br><span class="line">    <span class="hljs-keyword">if</span> (state.awaitDrain === <span class="hljs-number">0</span> &amp;&amp; EE.listenerCount(src, <span class="hljs-string">'data'</span>)) &#123;</span><br><span class="line">      <span class="hljs-comment">// 将流重新设为 flowing 模式</span></span><br><span class="line">      state.flowing = <span class="hljs-literal">true</span></span><br><span class="line">      <span class="hljs-comment">// 将缓冲区中残留的数据读取并重新触发 data 事件</span></span><br><span class="line">      flow(src)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过上面的代码我们可以看到</p>
+<ul>
+<li>当向 <code>dest</code> 写入数据返回 <code>false</code> 时，马上调用 <code>src.pause()</code> 暂停流，<code>src.pause()</code> 将暂停事件流，但不会暂停数据生成</li>
+<li>也就是说 <code>src</code> 此时依然汲取底层数据填充缓冲区，只是暂停发射 <code>data</code> 事件，等到缓冲区的数据量超过警戒线才会停止汲取</li>
+<li>因为写入数据返回 <code>false</code>，因此在稍后的某个时候 <code>dest</code> 必然会发射 <code>drain</code> 事件</li>
+<li>当 <code>drain</code> 事件发生后，<code>src</code> 再次进入 <code>flowing</code> 模式自动产生数据，同时将缓冲区中的残留数据写入 <code>dest</code></li>
+</ul>
+<h4 id="pipe-的生命周期"><a href="#pipe-的生命周期" class="headerlink" title=".pipe() 的生命周期"></a>.pipe() 的生命周期</h4><p>为了对积压有一个更好的理解，这里有一副 <code>Readable</code> 流正通过 <code>piped</code> 流入 <code>Writable</code> 流的整个生命周期图</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">                                                     +===================+</span><br><span class="line">                         x--&gt;  Piping functions   +--&gt;   src.pipe(dest)  |</span><br><span class="line">                         x     are <span class="hljs-keyword">set</span> up during     |===================|</span><br><span class="line">                         x     the .pipe method.     |  Event callbacks  |</span><br><span class="line">  +===============+      x                           |-------------------|</span><br><span class="line">  |   Your Data   |      x     They exist outside    | .on('close', cb)  |</span><br><span class="line">  +=======+=======+      x     the data flow, but    | .on('data', cb)   |</span><br><span class="line">          |              x     importantly attach    | .on('drain', cb)  |</span><br><span class="line">          |              x     events, and their     | .on('unpipe', cb) |</span><br><span class="line">+---------v---------+    x     respective callbacks. | .on('error', cb)  |</span><br><span class="line">|  Readable Stream  +----+                           | .on('finish', cb) |</span><br><span class="line">+-^-------^-------^-+    |                           | .on('end', cb)    |</span><br><span class="line">  ^       |       ^      |                           +-------------------+</span><br><span class="line">  |       |       |      |</span><br><span class="line">  |       ^       |      |</span><br><span class="line">  ^       ^       ^      |    +-------------------+         +=================+</span><br><span class="line">  ^       |       ^      +----&gt;  Writable Stream  +---------&gt;  .write(chunk)  |</span><br><span class="line">  |       |       |           +-------------------+         +=======+=========+</span><br><span class="line">  |       |       |                                                 |</span><br><span class="line">  |       ^       |                              +------------------v---------+</span><br><span class="line">  ^       |       +-&gt; if (!chunk)                |    Is this chunk too big?  |</span><br><span class="line">  ^       |       |     emit.end()               |    Is the queue busy?      |</span><br><span class="line">  |       |       +-&gt; else                       +-------+----------------+---+</span><br><span class="line">  |       ^       |     emit.write()                     |                |</span><br><span class="line">  |       ^       ^                                   +--v---+        +---v---+</span><br><span class="line">  |       |       ^-----------------------------------&lt;  No  |        |  Yes  |</span><br><span class="line">  ^       |                                           +------+        +---v---+</span><br><span class="line">  ^       |                                                               |</span><br><span class="line">  |       ^               emit.pause()            +=================+     |</span><br><span class="line">  |       ^---------------^-----------------------+  return false   &lt;-----+---+</span><br><span class="line">  |                                               +=================+         |</span><br><span class="line">  |                                                                           |</span><br><span class="line">  ^            when queue is empty     +============+                         |</span><br><span class="line">  ^------------^-----------------------&lt;  Buffering |                         |</span><br><span class="line">               |                       |============|                         |</span><br><span class="line">               +&gt; emit.drain()         |  ^Buffer^  |                         |</span><br><span class="line">               +&gt; emit.resume()        +------------+                         |</span><br><span class="line">                                       |  ^Buffer^  |                         |</span><br><span class="line">                                       +------------+   add chunk to queue    |</span><br><span class="line">                                       |            &lt;---^---------------------&lt;</span><br><span class="line">                                       +============+</span><br></pre></td></tr></table></figure>
+
+<p>注意，如果你创建一些管道准备把一些流串联起来从而操纵数据，你应该实现 <code>Transform</code> 流，在这种情况下，从 <code>Readable</code> 流中的输出进入 <code>Transform</code>，并且会被管道输送进入 <code>Writable</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Readable.pipe(Transformable).pipe(Writable)</span><br></pre></td></tr></table></figure>
+
+<p>积压将被自动应用，但是同时请注意输入和输出 <code>Transform</code> 的水准值，可以手动控制，并且会影响到积压系统，如果想要了解更多，可以参考 <a href="https://cnodejs.org/topic/56ba030271204e03637a3870" target="_blank" rel="noopener">通过源码解析 Node.js 中导流（pipe）的实现</a> 这篇文章</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在 <code>Node.js</code> 中有四种类型的流，它们是 <code>readable</code>、<code>writeable</code>、<code>duplex</code> 和 <code>transform</code></p>
 <ul>
 <li><code>readable</code>，可读流，表示数据能够被消费，是对提供数据的源头（<code>source</code>）的抽象，工作在下面两种模式之一<ul>
@@ -436,7 +473,7 @@
 </ul>
 </li>
 </ul>
-<p>推荐一下这篇文章 <a href="https://github.com/zoubin/streamify-your-node-program" target="_blank" rel="noopener">streamify-your-node-program</a>，干货很多</p>
+<p>推荐一下这篇文章 <a href="https://github.com/zoubin/streamify-your-node-program" target="_blank" rel="noopener">Node Stream</a>，干货很多</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="https://github.com/substack/stream-handbook" target="_blank" rel="noopener">stream-handbook</a></li>
 <li><a href="http://fe.meituan.com/stream-basics.html" target="_blank" rel="noopener">Node.js Stream - 基础篇</a></li>
@@ -473,9 +510,9 @@
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/10/14/Node/10/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/10/17/JavaScript/47/">
                 <i class="level-item fa fa-chevron-left"></i>
-                <span class="level-item">背压</span>
+                <span class="level-item">正则表达式</span>
             </a>
         </div>
         
@@ -558,7 +595,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        173
+                        149
                     </p>
                 </div>
             </div>
@@ -568,7 +605,7 @@
                         分类
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        8
                     </p>
                 </div>
             </div>
@@ -578,7 +615,7 @@
                         标签
                     </p>
                     <p class="title has-text-weight-normal">
-                        10
+                        8
                     </p>
                 </div>
             </div>
@@ -623,73 +660,93 @@
         <a class="is-flex" href="#flowing-mode">
         <span class="has-mr-6">4.2</span>
         <span>flowing mode</span>
-        </a></li></ul></li><li>
+        </a></li><li>
         <a class="is-flex" href="#readable-与-data-事件">
-        <span class="has-mr-6">5</span>
+        <span class="has-mr-6">4.3</span>
         <span>readable 与 data 事件</span>
         </a></li><li>
         <a class="is-flex" href="#readable-事件">
-        <span class="has-mr-6">6</span>
+        <span class="has-mr-6">4.4</span>
         <span>readable 事件</span>
-        </a><ul class="menu-list"><li>
+        </a></li><li>
         <a class="is-flex" href="#readable-的触发时机">
-        <span class="has-mr-6">6.1</span>
+        <span class="has-mr-6">4.5</span>
         <span>readable 的触发时机</span>
-        </a></li></ul></li><li>
+        </a></li><li>
         <a class="is-flex" href="#data-事件">
-        <span class="has-mr-6">7</span>
+        <span class="has-mr-6">4.6</span>
         <span>data 事件</span>
-        </a><ul class="menu-list"><li>
+        </a></li><li>
         <a class="is-flex" href="#data-的触发时机">
-        <span class="has-mr-6">7.1</span>
+        <span class="has-mr-6">4.7</span>
         <span>data 的触发时机</span>
         </a></li><li>
         <a class="is-flex" href="#如果同时监听-readable-和-data-事件">
-        <span class="has-mr-6">7.2</span>
+        <span class="has-mr-6">4.8</span>
         <span>如果同时监听 readable 和 data 事件</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#Writable">
-        <span class="has-mr-6">8</span>
+        <span class="has-mr-6">5</span>
         <span>Writable</span>
-        </a></li><li>
+        </a><ul class="menu-list"><li>
         <a class="is-flex" href="#Readable-Stream-与-Writeable-Stream">
-        <span class="has-mr-6">9</span>
+        <span class="has-mr-6">5.1</span>
         <span>Readable Stream 与 Writeable Stream</span>
         </a></li><li>
         <a class="is-flex" href="#pipe-的流程">
-        <span class="has-mr-6">10</span>
+        <span class="has-mr-6">5.2</span>
         <span>pipe 的流程</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#pipe-连接两个-stream">
-        <span class="has-mr-6">10.1</span>
+        <span class="has-mr-6">5.2.1</span>
         <span>pipe 连接两个 stream</span>
         </a></li><li>
         <a class="is-flex" href="#事件-data-事件-drain-联合实现">
-        <span class="has-mr-6">10.2</span>
+        <span class="has-mr-6">5.2.2</span>
         <span>事件 data + 事件 drain 联合实现</span>
-        </a></li></ul></li><li>
+        </a></li></ul></li></ul></li><li>
         <a class="is-flex" href="#Duplex">
-        <span class="has-mr-6">11</span>
+        <span class="has-mr-6">6</span>
         <span>Duplex</span>
         </a></li><li>
         <a class="is-flex" href="#Transform">
-        <span class="has-mr-6">12</span>
+        <span class="has-mr-6">7</span>
         <span>Transform</span>
-        </a></li><li>
+        </a><ul class="menu-list"><li>
         <a class="is-flex" href="#内置的-transform-stream">
-        <span class="has-mr-6">13</span>
+        <span class="has-mr-6">7.1</span>
         <span>内置的 transform stream</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#自定义流">
+        <span class="has-mr-6">8</span>
+        <span>自定义流</span>
         </a></li><li>
-        <a class="is-flex" href="#自定义-stream">
-        <span class="has-mr-6">14</span>
-        <span>自定义 stream</span>
+        <a class="is-flex" href="#背压">
+        <span class="has-mr-6">9</span>
+        <span>背压</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#数据流中的积压问题">
+        <span class="has-mr-6">9.1</span>
+        <span>数据流中的积压问题</span>
         </a></li><li>
+        <a class="is-flex" href="#数据太多，速度太快">
+        <span class="has-mr-6">9.2</span>
+        <span>数据太多，速度太快</span>
+        </a></li><li>
+        <a class="is-flex" href="#pipe-的背压平衡机制">
+        <span class="has-mr-6">9.3</span>
+        <span>pipe 的背压平衡机制</span>
+        </a></li><li>
+        <a class="is-flex" href="#pipe-的生命周期">
+        <span class="has-mr-6">9.4</span>
+        <span>.pipe() 的生命周期</span>
+        </a></li></ul></li><li>
         <a class="is-flex" href="#总结">
-        <span class="has-mr-6">15</span>
+        <span class="has-mr-6">10</span>
         <span>总结</span>
         </a></li><li>
         <a class="is-flex" href="#参考">
-        <span class="has-mr-6">16</span>
+        <span class="has-mr-6">11</span>
         <span>参考</span>
         </a></li></ul>
         </div>
@@ -715,7 +772,7 @@
                 <span class="level-item">Angular</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">15</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/CSS/">
@@ -723,7 +780,7 @@
                 <span class="level-item">CSS</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">14</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
@@ -731,15 +788,7 @@
                 <span class="level-item">Essay</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">32</span>
-            </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/HTML/">
-            <span class="level-start">
-                <span class="level-item">HTML</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">29</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/HTTP/">
@@ -747,7 +796,7 @@
                 <span class="level-item">HTTP</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">12</span>
+                <span class="level-item tag">11</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/JavaScript/">
@@ -755,7 +804,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">54</span>
+                <span class="level-item tag">44</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -763,7 +812,7 @@
                 <span class="level-item">Node.js</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">16</span>
+                <span class="level-item tag">14</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/React/">
@@ -781,14 +830,6 @@
             <span class="level-end">
                 <span class="level-item tag">4</span>
             </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/jQuery/">
-            <span class="level-start">
-                <span class="level-item">jQuery</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">4</span>
-            </span>
         </a></li>
             </ul>
         </div>
@@ -801,7 +842,7 @@
         <h3 class="menu-label">
             标签云
         </h3>
-        <a href="/tags/Angular/" style="font-size: 15px;">Angular</a> <a href="/tags/CSS/" style="font-size: 15px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/HTML/" style="font-size: 10px;">HTML</a> <a href="/tags/HTTP/" style="font-size: 13.33px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 15px;">Node.js</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Vue/" style="font-size: 11.67px;">Vue</a> <a href="/tags/jQuery/" style="font-size: 11.67px;">jQuery</a>
+        <a href="/tags/Angular/" style="font-size: 15px;">Angular</a> <a href="/tags/CSS/" style="font-size: 13.33px;">CSS</a> <a href="/tags/Essay/" style="font-size: 18.33px;">Essay</a> <a href="/tags/HTTP/" style="font-size: 11.67px;">HTTP</a> <a href="/tags/JavaScript/" style="font-size: 20px;">JavaScript</a> <a href="/tags/Node-js/" style="font-size: 13.33px;">Node.js</a> <a href="/tags/React/" style="font-size: 16.67px;">React</a> <a href="/tags/Vue/" style="font-size: 10px;">Vue</a>
     </div>
 </div>
 
@@ -984,7 +1025,7 @@
                     <span class="level-item">八月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -995,7 +1036,7 @@
                     <span class="level-item">七月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1006,7 +1047,7 @@
                     <span class="level-item">六月 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1094,7 +1135,7 @@
                     <span class="level-item">十月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -1127,7 +1168,7 @@
                     <span class="level-item">七月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1237,7 +1278,7 @@
                     <span class="level-item">九月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1270,7 +1311,7 @@
                     <span class="level-item">六月 2018</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1375,23 +1416,12 @@
         </li>
         
         <li>
-            <a class="level is-marginless" href="/archives/2017/08/">
-                <span class="level-start">
-                    <span class="level-item">八月 2017</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
             <a class="level is-marginless" href="/archives/2017/07/">
                 <span class="level-start">
                     <span class="level-item">七月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1413,7 +1443,7 @@
                     <span class="level-item">五月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -1424,7 +1454,7 @@
                     <span class="level-item">四月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1435,18 +1465,7 @@
                     <span class="level-item">三月 2017</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2017/02/">
-                <span class="level-start">
-                    <span class="level-item">二月 2017</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">1</span>
                 </span>
             </a>
         </li>
@@ -1473,28 +1492,6 @@
             </a>
         </li>
         
-        <li>
-            <a class="level is-marginless" href="/archives/2016/11/">
-                <span class="level-start">
-                    <span class="level-item">十一月 2016</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
-        <li>
-            <a class="level is-marginless" href="/archives/2016/10/">
-                <span class="level-start">
-                    <span class="level-item">十月 2016</span>
-                </span>
-                <span class="level-end">
-                    <span class="level-item tag">1</span>
-                </span>
-            </a>
-        </li>
-        
         </ul>
         </div>
     </div>
@@ -1511,49 +1508,42 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Angular/">
                         <span class="tag">Angular</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">15</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/CSS/">
                         <span class="tag">CSS</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Essay/">
                         <span class="tag">Essay</span>
-                        <span class="tag is-grey">32</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/HTML/">
-                        <span class="tag">HTML</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">29</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/HTTP/">
                         <span class="tag">HTTP</span>
-                        <span class="tag is-grey">12</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">54</span>
+                        <span class="tag is-grey">44</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Node-js/">
                         <span class="tag">Node.js</span>
-                        <span class="tag is-grey">16</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 
@@ -1567,13 +1557,6 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Vue/">
                         <span class="tag">Vue</span>
-                        <span class="tag is-grey">4</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/jQuery/">
-                        <span class="tag">jQuery</span>
                         <span class="tag is-grey">4</span>
                     </a>
                 </div>
