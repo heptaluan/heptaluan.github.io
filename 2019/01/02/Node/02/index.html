@@ -16,7 +16,7 @@
 <meta property="og:description" content="Node.js 中的 co 模块主要用于 Generator 函数的自动执行，可以使我们以同步的形式编写异步代码">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/02.webp">
-<meta property="og:updated_time" content="2020-12-08T14:41:08.890Z">
+<meta property="og:updated_time" content="2021-02-28T09:43:27.693Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Node.js 中的 co 模块">
 <meta name="twitter:description" content="Node.js 中的 co 模块主要用于 Generator 函数的自动执行，可以使我们以同步的形式编写异步代码">
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    22 分钟 读完 (大约 3327 个字)
+                    22 分钟 读完 (大约 3326 个字)
                 </span>
                 
                 
@@ -182,7 +182,7 @@
 <h2 id="实例一"><a href="#实例一" class="headerlink" title="实例一"></a>实例一</h2><p>先来看两个对比实例，传统方式下，<code>sayhello</code> 是一个异步函数，执行 <code>helloworld</code> 会先输出 <code>&#39;world&#39;</code> 再输出 <code>&#39;hello&#39;</code></p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'!'</span>)</span><br><span class="line">&#125;, <span class="hljs-number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sayhello</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-string">'hello'</span>).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">hello</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(hello)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">helloworld</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  sayhello()</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'world'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">helloworld()</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 'world'</span></span><br><span class="line"><span class="hljs-comment">// 'hello'</span></span><br><span class="line"><span class="hljs-comment">// !</span></span><br></pre></td></tr></table></figure>
 
-<p>这是因为 <code>Promise</code> 是基于任务队列机制的（详细可以参考 <a href="https://heptaluan.github.io/2018/08/12/JavaScript/30/" target="_blank" rel="noopener">JavaScript 并发模型</a>），即当前代码执行完的时候才会触发，但是会在下一个 <code>Event Loop</code> 之前执行（注意与 <code>setTimeout</code> 区分开来）</p>
+<p>这是因为 <code>Promise</code> 是基于任务队列机制的（详细可以参考 <a href="https://heptaluan.github.io/2018/08/12/JavaScript/30/" target="_blank" rel="noopener">JavaScript 并发模型</a>），即当前代码执行完的时候才会触发，但是会在下一个 <code>EventLoop</code> 之前执行（注意与 <code>setTimeout</code> 区分开来）</p>
 <h2 id="实例二"><a href="#实例二" class="headerlink" title="实例二"></a>实例二</h2><p>我们将上面的示例换一种写法，调整成 <code>Promise + Generator</code> 的方式来试试，也就是模拟一下 <code>co</code> 当中的实现方式</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">co</span>(<span class="hljs-params">gen</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> it = gen()</span><br><span class="line">  <span class="hljs-keyword">var</span> ret = it.next()</span><br><span class="line">  ret.value.then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">res</span>) </span>&#123;</span><br><span class="line">    it.next(res)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sayhello</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-built_in">Promise</span>.resolve(<span class="hljs-string">'hello'</span>).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">hello</span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(hello)</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">co(<span class="hljs-function"><span class="hljs-keyword">function</span>* <span class="hljs-title">helloworld</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">yield</span> sayhello()</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'world'</span>)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 'hello'</span></span><br><span class="line"><span class="hljs-comment">// 'world'</span></span><br></pre></td></tr></table></figure>
 
@@ -391,7 +391,7 @@ function run(gen) {
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        149
+                        150
                     </p>
                 </div>
             </div>
@@ -512,7 +512,7 @@ function run(gen) {
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">44</span>
+                <span class="level-item tag">45</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -1124,6 +1124,17 @@ function run(gen) {
         </li>
         
         <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2017/07/">
                 <span class="level-start">
                     <span class="level-item">七月 2017</span>
@@ -1244,7 +1255,7 @@ function run(gen) {
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">44</span>
+                        <span class="tag is-grey">45</span>
                     </a>
                 </div>
                 

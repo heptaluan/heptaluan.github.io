@@ -16,7 +16,7 @@
 <meta property="og:description" content="本章主要用于记录一些 React 相关知识点，因为最近在复习 React 相关内容，发现版本迭代了许多，废弃了很多 API，也添加了一些新的方法（比如生命周期钩子等），所以就简单的在这里汇总整理一下，也算是查漏补缺">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/11.webp">
-<meta property="og:updated_time" content="2021-01-30T14:34:51.755Z">
+<meta property="og:updated_time" content="2021-02-28T09:43:27.699Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="React 查漏补缺">
 <meta name="twitter:description" content="本章主要用于记录一些 React 相关知识点，因为最近在复习 React 相关内容，发现版本迭代了许多，废弃了很多 API，也添加了一些新的方法（比如生命周期钩子等），所以就简单的在这里汇总整理一下，也算是查漏补缺">
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    1 小时 读完 (大约 6934 个字)
+                    1 小时 读完 (大约 6933 个字)
                 </span>
                 
                 
@@ -383,7 +383,7 @@
 <p>原生事件是指非 <code>React</code> 合成事件，比如上面的 <code>addEventListener()</code>，它相较于合成事件，会直接触发点击事件，所以当你在原生事件中 <code>setState()</code> 后，能同步拿到更新后的 <code>state</code> 值</p>
 <h4 id="setTimeout-中的-setState"><a href="#setTimeout-中的-setState" class="headerlink" title="setTimeout 中的 setState()"></a>setTimeout 中的 setState()</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">App</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  state = &#123; <span class="hljs-attr">val</span>: <span class="hljs-number">0</span> &#125;</span><br><span class="line"></span><br><span class="line">  componentDidMount() &#123;</span><br><span class="line">    setTimeout(<span class="hljs-function"><span class="hljs-params">_</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.setState(&#123; <span class="hljs-attr">val</span>: <span class="hljs-keyword">this</span>.state.val + <span class="hljs-number">1</span> &#125;)</span><br><span class="line">      <span class="hljs-comment">// 需要注意的是这里的值为 1</span></span><br><span class="line">      <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.state.val)</span><br><span class="line">    &#125;, <span class="hljs-number">0</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>&#123;`Counter is $&#123;this.state.val&#125;`&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>在 <code>setTimeout()</code> 中去使用 <code>setState()</code> 并不算是一个单独的场景，它是随着外层所决定的，因为你可以在合成事件中使用 <code>setTimeout()</code>，可以在钩子函数中使用 <code>setTimeout()</code>，也可以在原生事件中使用 <code>setTimeout()</code>，但是不管是哪个场景下，基于 <code>Event Loop</code> 的模型下， 在 <code>setTimeout()</code> 当中去 <code>setState()</code> 总能拿到最新的 <code>state</code> 值</p>
+<p>在 <code>setTimeout()</code> 中去使用 <code>setState()</code> 并不算是一个单独的场景，它是随着外层所决定的，因为你可以在合成事件中使用 <code>setTimeout()</code>，可以在钩子函数中使用 <code>setTimeout()</code>，也可以在原生事件中使用 <code>setTimeout()</code>，但是不管是哪个场景下，基于 <code>EventLoop</code> 的模型下， 在 <code>setTimeout()</code> 当中去 <code>setState()</code> 总能拿到最新的 <code>state</code> 值</p>
 <h4 id="setState-中的批量更新"><a href="#setState-中的批量更新" class="headerlink" title="setState 中的批量更新"></a>setState 中的批量更新</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">App</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Component</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  state = &#123; <span class="hljs-attr">val</span>: <span class="hljs-number">0</span> &#125;</span><br><span class="line"></span><br><span class="line">  batchUpdates = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.setState(&#123; <span class="hljs-attr">val</span>: <span class="hljs-keyword">this</span>.state.val + <span class="hljs-number">1</span> &#125;)</span><br><span class="line">    <span class="hljs-keyword">this</span>.setState(&#123; <span class="hljs-attr">val</span>: <span class="hljs-keyword">this</span>.state.val + <span class="hljs-number">1</span> &#125;)</span><br><span class="line">    <span class="hljs-keyword">this</span>.setState(&#123; <span class="hljs-attr">val</span>: <span class="hljs-keyword">this</span>.state.val + <span class="hljs-number">1</span> &#125;)</span><br><span class="line">    <span class="hljs-comment">// 需要注意的是这里的值仍为 1</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  render() &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">onClick</span>=<span class="hljs-string">&#123;this.batchUpdates&#125;</span>&gt;</span>&#123;`Counter is $&#123;this.state.val&#125;`&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>在调用 <code>setState()</code> 的时候 <code>React</code> 内部会创建一个更新队列，通过 <code>firstUpdate/lastUpdate/lastUpdate.next</code> 等方式去维护一个更新队列，在最终的 <code>performWork</code> 当中，相同的 <code>key</code> 会被覆盖，所以只会对最后一次的 <code>setState()</code> 进行更新，而如果我们使用一些别的方式，如下</p>
@@ -596,7 +596,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        149
+                        150
                     </p>
                 </div>
             </div>
@@ -821,7 +821,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">44</span>
+                <span class="level-item tag">45</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -1433,6 +1433,17 @@
         </li>
         
         <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2017/07/">
                 <span class="level-start">
                     <span class="level-item">七月 2017</span>
@@ -1553,7 +1564,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">44</span>
+                        <span class="tag is-grey">45</span>
                     </a>
                 </div>
                 

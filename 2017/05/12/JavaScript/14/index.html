@@ -16,7 +16,7 @@
 <meta property="og:description" content="之前我们曾经介绍过了 作用域与执行上下文栈 的相关内容，这一章我们就来看看与其联系十分密切的闭包">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/14.webp">
-<meta property="og:updated_time" content="2021-02-19T11:48:20.837Z">
+<meta property="og:updated_time" content="2021-02-28T09:43:27.678Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的闭包">
 <meta name="twitter:description" content="之前我们曾经介绍过了 作用域与执行上下文栈 的相关内容，这一章我们就来看看与其联系十分密切的闭包">
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    38 分钟 读完 (大约 5769 个字)
+                    43 分钟 读完 (大约 6400 个字)
                 </span>
                 
                 
@@ -187,14 +187,10 @@
 <ol>
 <li>『闭包就是函数的局部变量集合，只是这些局部变量在函数返回后会继续存在』</li>
 <li>闭包就是就是函数的堆栈在函数返回后并不释放，我们也可以理解为这些函数堆栈并不在栈上分配而是在堆上分配</li>
-<li>简单来说，当在一个函数内返回了另外一个函数的时候就会产生闭包</li>
+<li>通常而言，如果在一个函数内返回了另外一个函数，这种情况下就会产生闭包</li>
 </ol>
 <p>做为局部变量都可以被函数内的代码访问，这个和静态语言是没有差别，闭包的差别在于局部变变量可以在函数执行结束后仍然被函数外的代码访问，这意味着函数必须返回一个指向闭包的引用，或将这个引用赋值给某个外部变量，才能保证闭包中局部变量被外部代码访问</p>
-<p>但是在 <code>ECMAScript</code> 中，函数对象中定义的内部函数（<code>inner function</code>） 是可以直接访问外部函数的局部变量，通过这种机制，我们就可以以如下的方式完成对闭包的访问了</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">greeting</span>(<span class="hljs-params">name</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// local variable</span></span><br><span class="line">  <span class="hljs-keyword">var</span> text = <span class="hljs-string">'Hello '</span> + name</span><br><span class="line">  <span class="hljs-comment">// 每次调用时，产生闭包，并返回内部函数对象给调用者</span></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    alert(text)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> sayHello = greeting(<span class="hljs-string">'Closure'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 通过闭包访问到了局部变量 text</span></span><br><span class="line">sayHello()</span><br></pre></td></tr></table></figure>
-
-<p>上述代码的执行结果是 <code>Hello Closure</code>，因为 <code>sayHello()</code> 函数在 <code>greeting</code> 函数执行完毕后，仍然可以访问到了定义在其之内的局部变量 <code>text</code></p>
-<h2 id="闭包模型"><a href="#闭包模型" class="headerlink" title="闭包模型"></a>闭包模型</h2><p>在本质上来说，闭包就是将函数内部和函数外部连接起来的一座桥梁，闭包可以用在许多地方，它的最大用处有两个，一个是前面提到的可以读取函数内部的变量，另一个就是让这些变量的值始终保持在内存中，在之前 <a href="https://heptaluan.github.io/2017/01/18/JavaScript/03/" target="_blank" rel="noopener">作用域与执行上下文栈</a> 一文当中我们已经介绍过执行上下文，这里我们再来简单的复习一下</p>
+<h2 id="闭包产生的原因"><a href="#闭包产生的原因" class="headerlink" title="闭包产生的原因"></a>闭包产生的原因</h2><p>在本质上来说，闭包就是将函数内部和函数外部连接起来的一座桥梁，闭包可以用在许多地方，它的最大用处有两个，一个是可以读取函数内部的变量，另一个就是让这些变量的值始终保持在内存中，在之前 <a href="https://heptaluan.github.io/2017/01/18/JavaScript/03/" target="_blank" rel="noopener">作用域与执行上下文栈</a> 一文当中我们已经介绍过执行上下文，这里我们再来简单的复习一下</p>
 <p><code>ECMAscript</code> 的脚本的函数运行时，每个函数关联都有一个执行上下文场景（<code>Execution Context</code>） ，这个执行上下文场景中包含三个部分</p>
 <ul>
 <li>文法环境（<code>The LexicalEnvironment</code>）</li>
@@ -202,9 +198,19 @@
 <li><code>this</code> 绑定</li>
 </ul>
 <p>我们可以将文法环境想象成一个对象，该对象包含了两个重要组件，环境记录（<code>Enviroment Recode</code>），和外部引用（指针），环境记录包含了函数内部声明的局部变量和参数变量，外部引用指向了外部函数对象的上下文执行场景，全局的上下文场景中此引用值为 <code>null</code>，这样的数据结构就构成了一个单向的链表，每个引用都指向外层的上下文场景</p>
-<p>比如上面的例子，<code>sayHello</code> 函数在最下层，上层是函数 <code>greeting</code>，最外层是全局场景</p>
-<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/27.png" alt></p>
-<p>当 <code>sayHello</code> 被调用的时候，<code>sayHello</code> 会通过上下文场景找到局部变量 <code>text</code> 的值，因此在屏幕的对话框中显示出 <code>Hello Closure</code></p>
+<p>而这也就是『闭包产生的原因』，我们都知道，在 <code>ES5</code> 中只存在两种作用域『全局作用域』和『函数作用域』，当访问一个变量时，解释器会首先在当前作用域查找标示符，如果没有找到，就去父作用域找，直到找到该变量的标示符或者不在父作用域中，这就是『作用域链』，值得注意的是，每一个子函数都会拷贝上级的作用域，形成一个作用域的链条，比如</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-number">1</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">f1</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> a = <span class="hljs-number">2</span></span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">f2</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">var</span> a = <span class="hljs-number">3</span></span><br><span class="line">    <span class="hljs-built_in">console</span>.log(a)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这段代码中，<code>f1</code> 的作用域指向有全局作用域（<code>window</code>）和它本身，而 <code>f2</code> 的作用域指向全局作用域（<code>window</code>）、<code>f1</code> 和它本身，而且作用域是从最底层向上找，直到找到全局作用域 <code>window</code> 为止，如果全局还没有的话就会报错，就这么简单一件事情</p>
+<p>而闭包产生的本质就是，当前环境中存在指向父级作用域的引用</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">f1</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> a = <span class="hljs-number">2</span></span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">f2</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(a)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> f2</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> x = f1()</span><br><span class="line"></span><br><span class="line">x() <span class="hljs-comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<p>这里 <code>x</code> 会拿到父级作用域中的变量，输出 <code>2</code>，因为在当前环境中，含有对 <code>f2</code> 的引用，<code>f2</code> 恰恰引用了 <code>window</code>、<code>f1</code> 和 <code>f2</code> 的作用域，因此 <code>f2</code> 可以访问到 <code>f1</code> 的作用域的变量</p>
+<p>看到这里我们可能会有一些疑问，那是不是只有返回函数才算是产生了闭包呢？让我们回到闭包的本质，我们需要做的只是让父级作用域的引用存在即可，因此我们可以调整上面的示例</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> f3</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">f1</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> a = <span class="hljs-number">2</span></span><br><span class="line">  f3 = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(a)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">f1()</span><br><span class="line"></span><br><span class="line">f3()</span><br></pre></td></tr></table></figure>
+
+<p>这里我们让 <code>f1</code> 执行，给 <code>f3</code> 赋值后，等于说现在 <code>f3</code> 拥有了 <code>window</code>、<code>f1</code> 和 <code>f3</code> 本身这几个作用域的访问权限，还是自底向上查找，最近是在 <code>f1</code> 中找到了 <code>a</code>，因此输出 <code>2</code></p>
+<p>在这里是外面的变量 <code>f3</code> 还存在着父级作用域的引用，因此产生了闭包，虽然形式变了，但是本质没有改变</p>
 <h2 id="闭包中-this-的指向"><a href="#闭包中-this-的指向" class="headerlink" title="闭包中 this 的指向"></a>闭包中 this 的指向</h2><p>浏览器中的顶级域，其实就是 <code>window</code> 对象，所谓的闭包中的 <code>this</code> 指向，通俗点说就是，谁调用这个函数（即 <code>xx.fn()</code> 中的 <code>xx</code>），谁就是这个函数（<code>fn</code>）的 <code>this</code>，<code>JavaScript</code> 中的 <code>this</code> 指向函数调用时的上下文，可以想像成每个函数在被调用时，动态注入了一个 <code>this</code> 对象，所以在非严格模式下内部的 <code>this</code> 指向 <code>window</code> 对象，严格模式下应为 <code>undefined</code>，其实，引入 <code>this</code> 的初衷就是想在原型继承的情况下，得到函数的调用者，如下实例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> obj = &#123;</span><br><span class="line">  method: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(obj.method() === obj)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> F = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123; &#125;</span><br><span class="line">F.prototype = obj</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> instance = <span class="hljs-keyword">new</span> F</span><br><span class="line"><span class="hljs-built_in">console</span>.log(instance.method() === instance)</span><br></pre></td></tr></table></figure>
 
@@ -221,6 +227,25 @@
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> name = <span class="hljs-string">'window'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> person = &#123;</span><br><span class="line">  name: <span class="hljs-string">'张三'</span>,</span><br><span class="line">  age: <span class="hljs-number">20</span>,</span><br><span class="line">  say: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-comment">// that 就指向 person（把 this 保存起来）</span></span><br><span class="line">    <span class="hljs-keyword">var</span> that = <span class="hljs-keyword">this</span></span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> that.name</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(person.say()())</span><br></pre></td></tr></table></figure>
 
 <p>此时 <code>that</code> 就是指向 <code>person</code> 的，所以调用 <code>that.name</code> 就是 <code>person</code> 中的 <code>name</code></p>
+<h2 id="闭包的表现形式"><a href="#闭包的表现形式" class="headerlink" title="闭包的表现形式"></a>闭包的表现形式</h2><p>我们下面来简单的看看，在真实的场景当中，有哪些地方可以体现闭包的存在，主要有以下几种情况</p>
+<ol>
+<li><p>首先是函数内部再次返回一个函数，这个也就是我们上面介绍的示例，就不过多提及了</p>
+</li>
+<li><p>作为函数参数传递，比如下面这个示例</p>
+</li>
+</ol>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-number">1</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">foo</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">var</span> a = <span class="hljs-number">2</span></span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">baz</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(a)</span><br><span class="line">  &#125;</span><br><span class="line">  bar(baz)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bar</span>(<span class="hljs-params">fn</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 这就是闭包</span></span><br><span class="line">  fn()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 结果为 2，而不是1</span></span><br><span class="line">foo()</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>在定时器、事件监听、<code>Ajax</code> 请求、跨窗口通信、<code>Web Workers</code> 或者任何异步中，只要使用了回调函数，实际上就是在使用闭包，比如下面这个示例，其中的闭包保存的仅仅是 <code>window</code> 和当前作用域</li>
+</ol>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 定时器</span></span><br><span class="line">setTimeout(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">timeHandler</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'123'</span>)</span><br><span class="line">&#125;, <span class="hljs-number">100</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 事件监听</span></span><br><span class="line">$(<span class="hljs-string">'#btn'</span>).click(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'DOM Listener'</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<ol start="4">
+<li><code>IIFE</code>（立即执行函数表达式）创建闭包，保存了全局作用域 <code>window</code> 和当前函数的作用域，因此可以全局的变量</li>
+</ol>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = <span class="hljs-number">2</span></span><br><span class="line"></span><br><span class="line">;(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">IIFE</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 输出2</span></span><br><span class="line">  <span class="hljs-built_in">console</span>.log(a)</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
+
 <h2 id="柯里化"><a href="#柯里化" class="headerlink" title="柯里化"></a>柯里化</h2><p>我们可以先从一道面试题看起，如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> result = add(<span class="hljs-number">1</span>)(<span class="hljs-number">2</span>)(<span class="hljs-number">3</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(result)  <span class="hljs-comment">// 要求输出的结果为 6</span></span><br></pre></td></tr></table></figure>
 
@@ -467,7 +492,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        149
+                        150
                     </p>
                 </div>
             </div>
@@ -513,68 +538,72 @@
         <span class="has-mr-6">1</span>
         <span>什么是闭包</span>
         </a></li><li>
-        <a class="is-flex" href="#闭包模型">
+        <a class="is-flex" href="#闭包产生的原因">
         <span class="has-mr-6">2</span>
-        <span>闭包模型</span>
+        <span>闭包产生的原因</span>
         </a></li><li>
         <a class="is-flex" href="#闭包中-this-的指向">
         <span class="has-mr-6">3</span>
         <span>闭包中 this 的指向</span>
         </a></li><li>
-        <a class="is-flex" href="#柯里化">
+        <a class="is-flex" href="#闭包的表现形式">
         <span class="has-mr-6">4</span>
+        <span>闭包的表现形式</span>
+        </a></li><li>
+        <a class="is-flex" href="#柯里化">
+        <span class="has-mr-6">5</span>
         <span>柯里化</span>
         </a></li><li>
         <a class="is-flex" href="#反柯里化">
-        <span class="has-mr-6">5</span>
+        <span class="has-mr-6">6</span>
         <span>反柯里化</span>
         </a></li><li>
         <a class="is-flex" href="#偏函数">
-        <span class="has-mr-6">6</span>
+        <span class="has-mr-6">7</span>
         <span>偏函数</span>
         </a></li><li>
         <a class="is-flex" href="#一道经典的闭包面试题">
-        <span class="has-mr-6">7</span>
+        <span class="has-mr-6">8</span>
         <span>一道经典的闭包面试题</span>
         </a></li><li>
         <a class="is-flex" href="#闭包的实例">
-        <span class="has-mr-6">8</span>
+        <span class="has-mr-6">9</span>
         <span>闭包的实例</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#实例一：闭包中局部变量是引用而非拷贝">
-        <span class="has-mr-6">8.1</span>
+        <span class="has-mr-6">9.1</span>
         <span>实例一：闭包中局部变量是引用而非拷贝</span>
         </a></li><li>
         <a class="is-flex" href="#实例二：多个函数绑定同一个闭包，因为他们定义在同一个函数内">
-        <span class="has-mr-6">8.2</span>
+        <span class="has-mr-6">9.2</span>
         <span>实例二：多个函数绑定同一个闭包，因为他们定义在同一个函数内</span>
         </a></li><li>
         <a class="is-flex" href="#实例三：当在一个循环中赋值函数时，这些函数将绑定同样的闭包">
-        <span class="has-mr-6">8.3</span>
+        <span class="has-mr-6">9.3</span>
         <span>实例三：当在一个循环中赋值函数时，这些函数将绑定同样的闭包</span>
         </a></li><li>
         <a class="is-flex" href="#实例四：外部函数所有局部变量都在闭包内，即使这个变量声明在内部函数定义之后">
-        <span class="has-mr-6">8.4</span>
+        <span class="has-mr-6">9.4</span>
         <span>实例四：外部函数所有局部变量都在闭包内，即使这个变量声明在内部函数定义之后</span>
         </a></li><li>
         <a class="is-flex" href="#实例五：每次函数调用的时候创建一个新的闭包">
-        <span class="has-mr-6">8.5</span>
+        <span class="has-mr-6">9.5</span>
         <span>实例五：每次函数调用的时候创建一个新的闭包</span>
         </a></li><li>
         <a class="is-flex" href="#实例六：闭包引用的局部变量，不会自动清除">
-        <span class="has-mr-6">8.6</span>
+        <span class="has-mr-6">9.6</span>
         <span>实例六：闭包引用的局部变量，不会自动清除</span>
         </a></li><li>
         <a class="is-flex" href="#实例七：闭包中的-this">
-        <span class="has-mr-6">8.7</span>
+        <span class="has-mr-6">9.7</span>
         <span>实例七：闭包中的 this</span>
         </a></li><li>
         <a class="is-flex" href="#实例八：闭包中的作用域">
-        <span class="has-mr-6">8.8</span>
+        <span class="has-mr-6">9.8</span>
         <span>实例八：闭包中的作用域</span>
         </a></li><li>
         <a class="is-flex" href="#实例九：下面两个函数有什么不同">
-        <span class="has-mr-6">8.9</span>
+        <span class="has-mr-6">9.9</span>
         <span>实例九：下面两个函数有什么不同</span>
         </a></li></ul></li></ul>
         </div>
@@ -632,7 +661,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">44</span>
+                <span class="level-item tag">45</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -1244,6 +1273,17 @@
         </li>
         
         <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2017/07/">
                 <span class="level-start">
                     <span class="level-item">七月 2017</span>
@@ -1364,7 +1404,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">44</span>
+                        <span class="tag is-grey">45</span>
                     </a>
                 </div>
                 

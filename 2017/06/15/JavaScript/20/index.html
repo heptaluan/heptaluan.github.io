@@ -16,7 +16,7 @@
 <meta property="og:description" content="在一些基于类的语言（比如 Java）当中，继承（inheritance/extends）提供了两个有用的服务，如果一个新的类与一个已存在的类大部分相似，那么你只需说明其不同点即可，JavaScript 是一门弱类型语言，从不需要类型转换，它可以模拟那些基于类的模式，同时它也支持其他更具表现力的模式">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/20.webp">
-<meta property="og:updated_time" content="2021-01-01T12:30:51.652Z">
+<meta property="og:updated_time" content="2021-02-28T09:43:27.680Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的继承">
 <meta name="twitter:description" content="在一些基于类的语言（比如 Java）当中，继承（inheritance/extends）提供了两个有用的服务，如果一个新的类与一个已存在的类大部分相似，那么你只需说明其不同点即可，JavaScript 是一门弱类型语言，从不需要类型转换，它可以模拟那些基于类的模式，同时它也支持其他更具表现力的模式">
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    13 分钟 读完 (大约 1993 个字)
+                    20 分钟 读完 (大约 2967 个字)
                 </span>
                 
                 
@@ -206,13 +206,27 @@
 <h2 id="寄生式组合继承"><a href="#寄生式组合继承" class="headerlink" title="寄生式组合继承"></a>寄生式组合继承</h2><p>所以，为了解决构造函数被执行两次的问题，我们将指向父类实例改为指向父类原型，减去一次构造函数的执行</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Parent</span>(<span class="hljs-params">name</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.name = [name]</span><br><span class="line">&#125;</span><br><span class="line">Parent.prototype.getName = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.name</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Child</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  Parent.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'zhangsan'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 这里我们将指向父类实例的方式调整为指向父类原型</span></span><br><span class="line">Child.prototype = Parent.prototype</span><br><span class="line">Child.prototype.constructor = Child</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> child1 = <span class="hljs-keyword">new</span> Child()</span><br><span class="line"><span class="hljs-keyword">const</span> child2 = <span class="hljs-keyword">new</span> Child()</span><br><span class="line">child1.name[<span class="hljs-number">0</span>] = <span class="hljs-string">'foo'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(child1.name)  <span class="hljs-comment">// ['foo']</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(child2.name)  <span class="hljs-comment">// ['zhangsan']</span></span><br><span class="line">child2.getName()          <span class="hljs-comment">// ['zhangsan']</span></span><br></pre></td></tr></table></figure>
 
-<p>但这种方式存在一个问题，由于子类原型和父类原型指向同一个对象，我们对子类原型的操作会影响到父类原型，例如给 <code>Child.prototype</code> 增加一个 <code>getName()</code> 方法，那么会导致 <code>Parent.prototype</code> 也增加或被覆盖一个 <code>getName()</code> 方法，为了解决这个问题，我们在这里可以使用 <code>Obeject.create()</code> 这个方法来进行创建</p>
-<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Parent</span>(<span class="hljs-params">name</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.name = [name]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Parent.prototype.getName = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Child</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  Parent.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'zhangsan'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Child.prototype = <span class="hljs-built_in">Object</span>.create(Parent.prototype)</span><br><span class="line">Child.prototype.constructor = Child</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> child = <span class="hljs-keyword">new</span> Child()</span><br><span class="line"><span class="hljs-keyword">const</span> parent = <span class="hljs-keyword">new</span> Parent()</span><br><span class="line">child.getName()   <span class="hljs-comment">// ['zhangsan']</span></span><br><span class="line">parent.getName()  <span class="hljs-comment">// 报错, 找不到getName()</span></span><br></pre></td></tr></table></figure>
+<p>但这种方式存在一个问题，由于子类原型和父类原型指向同一个对象，我们对子类原型的操作会影响到父类原型，例如给 <code>Child.prototype</code> 增加一个 <code>getName()</code> 方法，那么会导致 <code>Parent.prototype</code> 也增加或被覆盖一个 <code>getName()</code> 方法，为了解决这个问题，我们在这里可以使用 <code>Obeject.create()</code> 这个方法来进行创建（关于 <code>Object.create()</code> 方法更为详细的用法可以参考 <a href="https://heptaluan.github.io/2017/03/03/JavaScript/07/" target="_blank" rel="noopener">Object.create()</a>）</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Parent</span>(<span class="hljs-params">name</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.name = [name]</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Parent.prototype.getName = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.name</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Child</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  Parent.call(<span class="hljs-keyword">this</span>, <span class="hljs-string">'zhangsan'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Child.prototype = <span class="hljs-built_in">Object</span>.create(Parent.prototype)</span><br><span class="line">Child.prototype.constructor = Child</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">const</span> child = <span class="hljs-keyword">new</span> Child()</span><br><span class="line"><span class="hljs-keyword">const</span> parent = <span class="hljs-keyword">new</span> Parent()</span><br><span class="line">child.getName()   <span class="hljs-comment">// ['zhangsan']</span></span><br><span class="line">parent.getName()  <span class="hljs-comment">// 报错，找不到 getName()</span></span><br></pre></td></tr></table></figure>
 
-<p>以上便是我们最终完善后的继承方式，也称为寄生组合式继承，它是目前最为成熟的继承方式，在 <code>Babel</code> 对 <code>ES6</code> 继承的转化当中也是使用了寄生组合式继承</p>
+<p>以上便是我们最终完善后的继承方式，也称为寄生组合式继承，它是目前最为成熟的继承方式，在 <code>Babel</code> 对 <code>ES6</code> 中的继承的转化当中也是使用了寄生组合式继承，下面我们就来简单的了解一下</p>
+<h2 id="编译后的-extends"><a href="#编译后的-extends" class="headerlink" title="编译后的 extends"></a>编译后的 extends</h2><p>我们都知道，<code>ES6</code> 的代码最后都是要在浏览器上能够跑起来的，这中间就利用了 <code>Babel</code> 这个编译工具，将 <code>ES6</code> 的代码编译成 <code>ES5</code> 让一些不支持新语法的浏览器也能运行，下面我们就来看看 <code>extends</code> 被编译成了什么样子，如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">_possibleConstructorReturn</span>(<span class="hljs-params">self, call</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">  <span class="hljs-keyword">return</span> call &amp;&amp; (<span class="hljs-keyword">typeof</span> call === <span class="hljs-string">'object'</span> || <span class="hljs-keyword">typeof</span> call === <span class="hljs-string">'function'</span>) ? call : self</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">_inherits</span>(<span class="hljs-params">subClass, superClass</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">  subClass.prototype = <span class="hljs-built_in">Object</span>.create(superClass &amp;&amp; superClass.prototype, &#123;</span><br><span class="line">    <span class="hljs-keyword">constructor</span>: &#123;</span><br><span class="line">      value: subClass,</span><br><span class="line">      enumerable: <span class="hljs-literal">false</span>,</span><br><span class="line">      writable: <span class="hljs-literal">true</span>,</span><br><span class="line">      configurable: <span class="hljs-literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="hljs-keyword">if</span> (superClass) <span class="hljs-built_in">Object</span>.setPrototypeOf ? <span class="hljs-built_in">Object</span>.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> Parent = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Parent</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 验证是否是 Parent 构造出来的 this</span></span><br><span class="line">  _classCallCheck(<span class="hljs-keyword">this</span>, Parent)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> Child = (<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">_Parent</span>) </span>&#123;</span><br><span class="line">  _inherits(Child, _Parent)</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Child</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    _classCallCheck(<span class="hljs-keyword">this</span>, Child)</span><br><span class="line">    <span class="hljs-keyword">return</span> _possibleConstructorReturn(<span class="hljs-keyword">this</span>, (Child.__proto__ || <span class="hljs-built_in">Object</span>.getPrototypeOf(Child)).apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">arguments</span>))</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> Child</span><br><span class="line">&#125;(Parent))</span><br></pre></td></tr></table></figure>
+
+<p>核心是 <code>_inherits</code> 函数，我们可以发现它采用的是我们上面介绍到的『寄生组合继承』方式，同时证明了这种方式的成功，不过这里增加了一个额外的操作 <code>Object.setPrototypeOf(subClass, superClass)</code>，它的作用则是用来继承父类的静态方法，这也是我们原来的继承方式所疏忽掉的地方</p>
+<h2 id="继承本身的问题"><a href="#继承本身的问题" class="headerlink" title="继承本身的问题"></a>继承本身的问题</h2><p>我们下面来从设计思想上简单的谈谈继承本身的问题，我们可能听闻过面向对象的设计的方式，那么面向对象的设计的方式一定就是好的设计吗？当然这个需要根据使用场景来进行区分，如果从继承的角度说，这一设计是存在巨大隐患的，假如我们现在有不同品牌的车，每辆车都有 <code>drive</code>、<code>music</code>、<code>addOil</code> 这三个方法</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Car</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(id) &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.id = id</span><br><span class="line">  &#125;</span><br><span class="line">  drive() &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`drive`</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  music() &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`music`</span>)</span><br><span class="line">  &#125;</span><br><span class="line">  addOil() &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`addOil`</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">otherCar</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">Car</span> </span>&#123; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们现在可以实现车的功能，并且以此去扩展不同的车，但是问题来了，新能源汽车也是车，但是它并不需要 <code>addOil</code>（加油），如果让新能源汽车的类继承 <code>Car</code> 的话，也是有问题的，而这也是俗称的『大猩猩和香蕉』的问题</p>
+<p>大猩猩手里有香蕉，但是我们现在明明只需要香蕉，却拿到了一只大猩猩，也就是说加油这个方法，我们现在是不需要的，但是由于继承的原因，也给到子类了，所以我们可以发现</p>
 <blockquote>
-<p>关于 <code>Object.create()</code> 方法更为详细的用法可以参考 <a href="https://heptaluan.github.io/2017/03/03/JavaScript/07/" target="_blank" rel="noopener">Object.create()</a></p>
+<p>继承的最大问题在于『无法决定继承哪些属性，所有属性都得继承』</p>
 </blockquote>
+<p>当然有人可能会说，我们可以再创建一个父类，把加油的方法给去掉，但是这也是有问题的，一方面父类是无法描述所有子类的细节情况的，为了不同的子类特性去增加不同的父类，代码势必会大量重复，另一方面一旦子类有所变动，父类也要进行相应的更新，代码的耦合性太高，维护性不好，那我们该如何来解决继承的诸多问题呢？</p>
+<p>我们可以借住 <code>React</code> 当中的 <code>HOC</code> 的方式，利用『组合』来维护我们的继承，这也是当今编程语法发展的趋势，顾名思义，『组合』就是先设计一系列零件，然后将这些零件进行拼装，来形成不同的实例或者类</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">drive</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`drive`</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">music</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`music`</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addOil</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`addOil`</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> car = compose(drive, music, addOil)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> otherCar = compose(drive, music)</span><br></pre></td></tr></table></figure>
+
+<p>可以发现，代码干净，复用性也很好，而这也就是面向组合的设计方式</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我们回顾一下继承的实现过程</p>
 <ul>
 <li>我们首先采用了类式继承，通过在子类构造函数中调用父类构造函数并传入子类 <code>this</code> 来获取父类的属性和方法，但类式继承存在着不能继承父类原型链上的属性和方法的缺陷</li>
@@ -329,7 +343,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        149
+                        150
                     </p>
                 </div>
             </div>
@@ -387,8 +401,16 @@
         <span class="has-mr-6">4</span>
         <span>寄生式组合继承</span>
         </a></li><li>
-        <a class="is-flex" href="#总结">
+        <a class="is-flex" href="#编译后的-extends">
         <span class="has-mr-6">5</span>
+        <span>编译后的 extends</span>
+        </a></li><li>
+        <a class="is-flex" href="#继承本身的问题">
+        <span class="has-mr-6">6</span>
+        <span>继承本身的问题</span>
+        </a></li><li>
+        <a class="is-flex" href="#总结">
+        <span class="has-mr-6">7</span>
         <span>总结</span>
         </a></li></ul>
         </div>
@@ -446,7 +468,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">44</span>
+                <span class="level-item tag">45</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -1058,6 +1080,17 @@
         </li>
         
         <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2017/07/">
                 <span class="level-start">
                     <span class="level-item">七月 2017</span>
@@ -1178,7 +1211,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">44</span>
+                        <span class="tag is-grey">45</span>
                     </a>
                 </div>
                 

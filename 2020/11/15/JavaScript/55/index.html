@@ -16,7 +16,7 @@
 <meta property="og:description" content="之前重新梳理了一下 JavaScript 中的 Promise 的相关内容，也算是又温习了一遍 Promise 相关知识点，本章当中我们就来看看关于 Promise 的最后一部分内容，也就是 Promise 的内部实现原理 参考了网上各路大神的实现方式，发现虽然实现方式各有不同，但是原理都是十分类似的，所以下面就让我们站在巨人的肩膀上来实现一个我们自己版本的 Promise，尽量做到浅显易懂">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/55.webp">
-<meta property="og:updated_time" content="2020-12-08T14:41:08.891Z">
+<meta property="og:updated_time" content="2021-02-28T09:43:27.692Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中 Promise 的实现">
 <meta name="twitter:description" content="之前重新梳理了一下 JavaScript 中的 Promise 的相关内容，也算是又温习了一遍 Promise 相关知识点，本章当中我们就来看看关于 Promise 的最后一部分内容，也就是 Promise 的内部实现原理 参考了网上各路大神的实现方式，发现虽然实现方式各有不同，但是原理都是十分类似的，所以下面就让我们站在巨人的肩膀上来实现一个我们自己版本的 Promise，尽量做到浅显易懂">
@@ -293,7 +293,7 @@
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">_resolve(val) &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> run = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>._status !== PENDING) <span class="hljs-keyword">return</span></span><br><span class="line">    <span class="hljs-comment">// 依次执行成功队列中的函数，并清空队列</span></span><br><span class="line">    <span class="hljs-keyword">const</span> runFulfilled = <span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">while</span> (<span class="hljs-keyword">this</span>._fulfilledQueues.length) &#123;</span><br><span class="line">        <span class="hljs-keyword">const</span> callback = <span class="hljs-keyword">this</span>._fulfilledQueues.shift()</span><br><span class="line">        callback(value)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-comment">// 依次执行失败队列中的函数，并清空队列</span></span><br><span class="line">    <span class="hljs-keyword">const</span> runRejected = <span class="hljs-function">(<span class="hljs-params">error</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">while</span> (<span class="hljs-keyword">this</span>._rejectedQueues.length) &#123;</span><br><span class="line">        <span class="hljs-keyword">const</span> callback = <span class="hljs-keyword">this</span>._rejectedQueues.shift()</span><br><span class="line">        callback(error)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-comment">// 如果 resolve 的参数为 Promise 对象，则必须等待该 Promise 对象状态改变后，当前 Promsie 的状态才会改变</span></span><br><span class="line">    <span class="hljs-comment">// 且状态取决于参数 Promsie 对象的状态</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (val <span class="hljs-keyword">instanceof</span> MyPromise) &#123;</span><br><span class="line">      val.then(<span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="hljs-keyword">this</span>._value = value</span><br><span class="line">        <span class="hljs-keyword">this</span>._status = FULFILLED</span><br><span class="line">        runFulfilled(value)</span><br><span class="line">      &#125;, err =&gt; &#123;</span><br><span class="line">        <span class="hljs-keyword">this</span>._value = err</span><br><span class="line">        <span class="hljs-keyword">this</span>._status = REJECTED</span><br><span class="line">        runRejected(err)</span><br><span class="line">      &#125;)</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>._value = val</span><br><span class="line">      <span class="hljs-keyword">this</span>._status = FULFILLED</span><br><span class="line">      runFulfilled(val)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  setTimeout(run, <span class="hljs-number">0</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>至此，我们已经实现了 <code>Promise</code> 的主要功能，但是原生的 <code>Promise</code> 还提供了一些额外方法，下面我们来看看这些附加方法如何实现</p>
-<h2 id="catch"><a href="#catch" class="headerlink" title="catch()"></a>catch()</h2><p>我们在之前的 <a href="https://heptaluan.github.io/2018/03/19/JavaScript/26/" target="_blank" rel="noopener">JavaScript 中的 Promise</a> 章节当中的曾今提到过，实际上 <code>catch()</code> 只是 <code>promise.then(undefined, onRejected)</code> 方法的一个别名而已，但是需要注意的是 <code>catch()</code> 方法也返回一个 <code>Promise</code>，也就是说 <code>catch</code> 之后，我们还是可以继续是使用 <code>then</code> 方法</p>
+<h2 id="catch"><a href="#catch" class="headerlink" title="catch()"></a>catch()</h2><p>我们在之前的 <a href="https://heptaluan.github.io/2018/03/19/JavaScript/26/" target="_blank" rel="noopener">JavaScript 中的 Promise</a> 章节当中的曾经提到过，实际上 <code>catch()</code> 只是 <code>promise.then(undefined, onRejected)</code> 方法的一个别名而已，但是需要注意的是 <code>catch()</code> 方法也返回一个 <code>Promise</code>，也就是说 <code>catch</code> 之后，我们还是可以继续是使用 <code>then</code> 方法</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 其实就是执行 then 的第二个回调</span></span><br><span class="line"><span class="hljs-keyword">catch</span> (onRejected) &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.then(<span class="hljs-literal">undefined</span>, onRejected)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <h2 id="resolve"><a href="#resolve" class="headerlink" title="resolve()"></a>resolve()</h2><p><code>Promise.resolve(value)</code> 方法返回一个以给定值解析后的 <code>Promise</code> 对象</p>
@@ -455,7 +455,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        149
+                        150
                     </p>
                 </div>
             </div>
@@ -596,7 +596,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">44</span>
+                <span class="level-item tag">45</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Node-js/">
@@ -1208,6 +1208,17 @@
         </li>
         
         <li>
+            <a class="level is-marginless" href="/archives/2017/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2017/07/">
                 <span class="level-start">
                     <span class="level-item">七月 2017</span>
@@ -1328,7 +1339,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JavaScript/">
                         <span class="tag">JavaScript</span>
-                        <span class="tag is-grey">44</span>
+                        <span class="tag is-grey">45</span>
                     </a>
                 </div>
                 
