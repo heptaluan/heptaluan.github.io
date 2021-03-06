@@ -16,7 +16,7 @@
 <meta property="og:description" content="最后更新于 2019-12-02  由于最近在工作当中经常遇到移动端的一些相关问题，所以打算抽些时间来重新的梳理一下，主要目的是厘清 Web 移动端开发的前前后后，一些技术的发展过程，一些问题的优化手段以及给出一些常见的兼容性问题的解决方案，主要参考的是 移动端的兼容适配 这篇文章，内容有所调整，主要是方便自己理解，如果想了解更为详细的流程可以参考原文">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/02.webp">
-<meta property="og:updated_time" content="2021-02-28T09:43:27.676Z">
+<meta property="og:updated_time" content="2021-03-06T14:15:35.381Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="移动端开发相关内容汇总">
 <meta name="twitter:description" content="最后更新于 2019-12-02  由于最近在工作当中经常遇到移动端的一些相关问题，所以打算抽些时间来重新的梳理一下，主要目的是厘清 Web 移动端开发的前前后后，一些技术的发展过程，一些问题的优化手段以及给出一些常见的兼容性问题的解决方案，主要参考的是 移动端的兼容适配 这篇文章，内容有所调整，主要是方便自己理解，如果想了解更为详细的流程可以参考原文">
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    1 小时 读完 (大约 10112 个字)
+                    1 小时 读完 (大约 11097 个字)
                 </span>
                 
                 
@@ -292,7 +292,52 @@
 <blockquote>
 <p>当然这里还有一些其他比较重要的概念，比如 <code>PPI</code>、<code>DPI</code> 等，但是我们就不详细展开了，可以自行去加深理解</p>
 </blockquote>
-<h2 id="适配不同屏幕大小"><a href="#适配不同屏幕大小" class="headerlink" title="适配不同屏幕大小"></a>适配不同屏幕大小</h2><p>适配不同屏幕大小，也就是适配不同屏幕下的 <code>CSS</code> 像素，最早移动端屏幕 <code>CSS</code> 像素适配方案是媒体查询，但是无法做到接近 <code>100%</code> 的还原，适配不同屏幕大小其实只需要遵循一条原则，确保页面元素大小的与屏幕大小保持一定比例，也就是『按比例还原设计稿』</p>
+<h2 id="适配不同屏幕大小"><a href="#适配不同屏幕大小" class="headerlink" title="适配不同屏幕大小"></a>适配不同屏幕大小</h2><p>通常我们在移动端开发过程当中，都会添加一个移动端专用的 <code>meta</code> 标签，也就是下面这样的</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width; initial-scale=1; maximum-scale=1; minimum-scale=1; user-scalable=no;"</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>那么它的具体含义是什么样的呢？其中视口（<code>viewport</code>）代表当前可见的计算机图形区域，在 <code>Web</code> 浏览器术语中，通常与浏览器窗口相同，但不包括浏览器的 <code>UI</code>，菜单栏等，即指你正在浏览的文档的那一部分，而关于 <code>content</code> 参数的含义可以参考下表</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>含义</th>
+<th>取值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>width</code></td>
+<td>定义视口的宽度，单位为像索</td>
+<td>正整数或设备宽度 <code>device-width</code></td>
+</tr>
+<tr>
+<td><code>height</code></td>
+<td>定义视口的高度，单位为像索</td>
+<td>正整数或 <code>device-height</code></td>
+</tr>
+<tr>
+<td><code>initial-scale</code></td>
+<td>定义初始缩放值</td>
+<td>整数或小数</td>
+</tr>
+<tr>
+<td><code>minimum-scale</code></td>
+<td>定义缩小最小比例，它必须小于或等于 <code>maximum-scale</code> 设置</td>
+<td>整数或小数</td>
+</tr>
+<tr>
+<td><code>maximum-scale</code></td>
+<td>定义放大最大比例，它必须大于或等于 <code>minimum-scale</code> 设置</td>
+<td>整数或小数</td>
+</tr>
+<tr>
+<td><code>user-scalable</code></td>
+<td>定义是否允许用户手动缩放页面，默认值 <code>yes</code></td>
+<td><code>yes/no</code></td>
+</tr>
+</tbody></table>
+<p>我们在移动端视口要想视觉效果和体验好，那么我们的视口宽度必去无限接近理想视口，而所谓的理想视口，一般来讲，这个视口其实不是真是存在的，它对设备来说是一个最理想布局视口尺寸，在用户不进行手动缩放的情况下，可以将页面理想地展示，那么所谓的理想宽度就是浏览器（屏幕）的宽度了</p>
+<p>于是上述的 <code>meta</code> 设置，就是我们的理想设置，它规定了我们的视口宽度为屏幕宽度，初始缩放比例为 <code>1</code>，就是初始时候我们的视觉视口就是理想视口，下面我们就来看看有哪些比较常用的适配方法</p>
+<p>通常来说，适配不同屏幕大小，也就是适配不同屏幕下的 <code>CSS</code> 像素，最早移动端屏幕 <code>CSS</code> 像素适配方案是媒体查询，但是无法做到接近 <code>100%</code> 的还原，适配不同屏幕大小其实只需要遵循一条原则，确保页面元素大小的与屏幕大小保持一定比例，也就是『按比例还原设计稿』</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/02-14.png" alt></p>
 <p>假设我们现在拿到标注为 <code>375 * 667</code> 的大小的设计稿，其中一个元素的标注如下</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/02-15.png" alt></p>
@@ -318,26 +363,26 @@
 <li>盒阴影（<code>box-shadow</code>）和文本阴影（<code>text-shadow</code>）不支持百分比值</li>
 </ul>
 <p>首先，支持百分比单位的度量属性有其各自的参照基准，其次并非所有度量属性都支持百分比单位，所以我们需要另辟蹊径</p>
-<h2 id="rem-适配方案"><a href="#rem-适配方案" class="headerlink" title="rem 适配方案"></a>rem 适配方案</h2><p>在 <code>vw</code> 方案出来之前，最被大众接受的就是使用 <code>rem</code> 进行适配的方案，因为 <code>rem</code> 满足上面说的，可以是一个全局性的基准单位</p>
+<h4 id="rem-适配方案"><a href="#rem-适配方案" class="headerlink" title="rem 适配方案"></a>rem 适配方案</h4><p>在 <code>vw</code> 方案出来之前，最被大众接受的就是使用 <code>rem</code> 进行适配的方案，因为 <code>rem</code> 满足上面说的，可以是一个全局性的基准单位</p>
 <blockquote>
 <p><code>rem</code>（<code>font size of the root element</code>）在 <a href="https://drafts.csswg.org/css-values-3/#lengths" target="_blank" rel="noopener">CSS Values and Units Module Level 3</a> 中的定义就是，根据网页的根元素来设置字体大小，和 <code>em</code>（<code>font size of the element</code>）的区别是，<code>em</code> 是根据其父元素的字体大小来设置，而 <code>rem</code> 是根据网页的跟元素（<code>html</code>）来设置字体大小</p>
 </blockquote>
-<h4 id="flexible"><a href="#flexible" class="headerlink" title="flexible"></a>flexible</h4><p>基于此，淘宝早年推行的一套以 <code>rem</code> 为基准的适配方案 <a href="https://github.com/amfe/lib-flexible" target="_blank" rel="noopener">lib-flexible</a>，其核心做法在于</p>
+<h6 id="flexible"><a href="#flexible" class="headerlink" title="flexible"></a>flexible</h6><p>基于此，淘宝早年推行的一套以 <code>rem</code> 为基准的适配方案 <a href="https://github.com/amfe/lib-flexible" target="_blank" rel="noopener">lib-flexible</a>，其核心做法在于</p>
 <ul>
 <li><del>根据设备的 <code>dpr</code> 动态改写 <code>&lt;meta&gt;</code> 标签，设置 <code>viewport</code> 的缩放</del></li>
 <li><del>给 <code>&lt;html&gt;</code> 元素添加 <code>data-dpr</code> 属性，并且动态改写 <code>data-dpr</code> 的值</del></li>
 <li>根据 <code>document.documentElement.clientWidth</code> 动态修改 <code>&lt;html&gt;</code> 的 <code>font-size</code>，页面其他元素使用 <code>rem</code> 作为长度单位进行布局，从而实现页面的等比缩放</li>
 </ul>
 <p>只不过关于上面划掉的两点，是因为现在的 <code>lib-flexible</code> 库已经不再去缩放 <code>viewport</code>，字体大小的设定也直接使用了 <code>rem</code></p>
-<h4 id="hotcss"><a href="#hotcss" class="headerlink" title="hotcss"></a>hotcss</h4><p><a href="https://github.com/imochen/hotcss" target="_blank" rel="noopener">hotcss</a> 不是一个库，也不是一个框架，它是一个移动端布局开发解决方案，使用 <code>hotcss</code> 可以让移动端布局开发更容易，本质的思想与 <code>flexible</code> 完全一致</p>
-<h4 id="rem-方案的一些总结"><a href="#rem-方案的一些总结" class="headerlink" title="rem 方案的一些总结"></a>rem 方案的一些总结</h4><p>使用 <code>flexible/hotcss</code> 作为屏幕宽度适配解决方案，是存在一些问题的</p>
+<h6 id="hotcss"><a href="#hotcss" class="headerlink" title="hotcss"></a>hotcss</h6><p><a href="https://github.com/imochen/hotcss" target="_blank" rel="noopener">hotcss</a> 不是一个库，也不是一个框架，它是一个移动端布局开发解决方案，使用 <code>hotcss</code> 可以让移动端布局开发更容易，本质的思想与 <code>flexible</code> 完全一致</p>
+<h6 id="rem-方案的一些总结"><a href="#rem-方案的一些总结" class="headerlink" title="rem 方案的一些总结"></a>rem 方案的一些总结</h6><p>使用 <code>flexible/hotcss</code> 作为屏幕宽度适配解决方案，是存在一些问题的</p>
 <ol>
 <li>动态修改 <code>viewport</code> 是存在一定的风险的，譬如通过 <code>viewport</code> 改变了页面的缩放之后，获取到的 <code>innerWidth/innerHeight</code> 也会随之发生变化，如果业务逻辑有获取此类高宽进行其他计算的，可能会导致意想不到的错误（其实到今天，其实存在很多在 <code>flexible</code> 基础上演化而来的各种 <code>rem</code> 解决方案，有的不会对 <code>viewport</code> 进行缩放处理，自行处理 <code>1px</code> 边框问题）</li>
 <li><code>flexible/hotcss</code> 都并非纯 <code>CSS</code> 方案，需要引入一定的 <code>JavaScript</code> 代码</li>
 <li><code>rem</code> 的设计初衷并非是用于解决此类问题，用 <code>rem</code> 进行页面的宽度适配多少有一种 <code>hack</code> 的感觉</li>
 <li>存在一定的兼容性问题，对于安卓 <code>4.4</code> 以下版本系统不支持 <code>viewport</code> 缩放（当然 <code>flexible</code> 处理 <code>Android</code> 系列时，始终认为其 <code>dpr</code> 为 <code>1</code>，没有进行 <code>viewport</code> 缩放）</li>
 </ol>
-<h2 id="vw-适配方案"><a href="#vw-适配方案" class="headerlink" title="vw 适配方案"></a>vw 适配方案</h2><p>严格来说，使用 <code>rem</code> 进行页面适配其实是一种 <code>hack</code> 手段，<code>rem</code> 单位的初衷本身并不是用来进行移动端页面宽度适配的，到了今天有了一种更好的替代方案，那就是使用 <code>vw</code> 进行适配，也就是『百分比适配』</p>
+<h4 id="vw-适配方案"><a href="#vw-适配方案" class="headerlink" title="vw 适配方案"></a>vw 适配方案</h4><p>严格来说，使用 <code>rem</code> 进行页面适配其实是一种 <code>hack</code> 手段，<code>rem</code> 单位的初衷本身并不是用来进行移动端页面宽度适配的，到了今天有了一种更好的替代方案，那就是使用 <code>vw</code> 进行适配，也就是『百分比适配』</p>
 <p>百分比适配方案的核心需要一个全局通用的基准单位，<code>rem</code> 是不错，但是需要借助 <code>JavaScript</code> 进行动态修改根元素的 <code>font-size</code>，而 <code>vw/vh</code>（<code>vmax/vmin</code>）的出现则很好弥补 <code>rem</code> 需要 <code>JavaScript</code> 辅助的缺点</p>
 <p><a href="https://www.w3.org/TR/css-values-4/#percentages" target="_blank" rel="noopener">CSS Values and Units Module Level 4</a> 的定义，<code>vw</code> 等于初始包含块（<code>html</code> 元素）宽度的 <code>1%</code>，也就是</p>
 <ul>
@@ -360,21 +405,21 @@
 </ul>
 <p>简单的一个页面，看看效果，完全是等比例缩放的效果，线上预览地址可见 <a href="https://codepen.io/Chokcoco/pen/oNvWVYq?editors=1100" target="_blank" rel="noopener">CodePen</a></p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/02-18.gif" alt></p>
-<h4 id="自动转换插件"><a href="#自动转换插件" class="headerlink" title="自动转换插件"></a>自动转换插件</h4><p>当我们使用 <code>rem</code> 作为长度单位的时，通常会有借助 <code>Sass/Less</code> 实现一个转换函数，像是这样</p>
+<h6 id="自动转换插件"><a href="#自动转换插件" class="headerlink" title="自动转换插件"></a>自动转换插件</h6><p>当我们使用 <code>rem</code> 作为长度单位的时，通常会有借助 <code>Sass/Less</code> 实现一个转换函数，像是这样</p>
 <figure class="highlight scss hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 假设设计稿的宽度是 375px，假设取设计稿宽度下 1rem = 100px</span></span><br><span class="line"><span class="hljs-variable">$baseFontSize</span>: <span class="hljs-number">100</span>;</span><br><span class="line"></span><br><span class="line">@function px2rem(<span class="hljs-variable">$px</span>) &#123;</span><br><span class="line">  @return <span class="hljs-variable">$px</span> / <span class="hljs-variable">$baseFontSize</span> * 1rem;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>同理，在 <code>vw</code> 方案下，我们只需要去改写这个方法</p>
 <figure class="highlight scss hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 假设设计稿的宽度是 375px</span></span><br><span class="line">@function px2vw(<span class="hljs-variable">$px</span>) &#123;</span><br><span class="line">  @return <span class="hljs-variable">$px</span> / 375 * 100vw;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>当然，我们还可以借助一些插件包去实现这个自动转换，提高效率，譬如 <a href="https://www.npmjs.com/package/postcss-px-to-viewport" target="_blank" rel="noopener">postcss-px-to-viewport</a></p>
-<h4 id="vw-polyfill"><a href="#vw-polyfill" class="headerlink" title="vw polyfill"></a>vw polyfill</h4><p>但是 <code>vw</code> 目前毕竟还是存在兼容问题的，如下</p>
+<h6 id="vw-polyfill"><a href="#vw-polyfill" class="headerlink" title="vw polyfill"></a>vw polyfill</h6><p>但是 <code>vw</code> 目前毕竟还是存在兼容问题的，如下</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/02-19.png" alt></p>
 <p>看上去其实已经覆盖了绝大部分设备，但是如果在业务使用中又真的出现了兼容问题，应该怎么处理呢？通常来说，有下面两种方式可以进行降级处理</p>
 <ul>
 <li><code>CSS Houdini</code>，通过 <code>CSS Houdini</code> 针对 <code>vw</code> 做处理，调用 <code>CSS Typed OM Level1</code> 提供的 <code>CSSUnitValue API</code></li>
 <li><code>CSS Polyfill</code>，通过相应的 <code>Polyfill</code> 做相应的处理，目前针对于 <code>vw</code> 单位的 <code>Polyfill</code> 主要有 <code>vminpoly</code>、<code>Viewport Units Buggyfill</code>、<code>vunits.js</code> 和 <code>Modernizr</code> 等</li>
 </ul>
-<h4 id="对于-vw-方案的一些总结"><a href="#对于-vw-方案的一些总结" class="headerlink" title="对于 vw 方案的一些总结"></a>对于 vw 方案的一些总结</h4><p><code>vw</code> 确实看上去很不错，但是也是存在它的一些问题</p>
+<h6 id="对于-vw-方案的一些总结"><a href="#对于-vw-方案的一些总结" class="headerlink" title="对于 vw 方案的一些总结"></a>对于 vw 方案的一些总结</h6><p><code>vw</code> 确实看上去很不错，但是也是存在它的一些问题</p>
 <ul>
 <li>也没能很好的解决 <code>1px</code> 边框在高清屏下的显示问题，需要自行处理</li>
 <li>由于 <code>vw</code> 方案是完全的等比缩放，在完全等比还原设计稿的同时带来的一个问题是无法很好的限定一个最大最小宽度值，由于 <code>rem</code> 方案是借助 <code>JavaScript</code> 的，所以这一点 <code>rem</code> 比 <code>vw</code> 会更加的灵活</li>
@@ -520,8 +565,31 @@
 </ol>
 <p>上述 <code>5</code> 个字体族定义，优先级由高到底，可以看到，它们 <code>5</code> 个都并非某个特定字体，基本的核心思想都是选择对应平台上的默认系统字体，涵盖了 <code>iOS</code>、<code>MAC OS X</code>、<code>Android</code>、<code>Windows</code>、<code>Windows Phone</code> 基本所有用户经常使用的主流操作系统</p>
 <p>使用系统默认字体的主要原因是性能，字体通常是网站上加载的最大（也可能是最重）的资源之一，如果我们可以使用用户机器上已有的字体，我们就完全不需要再去获取字体资源，从而使加载时间明显加快，并且系统字体的优点在于它与当前操作系统使用的相匹配，因此它的文本展示必然也是一个让人舒适展示效果</p>
-<p>当然，上述 <code>font-family</code> 的定义不一定是最佳的，譬如天猫移动端在 <code>font-family</code> 最前面添加了 <code>&#39;PingFang SC&#39;</code>，<code>&#39;miui&#39;</code> 等字体，想必也是有他们业务上的考虑，但是一些 <code>fallback</code> 方案向后兼容的思想都是一致的，值得参考学习，更多的关于字体方面的细节知识，可以参考下面这几个链接</p>
+<p>当然，上述 <code>font-family</code> 的定义不一定是最佳的，譬如天猫移动端在 <code>font-family</code> 最前面添加了 <code>&#39;PingFang SC&#39;</code>，<code>&#39;miui&#39;</code> 等字体，想必也是有他们业务上的考虑，这里我们就再来简单的看看天猫的字体定义与 <code>Github</code> 的字体定义，比较比较它们两者有什么异同</p>
 <ul>
+<li><a href="https://www.tmall.com/" target="_blank" rel="noopener">天猫</a> 的定义为 <code>font-family: &quot;PingFang SC&quot;, miui, system-ui, -apple-system, BlinkMacSystemFont, Helvetica Neue, Helvetica, sans-serif;</code></li>
+<li><a href="https://github.com/" target="_blank" rel="noopener">Github</a> 的定义为 <code>font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;</code></li>
+</ul>
+<p>对比可以发现，它们总体遵循了这样一个基本原则</p>
+<ol>
+<li>尽量使用系统默认字体</li>
+</ol>
+<p>使用系统默认字体的主要原因是性能，并且系统字体的优点在于它与当前操作系统使用的相匹配，因此它的文本展示必然也是一个让人舒适展示效果</p>
+<ol start="2">
+<li>兼顾中西，西文在前，中文在后</li>
+</ol>
+<p>中文或者西文（英文）都要考虑到，由于大部分中文字体也是带有英文部分的，但是英文部分又不怎么好看，但是英文字体中大多不包含中文，通常会先进行英文字体的声明，选择最优的英文字体，这样<br>不会影响到中文字体的选择，中文字体声明则紧随其次</p>
+<ol start="3">
+<li>兼顾多操作系统</li>
+</ol>
+<p>选择字体的时候要考虑多操作系统，例如 <code>MAC OS</code> 下的很多中文字体在 <code>Windows</code> 都没有预装，为了保证 <code>MAC</code> 用户的体验，在定义中文字体的时候，先定义 <code>MAC</code> 用户的中文字体，再定义 <code>Windows</code> 用户的中文字体</p>
+<ol start="4">
+<li>兼顾旧操作系统，以字体族系列 <code>serif</code> 和 <code>sans-serif</code> 结尾</li>
+</ol>
+<p>当使用一些非常新的字体时，要考虑向下兼容，兼顾到一些极旧的操作系统，使用字体族系列 <code>serif</code> 和 <code>sans-serif</code> 结尾总归是不错的选择</p>
+<p>暂时就总结这么多，更多的关于字体方面的细节知识，可以参考下面这几个链接</p>
+<ul>
+<li><a href="https://github.com/chokcoco/iCSS/issues/69" target="_blank" rel="noopener">Web 字体 font-family 再探秘</a></li>
 <li><a href="https://github.com/chokcoco/iCSS/issues/6" target="_blank" rel="noopener">你该知道的字体 – font-family</a></li>
 <li><a href="https://github.com/chokcoco/iCSS/issues/69" target="_blank" rel="noopener">Web 字体 font-family 再探秘</a></li>
 <li><a href="https://www.smashingmagazine.com/2015/11/using-system-ui-fonts-practical-guide/" target="_blank" rel="noopener">Using UI System Fonts In Web Design: A Quick Practical Guide</a></li>
@@ -743,129 +811,129 @@
         <a class="is-flex" href="#适配不同屏幕大小">
         <span class="has-mr-6">5</span>
         <span>适配不同屏幕大小</span>
-        </a></li><li>
+        </a><ul class="menu-list"><li>
         <a class="is-flex" href="#rem-适配方案">
-        <span class="has-mr-6">6</span>
+        <span class="has-mr-6">5.1</span>
         <span>rem 适配方案</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#flexible">
-        <span class="has-mr-6">6.1</span>
+        <span class="has-mr-6">5.1.1</span>
         <span>flexible</span>
         </a></li><li>
         <a class="is-flex" href="#hotcss">
-        <span class="has-mr-6">6.2</span>
+        <span class="has-mr-6">5.1.2</span>
         <span>hotcss</span>
         </a></li><li>
         <a class="is-flex" href="#rem-方案的一些总结">
-        <span class="has-mr-6">6.3</span>
+        <span class="has-mr-6">5.1.3</span>
         <span>rem 方案的一些总结</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#vw-适配方案">
-        <span class="has-mr-6">7</span>
+        <span class="has-mr-6">5.2</span>
         <span>vw 适配方案</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#自动转换插件">
-        <span class="has-mr-6">7.1</span>
+        <span class="has-mr-6">5.2.1</span>
         <span>自动转换插件</span>
         </a></li><li>
         <a class="is-flex" href="#vw-polyfill">
-        <span class="has-mr-6">7.2</span>
+        <span class="has-mr-6">5.2.2</span>
         <span>vw polyfill</span>
         </a></li><li>
         <a class="is-flex" href="#对于-vw-方案的一些总结">
-        <span class="has-mr-6">7.3</span>
+        <span class="has-mr-6">5.2.3</span>
         <span>对于 vw 方案的一些总结</span>
-        </a></li></ul></li><li>
+        </a></li></ul></li></ul></li><li>
         <a class="is-flex" href="#1px-边框">
-        <span class="has-mr-6">8</span>
+        <span class="has-mr-6">6</span>
         <span>1px 边框</span>
         </a></li><li>
         <a class="is-flex" href="#图片适配及优化">
-        <span class="has-mr-6">9</span>
+        <span class="has-mr-6">7</span>
         <span>图片适配及优化</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#无脑多倍图">
-        <span class="has-mr-6">9.1</span>
+        <span class="has-mr-6">7.1</span>
         <span>无脑多倍图</span>
         </a></li><li>
         <a class="is-flex" href="#srcset-配合-1x-2x-像素密度描述符">
-        <span class="has-mr-6">9.2</span>
+        <span class="has-mr-6">7.2</span>
         <span>srcset 配合 1x 2x 像素密度描述符</span>
         </a></li><li>
         <a class="is-flex" href="#srcset-属性配合-sizes-属性-w-宽度描述符">
-        <span class="has-mr-6">9.3</span>
+        <span class="has-mr-6">7.3</span>
         <span>srcset 属性配合 sizes 属性 w 宽度描述符</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#当前屏幕-dpr-2，CSS-宽度为-375px">
-        <span class="has-mr-6">9.3.1</span>
+        <span class="has-mr-6">7.3.1</span>
         <span>当前屏幕 dpr = 2，CSS 宽度为 375px</span>
         </a></li><li>
         <a class="is-flex" href="#当前屏幕-dpr-3，CSS-宽度为-414px">
-        <span class="has-mr-6">9.3.2</span>
+        <span class="has-mr-6">7.3.2</span>
         <span>当前屏幕 dpr = 3，CSS 宽度为 414px</span>
         </a></li><li>
         <a class="is-flex" href="#当前屏幕-dpr-1，CSS-宽度为-1920px">
-        <span class="has-mr-6">9.3.3</span>
+        <span class="has-mr-6">7.3.3</span>
         <span>当前屏幕 dpr = 1，CSS 宽度为 1920px</span>
         </a></li></ul></li></ul></li><li>
         <a class="is-flex" href="#字体适配方案">
-        <span class="has-mr-6">10</span>
+        <span class="has-mr-6">8</span>
         <span>字体适配方案</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#字体大小">
-        <span class="has-mr-6">10.1</span>
+        <span class="has-mr-6">8.1</span>
         <span>字体大小</span>
         </a></li><li>
         <a class="is-flex" href="#字体的选择展示">
-        <span class="has-mr-6">10.2</span>
+        <span class="has-mr-6">8.2</span>
         <span>字体的选择展示</span>
         </a></li><li>
         <a class="is-flex" href="#兼顾各个操作系统">
-        <span class="has-mr-6">10.3</span>
+        <span class="has-mr-6">8.3</span>
         <span>兼顾各个操作系统</span>
         </a></li><li>
         <a class="is-flex" href="#font-family-关键字">
-        <span class="has-mr-6">10.4</span>
+        <span class="has-mr-6">8.4</span>
         <span>font-family 关键字</span>
         </a></li><li>
         <a class="is-flex" href="#新增通用字体族关键字">
-        <span class="has-mr-6">10.5</span>
+        <span class="has-mr-6">8.5</span>
         <span>新增通用字体族关键字</span>
         </a></li><li>
         <a class="is-flex" href="#system-ui">
-        <span class="has-mr-6">10.6</span>
+        <span class="has-mr-6">8.6</span>
         <span>system-ui</span>
         </a></li><li>
         <a class="is-flex" href="#San-Francisco-Fonts">
-        <span class="has-mr-6">10.7</span>
+        <span class="has-mr-6">8.7</span>
         <span>San Francisco Fonts</span>
         </a></li><li>
         <a class="is-flex" href="#apple-system-BlinkMacSystemFont">
-        <span class="has-mr-6">10.8</span>
+        <span class="has-mr-6">8.8</span>
         <span>-apple-system/BlinkMacSystemFont</span>
         </a></li><li>
         <a class="is-flex" href="#Segoe-UI">
-        <span class="has-mr-6">10.9</span>
+        <span class="has-mr-6">8.9</span>
         <span>Segoe UI</span>
         </a></li><li>
         <a class="is-flex" href="#Roboto">
-        <span class="has-mr-6">10.10</span>
+        <span class="has-mr-6">8.10</span>
         <span>Roboto</span>
         </a></li><li>
         <a class="is-flex" href="#总结">
-        <span class="has-mr-6">10.11</span>
+        <span class="has-mr-6">8.11</span>
         <span>总结</span>
         </a></li></ul></li><li>
         <a class="is-flex" href="#前端布局的兼容适配">
-        <span class="has-mr-6">11</span>
+        <span class="has-mr-6">9</span>
         <span>前端布局的兼容适配</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#布局发展历程">
-        <span class="has-mr-6">11.1</span>
+        <span class="has-mr-6">9.1</span>
         <span>布局发展历程</span>
         </a></li><li>
         <a class="is-flex" href="#CSS-Grid-Layout">
-        <span class="has-mr-6">11.2</span>
+        <span class="has-mr-6">9.2</span>
         <span>CSS Grid Layout</span>
         </a></li></ul></li></ul>
         </div>
@@ -973,7 +1041,9 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            最新文章
+            <a href="/tips" class="tips">
+                最新文章
+            </a>
         </h3>
         
         <article class="media">

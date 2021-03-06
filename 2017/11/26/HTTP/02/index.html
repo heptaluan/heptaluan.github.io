@@ -7,19 +7,19 @@
 
 
 
-    <meta name="description" content="最后更新于 2019-08-12  最近在复习相关内容，打算从头的整理一下 Cookie、Session、Token 与 JWT 相关内容，彻底弄清它们的含义以及它们之间的区别，主要内容包括以下这些  认证（Authentication） 授权（Authorization） 凭证（Credentials） 什么是 Cookie 什么是 Session 什么是 Token 什么是 JWT Cook">
+    <meta name="description" content="最后更新于 2020-04-12  最近在复习相关内容，打算从头的整理一下 Cookie、Session、Token 与 JWT 相关内容，彻底弄清它们的含义以及它们之间的区别，主要内容包括以下这些  认证（Authentication） 授权（Authorization） 凭证（Credentials） 什么是 Cookie 什么是 Session 什么是 Token 什么是 JWT Cook">
 <meta name="keywords" content="HTTP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Cookie、Session、Token 与 JWT">
 <meta property="og:url" content="http://yoursite.com/2017/11/26/HTTP/02/index.html">
 <meta property="og:site_name" content="heptaluan&#39;s blog">
-<meta property="og:description" content="最后更新于 2019-08-12  最近在复习相关内容，打算从头的整理一下 Cookie、Session、Token 与 JWT 相关内容，彻底弄清它们的含义以及它们之间的区别，主要内容包括以下这些  认证（Authentication） 授权（Authorization） 凭证（Credentials） 什么是 Cookie 什么是 Session 什么是 Token 什么是 JWT Cook">
+<meta property="og:description" content="最后更新于 2020-04-12  最近在复习相关内容，打算从头的整理一下 Cookie、Session、Token 与 JWT 相关内容，彻底弄清它们的含义以及它们之间的区别，主要内容包括以下这些  认证（Authentication） 授权（Authorization） 凭证（Credentials） 什么是 Cookie 什么是 Session 什么是 Token 什么是 JWT Cook">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="HTTPs://gitee.com/heptaluan/backups/raw/master/cdn/cover/02.webp">
-<meta property="og:updated_time" content="2021-01-16T14:34:39.289Z">
+<meta property="og:updated_time" content="2021-03-06T14:15:35.379Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Cookie、Session、Token 与 JWT">
-<meta name="twitter:description" content="最后更新于 2019-08-12  最近在复习相关内容，打算从头的整理一下 Cookie、Session、Token 与 JWT 相关内容，彻底弄清它们的含义以及它们之间的区别，主要内容包括以下这些  认证（Authentication） 授权（Authorization） 凭证（Credentials） 什么是 Cookie 什么是 Session 什么是 Token 什么是 JWT Cook">
+<meta name="twitter:description" content="最后更新于 2020-04-12  最近在复习相关内容，打算从头的整理一下 Cookie、Session、Token 与 JWT 相关内容，彻底弄清它们的含义以及它们之间的区别，主要内容包括以下这些  认证（Authentication） 授权（Authorization） 凭证（Credentials） 什么是 Cookie 什么是 Session 什么是 Token 什么是 JWT Cook">
 <meta name="twitter:image" content="HTTPs://gitee.com/heptaluan/backups/raw/master/cdn/cover/02.webp">
 
 
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    1 小时 读完 (大约 7533 个字)
+                    1 小时 读完 (大约 9492 个字)
                 </span>
                 
                 
@@ -177,7 +177,7 @@
         </h1>
         <div class="content">
             <blockquote>
-<p>最后更新于 <code>2019-08-12</code></p>
+<p>最后更新于 <code>2020-04-12</code></p>
 </blockquote>
 <p>最近在复习相关内容，打算从头的整理一下 <code>Cookie</code>、<code>Session</code>、<code>Token</code> 与 <code>JWT</code> 相关内容，彻底弄清它们的含义以及它们之间的区别，主要内容包括以下这些</p>
 <ul>
@@ -210,53 +210,151 @@
 <p>而在互联网应用中，一般网站会有两种模式，游客模式和登录模式，在游客模式下，你可以正常浏览网站上面的文章，一旦想要实现某些交互操作等（比如评论），就需要登录或者注册账号，当用户登录成功后，服务器会给该用户使用的浏览器颁发一个令牌（<code>Token</code>），这个令牌用来表明你的身份，每次浏览器发送请求时会带上这个令牌，就可以使用游客模式下无法使用的功能</p>
 <h2 id="什么是-Cookie"><a href="#什么是-Cookie" class="headerlink" title="什么是 Cookie"></a>什么是 Cookie</h2><p>在看完了几个基本概念以后，我们就正式的来了解一下什么是 <code>Cookie</code>，众所周知，<code>HTTP</code> 是一个无状态协议，所以客户端每次发出请求时，下一次请求无法得知上一次请求所包含的状态数据，那么我们如何能把一个用户的状态和数据关联起来呢？</p>
 <p>比如在某个页面中，你进行了登录操作，而当你跳转到商品页时，服务端如何知道你是已经登录的状态呢？所以在这种情况下就产生了 <code>Cookie</code> 这门技术来解决这个问题，<code>Cookie</code> 是 <code>HTTP</code> 协议的一部分，它的处理分为如下几步</p>
+<ol>
+<li>客户端发送 <code>HTTP</code> 请求到服务器</li>
+<li>当服务器收到 <code>HTTP</code> 请求时，在响应头里面添加一个 <code>Set-Cookie</code> 字段</li>
+<li>浏览器收到响应后保存下 <code>Cookie</code></li>
+<li>之后对该服务器每一次请求中都通过 <code>Cookie</code> 字段将 <code>Cookie</code> 信息发送给服务器</li>
+</ol>
+<p>这里有几个需要注意的地方，首先 <code>Cookie</code> 是存储在客户端的，其次 <code>Cookie</code> 是不可跨域的，每个 <code>Cookie</code> 都会绑定单一的域名，无法在别的域名下获取使用，但是一级域名和二级域名之间是允许共享使用的（依靠的是 <code>domain</code>）</p>
+<p>其次 <code>Cookie</code> 主要用于以下三个方面</p>
 <ul>
-<li>服务器向客户端发送 <code>Cookie</code><ul>
-<li>常使用 <code>HTTP</code> 协议规定的 <code>Set-Cookie</code> 头操作</li>
-<li>规范规定 <code>Cookie</code> 的格式为 <code>name = value</code> 格式，且必须包含这部分</li>
+<li>会话状态管理（如用户登录状态、购物车、游戏分数或其它需要记录的信息）</li>
+<li>个性化设置（如用户自定义设置、主题等）</li>
+<li>浏览器行为跟踪（如跟踪分析用户行为等）</li>
 </ul>
-</li>
-<li>浏览器将 <code>Cookie</code> 保存</li>
-<li>每次请求浏览器都会将 <code>Cookie</code> 发向服务器</li>
+<p>下面我们来看看一些 <code>Cookie</code> 当中比较重要的参数</p>
+<h4 id="Name-Value"><a href="#Name-Value" class="headerlink" title="Name/Value"></a>Name/Value</h4><p>键值对，设置 <code>Cookie</code> 的名称及相对应的值，都必须是字符串类型（如果值为 <code>Unicode</code> 字符，需要为字符编码，如果值为二进制数据，则需要使用 <code>BASE64</code> 编码），所以我们在用 <code>JavaScript</code> 操作 <code>Cookie</code> 的时候需要注意对 <code>Value</code> 进行编码处理</p>
+<h4 id="Expires"><a href="#Expires" class="headerlink" title="Expires"></a>Expires</h4><p><code>Expires</code> 用于设置 <code>Cookie</code> 的过期时间，比如</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Set</span>-Cookie: id=b7fGcj3fWa; Expires=Wed, <span class="hljs-number">21</span> Oct <span class="hljs-number">2017</span> <span class="hljs-number">07</span>:<span class="hljs-number">28</span>:<span class="hljs-number">00</span> GMT;</span><br></pre></td></tr></table></figure>
+
+<p>当 <code>Expires</code> 属性缺省时，表示是会话性 <code>Cookie</code>，当为会话性 <code>Cookie</code> 的时候，值保存在客户端内存中，并在用户关闭浏览器时失效，需要注意的是，有些浏览器提供了会话恢复功能，这种情况下即使关闭了浏览器，会话期 <code>Cookie</code> 也会被保留下来，就好像浏览器从来没有关闭一样</p>
+<p>与会话性 <code>Cookie</code> 相对的是持久性 <code>Cookie</code>，持久性 <code>Cookie</code> 会保存在用户的硬盘中，直至过期或者清除 <code>Cookie</code>，这里值得注意的是，设定的日期和时间只与客户端相关，而不是服务端</p>
+<h4 id="Max-Age"><a href="#Max-Age" class="headerlink" title="Max-Age"></a>Max-Age</h4><p><code>Max-Age</code> 用于设置在 <code>Cookie</code> 失效之前需要经过的秒数，比如</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Set</span>-Cookie: id=b7fGcj3fWa; Max-Age=<span class="hljs-number">604800</span></span><br></pre></td></tr></table></figure>
+
+<p><code>Max-Age</code> 可以为正数、负数、甚至是 <code>0</code>，具体区别如下</p>
+<ul>
+<li>如果 <code>max-Age</code> 属性为正数时，浏览器会将其持久化，即写到对应的 <code>Cookie</code> 文件中</li>
+<li>当 <code>max-Age</code> 属性为负数，则表示该 <code>Cookie</code> 只是一个会话性 <code>Cookie</code>，关闭浏览器即失效，浏览器也不会以任何形式保存该 <code>Cookie</code></li>
+<li>当 <code>max-Age</code> 为 <code>0</code> 时，则会立即删除这个 <code>Cookie</code></li>
 </ul>
-<p>这里有几个需要注意的地方，首先 <code>Cookie</code> 是存储在客户端的，其次 <code>Cookie</code> 是不可跨域的，每个 <code>Cookie</code> 都会绑定单一的域名，无法在别的域名下获取使用，但是一级域名和二级域名之间是允许共享使用的（依靠的是 <code>domain</code>），下面我们来看看一些 <code>Cookie</code> 当中比较重要的参数</p>
+<p>假如 <code>Expires</code> 和 <code>Max-Age</code> 都存在，则 <code>Max-Age</code> 优先级更高</p>
+<h4 id="Domain"><a href="#Domain" class="headerlink" title="Domain"></a>Domain</h4><p><code>Domain</code> 指定了 <code>Cookie</code> 可以送达的主机名，假如没有指定，那么默认值为当前文档访问地址中的主机部分（但是不包含子域名），比如某个站点首页设置的 <code>Domain</code> 是 <code>.test.com</code>，这样无论是 <code>a.test.com</code> 还是 <code>b.test.com</code> 都可以使用 <code>Cookie</code></p>
+<p>但是这里需要注意的是，不能跨域设置 <code>Cookie</code>，比如 <code>a</code> 域名下的页面把 <code>Domain</code> 设置成 <code>b</code> 是无效的</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">Set</span>-Cookie: qwerty=<span class="hljs-number">219</span>ffwef9w0f; Domain=b.com; Path=<span class="hljs-regexp">/; Expires=Wed, 30 Aug 2017 00:00:00 GMT</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Path"><a href="#Path" class="headerlink" title="Path"></a>Path</h4><p><code>Path</code> 指定了一个 <code>URL</code> 路径，这个路径必须出现在要请求的资源的路径中才可以发送 <code>Cookie</code> 首部，比如设置 <code>Path=/docs</code>，<code>/docs/Web/</code> 下的资源会带 <code>Cookie</code> 首部，<code>/test</code> 则不会携带 <code>Cookie</code> 首部</p>
+<p><code>Domain</code> 和 <code>Path</code> 标识共同定义了 <code>Cookie</code> 的作用域，即 <code>Cookie</code> 应该发送给哪些 <code>URL</code></p>
+<h4 id="Secure"><a href="#Secure" class="headerlink" title="Secure"></a>Secure</h4><p>标记为 <code>Secure</code> 的 <code>Cookie</code> 只应通过被 <code>HTTPS</code> 协议加密过的请求发送给服务端，默认为 <code>false</code>，当值为 <code>true</code> 时，<code>Cookie</code> 在 <code>HTTP</code> 中是无效，在 <code>HTTPS</code> 中才有效</p>
+<p>使用 <code>HTTPS</code> 安全协议，可以保护 <code>Cookie</code> 在浏览器和 <code>Web</code> 服务器间的传输过程中不被窃取和篡改</p>
+<h4 id="HTTPOnly"><a href="#HTTPOnly" class="headerlink" title="HTTPOnly"></a>HTTPOnly</h4><p>如果给某个 <code>Cookie</code> 设置了 <code>httpOnly</code> 属性，则无法通过 <code>JavaScript</code> 脚本读取到该 <code>Cookie</code> 的信息，但还是能通过 <code>Application</code> 中手动修改 <code>Cookie</code>，所以只是在一定程度上可以防止 <code>XSS</code> 攻击，不是绝对的安全</p>
+<h4 id="SameSite"><a href="#SameSite" class="headerlink" title="SameSite"></a>SameSite</h4><p>这里我们重点来看看这个属性，因为在二月份发布的 <code>Chrome 80</code> 的版本中已经默认屏蔽掉了第三方的 <code>Cookie</code>，这样一来就导致了许多问题，我们先来看看这个属性的作用，其实简单来说就是『<code>SameSite</code> 属性可以让 <code>Cookie</code> 在跨站请求时不会被发送，从而可以阻止跨站请求伪造攻击（<code>CSRF</code>）』 </p>
+<p><code>SameSite</code> 可以有下面三种值</p>
+<ul>
+<li><code>Strict</code>，仅允许一方请求携带 <code>Cookie</code>，即浏览器将只发送相同站点请求的 <code>Cookie</code>，即当前网页 <code>URL</code> 与请求目标 <code>URL</code> 完全一致</li>
+<li><code>Lax</code>，允许部分第三方请求携带 <code>Cookie</code></li>
+<li><code>None</code>，无论是否跨站都会发送 <code>Cookie</code></li>
+</ul>
+<p>之前默认是 <code>None</code> 的，而 <code>Chrome 80</code> 后默认是 <code>Lax</code></p>
+<h6 id="跨域和跨站"><a href="#跨域和跨站" class="headerlink" title="跨域和跨站"></a>跨域和跨站</h6><p>首先要理解的一点就是『跨站』和『跨域』是不同的，同站（<code>same-site</code>）与跨站（<code>cross-site</code>）和第一方（<code>first-party</code>）与第三方（<code>third-party</code>）是等价的，但是与浏览器同源策略（<code>SOP</code>）中的同源（<code>same-origin</code>）与跨域（<code>cross-origin</code>）是完全不同的概念</p>
+<p>同源策略作为浏览器的安全基石，其『同源』判断是比较严格的，相对而言，<code>Cookie</code> 中的『同站』判断就比较宽松，只要两个 <code>URL</code> 的 <code>eTLD + 1</code> 相同即可，不需要考虑协议和端口，其中 <code>eTLD</code> 表示有效顶级域名，注册于 <code>Mozilla</code> 维护的公共后缀列表（<code>Public Suffix List</code>）中，例如 <code>.com</code>、<code>.co.uk</code>、<code>.github.io</code> 等，其中的 <code>eTLD + 1</code> 则表示，有效顶级域名加上二级域名，例如 <code>test.com</code> 等</p>
+<p>举几个例子来说的话就是 <code>www.taobao.com</code> 和 <code>www.baidu.com</code> 是跨站，<code>www.a.taobao.com</code> 和 <code>www.b.taobao.com</code> 是同站，<code>a.github.io</code> 和 <code>b.github.io</code> 是跨站（注意是跨站）</p>
+<h6 id="改变"><a href="#改变" class="headerlink" title="改变"></a>改变</h6><p>接下来我们来看下从 <code>None</code> 改成 <code>Lax</code> 到底影响了哪些地方的 <code>Cookies</code> 的发送？见下表</p>
 <table>
 <thead>
 <tr>
-<th>属性</th>
-<th>说明</th>
+<th>请求类型</th>
+<th>实例</th>
+<th>以前</th>
+<th>Strict</th>
+<th>Lax</th>
+<th>None</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>name=value</code></td>
-<td>键值对，设置 <code>Cookie</code> 的名称及相对应的值，都必须是字符串类型（如果值为 <code>Unicode</code> 字符，需要为字符编码，如果值为二进制数据，则需要使用 <code>BASE64</code> 编码）</td>
+<td>链接</td>
+<td><code>&lt;a href=&quot;&quot;&gt;&lt;/a&gt;</code></td>
+<td>发送 <code>Cookie</code></td>
+<td>不发送</td>
+<td>发送 <code>Cookie</code></td>
+<td>发送 <code>Cookie</code></td>
 </tr>
 <tr>
-<td><code>domain</code></td>
-<td>指定 <code>Cookie</code> 所属域名，默认是当前域名</td>
+<td>预加载</td>
+<td><code>&lt;link rel=&quot;prerender&quot; href=&quot;&quot; /&gt;</code></td>
+<td>发送 <code>Cookie</code></td>
+<td>不发送</td>
+<td>发送 <code>Cookie</code></td>
+<td>发送 <code>Cookie</code></td>
 </tr>
 <tr>
-<td><code>path</code></td>
-<td>表示 <code>Cookie</code> 影响到的路径，匹配该路径才发送这个 <code>Cookie</code></td>
+<td><code>GET</code> 表单</td>
+<td><code>&lt;form method=&quot;GET&quot; action=&quot;&quot;&gt;</code></td>
+<td>发送 <code>Cookie</code></td>
+<td>不发送</td>
+<td>发送 <code>Cookie</code></td>
+<td>发送 <code>Cookie</code></td>
 </tr>
 <tr>
-<td><code>maxAge</code></td>
-<td><code>Cookie</code> 失效的时间，如果为负数，则该 <code>Cookie</code> 为临时 <code>Cookie</code>，关闭浏览器即失效，浏览器也不会以任何形式保存该 <code>Cookie</code>，如果为 <code>0</code>，表示删除该 <code>Cookie</code></td>
+<td><code>POST</code> 表单</td>
+<td><code>&lt;form method=&quot;POST&quot; action=&quot;&quot;&gt;</code></td>
+<td>发送 <code>Cookie</code></td>
+<td>不发送</td>
+<td>不发送</td>
+<td>发送 <code>Cookie</code></td>
 </tr>
 <tr>
-<td><code>expires</code></td>
-<td>过期时间，在设置的某个时间点后该 <code>Cookie</code> 就会失效</td>
+<td><code>iframe</code></td>
+<td><code>&lt;iframe src=&quot;&quot;&gt;&lt;/iframe&gt;</code></td>
+<td>发送 <code>Cookie</code></td>
+<td>不发送</td>
+<td>不发送</td>
+<td>发送 <code>Cookie</code></td>
 </tr>
 <tr>
-<td><code>secure</code></td>
-<td>该 <code>Cookie</code> 是否仅被使用安全协议传输，默认为 <code>false</code>，当值为 <code>true</code> 时，<code>Cookie</code> 在 <code>HTTP</code> 中是无效，在 <code>HTTPS</code> 中才有效</td>
+<td><code>Ajax</code></td>
+<td><code>$.get()</code></td>
+<td>发送 <code>Cookie</code></td>
+<td>不发送</td>
+<td>不发送</td>
+<td>发送 <code>Cookie</code></td>
 </tr>
 <tr>
-<td><code>httpOnly</code></td>
-<td>如果给某个 <code>Cookie</code> 设置了 <code>httpOnly</code> 属性，则无法通过 <code>JavaScript</code> 脚本读取到该 <code>Cookie</code> 的信息，但还是能通过 <code>Application</code> 中手动修改 <code>Cookie</code>，所以只是在一定程度上可以防止 <code>XSS</code> 攻击，不是绝对的安全</td>
+<td><code>Image</code></td>
+<td><code>&lt;img src=&quot;&quot; /&gt;</code></td>
+<td>发送 <code>Cookie</code></td>
+<td>不发送</td>
+<td>不发送</td>
+<td>发送 <code>Cookie</code></td>
 </tr>
 </tbody></table>
-<p>我们下面来看一个实际的使用示例，即 <code>express</code> 中的 <code>Cookie</code> 是如何使用的，这里需要注意的是 <code>express</code> 在 <code>4.x</code> 版本之后，<code>Session</code> 的管理和 <code>Cookies</code> 等许多模块都不再直接包含在 <code>express</code> 中，而是需要单独添加相应模块，在 <code>express</code> 在 <code>4.x</code> 版本中操作 <code>Cookie</code> 可以使用 <a href="HTTPs://github.com/expressjs/cookie-parser" target="_blank" rel="noopener">cookie-parser</a> 模块</p>
+<p>从上图可以看出，对大部分 <code>Web</code> 应用而言，<code>POST</code> 表单，<code>iframe</code>，<code>Ajax</code>，<code>Image</code> 这四种情况从以前的跨站会发送三方 <code>Cookie</code>，变成了不发送，主要原因如下</p>
+<ul>
+<li><code>iframe</code> 嵌入的 <code>Web</code> 应用有很多是跨站的，都会受到影响</li>
+<li><code>Ajax</code> 可能会影响部分前端取值的行为和结果</li>
+<li><code>Image</code> 一般都存放在 <code>CDN</code> 上，大部分情况不需要 <code>Cookie</code>，故影响有限，但如果引用了需要鉴权的图片，可能会受到影响</li>
+</ul>
+<h6 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h6><p>我们再看看会出现什么的问题？举几个例子</p>
+<ul>
+<li>通过接口获取的登录信息，由于 <code>Cookie</code> 丢失，用户无法登录，页面还会误判断成是由于用户开启了浏览器的禁止第三方 <code>Cookie</code> 功能导致而给与错误的提示</li>
+<li>一些站点上使用 <code>iframe</code> 嵌入的部分，没有了 <code>Cookie</code>，都会受到影响</li>
+<li>一些埋点系统会把用户 <code>id</code> 信息埋到 <code>Cookie</code> 中，用于日志上报，这种系统一般走的都是单独的域名，与业务域名分开，所以也会受到影响</li>
+<li>一些用于防止恶意请求的系统，对判断为恶意请求的访问会弹出验证码让用户进行安全验证，通过安全验证后会在请求所在域设置一个 <code>Cookie</code>，请求中带上这个 <code>Cookie</code> 之后，短时间内不再弹安全验证码，在 <code>Chrome 80</code> 以上如果因为 <code>Samesite</code> 的原因请求没办法带上这个 <code>Cookie</code>，则会出现一直弹出验证码进行安全验证</li>
+<li>某些请求了跨域的接口，因为没有 <code>Cookie</code>，接口不会返回数据</li>
+</ul>
+<h6 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h6><p>解决方案就是设置 <code>SameSite</code> 为 <code>none</code>，以 <code>Adobe</code> 网站为例 <a href="https://www.adobe.com/sea/" target="_blank" rel="noopener">www.adobe.com/sea/</a>，查看请求可以看到 <code>SameSite</code> 是为 <code>none</code> 的，如下图</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/http/02-07.png" alt></p>
+<p>这里也有两点我们需要注意的地方</p>
+<ul>
+<li><code>HTTP</code> 接口不支持 <code>SameSite=none</code></li>
+</ul>
+<p>如果想加 <code>SameSite=none</code> 属性，那么该 <code>Cookie</code> 就必须同时加上 <code>Secure</code> 属性，表示只有在 <code>HTTPS</code> 协议下该 <code>Cookie</code> 才会被发送</p>
+<ul>
+<li>需要 <code>UA</code> 检测，部分浏览器不能加 <code>SameSite=none</code></li>
+</ul>
+<p><code>iOS 12</code> 的 <code>Safari</code> 以及老版本的一些 <code>Chrome</code> 会把 <code>SameSite=none</code> 识别成 <code>SameSite=Strict</code>，所以服务端必须在下发 <code>Set-Cookie</code> 响应头时进行 <code>User-Agent</code> 检测，对这些浏览器不下发 <code>SameSite=none</code> 属性</p>
+<h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><p>我们下面来看一个实际的使用示例，即 <code>express</code> 中的 <code>Cookie</code> 是如何使用的，这里需要注意的是 <code>express</code> 在 <code>4.x</code> 版本之后，<code>Session</code> 的管理和 <code>Cookies</code> 等许多模块都不再直接包含在 <code>express</code> 中，而是需要单独添加相应模块，在 <code>express</code> 在 <code>4.x</code> 版本中操作 <code>Cookie</code> 可以使用 <a href="HTTPs://github.com/expressjs/cookie-parser" target="_blank" rel="noopener">cookie-parser</a> 模块</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>)</span><br><span class="line"><span class="hljs-keyword">var</span> cookieParser = <span class="hljs-built_in">require</span>(<span class="hljs-string">'cookie-parser'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> app = express()</span><br><span class="line">app.listen(<span class="hljs-number">3000</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 使用 cookieParser 中间件，cookieParser(secret, options)</span></span><br><span class="line"><span class="hljs-comment">// 其中 secret 用来加密 Cookie 字符串（下面会提到 signedCookies）</span></span><br><span class="line"><span class="hljs-comment">// options 传入上面介绍的 Cookie 可选参数</span></span><br><span class="line">app.use(cookieParser())</span><br><span class="line"></span><br><span class="line">app.get(<span class="hljs-string">'/'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-comment">// 如果请求中的 Cookie 存在 isVisit, 则输出 Cookie</span></span><br><span class="line">  <span class="hljs-comment">// 否则，设置 Cookie 字段 isVisit, 并设置过期时间为1分钟</span></span><br><span class="line">  <span class="hljs-keyword">if</span> (req.cookies.isVisit) &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(req.cookies)</span><br><span class="line">    res.send(<span class="hljs-string">'再次欢迎访问'</span>)</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">    res.cookie(<span class="hljs-string">'isVisit'</span>, <span class="hljs-number">1</span>, &#123; <span class="hljs-attr">maxAge</span>: <span class="hljs-number">60</span> * <span class="hljs-number">1000</span> &#125;)</span><br><span class="line">    res.send(<span class="hljs-string">'欢迎第一次访问'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
 
 <h2 id="什么是-Session"><a href="#什么是-Session" class="headerlink" title="什么是 Session"></a>什么是 Session</h2><p><code>Cookie</code> 虽然很方便，但是使用 <code>Cookie</code> 有一个很大的弊端，那就是 <code>Cookie</code> 中的所有数据在客户端就可以被修改，数据非常容易被伪造，那么一些重要的数据就不能存放在 <code>Cookie</code> 中了，而且如果 <code>Cookie</code> 中数据字段太多会影响传输效率，为了解决这些问题，就产生了 <code>Session</code>，<code>Session</code> 是另一种记录服务器和客户端会话状态的机制，<code>Session</code> 是基于 <code>Cookie</code> 实现的，<code>Session</code> 中的数据是保留在服务器端的，流程可以如下图所示</p>
@@ -582,7 +680,59 @@
         <a class="is-flex" href="#什么是-Cookie">
         <span class="has-mr-6">4</span>
         <span>什么是 Cookie</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#Name-Value">
+        <span class="has-mr-6">4.1</span>
+        <span>Name/Value</span>
         </a></li><li>
+        <a class="is-flex" href="#Expires">
+        <span class="has-mr-6">4.2</span>
+        <span>Expires</span>
+        </a></li><li>
+        <a class="is-flex" href="#Max-Age">
+        <span class="has-mr-6">4.3</span>
+        <span>Max-Age</span>
+        </a></li><li>
+        <a class="is-flex" href="#Domain">
+        <span class="has-mr-6">4.4</span>
+        <span>Domain</span>
+        </a></li><li>
+        <a class="is-flex" href="#Path">
+        <span class="has-mr-6">4.5</span>
+        <span>Path</span>
+        </a></li><li>
+        <a class="is-flex" href="#Secure">
+        <span class="has-mr-6">4.6</span>
+        <span>Secure</span>
+        </a></li><li>
+        <a class="is-flex" href="#HTTPOnly">
+        <span class="has-mr-6">4.7</span>
+        <span>HTTPOnly</span>
+        </a></li><li>
+        <a class="is-flex" href="#SameSite">
+        <span class="has-mr-6">4.8</span>
+        <span>SameSite</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#跨域和跨站">
+        <span class="has-mr-6">4.8.1</span>
+        <span>跨域和跨站</span>
+        </a></li><li>
+        <a class="is-flex" href="#改变">
+        <span class="has-mr-6">4.8.2</span>
+        <span>改变</span>
+        </a></li><li>
+        <a class="is-flex" href="#问题">
+        <span class="has-mr-6">4.8.3</span>
+        <span>问题</span>
+        </a></li><li>
+        <a class="is-flex" href="#解决方法">
+        <span class="has-mr-6">4.8.4</span>
+        <span>解决方法</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#实例">
+        <span class="has-mr-6">4.9</span>
+        <span>实例</span>
+        </a></li></ul></li><li>
         <a class="is-flex" href="#什么是-Session">
         <span class="has-mr-6">5</span>
         <span>什么是 Session</span>
@@ -764,7 +914,9 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            最新文章
+            <a href="/tips" class="tips">
+                最新文章
+            </a>
         </h3>
         
         <article class="media">

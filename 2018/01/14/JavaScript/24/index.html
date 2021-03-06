@@ -16,7 +16,7 @@
 <meta property="og:description" content="最后更新于 2020-02-22  深浅拷贝也算是一个老生常谈的话题了，它也是一些面试题当中的高频题目，所以今天就抽些时间来深入的了解一下 JavaScript 中的深浅拷贝，也算是记录记录，不过在此之前我们先来了解一下可能会与深浅拷贝所混淆的『赋值』概念">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/24.webp">
-<meta property="og:updated_time" content="2021-02-28T09:43:27.682Z">
+<meta property="og:updated_time" content="2021-03-06T14:15:35.384Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的深浅拷贝">
 <meta name="twitter:description" content="最后更新于 2020-02-22  深浅拷贝也算是一个老生常谈的话题了，它也是一些面试题当中的高频题目，所以今天就抽些时间来深入的了解一下 JavaScript 中的深浅拷贝，也算是记录记录，不过在此之前我们先来了解一下可能会与深浅拷贝所混淆的『赋值』概念">
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    35 分钟 读完 (大约 5247 个字)
+                    37 分钟 读完 (大约 5580 个字)
                 </span>
                 
                 
@@ -322,6 +322,17 @@
 <p>结果如下</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  a: <span class="hljs-number">1</span>,</span><br><span class="line">  b: <span class="hljs-literal">undefined</span>,</span><br><span class="line">  bool: [<span class="hljs-built_in">Boolean</span>: <span class="hljs-literal">true</span>],</span><br><span class="line">  c: &#123; <span class="hljs-attr">name</span>: <span class="hljs-number">2</span> &#125;,</span><br><span class="line">  d: [<span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>],</span><br><span class="line">  date: Mon Feb <span class="hljs-number">22</span> <span class="hljs-number">2020</span> <span class="hljs-number">22</span>:<span class="hljs-number">14</span>:<span class="hljs-number">00</span> GMT+<span class="hljs-number">0800</span> (中国标准时间) &#123;&#125;,</span><br><span class="line">  e: <span class="hljs-literal">null</span>,</span><br><span class="line">  error: <span class="hljs-built_in">Error</span>,</span><br><span class="line">  func1: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'func1'</span>) &#125;,</span><br><span class="line">  func2: [ƒ anonymous(a, b)],</span><br><span class="line">  map: &#123;<span class="hljs-string">'key'</span> =&gt; <span class="hljs-string">'value'</span>&#125;</span><br><span class="line">  num: [<span class="hljs-built_in">Number</span>: <span class="hljs-number">2</span>],</span><br><span class="line">  reg: <span class="hljs-regexp">/\d+/</span>,</span><br><span class="line">  <span class="hljs-keyword">set</span>: &#123;<span class="hljs-string">'key'</span>, <span class="hljs-string">'value'</span>&#125;</span><br><span class="line">  str: [<span class="hljs-built_in">String</span>: <span class="hljs-string">'2'</span>] ，</span><br><span class="line">  symbol: [<span class="hljs-built_in">Symbol</span>: <span class="hljs-built_in">Symbol</span>(<span class="hljs-number">1</span>)],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<h2 id="Vuex-当中的实现"><a href="#Vuex-当中的实现" class="headerlink" title="Vuex 当中的实现"></a>Vuex 当中的实现</h2><p>最后的最后，我们再来看看 <code>Vuex</code> 当中 <code>deepCopy</code> 的源码部分，与我们手动实现的版本可以做一个对比，加深印象，实现如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">deepCopy</span>(<span class="hljs-params">obj, cache = []</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">if</span> (obj === <span class="hljs-literal">null</span> || <span class="hljs-keyword">typeof</span> obj !== <span class="hljs-string">'object'</span>) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> obj</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">const</span> hit = cache.filter(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c.original === obj)[<span class="hljs-number">0</span>]</span><br><span class="line">  <span class="hljs-keyword">if</span> (hit) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> hit.copy</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">const</span> copy = <span class="hljs-built_in">Array</span>.isArray(obj) ? [] : &#123;&#125;</span><br><span class="line">  <span class="hljs-comment">// 将 copy 首先放入 cache，因为我们需要在递归 deepCopy 的时候引用它</span></span><br><span class="line">  cache.push(&#123;</span><br><span class="line">    original: obj,</span><br><span class="line">    copy</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="hljs-built_in">Object</span>.keys(obj).forEach(<span class="hljs-function"><span class="hljs-params">key</span> =&gt;</span> &#123;</span><br><span class="line">    copy[key] = deepCopy(obj[key], cache)</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="hljs-keyword">return</span> copy</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里我们着重介绍这一部分</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> hit = cache.filter(<span class="hljs-function"><span class="hljs-params">c</span> =&gt;</span> c.original === obj)[<span class="hljs-number">0</span>]</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">if</span> (hit) &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> hit.copy</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这一部分判断的作用主要是针对如果传入的对象与缓存的相等，则递归结束，这样可以防止循环，类似下面这种</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> a = &#123; <span class="hljs-attr">b</span>: <span class="hljs-number">1</span> &#125;</span><br><span class="line">a.c = a</span><br></pre></td></tr></table></figure>
+
+<p>更多详细内容可以参考 <code>MDN</code> 上面的 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Errors/Cyclic_object_value" target="_blank" rel="noopener">TypeError: cyclic object value</a></p>
+<p>当然你可能会发现，这里并没有针对 <code>Map</code>，<code>Set</code>，<code>Date</code> 等特殊对象来进行处理，因为针对于我们平常的开发任务来说，针对性的处理 <code>{}</code> 和 <code>[]</code> 就已经足够我们使用了，当然还是需要根据实际使用场景来选择最为适合的方式</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="https://lodash.com/docs/#cloneDeep" target="_blank" rel="noopener">Lodash</a></li>
 <li><a href="https://github.com/jsmini/clone/blob/master/README-zh_CN.md" target="_blank" rel="noopener">clone</a></li>
@@ -526,8 +537,12 @@
         <span class="has-mr-6">8</span>
         <span>完整代码</span>
         </a></li><li>
-        <a class="is-flex" href="#参考">
+        <a class="is-flex" href="#Vuex-当中的实现">
         <span class="has-mr-6">9</span>
+        <span>Vuex 当中的实现</span>
+        </a></li><li>
+        <a class="is-flex" href="#参考">
+        <span class="has-mr-6">10</span>
         <span>参考</span>
         </a></li></ul>
         </div>
@@ -635,7 +650,9 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            最新文章
+            <a href="/tips" class="tips">
+                最新文章
+            </a>
         </h3>
         
         <article class="media">

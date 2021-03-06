@@ -16,7 +16,7 @@
 <meta property="og:description" content="今天我们就来简单的复习一下 JavaScript 当中的正则表达式的一些内容，顺便记录记录，关于正则表达式，官网的说法是，正则表达式（regular expression）描述了一种字符串匹配的模式（pattern），可以用来检查一个串是否含有某种子串、将匹配的子串替换或者从某个串中取出符合某个条件的子串等">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/47.webp">
-<meta property="og:updated_time" content="2021-02-19T11:48:20.847Z">
+<meta property="og:updated_time" content="2021-03-06T14:15:35.387Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="正则表达式">
 <meta name="twitter:description" content="今天我们就来简单的复习一下 JavaScript 当中的正则表达式的一些内容，顺便记录记录，关于正则表达式，官网的说法是，正则表达式（regular expression）描述了一种字符串匹配的模式（pattern），可以用来检查一个串是否含有某种子串、将匹配的子串替换或者从某个串中取出符合某个条件的子串等">
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    11 分钟 读完 (大约 1713 个字)
+                    11 分钟 读完 (大约 1720 个字)
                 </span>
                 
                 
@@ -266,7 +266,7 @@
 
 <h4 id="千位分隔符"><a href="#千位分隔符" class="headerlink" title="千位分隔符"></a>千位分隔符</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">commafy</span>(<span class="hljs-params">num</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> num &amp;&amp; num</span><br><span class="line">    .toString()</span><br><span class="line">    <span class="hljs-comment">// 也可以使用 /\B(?=(\d&#123;3&#125;)+$)/g</span></span><br><span class="line">    .replace(<span class="hljs-regexp">/(\d)(?=(\d&#123;3&#125;)+\.)/g</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">$<span class="hljs-number">0</span>, $<span class="hljs-number">1</span></span>) </span>&#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> $<span class="hljs-number">1</span> + <span class="hljs-string">','</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">commafy(<span class="hljs-number">1234567.90</span>)</span><br></pre></td></tr></table></figure>
 
-<h4 id="解析-URL"><a href="#解析-URL" class="headerlink" title="解析 URL"></a>解析 URL</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">parseParam</span>(<span class="hljs-params">url</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> param = &#123;&#125;</span><br><span class="line">  url.replace(<span class="hljs-regexp">/[?&amp;](.*?)=([^&amp;]*)/g</span>, (m, $<span class="hljs-number">1</span>, $<span class="hljs-number">2</span>) =&gt; param[$<span class="hljs-number">1</span>] = $<span class="hljs-number">2</span>)</span><br><span class="line">  <span class="hljs-keyword">return</span> param</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">parseParam(<span class="hljs-string">'https://www.baidu.com?id=123&amp;name=zhangsan'</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="解析-URL"><a href="#解析-URL" class="headerlink" title="解析 URL"></a>解析 URL</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> getURLParameters = <span class="hljs-function"><span class="hljs-params">url</span> =&gt;</span></span><br><span class="line">  (url.match(<span class="hljs-regexp">/([^?=&amp;]+)(=([^&amp;]*))/g</span>) || []).reduce(</span><br><span class="line">    (a, v) =&gt; ((a[v.slice(<span class="hljs-number">0</span>, v.indexOf(<span class="hljs-string">'='</span>))] = v.slice(v.indexOf(<span class="hljs-string">'='</span>) + <span class="hljs-number">1</span>)), a),</span><br><span class="line">    &#123;&#125;</span><br><span class="line">  )</span><br><span class="line"></span><br><span class="line">getURLParameters(<span class="hljs-string">'https://www.baidu.com?id=123&amp;name=zhangsan'</span>)</span><br></pre></td></tr></table></figure>
 
 <h4 id="字符串大小写切换"><a href="#字符串大小写切换" class="headerlink" title="字符串大小写切换"></a>字符串大小写切换</h4><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">caseConvert</span>(<span class="hljs-params">str</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> str.replace(<span class="hljs-regexp">/([a-z]*)([A-Z]*)/g</span>, (m, s1, s2) =&gt; &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">$&#123;s1.toUpperCase()&#125;</span><span class="hljs-subst">$&#123;s2.toLowerCase()&#125;</span>`</span></span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">caseConvert(<span class="hljs-string">'abcdefg'</span>)</span><br><span class="line">caseConvert(<span class="hljs-string">'ABCDEFG'</span>)</span><br></pre></td></tr></table></figure>
 
@@ -640,7 +640,9 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            最新文章
+            <a href="/tips" class="tips">
+                最新文章
+            </a>
         </h3>
         
         <article class="media">

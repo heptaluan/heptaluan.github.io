@@ -16,7 +16,7 @@
 <meta property="og:description" content="所谓事件，说的就是用户或浏览器自身执行的某种动作，诸如 click、load、mouseover 等，事件处理程序响应某个事件的函数就叫事件处理程序（或事件侦听器）">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/01.webp">
-<meta property="og:updated_time" content="2021-01-30T14:34:51.696Z">
+<meta property="og:updated_time" content="2021-03-06T14:15:35.380Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="JavaScript 中的事件">
 <meta name="twitter:description" content="所谓事件，说的就是用户或浏览器自身执行的某种动作，诸如 click、load、mouseover 等，事件处理程序响应某个事件的函数就叫事件处理程序（或事件侦听器）">
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    22 分钟 读完 (大约 3342 个字)
+                    23 分钟 读完 (大约 3442 个字)
                 </span>
                 
                 
@@ -282,7 +282,13 @@
 <p>下面我们来创建一个支持冒泡且不能被取消的 <code>look</code> 事件的示例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> myEvent = <span class="hljs-keyword">new</span> Event(<span class="hljs-string">'look'</span>, &#123;</span><br><span class="line">  bubbles: <span class="hljs-literal">true</span>,</span><br><span class="line">  cancelable: <span class="hljs-literal">false</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">document</span>.dispatchEvent(myEvent)</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 事件可以在任何元素触发，不仅仅是 document</span></span><br><span class="line">myDiv.dispatchEvent(myEvent)</span><br></pre></td></tr></table></figure>
 
-<p>但是这种方式存在一定的局限性，那就是无法传递参数，如果我们想要传递参数的话，则可以使用 <code>CustomEvent</code>，从技术上讲 <code>CustomEvent</code> 和 <code>Event</code> 一样，除了一点不同，即在第二个参数（对象）中，我们可以为我们想要与事件一起传递的任何自定义信息添加一个附加的属性 <code>detail</code>，下面是一个简单的示例</p>
+<p>但是这种方式存在一定的局限性，那就是无法传递参数，如果我们想要传递参数的话，则可以使用 <code>CustomEvent</code>，从技术上讲 <code>CustomEvent</code> 和 <code>Event</code> 一样，除了一点不同，即在第二个参数（对象）中，我们可以为我们想要与事件一起传递的任何自定义信息添加一个附加的属性 <code>detail</code>，具体用法和上面的 <code>Event</code> 对象十分类似，语法如下</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> myEvent = <span class="hljs-keyword">new</span> CustomEvent(eventname, options)</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>options</code> 可以是</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  detail: &#123;</span><br><span class="line">    ...</span><br><span class="line">  &#125;,</span><br><span class="line">  bubbles: <span class="hljs-literal">true</span>,     <span class="hljs-comment">// 是否冒泡</span></span><br><span class="line">  cancelable: <span class="hljs-literal">false</span>  <span class="hljs-comment">// 是否取消默认事件</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>detail</code> 可以存放一些初始化的信息，可以在触发的时候调用，其他属性就是定义该事件是否具有冒泡等等功能，下面是一个简单的示例</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">el.addEventListener(<span class="hljs-string">'hello'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">e</span>) </span>&#123;</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(e.detail.name)  <span class="hljs-comment">// zhangsan</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">el.dispatchEvent(<span class="hljs-keyword">new</span> CustomEvent(<span class="hljs-string">'hello'</span>, &#123;</span><br><span class="line">  detail: &#123;</span><br><span class="line">    name: <span class="hljs-string">'zhangsan'</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;))</span><br></pre></td></tr></table></figure>
 
 <p>关于 <code>CustomEvent</code> 有一个坑就是，如果需要在事件处理函数（<code>addEventListener</code>）当中使用 <code>event.preventDefault()</code> 的话，则需要在 <code>CustomEvent</code> 当中指定 <code>cancelable: true</code>，否则 <code>event.preventDefault()</code> 调用将会被忽略，如下</p>
@@ -613,7 +619,9 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            最新文章
+            <a href="/tips" class="tips">
+                最新文章
+            </a>
         </h3>
         
         <article class="media">

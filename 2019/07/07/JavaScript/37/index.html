@@ -16,7 +16,7 @@
 <meta property="og:description" content="在展开渲染机制相关内容之前，我们先来简单的了解一下常见的浏览器内核有哪些，浏览器的内核是指支持浏览器运行的最核心的程序，分为两个部分的，一是渲染引擎，另一个是 JavaScript 引擎（比如我们经常可以听到的 V8 引擎），渲染引擎在不同的浏览器中也不是都相同的，目前市面上常见的浏览器内核主要有以下这些    浏览器/RunTime 内核（渲染引擎） JavaScript 引擎    Chrom">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://gitee.com/heptaluan/backups/raw/master/cdn/cover/37.webp">
-<meta property="og:updated_time" content="2021-01-30T14:34:51.724Z">
+<meta property="og:updated_time" content="2021-03-06T14:15:35.386Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="浏览器的渲染机制">
 <meta name="twitter:description" content="在展开渲染机制相关内容之前，我们先来简单的了解一下常见的浏览器内核有哪些，浏览器的内核是指支持浏览器运行的最核心的程序，分为两个部分的，一是渲染引擎，另一个是 JavaScript 引擎（比如我们经常可以听到的 V8 引擎），渲染引擎在不同的浏览器中也不是都相同的，目前市面上常见的浏览器内核主要有以下这些    浏览器/RunTime 内核（渲染引擎） JavaScript 引擎    Chrom">
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    1 小时 读完 (大约 7175 个字)
+                    1 小时 读完 (大约 11453 个字)
                 </span>
                 
                 
@@ -221,7 +221,7 @@
 <td><code>V8</code></td>
 </tr>
 </tbody></table>
-<p>这里面大家最耳熟能详的可能就是 <code>Webkit</code> 内核了，其中的 <code>Blink</code> 其实就是 <code>Webkit</code> 的一个分支，也就是说它也是基于 <code>Webkit</code> 的，所以本章也就以 <code>Webkit</code> 为例，来看看浏览器的渲染机制到底是一个什么样的过程，不过在此之前，我们先来简单的了解一下浏览器的主要组成部分</p>
+<p>这里面大家最耳熟能详的可能就是 <code>Webkit</code> 内核了，其中的 <code>Blink</code> 其实就是 <code>Webkit</code> 的一个分支，也就是说它也是基于 <code>Webkit</code> 的，所以本章也就以 <code>Webkit</code> 为例，来看看浏览器的渲染机制到底是一个什么样的过程，不过在此之前，我们先来简单的了解一下浏览器的主要组成部分和它包含的一些主要进程，这有助于我们下面更好的理解浏览器当中的渲染机制</p>
 <a id="more"></a>
 
 
@@ -237,21 +237,85 @@
 </ul>
 <p>如下图所示</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-01.png" alt></p>
-<h2 id="页面加载过程"><a href="#页面加载过程" class="headerlink" title="页面加载过程"></a>页面加载过程</h2><p>这里我们就简单的梳理一下，至于更为详细的过程可以参考之前整理过的 <a href="https://heptaluan.github.io/2017/11/07/HTTP/01/" target="_blank" rel="noopener">浏览器输入网址到页面展示所经历的过程</a> 和 <a href="https://heptaluan.github.io/2017/12/01/HTTP/03/" target="_blank" rel="noopener">域名发散与收敛</a> 当中的相关内容，流程如下</p>
+<h2 id="浏览器的主要进程"><a href="#浏览器的主要进程" class="headerlink" title="浏览器的主要进程"></a>浏览器的主要进程</h2><p>我们在之前的章节当中已经简单介绍了进程和线程的一些相关内容（可见 <a href="http://localhost:4000/2018/08/12/JavaScript/30/" target="_blank" rel="noopener">JavaScript 中的事件轮询机制</a>），这里我们简单的复习一下</p>
 <ul>
-<li>浏览器根据 <code>DNS</code> 服务器得到域名的 <code>IP</code> 地址</li>
-<li>向这个 <code>IP</code> 的机器发送 <code>HTTP</code> 请求</li>
-<li>服务器收到、处理并返回 <code>HTTP</code> 请求</li>
-<li>浏览器得到返回内容</li>
+<li>进程是 <code>CPU</code> 资源分配的最小单位（是能拥有资源和独立运行的最小单位）</li>
+<li>线程是 <code>CPU</code> 调度的最小单位（线程是建立在进程的基础上的一次程序运行单位，一个进程中可以有多个线程）</li>
+<li>不同进程之间也可以通信，不过代价较大</li>
+<li>单线程与多线程，都是指在一个进程内的单和多</li>
 </ul>
-<p>其实简单来说，过程就是 请求/响应 的过程，目的是为了拿到渲染需要的 <code>HTML</code> 等一类资源，有了资源以后，接下来就是浏览器的渲染过程</p>
-<h2 id="页面解析和页面渲染"><a href="#页面解析和页面渲染" class="headerlink" title="页面解析和页面渲染"></a>页面解析和页面渲染</h2><p>大家都听说过 <code>&lt;script&gt;</code> 标签会阻塞 <code>HTML</code> 页面解析，而 <code>&lt;link&gt;</code> 标签则不会，结果也确实是这样的，<code>&lt;link&gt;</code> 等样式资源的下载、解析确实不会阻塞页面的解析，但它们会阻塞页面的渲染，我们来看看两者的区别</p>
+<p>对于计算机来说，每一个应用程序都是一个进程，而每一个应用程序都会分别有很多的功能模块，这些功能模块实际上是通过子进程来实现的，对于这种子进程的扩展方式，我们可以称这个应用程序是多进程的</p>
+<p>而对于浏览器来说，浏览器就是多进程的，比如我们在 <code>Chrome</code> 浏览器中打开了多个 <code>TAB</code>，然后打开控制管理器是可以看到一个 <code>Chrome</code> 浏览器启动了好多个进程，那么浏览器又是具体包含了哪些进程呢？可以参考下面这个图片</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-15.png" alt></p>
+<p>可以归纳为以下这些</p>
+<ul>
+<li>主进程（<code>Browser Process</code>）<ul>
+<li>协调控制其他子进程（创建、销毁）</li>
+<li>浏览器界面显示，用户交互，前进、后退、收藏</li>
+<li>将渲染进程得到的内存中的 <code>Bitmap</code>，绘制到用户界面上</li>
+<li>处理不可见操作，网络请求，文件访问等</li>
+</ul>
+</li>
+<li>第三方插件进程（<code>Plugin Process</code>）<ul>
+<li>每种类型的插件对应一个进程，仅当使用该插件时才创建</li>
+</ul>
+</li>
+<li><code>GPU</code> 进程（<code>GPU Process</code>）<ul>
+<li>最多只有一个，用于 <code>3D</code> 绘制等</li>
+</ul>
+</li>
+<li>渲染进程（<code>Renderer Process</code>）<ul>
+<li>也称为浏览器渲染进程或浏览器内核，内部是多线程的</li>
+<li>主要负责页面渲染，脚本执行，事件处理等</li>
+<li>每个 <code>TAB</code> 页一个渲染进程</li>
+</ul>
+</li>
+</ul>
+<p>其实上面的有些进程我们不需要太过理解，在这里我们只需要重点关心渲染进程，也就是我们常说的浏览器内核</p>
+<h2 id="渲染进程（浏览器内核）"><a href="#渲染进程（浏览器内核）" class="headerlink" title="渲染进程（浏览器内核）"></a>渲染进程（浏览器内核）</h2><p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-16.png" alt></p>
+<p>进程和线程是一对多的关系，也就是说一个进程包含了多条线程，而对于渲染进程来说，它当然也是多线程的了，接下来我们来看一下渲染进程包含哪些线程，主要有以下这些</p>
+<ul>
+<li><code>GUI</code> 渲染线程 <ul>
+<li>负责渲染浏览器界面，解析 <code>HTML</code>，<code>CSS</code>，构建 <code>DOM</code> 树和 <code>RenderObject</code> 树，布局和绘制等</li>
+<li>当界面需要重绘（<code>Repaint</code>）或由于某种操作引发回流（<code>reflow</code>）时，该线程就会执行</li>
+<li>注意，<code>GUI</code> 渲染线程与 <code>JavaScript</code> 引擎线程是互斥的，当 <code>JavaScript</code> 引擎执行时 <code>GUI</code> 线程会被挂起（相当于被冻结了），<code>GUI</code> 更新会被保存在一个队列中等到 <code>JavaScript</code> 引擎空闲时立即被执行</li>
+</ul>
+</li>
+<li><code>JavaScript</code> 引擎线程 <ul>
+<li>该线程也称为 <code>JavaScript</code> 内核，负责处理 <code>JavaScript</code> 脚本程序（例如 <code>V8</code> 引擎）</li>
+<li><code>JavaScript</code> 引擎线程负责解析 <code>JavaScript</code> 脚本，运行代码</li>
+<li><code>JavaScript</code> 引擎一直等待着任务队列中任务的到来，然后加以处理，一个 <code>Tab</code> 页（<code>renderer</code> 进程）中无论什么时候都只有一个 <code>JavaScript</code> 线程在运行 <code>JavaScript</code> 程序</li>
+<li>注意，<code>GUI</code> 渲染线程与 <code>JavaScript</code> 引擎线程是互斥的，所以如果 <code>JavaScript</code> 执行的时间过长，这样就会造成页面的渲染不连贯，导致页面渲染加载阻塞</li>
+</ul>
+</li>
+<li>事件触发线程 <ul>
+<li>归属于浏览器而不是 <code>JavaScript</code> 引擎，用来控制事件循环（可以理解，<code>JavaScript</code> 引擎自己都忙不过来，需要浏览器另开线程协助）</li>
+<li>当 <code>JavaScript</code> 引擎执行代码块如 <code>setTimeOut</code> 时（也可来自浏览器内核的其他线程，如鼠标点击、<code>Ajax</code> 异步请求等），会将对应任务添加到事件线程中</li>
+<li>当对应的事件符合触发条件被触发时，该线程会把事件添加到待处理队列的队尾，等待 <code>JavaScript</code> 引擎的处理</li>
+<li>注意，由于 <code>JavaScript</code> 的单线程关系，所以这些待处理队列中的事件都得排队等待 <code>JavaScript</code> 引擎处理（当 <code>JavaScript</code> 引擎空闲时才会去执行）</li>
+</ul>
+</li>
+<li>定时触发器线程 <ul>
+<li>传说中的 <code>setInterval</code> 与 <code>setTimeout</code> 所在线程</li>
+<li>浏览器定时计数器并不是由 <code>JavaScript</code> 引擎计数的，（因为 <code>JavaScript</code> 引擎是单线程的， 如果处于阻塞线程状态就会影响记计时的准确）</li>
+<li>因此通过单独线程来计时并触发定时（计时完毕后，添加到事件队列中，等待 <code>JavaScript</code> 引擎空闲后执行）</li>
+<li>注意，<code>W3C</code> 在 <code>HTML</code> 标准中规定，规定要求 <code>setTimeout</code> 中低于 <code>4ms</code> 的时间间隔算为 <code>4ms</code></li>
+</ul>
+</li>
+<li>异步 <code>HTTP</code> 请求线程 <ul>
+<li>在 <code>XMLHttpRequest</code> 在连接后是通过浏览器新开一个线程请求</li>
+<li>将检测到状态变更时，如果设置有回调函数，异步线程就产生状态变更事件，将这个回调再放入事件队列中再由 <code>JavaScript</code> 引擎执行</li>
+</ul>
+</li>
+</ul>
+<p>在了解完浏览器的一些相关内容后，下面我们就来正式的看看浏览器的渲染过程到底是什么样子的</p>
+<h2 id="渲染过程"><a href="#渲染过程" class="headerlink" title="渲染过程"></a>渲染过程</h2><p>本小节内容主要参考的是 <a href="https://developers.google.com/web/fundamentals/performance/critical-rendering-path/?hl=en" target="_blank" rel="noopener">Critical Rendering Path</a> 当中的内容，这里有所调整，主要是方便自己理解，如果想要了解更为详细的内容可以参考原文</p>
+<p>大家都听说过 <code>&lt;script&gt;</code> 标签会阻塞 <code>HTML</code> 页面解析，而 <code>&lt;link&gt;</code> 标签则不会，结果也确实是这样的，<code>&lt;link&gt;</code> 等样式资源的下载、解析确实不会阻塞页面的解析，但它们会阻塞页面的渲染，我们来看看两者的区别</p>
 <ul>
 <li>页面解析，阻塞 <code>HTML</code> 页面解析，<code>HTML</code> 页面会被继续下载，但阻塞点后面的标签不会被解析，<code>&lt;img&gt;</code>，<code>&lt;link&gt;</code> 等不会发请求获取外部资源</li>
 <li>页面渲染，阻塞 <code>HTML</code> 页面渲染，<code>HTML</code> 页面会被继续下载，阻塞点后面的标签会继续被解析，<code>&lt;img&gt;</code>，<code>&lt;link&gt;</code> 等会继续发送请求获取外部资源，但不会合成 <code>Rendering Tree</code> 或不会触发页面渲染，也不会执行 <code>JavaScript</code> 代码</li>
 </ul>
-<h2 id="渲染过程"><a href="#渲染过程" class="headerlink" title="渲染过程"></a>渲染过程</h2><p>本小节内容主要参考的是 <a href="https://developers.google.com/web/fundamentals/performance/critical-rendering-path/?hl=en" target="_blank" rel="noopener">Critical Rendering Path</a> 当中的内容，这里有所调整，主要是方便自己理解，如果想要了解更为详细的内容可以参考原文</p>
-<p>想要理清楚我们在上面提到的页面解析和页面渲染之间的区别，我们需要先来了解一下 <code>Web</code> 浏览器的渲染机制，简单来说有以下几个步骤</p>
+<p>至于为什么会这样，我们就需要在浏览器的渲染机制当中来寻找答案了，简单来说有以下几个步骤</p>
 <h4 id="1、解析-HTML-标签，构建-DOM-树"><a href="#1、解析-HTML-标签，构建-DOM-树" class="headerlink" title="1、解析 HTML 标签，构建 DOM 树"></a>1、解析 HTML 标签，构建 DOM 树</h4><p>这个阶段对应着 <code>Create/Update DOM And request CSS/Images/JavaScript</code> 的过程，也就是说浏览器请求到 <code>HTML</code> 代码后，在生成 <code>DOM</code> 的最开始阶段（应该是 <code>Bytes → characters</code> 后），并行发起 <code>CSS</code>、<code>Images</code>、<code>JavaScript</code> 的请求，无论他们是否在 <code>HEAD</code> 里</p>
 <p>不过需要注意的是，发起 <code>JavaScript</code> 文件的下载 <code>request</code>，并不需要 <code>DOM</code> 处理到那个 <code>script</code> 节点</p>
 <h4 id="2-解析-CSS-标签，构建-CSSOM-树"><a href="#2-解析-CSS-标签，构建-CSSOM-树" class="headerlink" title="2. 解析 CSS 标签，构建 CSSOM 树"></a>2. 解析 CSS 标签，构建 CSSOM 树</h4><p>这个阶段对应着 <code>Create/Update Render CSSOM</code> 的过程，即 <code>CSS</code> 文件下载完成，开始构建 <code>CSSOM</code>，其中的 <code>CSSOM</code> 即 <code>CSS Object Model</code>，是浏览器将 <code>CSS</code> 代码解析成树形的数据结构，这个我们会在下方来进行介绍</p>
@@ -314,7 +378,7 @@
 <p>如果想知道哪些 <code>CSS</code> 属性会触发这三种方式，可以参考 <a href="https://csstriggers.com/" target="_blank" rel="noopener">CSS Triggers</a>，而对于高性能动画方面则可以参考 <a href="https://developers.google.com/web/fundamentals/performance/rendering/stick-to-compositor-only-properties-and-manage-layer-count" target="_blank" rel="noopener">使用渲染层合并属性</a></p>
 </blockquote>
 <h2 id="补充说明"><a href="#补充说明" class="headerlink" title="补充说明"></a>补充说明</h2><p>我们下面来看几个在上面过程当中延伸出来的问题</p>
-<h4 id="CSSOM"><a href="#CSSOM" class="headerlink" title="CSSOM"></a>CSSOM</h4><p><code>CSSOM</code> 是 <code>CSS Object Model</code> 的缩写，大体上来说，<code>CSSOM</code> 是一个建立在 <code>Web</code> 页面上的 <code>CSS</code> 样式的映射，它和 <code>DOM</code> 类似，但是只针对 <code>CSS</code> 而不是 <code>HTML</code>，浏览器将 <code>DOM</code> 和 <code>CSSOM</code> 结合来渲染 <code>Web</code> 页面</p>
+<h4 id="1-CSSOM"><a href="#1-CSSOM" class="headerlink" title="1. CSSOM"></a>1. CSSOM</h4><p><code>CSSOM</code> 是 <code>CSS Object Model</code> 的缩写，大体上来说，<code>CSSOM</code> 是一个建立在 <code>Web</code> 页面上的 <code>CSS</code> 样式的映射，它和 <code>DOM</code> 类似，但是只针对 <code>CSS</code> 而不是 <code>HTML</code>，浏览器将 <code>DOM</code> 和 <code>CSSOM</code> 结合来渲染 <code>Web</code> 页面</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-08.png" alt></p>
 <h6 id="CSSOM-是做什么的"><a href="#CSSOM-是做什么的" class="headerlink" title="CSSOM 是做什么的"></a>CSSOM 是做什么的</h6><p><code>CSSOM</code> 将样式表中的规则映射到页面对应的元素上，虽然 <code>CSSOM</code> 采取了复杂的措施来做这件事，但是 <code>CSSOM</code> 最终的功能还是将样式映射到它们应该对应的元素上去，更确切地说，<code>CSSOM</code> 识别 <code>tokens</code> 并把这些 <code>Tokens</code> 转换成一个树结构上的对应的结点，所有结点以及它们所关联的页面中的样式就是所谓的 <code>CSS Object Model</code>，从上面的渲染机制可以看出，<code>CSSOM</code> 对于 <code>Web</code> 页面的展示起着重要作用</p>
 <h6 id="使用-CSSOM"><a href="#使用-CSSOM" class="headerlink" title="使用 CSSOM"></a>使用 CSSOM</h6><p>其实我们不必为了优化 <code>Web</code> 页面而去了解 <code>CSSOM</code> 是怎样工作的，这里有几个关于 <code>CSSOM</code> 的关键点是我们需要知道的，利用这些关键点可以优化页面的加载速度</p>
@@ -342,7 +406,50 @@
 <li>如果我们阻塞了 <code>CSSOM</code> 的构建，<code>CSSOM</code> 的构建就会消耗更长的时间，这就意味着页面的渲染也需要更长的时间</li>
 <li>如果我们的 <code>JavaScript</code> 阻塞了 <code>CSSOM</code> 的构建，我们的用户就会面对更长时间的白屏</li>
 </ul>
-<h4 id="Async-和-Defer-有什么区别？"><a href="#Async-和-Defer-有什么区别？" class="headerlink" title="Async 和 Defer 有什么区别？"></a>Async 和 Defer 有什么区别？</h4><p>我们先来对比下 <code>Async</code> 和 <code>Defer</code> 属性的区别，如下图所示</p>
+<h4 id="2-为什么-JavaScript-是单线程的"><a href="#2-为什么-JavaScript-是单线程的" class="headerlink" title="2. 为什么 JavaScript 是单线程的"></a>2. 为什么 JavaScript 是单线程的</h4><p>首先是历史原因，在创建 <code>JavaScript</code> 这门语言时，多进程多线程的架构并不流行，硬件支持并不好，其次是因为多线程的复杂性，多线程操作需要加锁，编码的复杂性会增高</p>
+<p>如果 <code>JavaScript</code> 是多线程的方式来操作这些 <code>UI DOM</code>，则可能出现 <code>UI</code> 操作的冲突，在多线程的交互下，处于 <code>UI</code> 中的 <code>DOM</code> 节点就可能成为一个临界资源，假设存在两个线程同时操作一个 <code>DOM</code>，一个负责修改一个负责删除，那么这个时候就需要浏览器来裁决如何生效哪个线程的执行结果</p>
+<p>当然我们可以通过锁来解决上面的问题，但为了避免因为引入了锁而带来更大的复杂性，<code>JavaScript</code> 在最初就选择了单线程执行</p>
+<h4 id="3-为什么-GUI-渲染线程为什么与-JavaScript-引擎线程互斥"><a href="#3-为什么-GUI-渲染线程为什么与-JavaScript-引擎线程互斥" class="headerlink" title="3. 为什么 GUI 渲染线程为什么与 JavaScript 引擎线程互斥"></a>3. 为什么 GUI 渲染线程为什么与 JavaScript 引擎线程互斥</h4><p>由于 <code>JavaScript</code> 是可操纵 <code>DOM</code> 的，如果在修改这些元素属性同时渲染界面（即 <code>JavaScript</code> 线程和 <code>UI</code> 线程同时运行），那么渲染线程前后获得的元素数据就可能不一致了，因此为了防止渲染出现不可预期的结果，浏览器『设置 <code>GUI</code> 渲染线程与 <code>JavaScript</code> 引擎为互斥的关系』</p>
+<p>当 <code>JavaScript</code> 引擎执行时 <code>GUI</code> 线程会被挂起，<code>GUI</code> 更新会被保存在一个队列中等到引擎线程空闲时立即被执行，浏览器在执行 <code>JavaScript</code> 程序的时候，<code>GUI</code> 渲染线程会被保存在一个队列中，直到 <code>JavaScript</code> 程序执行完成，才会接着执行</p>
+<p>因此如果 <code>JavaScript</code> 执行的时间过长，这样就会造成页面的渲染不连贯，导致页面渲染加载阻塞的感觉</p>
+<h4 id="4-CSS-加载会造成阻塞吗"><a href="#4-CSS-加载会造成阻塞吗" class="headerlink" title="4. CSS 加载会造成阻塞吗"></a>4. CSS 加载会造成阻塞吗</h4><p>在上面的浏览器渲染流程当中我们可以看出，<code>DOM</code> 和 <code>CSSOM</code> 通常是并行构建的，所以 <code>CSS</code> 加载不会阻塞 <code>DOM</code> 的解析，然而由于 <code>Render Tree</code> 是依赖于 <code>DOM Tree</code> 和 <code>CSSOM Tree</code> 的，所以它必须等待到 <code>CSSOM Tree</code> 构建完成，也就是 <code>CSS</code> 资源加载完成（或者 <code>CSS</code> 资源加载失败）后，才能开始渲染，因此 <code>CSS</code> 加载会阻塞 <code>DOM</code> 的渲染</p>
+<p>由于 <code>JavaScript</code> 是可以操纵 <code>DOM</code> 和 <code>CSS</code> 样式的，如果在修改这些元素属性同时渲染界面（即 <code>JavaScript</code> 线程和 <code>UI</code> 线程同时运行），那么渲染线程前后获得的元素数据就可能不一致了，因此为了防止渲染出现不可预期的结果，浏览器设置 <code>GUI</code> 渲染线程与 <code>JavaScript</code> 引擎为互斥的关系</p>
+<p>这样一来，样式表会在后面的 <code>JavaScript</code> 执行前先加载执行完毕，所以 <code>CSS</code> 会阻塞后面 <code>JavaScript</code> 的执行</p>
+<h4 id="5-DOMContentLoaded-与-onload-的区别"><a href="#5-DOMContentLoaded-与-onload-的区别" class="headerlink" title="5. DOMContentLoaded 与 onload 的区别"></a>5. DOMContentLoaded 与 onload 的区别</h4><p>当 <code>DOMContentLoaded</code> 事件触发时，仅当 <code>DOM</code> 解析完成后，不包括样式表和图片，我们在上面提到过，<code>CSS</code> 加载会阻塞 <code>DOM</code> 的渲染和后面 <code>JavaScript</code> 的执行，也就是说 <code>JavaScript</code> 会阻塞 <code>DOM</code> 解析</p>
+<p>所以我们可以得到结论，当文档中没有脚本时，浏览器解析完文档便能触发 <code>DOMContentLoaded</code> 事件，如果文档中包含脚本，则脚本会阻塞文档的解析，而脚本需要等 <code>CSSOM</code> 构建完成才能执行，在任何情况下，<code>DOMContentLoaded</code> 的触发不需要等待图片等其他资源加载完成</p>
+<p>而当 <code>onload</code> 事件触发时，页面上所有的 <code>DOM</code>，样式表，脚本，图片等资源已经加载完毕，所以流程应该是由 <code>DOMContentLoaded</code> 到 <code>onload</code></p>
+<h4 id="6-如何优化-CRP"><a href="#6-如何优化-CRP" class="headerlink" title="6. 如何优化 CRP"></a>6. 如何优化 CRP</h4><p><code>CRP</code>，即关键渲染路径（<code>Critical Rendering Path</code>），它是浏览器将 <code>HTML/CSS/JavaScript</code> 转换为在屏幕上呈现的像素内容所经历的一系列步骤，也就是我们上面说的浏览器渲染流程，为了尽快完成首次渲染，我们需要最大限度减小以下三种可变因素</p>
+<ul>
+<li>关键资源的数量，可能阻止网页首次渲染的资源</li>
+<li>关键路径长度，获取所有关键资源所需的往返次数或总时间</li>
+<li>关键字节，实现网页首次渲染所需的总字节数，等同于所有关键资源传送文件大小的总和</li>
+</ul>
+<h6 id="优化-DOM"><a href="#优化-DOM" class="headerlink" title="优化 DOM"></a>优化 DOM</h6><ul>
+<li>删除不必要的代码和注释包括空格，尽量做到最小化文件</li>
+<li>可以利用 <code>GZIP</code> 压缩文件</li>
+<li>结合 <code>HTTP</code> 缓存文件</li>
+</ul>
+<h6 id="优化-CSSOM"><a href="#优化-CSSOM" class="headerlink" title="优化 CSSOM"></a>优化 CSSOM</h6><p>缩小、压缩以及缓存同样重要，对于 <code>CSSOM</code> 我们前面重点提过了它会阻止页面呈现，因此我们可以从这方面考虑去优化，步骤如下</p>
+<ul>
+<li>减少关键 <code>CSS</code> 元素数量</li>
+<li>当我们声明样式表时，请密切关注媒体查询的类型，它们极大地影响了 <code>CRP</code> 的性能</li>
+</ul>
+<h6 id="优化-JavaScript"><a href="#优化-JavaScript" class="headerlink" title="优化 JavaScript"></a>优化 JavaScript</h6><p>当浏览器遇到 <code>&lt;script&gt;</code> 标记时，会阻止解析器继续操作，直到 <code>CSSOM</code> 构建完毕，<code>JavaScript</code> 才会运行并继续完成 <code>DOM</code> 构建过程，所以我们可以考虑以下方式</p>
+<ul>
+<li><code>Async</code>，当我们在 <code>&lt;script&gt;</code> 标记中添加 <code>Async</code> 属性以后，浏览器遇到这个标记时会继续解析 <code>DOM</code>，同时脚本也不会被 <code>CSSOM</code> 阻止，即不会阻止 <code>CRP</code></li>
+<li><code>Defer</code>，与 <code>Async</code> 的区别在于，脚本需要等到文档解析后（<code>DOMContentLoaded</code> 事件前）执行，而 <code>Async</code> 允许脚本在文档解析时位于后台运行（两者下载的过程不会阻塞 <code>DOM</code>，但执行会）</li>
+<li>当我们的脚本不会修改 <code>DOM</code> 或 <code>CSSOM</code> 时推荐使用 <code>Async</code></li>
+<li>预加载（<code>preload &amp;&amp; prefetch</code>）</li>
+<li>DNS 预解析（<code>dns-prefetch</code>）</li>
+</ul>
+<h6 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h6><ul>
+<li>分析并用 关键资源数 关键字节数 关键路径长度 来描述我们的 <code>CRP</code></li>
+<li>最小化关键资源数，消除它们（内联）、推迟它们的下载（<code>Defer</code>）或者使它们异步解析（<code>Async</code>）等等</li>
+<li>优化关键字节数（缩小、压缩）来减少下载时间</li>
+<li>优化加载剩余关键资源的顺序，让关键资源（<code>CSS</code>）尽早下载以减少 <code>CRP</code> 长度</li>
+</ul>
+<p>更多相关内容可以参考 <a href="https://github.com/fi3ework/blog/issues/16" target="_blank" rel="noopener">前端性能优化之关键路径渲染优化</a></p>
+<h4 id="7-Async-和-Defer-的区别"><a href="#7-Async-和-Defer-的区别" class="headerlink" title="7. Async 和 Defer 的区别"></a>7. Async 和 Defer 的区别</h4><p>我们先来对比下 <code>Async</code> 和 <code>Defer</code> 属性的区别，如下图所示</p>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-10.png" alt></p>
 <p>其中蓝色线代表 <code>JavaScript</code> 加载，红色线代表 <code>JavaScript</code> 执行，绿色线代表 <code>HTML</code> 解析，所以我们也对应的分别来看看三种情况</p>
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=<span class="hljs-string">"example.js"</span>&gt;<span class="hljs-xml"><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
@@ -360,12 +467,15 @@
 <ol start="3">
 <li><code>Defer</code> 属性表示延迟执行引入的 <code>JavaScript</code>，即这段 <code>JavaScript</code> 加载时 <code>HTML</code> 并未停止解析，这两个过程是并行的，整个 <code>document</code> 解析完毕且 <code>defer-script</code> 也加载完成之后（这两件事情的顺序无关），会执行所有由 <code>defer-script</code> 加载的 <code>JavaScript</code> 代码，然后触发 <code>DOMContentLoaded</code> 事件</li>
 </ol>
-<p><code>Defer</code> 与相比普通 <code>&lt;script&gt;</code> 标签有两点区别，如下</p>
+<p>因此，我们可以得出结论</p>
 <ul>
-<li>载入 <code>JavaScript</code> 文件时不阻塞 <code>HTML</code> 的解析，执行阶段被放到 <code>HTML</code> 标签解析完成之后</li>
+<li><code>Defer</code> 和 <code>Async</code> 在网络读取（下载）这部分是一样的，都是异步的（相较于 <code>HTML</code> 解析）</li>
 <li>在加载多个 <code>JavaScript</code> 脚本的时候，<code>Async</code> 是无顺序的加载，而 <code>Defer</code> 是有顺序的加载</li>
+<li>差别在于脚本下载完之后何时执行，显然 <code>Defer</code> 是最接近我们对于应用脚本加载和执行的要求的</li>
+<li><code>Async</code> 是乱序执行，它的加载和执行是紧紧挨着的，所以不管声明的顺序如何，只要它加载完了就会立刻执行</li>
+<li>通常来说，<code>Async</code> 对于应用脚本的用处不大，因为它完全不考虑依赖（哪怕是最低级的顺序执行），不过它对于那些可以不依赖任何脚本或不被任何脚本依赖的脚本来说却是非常合适的</li>
 </ul>
-<h4 id="如何解析-CSS-选择器"><a href="#如何解析-CSS-选择器" class="headerlink" title="如何解析 CSS 选择器"></a>如何解析 CSS 选择器</h4><p>浏览器会『从右往左』解析 <code>CSS</code> 选择器，我们知道 <code>DOM Tree</code> 与 <code>Style Rules</code> 合成为 <code>Render Tree</code>，实际上是需要将 <code>Style Rules</code> 附着到 <code>DOM Tree</code> 上，因此需要根据选择器提供的信息对 <code>DOM Tree</code> 进行遍历，才能将样式附着到对应的 <code>DOM</code> 元素上，我们以下面这段 <code>CSS</code> 为例</p>
+<h4 id="8-如何解析-CSS-选择器"><a href="#8-如何解析-CSS-选择器" class="headerlink" title="8. 如何解析 CSS 选择器"></a>8. 如何解析 CSS 选择器</h4><p>浏览器会『从右往左』解析 <code>CSS</code> 选择器，我们知道 <code>DOM Tree</code> 与 <code>Style Rules</code> 合成为 <code>Render Tree</code>，实际上是需要将 <code>Style Rules</code> 附着到 <code>DOM Tree</code> 上，因此需要根据选择器提供的信息对 <code>DOM Tree</code> 进行遍历，才能将样式附着到对应的 <code>DOM</code> 元素上，我们以下面这段 <code>CSS</code> 为例</p>
 <figure class="highlight css hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-selector-class">.mod-nav</span> <span class="hljs-selector-tag">h3</span> <span class="hljs-selector-tag">span</span> &#123;<span class="hljs-attribute">font-size</span>: <span class="hljs-number">16px</span>;&#125;</span><br></pre></td></tr></table></figure>
 
 <p>对应的 <code>DOM Tree</code> 如下</p>
@@ -383,7 +493,7 @@
 <li>最后找到根元素 <code>html</code> 则结束这个分支的遍历</li>
 </ul>
 <p>两者对比下来，可以明显的发现后者匹配性能更好，是因为从右向左的匹配在第一步就筛选掉了大量的不符合条件的最右节点（叶子节点），而从左向右的匹配规则的性能都浪费在了失败的查找上面</p>
-<h4 id="回流与重绘"><a href="#回流与重绘" class="headerlink" title="回流与重绘"></a>回流与重绘</h4><p>渲染的流程基本上是这样（如下图黄色的四个步骤）</p>
+<h4 id="9-回流与重绘"><a href="#9-回流与重绘" class="headerlink" title="9. 回流与重绘"></a>9. 回流与重绘</h4><p>渲染的流程基本上是这样（如下图黄色的四个步骤）</p>
 <ol>
 <li>计算 <code>CSS</code> 样式</li>
 <li>构建 <code>Render Tree</code></li>
@@ -398,6 +508,9 @@
 </ul>
 <p>我们知道，当网页生成的时候，至少会渲染一次，在用户访问的过程中，还会不断重新渲染，重新渲染会重复 回流 + 重绘 或者只有重绘，回流必定会发生重绘，重绘不一定会引发回流，重绘和回流会在我们设置节点样式时频繁出现，同时也会很大程度上影响性能，回流所需的成本比重绘高的多，改变父节点里的子节点很可能会导致父节点的一系列回流</p>
 <h6 id="常见引起回流属性和方法"><a href="#常见引起回流属性和方法" class="headerlink" title="常见引起回流属性和方法"></a>常见引起回流属性和方法</h6><p>任何会改变元素几何信息（元素的位置和尺寸大小）的操作，都会触发回流，比如下面这些方式</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">clientWidth、clientHeight、clientTop、clientLeftoffsetWidth</span><br><span class="line"></span><br><span class="line">offsetHeight、offsetTop、offsetLeftscrollWidth</span><br><span class="line"></span><br><span class="line">scrollHeight、scrollTop、scrollLeftscrollIntoView()、scrollIntoViewIfNeeded()</span><br><span class="line"></span><br><span class="line">getComputedStyle()、getBoundingClientRect()、scrollTo()</span><br></pre></td></tr></table></figure>
+
+<p>具体表现为</p>
 <ul>
 <li>添加或者删除可见的 <code>DOM</code> 元素</li>
 <li>元素尺寸改变（边距、填充、边框、宽度和高度）</li>
@@ -429,7 +542,7 @@
 <figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> fragment = <span class="hljs-built_in">document</span>.createDocumentFragment()</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">10</span>; i++) &#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> node = <span class="hljs-built_in">document</span>.createElement(<span class="hljs-string">'p'</span>)</span><br><span class="line">  node.innerHTML = i</span><br><span class="line">  fragment.appendChild(node)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">document</span>.body.appendChild(fragment)</span><br></pre></td></tr></table></figure>
 
 <ul>
-<li>提升为合成层，将元素提升为合成层有以下优点<ul>
+<li>提升为合成层（关于合成层我们会在下面进行介绍），将元素提升为合成层有以下优点<ul>
 <li>合成层的位图，会交由 <code>GPU</code> 合成，比 <code>CPU</code> 处理要快</li>
 <li>当需要 <code>repaint</code> 时，只需要 <code>repaint</code> 本身，不会影响到其他的层</li>
 <li>对于 <code>transform</code> 和 <code>opacity</code> 效果，不会触发 <code>layout</code> 和 <code>paint</code></li>
@@ -440,16 +553,16 @@
 </ul>
 <figure class="highlight css hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-selector-id">#target</span> &#123;</span><br><span class="line">  <span class="hljs-attribute">will-change</span>: transform;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="性能优化策略"><a href="#性能优化策略" class="headerlink" title="性能优化策略"></a>性能优化策略</h4><p>基于上面介绍的浏览器渲染原理，<code>DOM</code> 和 <code>CSSOM</code> 结构构建顺序，初始化可以对页面渲染做些优化，提升页面性能</p>
+<h4 id="10-性能优化策略"><a href="#10-性能优化策略" class="headerlink" title="10. 性能优化策略"></a>10. 性能优化策略</h4><p>基于上面介绍的浏览器渲染原理，<code>DOM</code> 和 <code>CSSOM</code> 结构构建顺序，初始化可以对页面渲染做些优化，提升页面性能</p>
 <ul>
-<li><code>JavaScript</code> 优化，<code>&lt;script&gt;</code> 标签加上 <code>defer</code> 属性和 <code>async</code> 属性用于在不阻塞页面文档解析的前提下，控制脚本的下载和执行<ul>
-<li><code>defer</code> 属性，用于开启新的线程下载脚本文件，并使脚本在文档解析完成后执行</li>
-<li><code>async</code> 属性，<code>HTML5</code> 新增属性，用于异步下载脚本文件，下载完毕立即解释执行代码</li>
+<li><code>JavaScript</code> 优化，<code>&lt;script&gt;</code> 标签加上 <code>Defer</code> 属性和 <code>Async</code> 属性用于在不阻塞页面文档解析的前提下，控制脚本的下载和执行<ul>
+<li><code>Defer</code> 属性，用于开启新的线程下载脚本文件，并使脚本在文档解析完成后执行</li>
+<li><code>Async</code> 属性，<code>HTML5</code> 新增属性，用于异步下载脚本文件，下载完毕立即解释执行代码</li>
 </ul>
 </li>
 <li><code>CSS</code> 优化，<code>&lt;link&gt;</code> 标签的 <code>rel</code> 属性中的属性值设置为 <code>preload</code> 能够让我们在 <code>HTML</code> 页面中可以指明哪些资源是在页面加载完成后即刻需要的，最优的配置加载顺序，提高渲染性能</li>
 </ul>
-<h4 id="浏览器解析-JavaScript-的过程"><a href="#浏览器解析-JavaScript-的过程" class="headerlink" title="浏览器解析 JavaScript 的过程"></a>浏览器解析 JavaScript 的过程</h4><p>早期，浏览器内部对 <code>JavaScript</code> 的处理过程大致如下</p>
+<h4 id="11-浏览器解析-JavaScript-的过程"><a href="#11-浏览器解析-JavaScript-的过程" class="headerlink" title="11. 浏览器解析 JavaScript 的过程"></a>11. 浏览器解析 JavaScript 的过程</h4><p>早期，浏览器内部对 <code>JavaScript</code> 的处理过程大致如下</p>
 <ul>
 <li>读取代码，进行词法分析（<code>Lexical Analysis</code>），将代码分解成词元（<code>token</code>）</li>
 <li>对词元进行语法分析（<code>Parsing</code>），将代码整理成语法树（<code>Syntax Tree</code>）</li>
@@ -458,14 +571,39 @@
 </ul>
 <p>逐行解释将字节码转为机器码，是很低效的，为了提高运行速度，现代浏览器改为采用即时编译（<code>Just In Time compiler</code>，<code>JIT</code>），即字节码只在运行时编译，用到哪一行就编译哪一行，并且把编译结果缓存（<code>Inline Cache</code>），通常来说，一个程序被经常用到的，只是其中一小部分代码，有了缓存的编译结果，整个程序的运行速度就会显著提升</p>
 <p>关于这部分更为详细的内容可以参考我们之前整理过的 <a href="http://localhost:4000/2020/08/02/JavaScript/54/" target="_blank" rel="noopener">V8 引擎机制</a> 这篇文章了解更多</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
-<li>浏览器渲染工作的主流程分为下面五个步骤（如下图所示）<ul>
-<li>浏览器获取 <code>HTML</code> 文件，然后对文件进行解析，形成 <code>DOM Tree</code></li>
-<li>与此同时，进行 <code>CSS</code> 解析，生成 <code>Style Rules</code></li>
-<li>接着将 <code>DOM Tree</code> 与 <code>Style Rules</code> 合成为 <code>Render Tree</code></li>
-<li>接着进入布局（<code>Layout</code>）阶段，也就是为每个节点分配一个应出现在屏幕上的确切坐标</li>
-<li>随后调用 <code>GPU</code> 进行绘制（<code>Paint</code>），遍历 <code>Render Tree</code> 的节点，并将元素呈现出来</li>
+<h4 id="12-什么是渲染层合并（Composite）"><a href="#12-什么是渲染层合并（Composite）" class="headerlink" title="12. 什么是渲染层合并（Composite）"></a>12. 什么是渲染层合并（Composite）</h4><p>渲染层合并，对于页面中 <code>DOM</code> 元素的绘制（<code>Paint</code>）是在多个层上进行的，在每个层上完成绘制过程之后，浏览器会将绘制的位图发送给 <code>GPU</code> 绘制到屏幕上，将所有层按照合理的顺序合并成一个图层，然后在屏幕上呈现，对于有位置重叠的元素的页面，这个过程尤其重要，因为一旦图层的合并顺序出错，将会导致元素显示异常</p>
+<p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-17.png" alt></p>
+<p>如上图</p>
+<ul>
+<li><code>RenderLayers</code> 渲染层，这是负责对应 <code>DOM</code> 子树</li>
+<li><code>GraphicsLayers</code> 图形层，这是负责对应 <code>RenderLayers</code> 子树</li>
+<li><code>RenderObjects</code> 保持了树结构，一个 <code>RenderObjects</code> 知道如何绘制一个 <code>Node</code> 的内容，通过向一个绘图上下文（<code>GraphicsContext</code>）发出必要的绘制调用来绘制 <code>Nodes</code></li>
 </ul>
+<p>每个 <code>GraphicsLayer</code> 都有一个 <code>GraphicsContext</code>，<code>GraphicsContext</code> 会负责输出该层的位图，位图是存储在共享内存中，作为纹理上传到 <code>GPU</code> 中，最后由 <code>GPU</code> 将多个位图进行合成，然后画到屏幕上，此时我们的页面也就展现到了屏幕上</p>
+<p><code>GraphicsContext</code> 绘图上下文的责任就是向屏幕进行像素绘制（这个过程是先把像素级的数据写入位图中，然后再显示到显示器），在 <code>Chrome</code> 里，绘图上下文是包裹了的 <code>Skia</code>（<code>Chrome</code> 自己的 <code>2D</code> 图形绘制库）</p>
+<p>某些特殊的渲染层会被认为是合成层（<code>Compositing Layers</code>），合成层拥有单独的 <code>GraphicsLayer</code>，而其他不是合成层的渲染层，则和其第一个拥有 <code>GraphicsLayer</code> 父层公用一个</p>
+<h6 id="合成层的优点"><a href="#合成层的优点" class="headerlink" title="合成层的优点"></a>合成层的优点</h6><p>一旦 <code>renderLayer</code> 提升为了合成层就会有自己的绘图上下文，并且会开启硬件加速，有利于性能提升</p>
+<ul>
+<li>合成层的位图，会交由 <code>GPU</code> 合成，比 <code>CPU</code> 处理要快，也就是说，提升到合成层后合成层的位图会交 <code>GPU</code> 处理，但请注意，仅仅只是合成的处理（把绘图上下文的位图输出进行组合）需要用到 <code>GPU</code>，生成合成层的位图处理（绘图上下文的工作）是需要 <code>CPU</code></li>
+<li>当需要 <code>repaint</code> 时，只需要 <code>repaint</code> 本身，不会影响到其他的层，当需要 <code>repaint</code> 的时候可以只 <code>repaint</code> 本身，不影响其他层，但是 <code>paint</code> 之前还有 <code>style</code>，<code>layout</code> 那就意味着即使合成层只是 <code>repaint</code> 了自己，但 <code>style</code> 和 <code>layout</code> 本身就很占用时间</li>
+<li>对于 <code>transform</code> 和 <code>opacity</code> 效果，不会触发 <code>layout</code> 和 <code>paint</code>，仅仅是 <code>transform</code> 和 <code>opacity</code> 不会引发 <code>layout</code> 和 <code>paint</code>，其他的属性不确定</li>
+</ul>
+<p>一般一个元素开启硬件加速后会变成合成层，可以独立于普通文档流中，改动后可以避免整个页面重绘，提升性能</p>
+<p>注意不能滥用 <code>GPU</code> 加速，一定要分析其实际性能表现，因为 <code>GPU</code> 加速创建渲染层是有代价的，每创建一个新的渲染层，就意味着新的内存分配和更复杂的层的管理，并且在移动端 <code>GPU</code> 和 <code>CPU</code> 的带宽有限制，创建的渲染层过多时，合成也会消耗跟多的时间，随之而来的就是耗电更多，内存占用更多，过多的渲染层来带的开销而对页面渲染性能产生的影响，甚至远远超过了它在性能改善上带来的好处</p>
+<p>更多详细内容可以参考下面几个链接</p>
+<ul>
+<li><a href="https://www.html5rocks.com/zh/tutorials/speed/layers/" target="_blank" rel="noopener">Accelerated Rendering in Chrome</a></li>
+<li><a href="https://www.smashingmagazine.com/2016/12/gpu-animation-doing-it-right/" target="_blank" rel="noopener">CSS GPU Animation: Doing It Right</a></li>
+<li><a href="https://fed.taobao.org/blog/taofed/do71ct/performance-composite/?spm=taofed.blogs.blog-list.10.67bd5ac8fHy0LS" target="_blank" rel="noopener">无线性能优化：Composite</a></li>
+</ul>
+<h2 id="总结-1"><a href="#总结-1" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>浏览器渲染工作的主流程分为下面五个步骤（如下图所示）<ol>
+<li>解析 <code>HTML</code> 文件，构建 <code>DOM</code> 树，同时浏览器主进程负责下载 <code>CSS</code> 文件</li>
+<li><code>CSS</code> 文件下载完成，解析 <code>CSS</code> 文件成树形的数据结构，然后结合 <code>DOM</code> 树合并成 <code>RenderObject</code> 树</li>
+<li>布局 <code>RenderObject</code> 树（<code>Layout/reflow</code>），负责 <code>RenderObject</code> 树中的元素的尺寸，位置等计算</li>
+<li>绘制 <code>RenderObject</code> 树（<code>paint</code>），绘制页面的像素信息</li>
+<li>浏览器主进程将默认的图层和复合图层交给 <code>GPU</code> 进程，<code>GPU</code> 进程再将各个图层合成（<code>composite</code>），最后显示出页面</li>
+</ol>
 </li>
 </ul>
 <p><img src="https://gitee.com/heptaluan/backups/raw/master/cdn/js/37-13.png" alt></p>
@@ -634,13 +772,13 @@
         <span class="has-mr-6">1</span>
         <span>浏览器的主要组成部分</span>
         </a></li><li>
-        <a class="is-flex" href="#页面加载过程">
+        <a class="is-flex" href="#浏览器的主要进程">
         <span class="has-mr-6">2</span>
-        <span>页面加载过程</span>
+        <span>浏览器的主要进程</span>
         </a></li><li>
-        <a class="is-flex" href="#页面解析和页面渲染">
+        <a class="is-flex" href="#渲染进程（浏览器内核）">
         <span class="has-mr-6">3</span>
-        <span>页面解析和页面渲染</span>
+        <span>渲染进程（浏览器内核）</span>
         </a></li><li>
         <a class="is-flex" href="#渲染过程">
         <span class="has-mr-6">4</span>
@@ -686,9 +824,9 @@
         <span class="has-mr-6">6</span>
         <span>补充说明</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#CSSOM">
+        <a class="is-flex" href="#1-CSSOM">
         <span class="has-mr-6">6.1</span>
-        <span>CSSOM</span>
+        <span>1. CSSOM</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#CSSOM-是做什么的">
         <span class="has-mr-6">6.1.1</span>
@@ -698,39 +836,83 @@
         <span class="has-mr-6">6.1.2</span>
         <span>使用 CSSOM</span>
         </a></li></ul></li><li>
-        <a class="is-flex" href="#Async-和-Defer-有什么区别？">
+        <a class="is-flex" href="#2-为什么-JavaScript-是单线程的">
         <span class="has-mr-6">6.2</span>
-        <span>Async 和 Defer 有什么区别？</span>
+        <span>2. 为什么 JavaScript 是单线程的</span>
         </a></li><li>
-        <a class="is-flex" href="#如何解析-CSS-选择器">
+        <a class="is-flex" href="#3-为什么-GUI-渲染线程为什么与-JavaScript-引擎线程互斥">
         <span class="has-mr-6">6.3</span>
-        <span>如何解析 CSS 选择器</span>
+        <span>3. 为什么 GUI 渲染线程为什么与 JavaScript 引擎线程互斥</span>
         </a></li><li>
-        <a class="is-flex" href="#回流与重绘">
+        <a class="is-flex" href="#4-CSS-加载会造成阻塞吗">
         <span class="has-mr-6">6.4</span>
-        <span>回流与重绘</span>
+        <span>4. CSS 加载会造成阻塞吗</span>
+        </a></li><li>
+        <a class="is-flex" href="#5-DOMContentLoaded-与-onload-的区别">
+        <span class="has-mr-6">6.5</span>
+        <span>5. DOMContentLoaded 与 onload 的区别</span>
+        </a></li><li>
+        <a class="is-flex" href="#6-如何优化-CRP">
+        <span class="has-mr-6">6.6</span>
+        <span>6. 如何优化 CRP</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#优化-DOM">
+        <span class="has-mr-6">6.6.1</span>
+        <span>优化 DOM</span>
+        </a></li><li>
+        <a class="is-flex" href="#优化-CSSOM">
+        <span class="has-mr-6">6.6.2</span>
+        <span>优化 CSSOM</span>
+        </a></li><li>
+        <a class="is-flex" href="#优化-JavaScript">
+        <span class="has-mr-6">6.6.3</span>
+        <span>优化 JavaScript</span>
+        </a></li><li>
+        <a class="is-flex" href="#总结">
+        <span class="has-mr-6">6.6.4</span>
+        <span>总结</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#7-Async-和-Defer-的区别">
+        <span class="has-mr-6">6.7</span>
+        <span>7. Async 和 Defer 的区别</span>
+        </a></li><li>
+        <a class="is-flex" href="#8-如何解析-CSS-选择器">
+        <span class="has-mr-6">6.8</span>
+        <span>8. 如何解析 CSS 选择器</span>
+        </a></li><li>
+        <a class="is-flex" href="#9-回流与重绘">
+        <span class="has-mr-6">6.9</span>
+        <span>9. 回流与重绘</span>
         </a><ul class="menu-list"><li>
         <a class="is-flex" href="#常见引起回流属性和方法">
-        <span class="has-mr-6">6.4.1</span>
+        <span class="has-mr-6">6.9.1</span>
         <span>常见引起回流属性和方法</span>
         </a></li><li>
         <a class="is-flex" href="#常见引起重绘属性和方法">
-        <span class="has-mr-6">6.4.2</span>
+        <span class="has-mr-6">6.9.2</span>
         <span>常见引起重绘属性和方法</span>
         </a></li><li>
         <a class="is-flex" href="#如何减少回流、重绘">
-        <span class="has-mr-6">6.4.3</span>
+        <span class="has-mr-6">6.9.3</span>
         <span>如何减少回流、重绘</span>
         </a></li></ul></li><li>
-        <a class="is-flex" href="#性能优化策略">
-        <span class="has-mr-6">6.5</span>
-        <span>性能优化策略</span>
+        <a class="is-flex" href="#10-性能优化策略">
+        <span class="has-mr-6">6.10</span>
+        <span>10. 性能优化策略</span>
         </a></li><li>
-        <a class="is-flex" href="#浏览器解析-JavaScript-的过程">
-        <span class="has-mr-6">6.6</span>
-        <span>浏览器解析 JavaScript 的过程</span>
-        </a></li></ul></li><li>
-        <a class="is-flex" href="#总结">
+        <a class="is-flex" href="#11-浏览器解析-JavaScript-的过程">
+        <span class="has-mr-6">6.11</span>
+        <span>11. 浏览器解析 JavaScript 的过程</span>
+        </a></li><li>
+        <a class="is-flex" href="#12-什么是渲染层合并（Composite）">
+        <span class="has-mr-6">6.12</span>
+        <span>12. 什么是渲染层合并（Composite）</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#合成层的优点">
+        <span class="has-mr-6">6.12.1</span>
+        <span>合成层的优点</span>
+        </a></li></ul></li></ul></li><li>
+        <a class="is-flex" href="#总结-1">
         <span class="has-mr-6">7</span>
         <span>总结</span>
         </a></li><li>
@@ -843,7 +1025,9 @@
 <div class="card widget">
     <div class="card-content">
         <h3 class="menu-label">
-            最新文章
+            <a href="/tips" class="tips">
+                最新文章
+            </a>
         </h3>
         
         <article class="media">
